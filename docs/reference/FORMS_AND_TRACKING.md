@@ -23,6 +23,7 @@ Fields (default variant): first name*, last name*, email*, country (ISO, stored 
 3. **Evidence stored per enquiry**: consent flag, the exact consent text shown, terms version (from the Terms page), timestamp, IP, user agent, page URL.
 4. CSRF, honeypot (`company_website`), rate limit (6 per minute per IP, `enquiry` limiter), tag-stripping/sanitising, inline errors, success state, redirect to `/thank-you`.
 5. Accessible labels, `aria-invalid`, `role="alert"` errors, visible focus.
+6. **Country code** is a custom listbox with a flag beside every country (`countrySelect` in `resources/js/app.js`; keyboard: arrows, Home/End, Enter, Esc, type-ahead). It drives the real `<select name="country_code">`, which is the submitted value and the only control shown without JavaScript. Flags: `public/images/flags/`.
 
 No JavaScript: the hero shows a plain contact form (the `.nojs-only` block) and every form posts normally.
 
