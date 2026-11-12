@@ -25,6 +25,11 @@
                         @foreach ($step['options'] as $o)<option value="{{ $o['value'] }}">{{ $o['label'] }}</option>@endforeach
                     </select>
                     <button type="button" class="btn btn-primary btn-block mt-4" :disabled="!answers['{{ $step['key'] }}']" @click="next('{{ $step['key'] }}')">Next</button>
+                @elseif ($step['type'] === 'text')
+                    <label for="quiz-txt-{{ $idx }}" class="sr-only">{{ $step['question'] }}</label>
+                    <input id="quiz-txt-{{ $idx }}" type="text" maxlength="60" class="field mt-4" placeholder="For example: April 2027, or flexible"
+                           x-model.trim="answers['{{ $step['key'] }}']" @keydown.enter.prevent="next('{{ $step['key'] }}')">
+                    <button type="button" class="btn btn-primary btn-block mt-4" :disabled="!answers['{{ $step['key'] }}']" @click="next('{{ $step['key'] }}')">Next</button>
                 @else
                     <div class="mt-4 grid grid-cols-2 gap-3">
                         @foreach ($step['options'] as $o)
@@ -51,7 +56,7 @@
                     </div>
                 @endforeach
             </dl>
-            <x-enquiry-form form="hero-quiz" idp="quiz" quiz-answers submit="Send My Quote Request" />
+            <x-enquiry-form form="hero-quiz" idp="quiz" variant="quiz" quiz-answers submit="Send My Quote Request" />
         </section>
 
         <div class="mt-4 flex items-center justify-between text-xs text-ink/70">
@@ -65,6 +70,6 @@
          Hidden by the .js class that the layout adds when JavaScript runs. --}}
     <div class="nojs-only">
         <h3 class="mt-4 font-display text-xl">Tell us about your trip</h3>
-        <x-enquiry-form form="hero-quiz" idp="quiz-plain" extra submit="Send My Quote Request" />
+        <x-enquiry-form form="hero-quiz" idp="quiz-plain" variant="modal" submit="Send My Quote Request" />
     </div>
 </div>

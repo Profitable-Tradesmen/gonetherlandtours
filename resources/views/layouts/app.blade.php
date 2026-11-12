@@ -55,7 +55,7 @@
     {{-- Header modal enquiry form (reachable from every page) --}}
     <x-modal title="Start your adventure">
         <p class="mt-1 text-sm text-ink/75">Fill out this form, save up to {{ setting('modal_discount', '[CONFIRM: discount %]') }} on your trip.</p>
-        <div class="mt-4"><x-enquiry-form form="header-modal" idp="modal" extra submit="Send My Enquiry" /></div>
+        <div class="mt-4"><x-enquiry-form form="header-modal" idp="modal" variant="modal" submit="Send My Enquiry" /></div>
     </x-modal>
 
     {{-- Mobile sticky action bar --}}

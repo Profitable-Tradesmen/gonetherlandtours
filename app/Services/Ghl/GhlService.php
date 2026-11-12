@@ -96,6 +96,9 @@ class GhlService
         if ($answers) {
             $v[GhlFields::core('quiz_answers')] = collect($answers)->map(fn ($val, $k) => ucfirst(str_replace('_', ' ', $k)).': '.$val)->implode("\n");
             foreach ($answers as $k => $val) {
+                if ($k === 'travel_date') {
+                    continue; // already sent as "Preferred Travel Date"
+                }
                 $v[GhlFields::quiz($k)] = $val;
             }
         }

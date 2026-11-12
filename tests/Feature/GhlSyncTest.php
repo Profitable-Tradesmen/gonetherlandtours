@@ -74,7 +74,7 @@ class GhlSyncTest extends TestCase
         $this->enableGhl();
 
         $this->withSession(['tracking_last' => self::TRACKING])
-            ->post('/enquiry', ['form_name' => $form, 'quiz' => ['region' => 'Amsterdam & cities']] + $this->basePost())
+            ->post('/enquiry', ['form_name' => $form, 'budget' => '$2K pp', 'quiz' => ['season' => 'Spring']] + $this->basePost())
             ->assertRedirect(route('thank-you'));
 
         $body = $this->upsertBody();
@@ -91,8 +91,8 @@ class GhlSyncTest extends TestCase
         $this->assertSame('Yes', $this->valueFor($body, GhlFields::core('consent_given')));
         $this->assertSame('1.0', $this->valueFor($body, GhlFields::core('consent_version')));
         $this->assertNotNull($this->valueFor($body, GhlFields::core('consent_at')));
-        $this->assertSame('Amsterdam & cities', $this->valueFor($body, GhlFields::quiz('region')));
-        $this->assertStringContainsString('Region: Amsterdam & cities', $this->valueFor($body, GhlFields::core('quiz_answers')));
+        $this->assertSame('Spring', $this->valueFor($body, GhlFields::quiz('season')));
+        $this->assertStringContainsString('Season: Spring', $this->valueFor($body, GhlFields::core('quiz_answers')));
 
         $e = Enquiry::first();
         $this->assertSame('synced', $e->ghl_status);
@@ -145,7 +145,7 @@ class GhlSyncTest extends TestCase
         $this->assertNotContains(GhlFields::core('travel_date'), $result['created']);
         $this->assertNotContains('UTM Source (First)', $result['created']);
         $this->assertContains('UTM Source (Last)', $result['created']);
-        $this->assertContains('Quiz: Region', $result['created']);
+        $this->assertContains('Quiz: Season', $result['created']);
         $this->assertCount(count(GhlFields::all()) - 2, $result['created']);
     }
 }

@@ -20,7 +20,7 @@ class EnquiryRequest extends FormRequest
     {
         // Sanitise: strip tags and trim every text input; the honeypot is left untouched.
         $clean = [];
-        foreach (['first_name', 'last_name', 'email', 'phone', 'travel_date', 'second_quote', 'special_request', 'season', 'group_size', 'nights', 'package_name'] as $k) {
+        foreach (['first_name', 'last_name', 'email', 'phone', 'travel_date', 'second_quote', 'special_request', 'season', 'group_size', 'nights', 'destination', 'travel_style', 'budget', 'package_name'] as $k) {
             if (is_string($this->input($k))) {
                 $clean[$k] = trim(strip_tags($this->input($k)));
             }
@@ -48,6 +48,10 @@ class EnquiryRequest extends FormRequest
             'season' => ['nullable', 'string', 'max:20'],
             'group_size' => ['nullable', 'string', 'max:20'],
             'nights' => ['nullable', 'string', 'max:20'],
+            'destination' => ['nullable', 'string', 'max:120'],
+            'travel_style' => ['nullable', 'string', 'max:120'],
+            // The pop-up form requires an estimated budget; the other forms do not ask for it directly.
+            'budget' => [Rule::requiredIf(fn () => $this->input('form_name') === 'header-modal'), 'nullable', 'string', 'max:60'],
             'quiz' => ['nullable', 'array', 'max:30'],
             'quiz.*' => ['nullable', 'string', 'max:120'],
             'page_url' => ['nullable', 'string', 'max:500'],

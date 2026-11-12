@@ -6,6 +6,7 @@
     'quizAnswers' => false,       // inside the hero quiz: emit hidden quiz[...] inputs from Alpine state
     'submit' => 'Get My Free Quote',
     'note' => null,
+    'variant' => 'default',       // default (contact/package) | quiz (short: contact details only) | modal (pop-up: full trip details)
 ])
 {{--
     THE enquiry form. Every form on the site renders this component and posts to the same route
@@ -16,6 +17,8 @@
     $countries = config('gnt.countries');
     $siteKey = recaptcha_site_key();
     $oldHere = old('_form_id') === $idp;
+    // Dropdown options for the pop-up come from the quiz steps (Admin > Quiz) so both forms stay consistent.
+    $opts = fn (string $key) => \App\Models\QuizStep::where('key', $key)->first()?->activeOptions()->get(['label', 'value']) ?? collect();
 @endphp
 <form method="POST" action="{{ route('enquiry.store') }}" x-data="enquiryForm" @submit.prevent="submit($event)"
       data-form-name="{{ $form }}" novalidate class="relative" aria-label="{{ config('gnt.form_names.'.$form, 'Enquiry') }} enquiry form">
@@ -59,7 +62,28 @@
             <x-form-field name="phone" label="Phone" type="tel" :idp="$idp" required autocomplete="tel-national" />
         </div>
 
-        @if ($extra)
+        @if ($variant === 'modal')
+            <x-form-field name="destination" label="Destination" :idp="$idp" span>
+                <select id="{{ $idp }}-destination" name="destination" class="field">
+                    <option value="">Select (optional)</option>
+                    @foreach (\App\Models\Destination::active()->pluck('name') as $dName)<option>{{ $dName }}</option>@endforeach
+                    <option>Not sure yet</option>
+                </select>
+            </x-form-field>
+            <x-form-field name="group_size" label="Number of travellers" :idp="$idp">
+                <select id="{{ $idp }}-group_size" name="group_size" class="field"><option value="">Select</option>@foreach ($opts('group_size') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
+            </x-form-field>
+            <x-form-field name="travel_date" label="Preferred travel dates" :idp="$idp" hint="For example: April 2027" />
+            <x-form-field name="travel_style" label="What is your favourite way to see a new country?" :idp="$idp" span>
+                <select id="{{ $idp }}-travel_style" name="travel_style" class="field"><option value="">Select</option>@foreach ($opts('travel_style') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
+            </x-form-field>
+            <x-form-field name="nights" label="Number of nights" :idp="$idp">
+                <select id="{{ $idp }}-nights" name="nights" class="field"><option value="">Select</option>@foreach ($opts('nights') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
+            </x-form-field>
+            <x-form-field name="budget" label="Estimated budget (per person)" :idp="$idp" required>
+                <select id="{{ $idp }}-budget" name="budget" class="field" required><option value="">Select</option>@foreach ($opts('budget') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
+            </x-form-field>
+        @elseif ($extra && $variant === 'default')
             <x-form-field name="season" label="Time of year" :idp="$idp">
                 <select id="{{ $idp }}-season" name="season" class="field">
                     <option value="">Select (optional)</option>
@@ -82,15 +106,17 @@
             </x-form-field>
         @endif
 
-        <x-form-field name="travel_date" label="Preferred travel date (approx.)" :idp="$idp" :span="! $extra" hint="For example: April 2027" />
+        @if ($variant === 'default')
+            <x-form-field name="travel_date" label="Preferred travel date (approx.)" :idp="$idp" :span="! $extra" hint="For example: April 2027" />
 
-        <x-form-field name="second_quote" label="Would you like a second quote from a partner?" :idp="$idp" span>
-            <select id="{{ $idp }}-second_quote" name="second_quote" class="field">
-                @foreach (config('gnt.second_quote_options') as $v => $l)
-                    <option value="{{ $v }}">{{ $l }}</option>
-                @endforeach
-            </select>
-        </x-form-field>
+            <x-form-field name="second_quote" label="Would you like a second quote from a partner?" :idp="$idp" span>
+                <select id="{{ $idp }}-second_quote" name="second_quote" class="field">
+                    @foreach (config('gnt.second_quote_options') as $v => $l)
+                        <option value="{{ $v }}">{{ $l }}</option>
+                    @endforeach
+                </select>
+            </x-form-field>
+        @endif
 
         <x-form-field name="special_request" label="Special request" :idp="$idp" span>
             <textarea id="{{ $idp }}-special_request" name="special_request" rows="3" class="field" maxlength="2000">{{ $oldHere ? old('special_request') : '' }}</textarea>

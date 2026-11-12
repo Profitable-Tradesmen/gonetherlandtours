@@ -69,12 +69,13 @@ class QuizController extends Controller
 
     private function save(Request $request, QuizStep $step)
     {
+        $isText = $request->input('type') === 'text';   // free-text step: no options
         $data = $request->validate([
             'question' => 'required|string|max:255',
-            'type' => 'required|in:tiles,select',
+            'type' => 'required|in:tiles,select,text',
             'key' => [$step->exists ? 'nullable' : 'required', 'regex:/^[a-z][a-z0-9_]{1,40}$/', 'unique:quiz_steps,key'],
-            'options' => 'required|array|min:2|max:30',
-            'options.*.label' => 'required|string|max:120',
+            'options' => $isText ? 'nullable|array' : 'required|array|min:2|max:30',
+            'options.*.label' => $isText ? 'nullable|string|max:120' : 'required|string|max:120',
             'options.*.value' => 'nullable|string|max:120',
             'options.*.icon' => 'nullable|string|max:40',
             'options.*.active' => 'nullable',
@@ -91,7 +92,8 @@ class QuizController extends Controller
 
         // Replace options in the submitted order.
         $step->options()->delete();
-        foreach (array_values($data['options']) as $i => $o) {
+        $rows = $isText ? [] : array_values($data['options'] ?? []);
+        foreach ($rows as $i => $o) {
             $step->options()->create([
                 'label' => $o['label'],
                 'value' => filled($o['value'] ?? null) ? $o['value'] : $o['label'],

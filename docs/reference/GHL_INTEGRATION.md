@@ -34,7 +34,7 @@ Custom fields (names are matched **exactly**; defined in one place, `app/Service
 | Group | Fields |
 |---|---|
 | Enquiry | Preferred Travel Date, Second Quote Preference, Special Request, Package, Form Name |
-| Quiz | Quiz: Region, Quiz: Season, Quiz: Travel Style, Quiz: Group Size, Quiz: Nights, Quiz: Flights Booked, Quiz: Budget, Quiz: Likelihood (one per quiz step key), plus **Quiz Answers (Full)** (all answers as text) |
+| Quiz | Quiz: Season, Quiz: Travel Style, Quiz: Group Size, Quiz: Nights, Quiz: Flights Booked, Quiz: Budget, Quiz: Likelihood, Quiz: Destination (one per quiz step key; the pop-up form also fills Destination, Travel Style, Group Size, Nights and Budget), plus **Quiz Answers (Full)** (all answers as text). The quiz's travel-dates answer is sent as **Preferred Travel Date**. |
 | Consent | Consent Given, Consent Timestamp, Consent Text Version |
 | Tracking, latest touch | UTM Source / Medium / Campaign / Term / Content (Last), GCLID (Last), GBRAID (Last), WBRAID (Last), Referrer (Last), Landing Page URL (Last) |
 | Tracking, first touch | the same ten, suffixed `(First)` |

@@ -5,7 +5,11 @@ namespace Database\Seeders;
 use App\Models\QuizStep;
 use Illuminate\Database\Seeder;
 
-/** Default 8 question steps (the 9th step, contact details, is the shared enquiry form). Editable in Admin > Quiz. */
+/**
+ * Hero quiz question steps (the final contact step is the shared enquiry form, variant "quiz").
+ * Editable in Admin > Quiz. The pop-up form also reads its dropdown options (travel style, travellers,
+ * nights, budget) from these steps, so the two forms stay consistent.
+ */
 class QuizSeeder extends Seeder
 {
     public function run(): void
@@ -14,13 +18,9 @@ class QuizSeeder extends Seeder
             return;
         }
 
-        $range = fn (int $from, int $to, string $suffix = '') => collect(range($from, $to))->map(fn ($n) => [(string) $n.$suffix, (string) $n.$suffix, null])->all();
+        $range = fn (int $from, int $to) => collect(range($from, $to))->map(fn ($n) => [(string) $n, (string) $n, null])->all();
 
         $steps = [
-            ['region', 'Would you like to visit Amsterdam & the cities or the Countryside & tulips?', 'tiles', [
-                ['Amsterdam & cities', 'Amsterdam & cities', 'city'],
-                ['Countryside & tulips', 'Countryside & tulips', 'tulip'],
-            ]],
             ['season', 'What time of year do you want to travel?', 'tiles', [
                 ['Spring', 'Spring', 'spring'], ['Summer', 'Summer', 'summer'],
                 ['Autumn', 'Autumn', 'autumn'], ['Winter', 'Winter', 'winter'],
@@ -31,18 +31,20 @@ class QuizSeeder extends Seeder
                 ['With a tour guide driving', 'Chauffeur driven', 'guide'],
                 ["Don't know", "Don't know", 'question'],
             ]],
-            ['group_size', 'How many people are in your group?', 'select', array_merge($range(1, 9), [['10+', '10+', null]])],
-            ['nights', 'How many nights?', 'select', array_merge($range(3, 13), [['14+', '14+', null]])],
-            ['flights_booked', 'Have you booked flights?', 'tiles', [
+            ['group_size', 'Number of travellers', 'select', array_merge($range(1, 9), [['10+', '10+', null]])],
+            // type "text": free text answer, saved as the enquiry's preferred travel date
+            ['travel_date', 'Preferred travel dates', 'text', []],
+            ['nights', 'How many nights do you want to stay for?', 'select', array_merge($range(3, 13), [['14+', '14+', null]])],
+            ['flights_booked', 'Have you flights booked?', 'tiles', [
                 ['Yes', 'Yes', 'yes'], ['No', 'No', 'no'],
             ]],
             ['budget', 'Have you a budget in mind for your trip?', 'tiles', [
-                ['$1K per person', '$1K per person', 'money'], ['$2K per person', '$2K per person', 'money'],
-                ['$3K per person', '$3K per person', 'money'], ['$4K+ per person', '$4K+ per person', 'money'],
+                ['$1K pp', '$1K pp', 'money'], ['$2K pp', '$2K pp', 'money'], ['$3K pp', '$3K pp', 'money'],
             ]],
-            ['likelihood', 'How likely are you to come?', 'tiles', [
-                ["I'm 100% sure I'm going", '100% sure', 'check'], ["I'm 80% sure", '80% sure', 'check'],
-                ["It's 50/50", '50/50', 'question'], ["Unsure, just researching", 'Just researching', 'search'],
+            ['likelihood', 'How likely are you to come to the Netherlands?', 'tiles', [
+                ["I'm 80% sure I'm going", '80% sure', 'check'],
+                ["I'm 50/50", '50/50', 'question'],
+                ['Unsure, just researching', 'Just researching', 'search'],
             ]],
         ];
 

@@ -47,7 +47,8 @@ class EnquiryService
             'country_code' => '+'.$dial,
             'phone_national' => preg_replace('/\D/', '', $data['phone']),
             'phone_e164' => $e164,
-            'travel_date' => $data['travel_date'] ?? null,
+            // The quiz's "Preferred travel dates" step (key travel_date) fills the same field as the other forms.
+            'travel_date' => ($data['travel_date'] ?? null) ?: ($data['quiz']['travel_date'] ?? null),
             'second_quote' => $data['second_quote'] ?? null,
             'special_request' => $data['special_request'] ?? null,
             'package_id' => $package?->id,
@@ -75,8 +76,8 @@ class EnquiryService
     private function answers(array $data): array
     {
         $allowed = QuizStep::pluck('key')->all();
-        $answers = collect($data['quiz'] ?? [])->only($allowed)->filter(fn ($v) => $v !== '')->all();
-        foreach (['season', 'group_size', 'nights'] as $k) {
+        $answers = collect($data['quiz'] ?? [])->only(array_merge($allowed, ['destination']))->filter(fn ($v) => $v !== '')->all();
+        foreach (['season', 'group_size', 'nights', 'destination', 'travel_style', 'budget'] as $k) {
             if (! empty($data[$k]) && ! isset($answers[$k])) {
                 $answers[$k] = $data[$k];
             }

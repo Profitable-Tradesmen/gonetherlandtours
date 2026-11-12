@@ -120,9 +120,54 @@ class EnquiryTest extends TestCase
     {
         $this->fakeRecaptcha();
 
-        $this->postJson('/enquiry', $this->payload(['form_name' => 'hero-quiz', 'quiz' => ['region' => 'Amsterdam & cities', 'budget' => '$2K per person', 'bogus_key' => 'x']]))->assertOk();
+        $this->postJson('/enquiry', $this->payload(['form_name' => 'hero-quiz', 'quiz' => ['season' => 'Spring', 'budget' => '$2K pp', 'bogus_key' => 'x']]))->assertOk();
 
-        $this->assertSame(['region' => 'Amsterdam & cities', 'budget' => '$2K per person'], Enquiry::first()->quiz_answers);
+        $this->assertSame(['season' => 'Spring', 'budget' => '$2K pp'], Enquiry::first()->quiz_answers);
+    }
+
+    public function test_quiz_travel_dates_answer_fills_the_enquiry_travel_date(): void
+    {
+        $this->fakeRecaptcha();
+        $data = $this->payload(['form_name' => 'hero-quiz', 'quiz' => ['travel_date' => 'May 2027', 'group_size' => '2']]);
+        unset($data['travel_date'], $data['second_quote']);
+
+        $this->postJson('/enquiry', $data)->assertOk();
+
+        $e = Enquiry::first();
+        $this->assertSame('May 2027', $e->travel_date);
+        $this->assertSame('2', $e->quiz_answers['group_size']);
+    }
+
+    public function test_popup_form_requires_budget_and_stores_trip_details(): void
+    {
+        $this->fakeRecaptcha();
+        $details = ['form_name' => 'header-modal', 'destination' => 'Zeeland & the Delta', 'group_size' => '4', 'travel_style' => 'Self drive', 'nights' => '7'];
+
+        $this->postJson('/enquiry', $this->payload($details))->assertStatus(422)->assertJsonValidationErrors('budget');
+        $this->assertDatabaseCount('enquiries', 0);
+
+        $this->postJson('/enquiry', $this->payload($details + ['budget' => '$2K pp']))->assertOk();
+        $expected = ['group_size' => '4', 'nights' => '7', 'destination' => 'Zeeland & the Delta', 'travel_style' => 'Self drive', 'budget' => '$2K pp'];
+        $this->assertEquals($expected, collect(Enquiry::first()->quiz_answers)->sortKeys()->all() === [] ? [] : collect(Enquiry::first()->quiz_answers)->only(array_keys($expected))->all());
+    }
+
+    public function test_popup_and_quiz_forms_show_the_requested_fields_only(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+        // pop-up
+        foreach (['modal-destination', 'modal-group_size', 'modal-travel_date', 'modal-travel_style', 'modal-nights', 'modal-budget', 'modal-special_request'] as $id) {
+            $this->assertStringContainsString('id="'.$id.'"', $html, $id);
+        }
+        $this->assertStringNotContainsString('id="modal-second_quote"', $html);
+        // quiz contact step: contact details + special request only
+        $this->assertStringContainsString('id="quiz-special_request"', $html);
+        foreach (['quiz-travel_date', 'quiz-second_quote', 'quiz-budget', 'quiz-nights'] as $id) {
+            $this->assertStringNotContainsString('id="'.$id.'"', $html, $id);
+        }
+        // quiz steps in the requested order
+        $this->assertLessThan(strpos($html, 'Preferred travel dates'), strpos($html, 'What time of year'));
+        $this->assertStringContainsString('How likely are you to come to the Netherlands?', $html);
+        $this->assertStringNotContainsString("I'm 100% sure", $html);
     }
 
     public function test_non_javascript_post_redirects_to_thank_you(): void

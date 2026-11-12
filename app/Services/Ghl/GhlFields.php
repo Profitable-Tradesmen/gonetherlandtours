@@ -62,7 +62,7 @@ class GhlFields
                 $names[] = self::tracking($k, $touch);
             }
         }
-        $quizKeys = array_unique(array_merge(['region', 'season', 'travel_style', 'group_size', 'nights', 'flights_booked', 'budget', 'likelihood'], QuizStep::pluck('key')->all()));
+        $quizKeys = array_unique(array_merge(['season', 'travel_style', 'group_size', 'nights', 'flights_booked', 'budget', 'likelihood', 'destination'], QuizStep::pluck('key')->all()));
         foreach ($quizKeys as $k) {
             $names[] = self::quiz($k);
         }

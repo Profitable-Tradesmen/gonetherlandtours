@@ -11,13 +11,14 @@
     <div class="grid gap-4 sm:grid-cols-2">
         <div><label class="field-label" for="key">Key (answer name, e.g. group_size)</label>
             @if ($step->exists)<input id="key" value="{{ $step->key }}" class="field bg-sand" disabled>@else<input id="key" name="key" value="{{ old('key') }}" class="field" required placeholder="lowercase_with_underscores">@endif</div>
-        <div><label class="field-label" for="type">Type</label><select id="type" name="type" class="field"><option value="tiles" @selected(old('type', $step->type) === 'tiles')>Tiles (click advances)</option><option value="select" @selected(old('type', $step->type) === 'select')>Dropdown (Next button)</option></select></div>
+        <div><label class="field-label" for="type">Type</label><select id="type" name="type" class="field"><option value="tiles" @selected(old('type', $step->type) === 'tiles')>Tiles (click advances)</option><option value="select" @selected(old('type', $step->type) === 'select')>Dropdown (Next button)</option><option value="text" @selected(old('type', $step->type) === 'text')>Text box (Next button, no options)</option></select>
+            <p class="mt-1 text-xs text-ink/60">A step with key <code>travel_date</code> is saved as the enquiry's preferred travel date.</p></div>
     </div>
     <label class="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $step->is_active))> Active</label>
 
     <div><h2 class="font-display text-xl">Options (in order)</h2>
         <template x-for="(r, i) in rows" :key="i"><div class="mt-2 grid items-center gap-2 rounded-lg border border-sand-200 p-3 sm:grid-cols-[1fr_1fr_9rem_auto]">
-            <input class="field" :name="'options[' + i + '][label]'" x-model="r.label" placeholder="Label shown" aria-label="Label" required>
+            <input class="field" :name="'options[' + i + '][label]'" x-model="r.label" placeholder="Label shown" aria-label="Label">
             <input class="field" :name="'options[' + i + '][value]'" x-model="r.value" placeholder="Saved value (blank = label)" aria-label="Value">
             <select class="field" :name="'options[' + i + '][icon]'" x-model="r.icon" aria-label="Icon"><option value="">No icon</option>@foreach ($icons as $ic)<option>{{ $ic }}</option>@endforeach</select>
             <div class="flex items-center gap-2 text-sm"><label class="flex items-center gap-1"><input type="checkbox" :name="'options[' + i + '][active]'" value="1" x-model="r.active"> On</label>
