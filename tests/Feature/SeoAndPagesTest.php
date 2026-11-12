@@ -80,6 +80,15 @@ class SeoAndPagesTest extends TestCase
         $this->get('/no-such-page')->assertNotFound()->assertSee('We could not find that page')->assertSee('noindex', false);
     }
 
+    public function test_site_noindex_switch_hides_the_whole_site_for_previews(): void
+    {
+        config(['gnt.site_noindex' => true]);
+
+        $res = $this->get('/')->assertOk()->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+        $this->assertStringContainsString('<meta name="robots" content="noindex, nofollow">', $res->getContent());
+        $this->get('/robots.txt')->assertSee('Disallow: /', false)->assertDontSee('Sitemap:', false);
+    }
+
     public function test_security_headers_are_sent(): void
     {
         $this->get('/')->assertHeader('X-Content-Type-Options', 'nosniff')->assertHeader('X-Frame-Options', 'SAMEORIGIN');

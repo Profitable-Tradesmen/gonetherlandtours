@@ -31,6 +31,7 @@ See `docs/reference/LOCAL_XAMPP.md`. Short: `.env` from `.env.example`, DB `gone
 - Legal pages are starter templates, not legal advice.
 - Images: only free-for-commercial-use; credit in `IMAGE_CREDITS.md`. Currently all images are generated placeholders.
 - Admin: separate `admin` guard + `admin_users`; login throttled 5/min; cannot delete self or last admin. Admin first user comes from `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`.
+- `SITE_NOINDEX=true` (preview/staging only) forces noindex meta, `X-Robots-Tag` and `Disallow: /` robots.txt. Must be false on the live site. See `docs/reference/SHARING_PREVIEW.md`.
 - Package routes bind by **slug** (`/admin/packages/{slug}/edit`).
 
 ## Conventions

@@ -28,7 +28,9 @@ class SitemapController extends Controller
 
     public function robots()
     {
-        $body = "User-agent: *\nDisallow: /admin\nDisallow: /thank-you\nAllow: /\n\nSitemap: ".url('/sitemap.xml')."\n";
+        $body = config('gnt.site_noindex')
+            ? "User-agent: *\nDisallow: /\n"   // preview/staging: keep everything out of search engines
+            : "User-agent: *\nDisallow: /admin\nDisallow: /thank-you\nAllow: /\n\nSitemap: ".url('/sitemap.xml')."\n";
 
         return response($body, 200, ['Content-Type' => 'text/plain']);
     }

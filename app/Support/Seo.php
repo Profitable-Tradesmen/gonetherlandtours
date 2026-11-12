@@ -18,7 +18,8 @@ class Seo
             'description' => $o['description'] ?? setting('default_meta_description', ''),
             'canonical' => $o['canonical'] ?? url()->current(),
             'image' => str_starts_with((string) $img, 'http') ? $img : asset($img),
-            'noindex' => (bool) ($o['noindex'] ?? false),
+            // SITE_NOINDEX=true (preview/staging) forces noindex on every page.
+            'noindex' => config('gnt.site_noindex') || (bool) ($o['noindex'] ?? false),
             'type' => $o['type'] ?? 'website',
             'jsonld' => [self::organization()],
         ];
