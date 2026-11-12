@@ -30,3 +30,7 @@ No licensed photography could be downloaded and verified during the build, so **
 | (none yet) | | | | |
 
 The brand reference images supplied for fonts (onesalt, ORÍMA) were used only as typographic inspiration; none of their artwork is used.
+
+## Flags (country-code field)
+
+`public/images/flags/*.svg` (33 files, one per country in `config/gnt.php`) come from the **flag-icons** project (https://github.com/lipis/flag-icons), MIT licence, copyright Panayiotis Lipiridis. Self-hosted, not hotlinked. To add a country: add it to `config/gnt.php` and copy its `4x3` SVG from the flag-icons package as `public/images/flags/<iso lowercase>.svg`.

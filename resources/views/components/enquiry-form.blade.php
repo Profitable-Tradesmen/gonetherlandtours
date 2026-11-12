@@ -51,13 +51,19 @@
         <x-form-field name="last_name" label="Last name" :idp="$idp" required autocomplete="family-name" />
         <x-form-field name="email" label="Email" type="email" :idp="$idp" required autocomplete="email" span />
 
-        <div class="sm:col-span-2 grid grid-cols-[minmax(0,9rem)_1fr] gap-3">
+        <div class="sm:col-span-2 grid grid-cols-[minmax(0,10.5rem)_1fr] gap-3">
             <x-form-field name="country_code" label="Country code" :idp="$idp" required>
-                <select id="{{ $idp }}-country_code" name="country_code" class="field" required autocomplete="tel-country-code">
-                    @foreach ($countries as [$cName, $cDial, $cIso])
-                        <option value="{{ $cIso }}" @selected(($oldHere ? old('country_code', 'US') : 'US') === $cIso)>{{ $cIso }} (+{{ $cDial }})</option>
-                    @endforeach
-                </select>
+                @php $selectedIso = $oldHere ? old('country_code', 'US') : 'US'; @endphp
+                {{-- Native select (mobile pickers, keyboard and no-JS keep working) with the chosen country's flag shown inside the field. --}}
+                <div class="relative" x-data="{ iso: @js($selectedIso) }">
+                    <img :src="'{{ asset('images/flags') }}/' + iso.toLowerCase() + '.svg'" src="{{ asset('images/flags/'.strtolower($selectedIso).'.svg') }}"
+                         alt="" width="24" height="18" class="pointer-events-none absolute left-3 top-1/2 h-[18px] w-6 -translate-y-1/2 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
+                    <select id="{{ $idp }}-country_code" name="country_code" class="field !pl-11" required autocomplete="tel-country-code" x-model="iso">
+                        @foreach ($countries as [$cName, $cDial, $cIso])
+                            <option value="{{ $cIso }}" title="{{ $cName }}" @selected($selectedIso === $cIso)>{{ $cIso }} (+{{ $cDial }})</option>
+                        @endforeach
+                    </select>
+                </div>
             </x-form-field>
             <x-form-field name="phone" label="Phone" type="tel" :idp="$idp" required autocomplete="tel-national" />
         </div>
