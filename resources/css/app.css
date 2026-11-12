@@ -71,6 +71,10 @@
     .field { display: block; width: 100%; border-radius: .6rem; border: 1px solid #b9b3aa; background: #fff; padding: .7rem .85rem; font-size: 1rem; color: var(--color-ink); min-height: 2.75rem; }
     .field:focus { border-color: var(--color-brand-700); outline: 3px solid color-mix(in srgb, var(--color-accent) 70%, transparent); outline-offset: 0; }
     .field[aria-invalid='true'] { border-color: var(--color-rust); }
+    /* Country-code listbox: custom UI only when JavaScript runs; the native select is the no-JS fallback. */
+    .cc-btn { display: none; cursor: pointer; }
+    .js .cc-btn { display: flex; }
+    .js .cc-native { display: none; }
     .field-label { display: block; margin-bottom: .25rem; font-size: .8rem; font-weight: 600; }
     .field-error { margin-top: .25rem; font-size: .8rem; color: #9b2c15; font-weight: 600; }
 

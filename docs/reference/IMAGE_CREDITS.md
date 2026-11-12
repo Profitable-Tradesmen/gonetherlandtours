@@ -33,4 +33,4 @@ The brand reference images supplied for fonts (onesalt, ORÍMA) were used only a
 
 ## Flags (country-code field)
 
-`public/images/flags/*.svg` (33 files, one per country in `config/gnt.php`) come from the **flag-icons** project (https://github.com/lipis/flag-icons), MIT licence, copyright Panayiotis Lipiridis. Self-hosted, not hotlinked. To add a country: add it to `config/gnt.php` and copy its `4x3` SVG from the flag-icons package as `public/images/flags/<iso lowercase>.svg`.
+`public/images/flags/*.svg` (33 files, one per country in `config/gnt.php`) come from the **flag-icons** project (https://github.com/lipis/flag-icons), MIT licence, copyright Panayiotis Lipiridis. Self-hosted, not hotlinked. The flag shows beside every country in the country-code list and in the closed field. To add a country: add it to `config/gnt.php` and copy its `4x3` SVG from the flag-icons package as `public/images/flags/<iso lowercase>.svg`.

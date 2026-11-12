@@ -159,6 +159,73 @@ Alpine.data('quiz', (keys) => ({
     },
 }));
 
+/* ---------------------------------------------------------------
+ * Country-code listbox with flags. The native <select> (x-model="iso")
+ * stays the submitted value; this is the accessible custom UI on top.
+ * Keys: arrows, Home/End, Enter/Space, Escape, Tab, type-ahead.
+ * ------------------------------------------------------------- */
+Alpine.data('countrySelect', (initial, list, flagBase) => ({
+    iso: initial,
+    list,
+    open: false,
+    active: -1,
+    typed: '',
+    typedAt: 0,
+
+    get current() {
+        return this.list.find((c) => c.iso === this.iso) || this.list[0];
+    },
+    flag(iso) {
+        return flagBase + '/' + iso.toLowerCase() + '.svg';
+    },
+    toggle() {
+        this.open ? this.close() : this.show();
+    },
+    show() {
+        this.open = true;
+        this.setActive(Math.max(0, this.list.findIndex((c) => c.iso === this.iso)));
+        this.$nextTick(() => {
+            this.$refs.list.focus();
+            this.scroll();
+        });
+    },
+    close(refocus = true) {
+        this.open = false;
+        if (refocus) this.$refs.btn.focus();
+    },
+    setActive(i) {
+        this.active = (i + this.list.length) % this.list.length;
+        this.scroll();
+    },
+    scroll() {
+        const li = this.$refs.list.children[this.active];
+        if (li) li.scrollIntoView({ block: 'nearest' });
+    },
+    choose(iso) {
+        this.iso = iso;
+        this.close();
+    },
+    key(e) {
+        const k = e.key;
+        if (k === 'ArrowDown') { e.preventDefault(); this.setActive(this.active + 1); }
+        else if (k === 'ArrowUp') { e.preventDefault(); this.setActive(this.active - 1); }
+        else if (k === 'Home') { e.preventDefault(); this.setActive(0); }
+        else if (k === 'End') { e.preventDefault(); this.setActive(this.list.length - 1); }
+        else if (k === 'Enter' || k === ' ') { e.preventDefault(); this.choose(this.list[this.active].iso); }
+        else if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); this.close(); }
+        else if (k === 'Tab') { this.close(false); }
+        else if (k.length === 1 && /\S/.test(k)) {
+            // type-ahead on the country name
+            const now = Date.now();
+            this.typed = now - this.typedAt > 700 ? k.toLowerCase() : this.typed + k.toLowerCase();
+            this.typedAt = now;
+            const hit = this.list.findIndex((c, i) => i >= (this.typed.length > 1 ? this.active : this.active + 1) && c.name.toLowerCase().startsWith(this.typed));
+            const any = hit >= 0 ? hit : this.list.findIndex((c) => c.name.toLowerCase().startsWith(this.typed));
+            if (any >= 0) this.setActive(any);
+        }
+    },
+}));
+
 /* Header modal */
 Alpine.store('modal', {
     open: false,

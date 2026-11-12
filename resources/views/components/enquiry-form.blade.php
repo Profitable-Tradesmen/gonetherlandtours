@@ -54,15 +54,45 @@
         <div class="sm:col-span-2 grid grid-cols-[minmax(0,10.5rem)_1fr] gap-3">
             <x-form-field name="country_code" label="Country code" :idp="$idp" required>
                 @php $selectedIso = $oldHere ? old('country_code', 'US') : 'US'; @endphp
-                {{-- Native select (mobile pickers, keyboard and no-JS keep working) with the chosen country's flag shown inside the field. --}}
-                <div class="relative" x-data="{ iso: @js($selectedIso) }">
-                    <img :src="'{{ asset('images/flags') }}/' + iso.toLowerCase() + '.svg'" src="{{ asset('images/flags/'.strtolower($selectedIso).'.svg') }}"
-                         alt="" width="24" height="18" class="pointer-events-none absolute left-3 top-1/2 h-[18px] w-6 -translate-y-1/2 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
-                    <select id="{{ $idp }}-country_code" name="country_code" class="field !pl-11" required autocomplete="tel-country-code" x-model="iso">
+                @php
+                    $flagBase = asset('images/flags');
+                    $selectedRow = collect($countries)->firstWhere(2, $selectedIso) ?? $countries[0];
+                @endphp
+                {{--
+                    Country code with flags in the list. With JavaScript the custom listbox (countrySelect in app.js) is shown and
+                    drives the real <select>, which is the value that is submitted. Without JavaScript only the native select shows.
+                --}}
+                <div class="relative" x-data="countrySelect(@js($selectedIso), @js(collect($countries)->map(fn ($c) => ['name' => $c[0], 'dial' => $c[1], 'iso' => $c[2]])->all()), @js($flagBase))" @click.outside="open && close(false)">
+                    <select id="{{ $idp }}-country_code" name="country_code" class="field cc-native" required autocomplete="tel-country-code" x-model="iso">
                         @foreach ($countries as [$cName, $cDial, $cIso])
-                            <option value="{{ $cIso }}" title="{{ $cName }}" @selected($selectedIso === $cIso)>{{ $cIso }} (+{{ $cDial }})</option>
+                            <option value="{{ $cIso }}" @selected($selectedIso === $cIso)>{{ $cIso }} (+{{ $cDial }})</option>
                         @endforeach
                     </select>
+
+                    <button type="button" x-ref="btn" class="field cc-btn items-center gap-2 text-left" aria-haspopup="listbox"
+                            :aria-expanded="open" aria-controls="{{ $idp }}-cc-list"
+                            :aria-label="'Country code: ' + current.name + ' (+' + current.dial + ')'"
+                            @click="toggle()" @keydown.arrow-down.prevent="show()" @keydown.arrow-up.prevent="show()">
+                        <img :src="flag(iso)" src="{{ $flagBase }}/{{ strtolower($selectedIso) }}.svg" alt="" width="24" height="18" class="h-[18px] w-6 shrink-0 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
+                        <span class="min-w-0 flex-1 truncate" x-text="current.iso + ' (+' + current.dial + ')'">{{ $selectedRow[2] }} (+{{ $selectedRow[1] }})</span>
+                        <x-icon name="chevron" class="h-4 w-4 shrink-0 text-ink/60" />
+                    </button>
+
+                    <ul id="{{ $idp }}-cc-list" x-ref="list" x-show="open" x-cloak tabindex="-1" role="listbox" aria-label="Country code"
+                        :aria-activedescendant="active >= 0 ? '{{ $idp }}-cc-' + list[active].iso : null"
+                        @keydown="key($event)"
+                        class="absolute left-0 top-full z-30 mt-1 max-h-64 w-72 max-w-[calc(100vw-3rem)] overflow-y-auto rounded-xl border border-sand-200 bg-white py-1 shadow-card focus:outline-none">
+                        @foreach ($countries as $i => [$cName, $cDial, $cIso])
+                            <li id="{{ $idp }}-cc-{{ $cIso }}" role="option" :aria-selected="iso === '{{ $cIso }}'"
+                                @click="choose('{{ $cIso }}')" @mousemove="active = {{ $i }}"
+                                :class="active === {{ $i }} ? 'bg-sand' : ''"
+                                class="flex cursor-pointer items-center gap-3 px-3 py-2 text-sm">
+                                <img src="{{ $flagBase }}/{{ strtolower($cIso) }}.svg" alt="" width="24" height="18" loading="lazy" class="h-[18px] w-6 shrink-0 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
+                                <span class="flex-1">{{ $cName }}</span>
+                                <span class="text-ink/60">+{{ $cDial }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
             </x-form-field>
             <x-form-field name="phone" label="Phone" type="tel" :idp="$idp" required autocomplete="tel-national" />
