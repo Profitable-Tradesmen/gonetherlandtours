@@ -1,6 +1,6 @@
 # Design system
 
-Everything visual is defined once in `resources/css/app.css` inside the `@theme` block (Tailwind v4 tokens). To re-skin for another brand, change that block (and the font imports at the top), the text wordmark in `resources/views/partials/logo.blade.php`, and the images.
+Everything visual is defined once in `resources/css/app.css` inside the `@theme` block (Tailwind v4 tokens). To re-skin for another brand, change that block (and the font imports at the top), the logo files `public/images/logo.webp` / `logo-2x.webp` (rendered by `resources/views/partials/logo.blade.php`; the supplied logo is navy and orange on white, so it sits on a white plate in the dark footer), and the images.
 
 ## Tokens (`@theme`)
 
@@ -46,7 +46,7 @@ Visible focus ring (gold), skip link, labelled controls, `aria-invalid` and `rol
 
 ## Re-skin checklist
 1. Edit tokens and fonts in `app.css`.
-2. Replace logo (Admin > Settings) or edit `partials/logo.blade.php`.
+2. Replace `public/images/logo.webp` + `logo-2x.webp` (or upload a logo in Admin > Settings).
 3. Replace images in `public/images/` (same filenames) and update IMAGE_CREDITS.md.
 4. Update `config/gnt.php`, the seeders (copy, FAQs, quiz) and `docs`.
 5. `npm run build`, run tests, run Lighthouse.

@@ -41,7 +41,7 @@ class Seo
             '@type' => 'TravelAgency',
             'name' => setting('brand_name', 'GoNetherlandTours'),
             'url' => url('/'),
-            'logo' => setting('logo') ? asset(setting('logo')) : null,
+            'logo' => asset(setting('logo') ?: 'images/logo.webp'),
             'telephone' => setting('phone'),
             'email' => setting('email'),
             'address' => setting('address') ? ['@type' => 'PostalAddress', 'streetAddress' => setting('address')] : null,

@@ -15,6 +15,7 @@ No licensed photography could be downloaded and verified during the build, so **
 | `public/images/dest-amsterdam.webp` | Destination page: Amsterdam & the Cities | Generated placeholder | Amsterdam canals |
 | `public/images/dest-tulips.webp` | Destination page: Tulips & Countryside | Generated placeholder | Tulip fields / windmill |
 | `public/images/dest-zeeland.webp` | Destination page: Zeeland & the Delta | Generated placeholder | Coastline |
+| `public/images/logo.webp` (900x135) and `logo-2x.webp` (1500x225) | Site logo (header, footer, structured data) | **Supplied by the client** (GoNetherlandTours wordmark), trimmed and converted to WebP. Not a stock image | Keep. Override in Admin > Settings if the logo changes |
 | `public/images/og-default.webp` (1200x630) | Default social share image | Generated placeholder | Branded 1200x630 share image |
 
 ## How to replace

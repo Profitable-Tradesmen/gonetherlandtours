@@ -6,7 +6,7 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 - [ ] Phone number (hidden everywhere until set; click-to-call depends on it)
 - [ ] Public email, address
 - [ ] Legal company name (currently "GoNetherlandTours", which flows into the consent text and legal pages)
-- [ ] Social links; logo and favicon (currently a text wordmark)
+- [ ] Social links; favicon (the logo is the supplied GoNetherlandTours wordmark)
 - [ ] Staff notification emails (no enquiry emails are sent until set)
 - [ ] Modal discount: "save up to **[CONFIRM: discount %]** on your trip". Only enter a discount the business will honour
 - [ ] Google Tag Manager ID; real reCAPTCHA keys; GHL token and location ID (in `.env`)

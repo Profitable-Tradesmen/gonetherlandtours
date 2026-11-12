@@ -1,5 +1,5 @@
 {{-- Sticky header: logo + nav (dropdowns for tour types and destinations) + mobile menu. $tourTypes/$destinations come from the layout. --}}
-<header class="sticky top-0 z-50 border-b border-sand-200 bg-white/95 backdrop-blur" x-data="{ menu: false, dd: null }" @keydown.escape.window="menu = false; dd = null">
+<header class="sticky top-0 z-50 border-b border-sand-200 bg-white" x-data="{ menu: false, dd: null }" @keydown.escape.window="menu = false; dd = null">
     <div class="container-site flex h-16 items-center justify-between gap-4">
         <a href="{{ route('home') }}">@include('partials.logo')</a>
 
