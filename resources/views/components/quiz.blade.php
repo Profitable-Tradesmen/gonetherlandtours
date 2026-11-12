@@ -25,6 +25,12 @@
                         @foreach ($step['options'] as $o)<option value="{{ $o['value'] }}">{{ $o['label'] }}</option>@endforeach
                     </select>
                     <button type="button" class="btn btn-primary btn-block mt-4" :disabled="!answers['{{ $step['key'] }}']" @click="next('{{ $step['key'] }}')">Next</button>
+                @elseif ($step['type'] === 'date')
+                    <label for="quiz-date-{{ $idx }}" class="sr-only">{{ $step['question'] }}</label>
+                    <input id="quiz-date-{{ $idx }}" type="date" min="{{ now()->toDateString() }}" class="field mt-4"
+                           x-model="answers['{{ $step['key'] }}']">
+                    <p class="mt-1 text-xs text-ink/60">An approximate date is fine.</p>
+                    <button type="button" class="btn btn-primary btn-block mt-4" :disabled="!answers['{{ $step['key'] }}']" @click="next('{{ $step['key'] }}')">Next</button>
                 @elseif ($step['type'] === 'text')
                     <label for="quiz-txt-{{ $idx }}" class="sr-only">{{ $step['question'] }}</label>
                     <input id="quiz-txt-{{ $idx }}" type="text" maxlength="60" class="field mt-4" placeholder="For example: April 2027, or flexible"

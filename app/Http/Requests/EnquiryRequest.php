@@ -40,7 +40,8 @@ class EnquiryRequest extends FormRequest
             'email' => ['required', 'email:rfc', 'max:190'],
             'country_code' => ['required', 'string', 'in:'.implode(',', array_column(config('gnt.countries'), 2))],
             'phone' => ['required', 'string', 'max:30', 'regex:/^[0-9+\-\s().]{5,30}$/'],
-            'travel_date' => ['nullable', 'string', 'max:60'],
+            'travel_date' => ['nullable', 'date'],   // calendar picker sends YYYY-MM-DD
+            'quiz.travel_date' => ['nullable', 'date'],
             // Rule::in (not the "in:" string form) because the option labels contain commas.
             'second_quote' => ['nullable', 'string', Rule::in(array_keys(config('gnt.second_quote_options')))],
             'special_request' => ['nullable', 'string', 'max:2000'],

@@ -73,7 +73,7 @@
             <x-form-field name="group_size" label="Number of travellers" :idp="$idp">
                 <select id="{{ $idp }}-group_size" name="group_size" class="field"><option value="">Select</option>@foreach ($opts('group_size') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
             </x-form-field>
-            <x-form-field name="travel_date" label="Preferred travel dates" :idp="$idp" hint="For example: April 2027" />
+            <x-form-field name="travel_date" label="Preferred travel dates" type="date" :min="now()->toDateString()" :idp="$idp" hint="An approximate date is fine." />
             <x-form-field name="travel_style" label="What is your favourite way to see a new country?" :idp="$idp" span>
                 <select id="{{ $idp }}-travel_style" name="travel_style" class="field"><option value="">Select</option>@foreach ($opts('travel_style') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
             </x-form-field>
@@ -107,7 +107,7 @@
         @endif
 
         @if ($variant === 'default')
-            <x-form-field name="travel_date" label="Preferred travel date (approx.)" :idp="$idp" :span="! $extra" hint="For example: April 2027" />
+            <x-form-field name="travel_date" label="Preferred travel date (approx.)" type="date" :min="now()->toDateString()" :idp="$idp" :span="! $extra" hint="An approximate date is fine." />
 
             <x-form-field name="second_quote" label="Would you like a second quote from a partner?" :idp="$idp" span>
                 <select id="{{ $idp }}-second_quote" name="second_quote" class="field">

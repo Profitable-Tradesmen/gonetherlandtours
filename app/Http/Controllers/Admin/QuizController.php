@@ -69,10 +69,10 @@ class QuizController extends Controller
 
     private function save(Request $request, QuizStep $step)
     {
-        $isText = $request->input('type') === 'text';   // free-text step: no options
+        $isText = in_array($request->input('type'), ['text', 'date']);   // no options for text/date steps
         $data = $request->validate([
             'question' => 'required|string|max:255',
-            'type' => 'required|in:tiles,select,text',
+            'type' => 'required|in:tiles,select,text,date',
             'key' => [$step->exists ? 'nullable' : 'required', 'regex:/^[a-z][a-z0-9_]{1,40}$/', 'unique:quiz_steps,key'],
             'options' => $isText ? 'nullable|array' : 'required|array|min:2|max:30',
             'options.*.label' => $isText ? 'nullable|string|max:120' : 'required|string|max:120',

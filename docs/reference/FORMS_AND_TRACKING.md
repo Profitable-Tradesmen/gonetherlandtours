@@ -12,7 +12,7 @@ Every form renders `resources/views/components/enquiry-form.blade.php` and posts
 | `modal` | Header pop-up (and the no-JS hero fallback) | Name, email, phone, destination, number of travellers, preferred travel dates, favourite way to travel, number of nights, **estimated budget per person (required)**, special request. Dropdown options for travellers, travel style, nights and budget are read from the quiz steps (Admin > Quiz), so both forms stay in sync. |
 | `default` | Contact page, package quote / question | The original field set below, including the second-quote question. |
 
-**Hero quiz steps (Admin > Quiz):** time of year, favourite way to travel, number of travellers (dropdown), preferred travel dates (text box; saved as the enquiry's travel date), nights (dropdown), flights booked, budget ($1K / $2K / $3K pp), likelihood (80% / 50/50 / just researching), then the contact step.
+**Hero quiz steps (Admin > Quiz):** time of year, favourite way to travel, number of travellers (dropdown), preferred travel dates (calendar date picker; saved as the enquiry's travel date), nights (dropdown), flights booked, budget ($1K / $2K / $3K pp), likelihood (80% / 50/50 / just researching), then the contact step.
 
 Fields (default variant): first name*, last name*, email*, country (ISO, stored as `+dial`), phone* (stored as E.164), preferred travel date, second-quote preference, special request; optional season / group size / nights; package ID and name on package forms; quiz answers as JSON.
 

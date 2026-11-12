@@ -23,7 +23,7 @@ class EnquiryTest extends TestCase
             'email' => 'Jane@Example.com',
             'country_code' => 'US',
             'phone' => '(415) 555-0132',
-            'travel_date' => 'April 2027',
+            'travel_date' => '2027-04-15',
             'second_quote' => 'Yes, please',
             'special_request' => 'Tulips please',
             'consent' => '1',
@@ -128,13 +128,13 @@ class EnquiryTest extends TestCase
     public function test_quiz_travel_dates_answer_fills_the_enquiry_travel_date(): void
     {
         $this->fakeRecaptcha();
-        $data = $this->payload(['form_name' => 'hero-quiz', 'quiz' => ['travel_date' => 'May 2027', 'group_size' => '2']]);
+        $data = $this->payload(['form_name' => 'hero-quiz', 'quiz' => ['travel_date' => '2027-05-20', 'group_size' => '2']]);
         unset($data['travel_date'], $data['second_quote']);
 
         $this->postJson('/enquiry', $data)->assertOk();
 
         $e = Enquiry::first();
-        $this->assertSame('May 2027', $e->travel_date);
+        $this->assertSame('2027-05-20', $e->travel_date);
         $this->assertSame('2', $e->quiz_answers['group_size']);
     }
 

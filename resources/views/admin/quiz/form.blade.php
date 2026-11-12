@@ -11,7 +11,7 @@
     <div class="grid gap-4 sm:grid-cols-2">
         <div><label class="field-label" for="key">Key (answer name, e.g. group_size)</label>
             @if ($step->exists)<input id="key" value="{{ $step->key }}" class="field bg-sand" disabled>@else<input id="key" name="key" value="{{ old('key') }}" class="field" required placeholder="lowercase_with_underscores">@endif</div>
-        <div><label class="field-label" for="type">Type</label><select id="type" name="type" class="field"><option value="tiles" @selected(old('type', $step->type) === 'tiles')>Tiles (click advances)</option><option value="select" @selected(old('type', $step->type) === 'select')>Dropdown (Next button)</option><option value="text" @selected(old('type', $step->type) === 'text')>Text box (Next button, no options)</option></select>
+        <div><label class="field-label" for="type">Type</label><select id="type" name="type" class="field"><option value="tiles" @selected(old('type', $step->type) === 'tiles')>Tiles (click advances)</option><option value="select" @selected(old('type', $step->type) === 'select')>Dropdown (Next button)</option><option value="date" @selected(old('type', $step->type) === 'date')>Calendar date picker (Next button, no options)</option><option value="text" @selected(old('type', $step->type) === 'text')>Text box (Next button, no options)</option></select>
             <p class="mt-1 text-xs text-ink/60">A step with key <code>travel_date</code> is saved as the enquiry's preferred travel date.</p></div>
     </div>
     <label class="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $step->is_active))> Active</label>
