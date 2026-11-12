@@ -100,7 +100,7 @@
             <x-form-field name="nights" label="Number of nights" :idp="$idp">
                 <select id="{{ $idp }}-nights" name="nights" class="field">
                     <option value="">Select (optional)</option>
-                    @foreach (range(3, 13) as $n)<option>{{ $n }}</option>@endforeach
+                    @foreach (range(1, 13) as $n)<option>{{ $n }}</option>@endforeach
                     <option>14+</option>
                 </select>
             </x-form-field>

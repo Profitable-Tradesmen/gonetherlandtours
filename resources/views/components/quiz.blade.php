@@ -53,15 +53,7 @@
 
         {{-- final step: contact details --}}
         <section x-show="onContact" x-cloak class="mt-4" x-ref="contactWrap" aria-labelledby="quiz-q-contact">
-            <h3 id="quiz-q-contact" class="font-display text-xl sm:text-2xl">Where should we send your quote?</h3>
-            <dl class="my-3 rounded-lg bg-sand p-3 text-xs leading-relaxed">
-                @foreach ($steps as $step)
-                    <div class="flex gap-2" x-show="answers['{{ $step['key'] }}']">
-                        <dt class="font-semibold">{{ \Illuminate\Support\Str::limit($step['question'], 38) }}</dt>
-                        <dd x-text="answers['{{ $step['key'] }}']"></dd>
-                    </div>
-                @endforeach
-            </dl>
+            <h3 id="quiz-q-contact" class="sr-only">Where should we send your quote?</h3>
             <x-enquiry-form form="hero-quiz" idp="quiz" variant="quiz" quiz-answers submit="Send My Quote Request" />
         </section>
 

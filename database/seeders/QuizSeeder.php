@@ -34,7 +34,7 @@ class QuizSeeder extends Seeder
             ['group_size', 'Number of travellers', 'select', array_merge($range(1, 9), [['10+', '10+', null]])],
             // type "date": calendar picker, saved as the enquiry's preferred travel date
             ['travel_date', 'Preferred travel dates', 'date', []],
-            ['nights', 'How many nights do you want to stay for?', 'select', array_merge($range(3, 13), [['14+', '14+', null]])],
+            ['nights', 'How many nights do you want to stay for?', 'select', array_merge($range(1, 13), [['14+', '14+', null]])],
             ['flights_booked', 'Have you flights booked?', 'tiles', [
                 ['Yes', 'Yes', 'yes'], ['No', 'No', 'no'],
             ]],
