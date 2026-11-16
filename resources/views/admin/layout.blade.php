@@ -16,7 +16,7 @@
     $nav = [
         ['admin.dashboard', 'Dashboard'], ['admin.enquiries.index', 'Enquiries'], ['admin.packages.index', 'Packages'],
         ['admin.tour-types.index', 'Tour types'], ['admin.destinations.index', 'Destinations'], ['admin.quiz.index', 'Quiz'],
-        ['admin.pages.index', 'Pages'], ['admin.faqs.index', 'FAQs'], ['admin.testimonials.index', 'Testimonials'],
+        ['admin.pages.index', 'Pages'], ['admin.faqs.index', 'FAQs'], ['admin.testimonials.index', 'Testimonials'], ['admin.blog.index', 'Blog'],
         ['admin.media.index', 'Media'], ['admin.settings', 'Settings'], ['admin.users.index', 'Admin users'],
     ];
 @endphp
@@ -26,7 +26,9 @@
         <nav class="space-y-1 text-sm" aria-label="Admin">
             @foreach ($nav as [$r, $label])
                 @continue(! auth("admin")->user()->canAccessRoute($r))
-                <a href="{{ route($r) }}" @class(['block rounded-lg px-3 py-2', 'bg-accent text-ink font-semibold' => request()->routeIs(Str::beforeLast($r, '.').'*') || request()->routeIs($r), 'hover:bg-white/10' => ! request()->routeIs(Str::beforeLast($r, '.').'*')])>{{ $label }}</a>
+                {{-- "admin.packages.index" is active for every "admin.packages.*" page; two-part names ("admin.dashboard", "admin.settings") match only themselves. --}}
+                @php $active = request()->routeIs(substr_count($r, '.') >= 2 ? Str::beforeLast($r, '.').'.*' : $r.'*'); @endphp
+                <a href="{{ route($r) }}" @class(['block rounded-lg px-3 py-2', 'bg-accent text-ink font-semibold' => $active, 'hover:bg-white/10' => ! $active])>{{ $label }}</a>
             @endforeach
             <a href="{{ url('/') }}" target="_blank" class="block rounded-lg px-3 py-2 text-white/70 hover:bg-white/10">View site &nearr;</a>
             <form method="POST" action="{{ route('admin.logout') }}">@csrf<button class="mt-4 w-full rounded-lg px-3 py-2 text-left text-white/70 hover:bg-white/10">Log out</button></form>

@@ -7,6 +7,7 @@ use App\Models\Package;
 use App\Models\TourType;
 use App\Support\Seo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PackageController extends Controller
 {
@@ -21,7 +22,6 @@ class PackageController extends Controller
             ->orderBy('sort_order')->get();
 
         $h1 = $type ? $type->name.' Tour Packages' : 'Netherlands Tour Packages';
-        $filtered = $type || $destination;
 
         return view('pages.packages-index', [
             'packages' => $packages,
@@ -37,6 +37,22 @@ class PackageController extends Controller
                 'breadcrumbs' => [['Home', url('/')], ['Packages', route('packages.index')]],
             ]),
         ]);
+    }
+
+    /** AJAX endpoint for the "Search by location" popup: returns an HTML fragment of matching packages (no page reload). */
+    public function search(Request $request)
+    {
+        $term = trim(Str::limit((string) $request->query('q', ''), 80, ''));
+        $like = '%'.addcslashes($term, '%_\\').'%';
+
+        $packages = $term === '' ? collect() : Package::published()->with(['tourType', 'destination', 'images'])
+            ->where(fn ($w) => $w
+                ->whereHas('destination', fn ($d) => $d->where('name', 'like', $like))
+                ->orWhere('title', 'like', $like)
+                ->orWhere('summary', 'like', $like))
+            ->orderBy('sort_order')->limit(12)->get();
+
+        return view('partials.package-search-results', ['packages' => $packages, 'term' => $term]);
     }
 
     public function show(Package $package)

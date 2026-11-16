@@ -12,7 +12,7 @@
         <tbody>
         @forelse ($items as $item)
             <tr class="border-t border-sand-200 align-top">
-                @foreach ($cfg['columns'] as $label => $attr)<td class="p-3">{{ \Illuminate\Support\Str::limit((string) $item->{$attr}, 80) }}@if ($loop->first && isset($item->is_active) && ! $item->is_active) <span class="ml-1 rounded bg-sand px-1.5 py-0.5 text-xs">inactive</span>@endif</td>@endforeach
+                @foreach ($cfg['columns'] as $label => $attr)<td class="p-3">{{ $item->{$attr} instanceof \Carbon\CarbonInterface ? $item->{$attr}->format('j M Y') : \Illuminate\Support\Str::limit((string) $item->{$attr}, 80) }}@if ($loop->first && isset($item->is_active) && ! $item->is_active) <span class="ml-1 rounded bg-sand px-1.5 py-0.5 text-xs">inactive</span>@endif</td>@endforeach
                 <td class="whitespace-nowrap p-3 text-right">
                     @if ($cfg['sortable'] ?? true)
                         <form class="inline" method="POST" action="{{ route($cfg['route'].'.move', [$item->id, 'up']) }}">@csrf<button class="px-1" title="Move up" aria-label="Move up">&uarr;</button></form>

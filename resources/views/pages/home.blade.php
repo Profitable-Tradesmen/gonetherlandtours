@@ -15,10 +15,6 @@
     ];
     // Visual journey reuses the traveller photos: [caption, subtitle, image, alt].
     $gallery = $travellers;
-    $journal = [
-        ['Guide 01', 'Beyond Amsterdam: five hidden gems worth the detour', 'Placeholder summary. Replace with a real guide to lesser-known Dutch towns and local secrets.', 'Guide_1', 'A quiet Dutch town square with a church tower in soft morning light'],
-        ['Guide 02', 'Why a small group changes the way you see the Netherlands', 'Placeholder summary. Replace with a real guide on flexible itineraries and personal attention.', 'Guide_2', 'A guide pointing out a canal view to a small group of travellers'],
-    ];
     $partners = ['Partner One', 'Partner Two', 'Partner Three', 'Partner Four', 'Partner Five', 'Partner Six'];
 @endphp
 
@@ -274,20 +270,20 @@
     </div>
 </section>
 
-{{-- TRAVEL JOURNAL (placeholder guides) --}}
+{{-- TRAVEL JOURNAL (latest blog posts, managed in Admin > Blog) --}}
+@if ($posts->isNotEmpty())
 <section class="bg-sand py-16 sm:py-24" aria-labelledby="journal">
     <div class="container-site">
         <x-section-heading eyebrow="Travel journal" title="Guides and inspiration" id="journal" />
         <x-slider class="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
-            @foreach ($journal as [$n, $title, $sum, $img, $alt])
-                <article class="overflow-hidden rounded-2xl bg-white shadow-card">
-                    <x-picture :src="'images/'.$img.'.webp'" :alt="$alt" :width="1600" :height="893" class="aspect-[3/2] w-full object-cover" />
-                    <div class="p-6"><p class="label-caps text-rust">{{ $n }}</p><h3 class="mt-2 text-xl font-medium">{{ $title }}</h3><p class="mt-2 text-sm text-ink/75">{{ $sum }}</p><p class="mt-3 text-sm font-bold text-brand-700">Read more (placeholder)</p></div>
-                </article>
+            @foreach ($posts as $post)
+                @include('partials.blog-card', ['post' => $post])
             @endforeach
         </x-slider>
+        <p class="mt-10 text-center"><x-button variant="secondary" :href="route('blog.index')">Read all articles</x-button></p>
     </div>
 </section>
+@endif
 
 {{-- FINAL CTA --}}
 <section class="relative isolate overflow-hidden py-20 text-center text-white sm:py-28" aria-labelledby="cta">

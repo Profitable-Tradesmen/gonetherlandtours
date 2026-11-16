@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogPost;
 use App\Models\Faq;
 use App\Models\Package;
 use App\Models\Page;
@@ -35,6 +36,7 @@ class PageController extends Controller
             'featured' => Package::published()->where('is_featured', true)->with(['tourType', 'images'])->orderBy('sort_order')->take(6)->get(),
             'testimonials' => Testimonial::active()->get(),
             'faqs' => $faqs,
+            'posts' => BlogPost::published()->limit(2)->get(),
             'seo' => $this->seoFor($page, ['jsonld' => $faqs->isNotEmpty() ? [Seo::faqPage($faqs->map->only('question', 'answer'))] : []]),
         ]);
     }

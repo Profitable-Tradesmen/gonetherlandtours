@@ -20,6 +20,7 @@
             <button type="button" class="{{ $navBtn }}" :class="dd === 'about' && 'bg-sand'" @click="dd = dd === 'about' ? null : 'about'" @mouseenter="dd = 'about'" :aria-expanded="dd === 'about'" aria-controls="mega-about">
                 About Us <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'about' && 'rotate-180'" />
             </button>
+            <a href="{{ route('blog.index') }}" class="{{ $navBtn }}" @mouseenter="dd = null">Blog</a>
             <a href="{{ route('contact') }}" class="{{ $navBtn }}" @mouseenter="dd = null">Contact</a>
         </nav>
 
@@ -92,6 +93,7 @@
             <p class="label-caps px-2 pt-3 text-rust">More</p>
             <a href="{{ route('packages.index') }}" class="block rounded px-2 py-2.5 hover:bg-sand">All packages</a>
             <a href="{{ route('about') }}" class="block rounded px-2 py-2.5 hover:bg-sand">About Us</a>
+            <a href="{{ route('blog.index') }}" class="block rounded px-2 py-2.5 hover:bg-sand">Blog</a>
             <a href="{{ route('contact') }}" class="block rounded px-2 py-2.5 hover:bg-sand">Contact</a>
             <button type="button" class="btn btn-primary mt-3 w-full" @click="menu = false; $store.modal.show()">Free Quote</button>
         </div>

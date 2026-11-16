@@ -6,7 +6,7 @@
     @csrf
     @if ($item->exists) @method('PUT') @endif
     @foreach ($cfg['fields'] as $f)
-        @php $n = $f['name']; $val = old($n, $item->{$n} ?? ($f['type'] === 'checkbox' && ! $item->exists ? true : null)); @endphp
+        @php $n = $f['name']; $val = old($n, $item->{$n} ?? ($f['type'] === 'checkbox' && ! $item->exists ? true : null)); if ($val instanceof \Carbon\CarbonInterface) { $val = $val->format('Y-m-d'); } @endphp
         <div>
             @if ($f['type'] === 'checkbox')
                 <label class="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="{{ $n }}" value="1" @checked($val)> {{ $f['label'] }}</label>
@@ -27,7 +27,7 @@
                 @elseif ($f['type'] === 'password')
                     <input id="f-{{ $n }}" type="password" name="{{ $n }}" autocomplete="new-password" class="field">
                 @else
-                    <input id="f-{{ $n }}" type="{{ $f['type'] === 'number' ? 'number' : 'text' }}" name="{{ $n }}" value="{{ $val }}" class="field">
+                    <input id="f-{{ $n }}" type="{{ in_array($f['type'], ['number', 'date'], true) ? $f['type'] : 'text' }}" name="{{ $n }}" value="{{ $val }}" class="field">
                 @endif
             @endif
         </div>

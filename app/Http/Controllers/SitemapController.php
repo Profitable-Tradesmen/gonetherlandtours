@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogPost;
 use App\Models\Destination;
 use App\Models\Package;
 use App\Models\Page;
@@ -10,7 +11,7 @@ class SitemapController extends Controller
 {
     public function sitemap()
     {
-        $urls = [[url('/'), now()], [route('packages.index'), now()]];
+        $urls = [[url('/'), now()], [route('packages.index'), now()], [route('blog.index'), now()]];
 
         $slugs = Page::whereIn('slug', ['about', 'contact', 'terms', 'privacy'])->where('noindex', false)->get();
         foreach ($slugs as $p) {
@@ -21,6 +22,10 @@ class SitemapController extends Controller
         }
         foreach (Package::published()->where('noindex', false)->get() as $p) {
             $urls[] = [route('packages.show', $p), $p->updated_at];
+        }
+
+        foreach (BlogPost::published()->where('noindex', false)->get() as $b) {
+            $urls[] = [route('blog.show', $b), $b->updated_at];
         }
 
         return response()->view('sitemap', ['urls' => $urls])->header('Content-Type', 'application/xml');

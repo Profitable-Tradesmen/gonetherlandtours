@@ -45,6 +45,47 @@ function resetCaptcha(el) {
 }
 
 /* ---------------------------------------------------------------
+ * Packages page: "Search by location" popup. Fetches an HTML fragment
+ * (packages.search) as the visitor types; no page reload.
+ * ------------------------------------------------------------- */
+Alpine.data('locationSearch', (url) => ({
+    open: false,
+    q: '',
+    html: '',
+    loading: false,
+    ctrl: null,
+
+    show() {
+        this.open = true;
+        this.run();
+        this.$nextTick(() => this.$refs.input && this.$refs.input.focus());
+    },
+
+    hide() {
+        this.open = false;
+    },
+
+    async run() {
+        if (this.ctrl) this.ctrl.abort(); // drop the previous in-flight request
+        this.ctrl = new AbortController();
+        this.loading = true;
+        try {
+            const res = await fetch(`${url}?q=${encodeURIComponent(this.q.trim())}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'text/html' },
+                signal: this.ctrl.signal,
+            });
+            if (!res.ok) throw new Error(String(res.status));
+            this.html = await res.text();
+            this.loading = false;
+        } catch (e) {
+            if (e.name === 'AbortError') return;
+            this.html = '<p class="py-6 text-center text-sm">Search is unavailable right now. Please try again.</p>';
+            this.loading = false;
+        }
+    },
+}));
+
+/* ---------------------------------------------------------------
  * Enquiry form: same behaviour for every form on the site.
  * Posts via fetch; the server is the source of truth for validation.
  * Without JavaScript the form posts normally (see EnquiryController).

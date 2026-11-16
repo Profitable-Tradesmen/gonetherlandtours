@@ -1,0 +1,32 @@
+name: Deploy live
+
+# Every push to `main` updates the LIVE Hostinger site over SSH. `dev` (staging) is handled by deploy-staging.yml.
+# Needs the LIVE_* secrets (GitHub > Settings > Secrets and variables > Actions). Use a GitHub Environment named
+# "production" with required reviewers if you want a manual approval before each live deploy.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-live
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy over SSH
+        env:
+          SSH_KEY: ${{ secrets.LIVE_SSH_KEY }}
+          SSH_HOST: ${{ secrets.LIVE_HOST }}
+          SSH_PORT: ${{ secrets.LIVE_PORT }}
+          SSH_USER: ${{ secrets.LIVE_USER }}
+          APP_PATH: ${{ secrets.LIVE_PATH }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "bash '$APP_PATH/deploy.sh'"

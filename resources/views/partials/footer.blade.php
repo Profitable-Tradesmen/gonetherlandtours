@@ -26,6 +26,7 @@
             <h2 class="label-caps text-accent !font-sans">Company</h2>
             <ul class="mt-4 space-y-2 text-sm">
                 <li><a href="{{ route('about') }}" class="hover:text-accent">About us</a></li>
+                <li><a href="{{ route('blog.index') }}" class="hover:text-accent">Blog</a></li>
                 <li><a href="{{ route('contact') }}" class="hover:text-accent">Contact</a></li>
                 <li><a href="{{ route('terms') }}" class="hover:text-accent">Terms and Conditions</a></li>
                 <li><a href="{{ route('privacy') }}" class="hover:text-accent">Privacy Policy</a></li>
