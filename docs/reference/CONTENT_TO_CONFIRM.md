@@ -30,7 +30,7 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 - [ ] Verify each answer: best time/tulip season dates, visa/entry rules for US travellers, US licence and IDP requirements, standard inclusions
 
 ## About / destinations
-- [ ] About page: company story, team, years in business (all `[CONFIRM]`)
+- [ ] About page (`resources/views/pages/about.blade.php`): search `[CONFIRM` in the view for support hours, accommodation standard, tulip season dates, quote inclusions and the reviews badge. Company story, team and years in business are not added. Newsletter and free-guide sections are omitted until a real form and guides exist
 - [ ] Destination pages: real guide copy (currently one-line summaries and `[CONFIRM: destination guide copy]`)
 
 ## Legal (Admin > Pages > Terms / Privacy): STARTER TEMPLATES, NOT LEGAL ADVICE

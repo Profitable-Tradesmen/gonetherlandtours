@@ -43,8 +43,8 @@ class PagesSeeder extends Seeder
             ],
             'about' => [
                 'title' => 'About Us', 'h1' => 'About GoNetherlandTours',
-                'seo_title' => 'About GoNetherlandTours | Netherlands Tour Specialists',
-                'meta_description' => 'Learn about GoNetherlandTours and how we plan tailor-made Netherlands tours.',
+                'seo_title' => 'About GoNetherlandTours | Netherlands Tour Specialists for US Travellers',
+                'meta_description' => 'Meet GoNetherlandTours. We plan tailor-made self drive, chauffeur driven and coach tours of the Netherlands for American travellers, from tulip season to Dutch cities and coast.',
                 'body' => '<p>[CONFIRM: company story, years in business, team. Sample text only.]</p><p>GoNetherlandTours plans self drive, chauffeur driven and coach tours of the Netherlands for American travellers.</p>',
             ],
             'contact' => [

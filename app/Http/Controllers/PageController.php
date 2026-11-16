@@ -43,7 +43,7 @@ class PageController extends Controller
     {
         $page = Page::bySlug('about');
 
-        return view('pages.content', ['page' => $page, 'seo' => $this->seoFor($page, ['breadcrumbs' => [['Home', url('/')], [$page->title, route('about')]]])]);
+        return view('pages.about', ['page' => $page, 'testimonials' => Testimonial::active()->get(), 'seo' => $this->seoFor($page, ['breadcrumbs' => [['Home', url('/')], [$page->title, route('about')]]])]);
     }
 
     public function contact()
