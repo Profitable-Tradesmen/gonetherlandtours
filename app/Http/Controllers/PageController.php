@@ -31,6 +31,7 @@ class PageController extends Controller
             'page' => $page,
             'quizSteps' => QuizStep::forQuiz(),
             'tourTypes' => TourType::active()->get(),
+            'destinations' => \App\Models\Destination::active()->get(),
             'featured' => Package::published()->where('is_featured', true)->with(['tourType', 'images'])->orderBy('sort_order')->take(6)->get(),
             'testimonials' => Testimonial::active()->get(),
             'faqs' => $faqs,

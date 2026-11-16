@@ -78,6 +78,11 @@
     .field-label { display: block; margin-bottom: .25rem; font-size: .8rem; font-weight: 600; }
     .field-error { margin-top: .25rem; font-size: .8rem; color: #9b2c15; font-weight: 600; }
 
+    /* Looping ticker (destinations, partners). Paused for reduced motion via the global rule above. */
+    .marquee { animation: marquee 40s linear infinite; }
+    .marquee:hover { animation-play-state: paused; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
     .prose-site { line-height: 1.75; }
     .prose-site h2 { font-size: 1.6rem; margin: 2rem 0 .75rem; }
     .prose-site h3 { font-size: 1.25rem; margin: 1.5rem 0 .5rem; }

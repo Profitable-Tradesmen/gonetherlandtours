@@ -20,9 +20,9 @@
 <div class="container-site grid gap-10 py-10 lg:grid-cols-[1.4fr_1fr] lg:py-14">
     <div class="min-w-0 space-y-10">
         @if ($cover)
-            <x-picture :media="$cover" :alt="$cover->alt" priority class="w-full rounded-2xl object-cover" sizes="(min-width:1024px) 60vw, 100vw" />
+            <x-picture :media="$cover" :alt="$cover->alt" priority class="aspect-[16/9] max-h-[26rem] w-full rounded-2xl object-cover" sizes="(min-width:1024px) 60vw, 100vw" />
         @else
-            <x-picture :src="$fallback" :alt="$package->tourType?->image_alt ?? ''" :width="960" :height="640" priority class="w-full rounded-2xl object-cover" />
+            <x-picture :src="$fallback" :alt="$package->tourType?->image_alt ?? ''" :width="960" :height="640" priority class="aspect-[16/9] max-h-[26rem] w-full rounded-2xl object-cover" />
         @endif
 
         @if ($package->description)<div class="prose-site">{!! clean_html($package->description) !!}</div>@endif

@@ -229,7 +229,9 @@ Alpine.data('countrySelect', (initial, list, flagBase) => ({
 /* Header modal */
 Alpine.store('modal', {
     open: false,
-    show() {
+    pkg: null, // {id, name} when opened from a package card, so the enquiry is tied to that package
+    show(pkg = null) {
+        this.pkg = pkg;
         this.open = true;
         window.dataLayer.push({ event: 'modal_open' });
     },

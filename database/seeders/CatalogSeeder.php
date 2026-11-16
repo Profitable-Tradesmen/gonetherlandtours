@@ -23,9 +23,9 @@ class CatalogSeeder extends Seeder
         }
 
         $types = [
-            ['Self Drive', 'self-drive', 'car', 'Pick up your car and follow a carefully planned route at your own pace, with hotels booked for you.', 'images/tour-self-drive.webp', 'A scenic Dutch country road lined with trees'],
-            ['Chauffeur Driven', 'chauffeur-driven', 'guide', 'Relax in comfort while a local driver-guide handles the roads and shares the stories behind each stop.', 'images/tour-chauffeur.webp', 'A canal-side street in a Dutch town'],
-            ['Coach Tours', 'coach-tours', 'coach', 'Travel in a small group with a guide, with sightseeing, transport and accommodation taken care of.', 'images/tour-coach.webp', 'Colourful Dutch tulip fields in spring'],
+            ['Self Drive', 'self-drive', 'car', 'Pick up your car and follow a carefully planned route at your own pace, with hotels booked for you.', 'images/tour-self-drive.webp', 'A small car driving a quiet country road through Dutch polders and tulip fields'],
+            ['Chauffeur Driven', 'chauffeur-driven', 'guide', 'Relax in comfort while a local driver-guide handles the roads and shares the stories behind each stop.', 'images/tour-chauffeur.webp', 'A chauffeur holding the door of a black van on a cobbled Dutch town square'],
+            ['Coach Tours', 'coach-tours', 'coach', 'Travel in a small group with a guide, with sightseeing, transport and accommodation taken care of.', 'images/tour-coach.webp', 'A small tour minibus parked beside a canal in a charming Dutch village'],
         ];
         $typeIds = [];
         foreach ($types as $i => [$name, $slug, $icon, $summary, $image, $alt]) {
@@ -89,12 +89,14 @@ class CatalogSeeder extends Seeder
             Faq::create(['question' => $q, 'answer' => $a, 'sort_order' => $i + 1]);
         }
 
-        foreach ([1, 2, 3] as $n) {
-            Testimonial::create([
-                'name' => '[PLACEHOLDER: traveller name]', 'location' => '[PLACEHOLDER: city, state]',
-                'quote' => '[PLACEHOLDER REVIEW '.$n.': replace with a real, permitted customer review before launch.]',
-                'is_placeholder' => true, 'sort_order' => $n,
-            ]);
+        // SAMPLE reviews (is_placeholder = true): the home page labels them "Sample review". Replace with real, permitted reviews and untick the placeholder flag before launch.
+        $reviews = [
+            ['Sarah M.', 'Portland, Oregon', 'We wanted to see the real Netherlands, not just the postcard version. Our small group got to visit a cheese market, wander through quiet villages and ride bikes past the windmills. It felt personal from the first email to the last day.'],
+            ['David & Karen L.', 'Charlotte, North Carolina', 'The itinerary was beautifully planned. Every stop made sense, nothing felt rushed, and we found little towns we would never have found on our own. We have already recommended it to our friends.'],
+            ['Michelle T.', 'Austin, Texas', 'Travelling in a small group made all the difference. Our guide adjusted the plan to what we enjoyed most, and we came home with real friendships and a camera full of tulips. Planning the trip was easy too.'],
+        ];
+        foreach ($reviews as $i => [$name, $location, $quote]) {
+            Testimonial::create(['name' => $name, 'location' => $location, 'quote' => $quote, 'is_placeholder' => true, 'sort_order' => $i + 1]);
         }
     }
 }

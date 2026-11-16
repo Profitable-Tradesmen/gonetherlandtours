@@ -30,6 +30,7 @@ See `docs/reference/LOCAL_XAMPP.md`. Short: `.env` from `.env.example`, DB `gone
 - Quiz steps/options are database driven (Admin > Quiz). Step `key` = answer name = GHL field `Quiz: <Key>`; avoid renaming keys once leads exist.
 - Sample packages (`is_sample`) are `noindex`, have no price (`[CONFIRM: price]`). Never invent business facts: use `[CONFIRM: ...]` and list it in `docs/reference/CONTENT_TO_CONFIRM.md`.
 - Legal pages are starter templates, not legal advice.
+- Home page (`pages/home.blade.php`) follows the Go Germany Tours reference layout in this palette: video hero + quiz, destination ticker, intro split, package tabs, feature band, tour types, video feature, traveller tiles, steps, reviews, gallery lightbox, partners, FAQ, journal, CTA. Videos use `<x-video name="homepage_banner|feature">`: drop `public/videos/{name}.mp4` to replace the poster placeholder. Journal/traveller/gallery/partner copy is placeholder inside the view.
 - Images: only free-for-commercial-use; credit in `IMAGE_CREDITS.md`. Currently all images are generated placeholders.
 - Admin: separate `admin` guard + `admin_users`; login throttled 5/min; cannot delete self or last admin. Admin first user comes from `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`.
 - `SITE_NOINDEX=true` (preview/staging only) forces noindex meta, `X-Robots-Tag` and `Disallow: /` robots.txt. Must be false on the live site. See `docs/reference/SHARING_PREVIEW.md`.

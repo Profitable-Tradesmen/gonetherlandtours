@@ -54,6 +54,7 @@
 
     {{-- Header modal enquiry form (reachable from every page) --}}
     <x-modal title="Start your adventure">
+        <p x-show="$store.modal.pkg" x-cloak class="mt-2 rounded-lg bg-sand px-3 py-2 text-sm font-semibold text-brand-700" x-text="'Package: ' + ($store.modal.pkg?.name ?? '')"></p>
         <p class="mt-1 text-sm text-ink/75">Fill out this form, save up to {{ setting('modal_discount', '[CONFIRM: discount %]') }} on your trip.</p>
         <div class="mt-4"><x-enquiry-form form="header-modal" idp="modal" variant="modal" submit="Send My Enquiry" /></div>
     </x-modal>

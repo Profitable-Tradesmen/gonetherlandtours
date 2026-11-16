@@ -19,7 +19,8 @@ class Media extends Model
         $widths = $this->widths ?: [];
         $w = $width && in_array($width, $widths) ? $width : (max($widths) ?: null);
 
-        return Storage::disk('public')->url($this->path.'-'.$w.'.webp');
+        // asset() follows the host the visitor is on, so images work on .test, 127.0.0.1:8000 and live alike (APP_URL need not match).
+        return asset('storage/'.$this->path.'-'.$w.'.webp');
     }
 
     public function srcset(): string

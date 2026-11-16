@@ -26,6 +26,11 @@
     <input type="hidden" name="form_name" value="{{ $form }}">
     <input type="hidden" name="_form_id" value="{{ $idp }}">
     <input type="hidden" name="page_url" value="{{ request()->fullUrl() }}">
+    @if ($variant === 'modal' && ! $package)
+        {{-- Filled when the pop-up is opened from a package card (Alpine.store('modal').pkg). --}}
+        <input type="hidden" name="package_id" :value="$store.modal.pkg?.id ?? ''">
+        <input type="hidden" name="package_name" :value="$store.modal.pkg?.name ?? ''">
+    @endif
     @if ($package)
         <input type="hidden" name="package_id" value="{{ $package->id }}">
         <input type="hidden" name="package_name" value="{{ $package->title }}">
