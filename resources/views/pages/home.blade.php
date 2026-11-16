@@ -98,11 +98,11 @@
                 <button type="button" role="tab" :aria-selected="tab === '{{ $t->slug }}'" class="btn w-full !px-3 !py-2 !text-[0.7rem] sm:w-auto sm:!px-6 sm:!text-[0.8rem]" :class="tab === '{{ $t->slug }}' ? 'btn-secondary' : 'btn-outline text-brand-700'" @click="tab = '{{ $t->slug }}'">{{ $t->name }}</button>
             @endforeach
         </div>
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($featured as $p)
                 <div x-show="tab === 'all' || tab === '{{ $p->tourType?->slug }}'" x-transition.opacity>@include('partials.package-card', ['package' => $p])</div>
             @endforeach
-        </div>
+        </x-slider>
         <p class="mt-10 text-center"><x-button variant="secondary" :href="route('packages.index')">See all packages</x-button></p>
     </div>
 </section>
@@ -133,7 +133,7 @@
 <section class="py-16 sm:py-24" aria-labelledby="tours">
     <div class="container-site">
         <x-section-heading eyebrow="Tour types" :title="$page->c('tours_heading')" id="tours" />
-        <div class="grid gap-6 md:grid-cols-3">
+        <x-slider class="grid gap-6 md:grid-cols-3">
             @foreach ($tourTypes as $i => $t)
                 <article class="group flex flex-col">
                     <div class="overflow-hidden rounded-2xl">
@@ -148,7 +148,7 @@
                     </p>
                 </article>
             @endforeach
-        </div>
+        </x-slider>
     </div>
 </section>
 
@@ -170,7 +170,7 @@
 <section class="bg-sand py-16 sm:py-24" aria-labelledby="trav">
     <div class="container-site">
         <x-section-heading eyebrow="Journeys by traveller" title="Find the journey that fits you" id="trav" />
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($travellers as $i => [$title, $blurb, $img, $alt])
                 <article class="relative isolate flex min-h-72 flex-col justify-end overflow-hidden rounded-2xl p-6 text-white shadow-card">
                     <x-picture :src="'images/'.$img.'.webp'" :alt="$alt" :width="2000" :height="1116" class="absolute inset-0 -z-20 h-full w-full object-cover" />
@@ -181,7 +181,7 @@
                     <button type="button" class="mt-3 self-start text-sm font-bold text-accent underline underline-offset-4" @click="$store.modal.show()">Plan this trip</button>
                 </article>
             @endforeach
-        </div>
+        </x-slider>
     </div>
 </section>
 
@@ -189,7 +189,7 @@
 <section class="py-16 sm:py-24" aria-labelledby="how">
     <div class="container-site">
         <x-section-heading eyebrow="Simple" :title="$page->c('how_heading')" id="how" />
-        <ol class="grid gap-8 md:grid-cols-3">
+        <x-slider tag="ol" class="grid gap-8 md:grid-cols-3">
             @foreach (data_get($page->content, 'steps', []) as $i => $s)
                 <li class="text-center">
                     <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brown font-display text-2xl text-accent">{{ $i + 1 }}</span>
@@ -197,7 +197,7 @@
                     <p class="mx-auto mt-2 max-w-xs text-sm text-ink/75">{{ $s['text'] }}</p>
                 </li>
             @endforeach
-        </ol>
+        </x-slider>
     </div>
 </section>
 
@@ -206,7 +206,7 @@
 <section class="bg-brand-900 py-16 text-white sm:py-24" aria-labelledby="reviews">
     <div class="container-site">
         <x-section-heading eyebrow="Reviews" :title="$page->c('testimonials_heading')" light id="reviews" />
-        <div class="grid gap-6 md:grid-cols-3">
+        <x-slider light class="grid gap-6 md:grid-cols-3">
             @foreach ($testimonials as $t)
                 <figure class="relative rounded-2xl bg-white/10 p-6 pt-10">
                     <span class="absolute left-5 top-1 font-display text-6xl leading-none text-accent" aria-hidden="true">&ldquo;</span>
@@ -214,7 +214,7 @@
                     <figcaption class="mt-4 text-sm font-semibold text-accent">@if ($t->is_placeholder)<span class="label-caps mb-2 block text-[0.65rem] text-white/60">Sample review</span>@endif {{ $t->name }}@if ($t->location), <span class="font-normal text-white/75">{{ $t->location }}</span>@endif</figcaption>
                 </figure>
             @endforeach
-        </div>
+        </x-slider>
     </div>
 </section>
 @endif
@@ -278,14 +278,14 @@
 <section class="bg-sand py-16 sm:py-24" aria-labelledby="journal">
     <div class="container-site">
         <x-section-heading eyebrow="Travel journal" title="Guides and inspiration" id="journal" />
-        <div class="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+        <x-slider class="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
             @foreach ($journal as [$n, $title, $sum, $img, $alt])
                 <article class="overflow-hidden rounded-2xl bg-white shadow-card">
                     <x-picture :src="'images/'.$img.'.webp'" :alt="$alt" :width="1600" :height="893" class="aspect-[3/2] w-full object-cover" />
                     <div class="p-6"><p class="label-caps text-rust">{{ $n }}</p><h3 class="mt-2 text-xl font-medium">{{ $title }}</h3><p class="mt-2 text-sm text-ink/75">{{ $sum }}</p><p class="mt-3 text-sm font-bold text-brand-700">Read more (placeholder)</p></div>
                 </article>
             @endforeach
-        </div>
+        </x-slider>
     </div>
 </section>
 

@@ -1,0 +1,11 @@
+@props(['tag' => 'div', 'light' => false])
+{{-- On phones the children become a swipe slider with dots; from sm up the classes you pass (grid...) apply as normal. --}}
+<div x-data="slider" class="min-w-0">
+    <{{ $tag }} x-ref="track" @scroll.passive="sync()" {{ $attributes->merge(['class' => 'slider']) }}>{{ $slot }}</{{ $tag }}>
+    <div class="mt-1 flex justify-center gap-2 sm:hidden" x-show="n > 1" x-cloak role="tablist" aria-label="Slides">
+        <template x-for="k in n" :key="k">
+            <button type="button" role="tab" :aria-selected="i === k - 1" :aria-label="'Go to slide ' + k" @click="go(k - 1)"
+                    class="h-2 rounded-full transition-all" :class="[i === k - 1 ? 'w-6 {{ $light ? 'bg-accent' : 'bg-brand-700' }}' : 'w-2 {{ $light ? 'bg-white/40' : 'bg-brand-700/25' }}']"></button>
+        </template>
+    </div>
+</div>

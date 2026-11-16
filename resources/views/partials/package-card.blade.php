@@ -14,12 +14,12 @@
             <x-picture :src="$fallback" :alt="$package->tourType?->image_alt ?? ''" :width="960" :height="640" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:aspect-[3/2] sm:h-auto" />
         @endif
         @if ($badge)
-            <span class="label-caps absolute left-0 top-3 whitespace-nowrap bg-accent px-3 py-1.5 text-[0.65rem] text-ink sm:left-auto sm:right-0 sm:top-4 sm:px-4 sm:text-xs">{{ $badge }}</span>
+            <span class="label-caps absolute left-0 top-3 max-w-[88%] bg-accent px-2.5 py-1.5 text-[0.6rem] leading-tight text-ink sm:left-auto sm:right-0 sm:top-4 sm:max-w-none sm:whitespace-nowrap sm:px-4 sm:text-xs">{{ $badge }}</span>
         @endif
     </a>
 
     <div class="flex flex-1 flex-col p-4 sm:p-6">
-        <p class="label-caps text-[0.68rem] text-accent sm:text-xs">{{ $package->nights }} night tour @if ($package->tourType)<span class="text-white/50">&nbsp;&middot;&nbsp;</span> {{ $package->tourType->name }}@endif</p>
+        <p class="label-caps text-[0.68rem] text-accent sm:text-xs">{{ $package->nights }} night tour @if ($package->tourType)<span class="hidden text-white/50 sm:inline">&nbsp;&middot;&nbsp;</span><span class="block sm:inline">{{ $package->tourType->name }}</span>@endif</p>
         <h3 class="mt-2 text-lg font-medium leading-snug text-white sm:text-2xl"><a href="{{ $url }}" class="hover:text-accent">{{ $package->title }}</a></h3>
         <p class="mt-3 hidden line-clamp-3 text-sm leading-relaxed text-white/80 sm:block">{{ $package->summary }}</p>
 

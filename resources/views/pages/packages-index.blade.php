@@ -26,9 +26,9 @@
         @if ($packages->isEmpty())
             <p class="rounded-xl bg-sand p-6 text-center">No packages match those filters yet. <a href="{{ route('packages.index') }}" class="font-semibold text-rust underline">Clear filters</a> or <a href="{{ route('contact') }}" class="font-semibold text-rust underline">ask us to build one for you</a>.</p>
         @else
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($packages as $p)@include('partials.package-card', ['package' => $p])@endforeach
-            </div>
+            </x-slider>
         @endif
     </div>
 </section>

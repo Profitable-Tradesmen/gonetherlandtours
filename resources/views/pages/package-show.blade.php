@@ -84,9 +84,9 @@
 <section class="bg-sand py-14 sm:py-20" aria-labelledby="related-h">
     <div class="container-site">
         <x-section-heading eyebrow="More {{ $package->tourType->name }}" title="Related tour packages" id="related-h" />
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($related as $rp)@include('partials.package-card', ['package' => $rp])@endforeach
-        </div>
+        </x-slider>
         <p class="mt-8 text-center"><a href="{{ route('packages.index') }}" class="btn btn-secondary">View all packages</a></p>
     </div>
 </section>

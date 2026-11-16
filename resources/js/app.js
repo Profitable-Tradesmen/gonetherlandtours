@@ -240,4 +240,37 @@ Alpine.store('modal', {
     },
 });
 
+// Mobile slider (see components/slider.blade.php): counts visible slides and tracks the current one for the dots.
+Alpine.data('slider', () => ({
+    n: 0,
+    i: 0,
+    slides() {
+        return [...this.$refs.track.children].filter((el) => el.style.display !== 'none');
+    },
+    init() {
+        this.$nextTick(() => this.sync());
+        // Slides can be filtered by the package tabs (x-show); recount when that changes.
+        new MutationObserver(() => this.sync()).observe(this.$refs.track, { attributes: true, attributeFilter: ['style'], subtree: true, childList: true });
+        window.addEventListener('resize', () => this.sync());
+    },
+    sync() {
+        const t = this.$refs.track;
+        const s = this.slides();
+        this.n = s.length;
+        if (!s.length) return;
+        const pos = t.scrollLeft;
+        let best = 0;
+        let min = Infinity;
+        s.forEach((el, k) => {
+            const d = Math.abs(el.offsetLeft - 16 - pos);
+            if (d < min) { min = d; best = k; }
+        });
+        this.i = pos + t.clientWidth >= t.scrollWidth - 4 ? s.length - 1 : best;
+    },
+    go(k) {
+        const el = this.slides()[k];
+        if (el) this.$refs.track.scrollTo({ left: el.offsetLeft - 16, behavior: 'smooth' });
+    },
+}));
+
 Alpine.start();
