@@ -22,6 +22,8 @@
                     <textarea id="f-{{ $n }}" name="{{ $n }}" rows="4" class="field">{{ $val }}</textarea>
                 @elseif ($f['type'] === 'rich')
                     <input id="f-{{ $n }}" type="hidden" name="{{ $n }}" value="{{ $val }}"><trix-editor input="f-{{ $n }}"></trix-editor>
+                @elseif ($f['type'] === 'select')
+                    <select id="f-{{ $n }}" name="{{ $n }}" class="field">@foreach ($f['options'] as $ov => $ol)<option value="{{ $ov }}" @selected(old($n, $item->exists ? $item->{$n} : ($f['default'] ?? null)) == $ov)>{{ $ol }}</option>@endforeach</select>
                 @elseif ($f['type'] === 'password')
                     <input id="f-{{ $n }}" type="password" name="{{ $n }}" autocomplete="new-password" class="field">
                 @else

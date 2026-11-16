@@ -44,6 +44,12 @@ class PackageController extends Controller
         abort_unless($package->is_published, 404);
         $package->load(['tourType', 'destination', 'images']);
 
+        // Related: only other published packages in the same category (tour type). No filler from other categories.
+        $related = $package->tour_type_id
+            ? Package::published()->with(['tourType', 'destination', 'images'])->whereKeyNot($package->id)
+                ->where('tour_type_id', $package->tour_type_id)->orderBy('sort_order')->limit(3)->get()
+            : collect();
+
         $cover = $package->images->first();
         $schema = array_filter([
             '@context' => 'https://schema.org',
@@ -62,6 +68,7 @@ class PackageController extends Controller
 
         return view('pages.package-show', [
             'package' => $package,
+            'related' => $related,
             'seo' => Seo::make([
                 'title' => $package->seo_title ?: $package->title.' | '.setting('brand_name', 'GoNetherlandTours'),
                 'description' => $package->meta_description ?: $package->summary,

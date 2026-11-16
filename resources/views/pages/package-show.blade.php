@@ -57,16 +57,38 @@
         @endif
     </div>
 
-    <aside class="lg:sticky lg:top-24 lg:self-start" aria-label="Get a quote">
-        <div id="quote" class="rounded-2xl border-4 border-accent bg-white p-5 shadow-card sm:p-6">
-            <p class="text-sm">From <strong class="font-display text-3xl">{{ $package->priceLabel() }}</strong> <span class="text-ink/60">per person</span></p>
-            <h2 class="mt-2 mb-4 text-xl font-medium">Get a free quote for this tour</h2>
-            <x-enquiry-form form="package-quote" idp="pkg-quote" :package="$package" extra submit="Get My Free Quote" />
+    <aside class="lg:sticky lg:top-28 lg:self-start" aria-label="Get a quote">
+        <div id="quote" class="rounded-2xl border border-sand-200 bg-white p-6 shadow-card">
+            <p class="label-caps text-xs text-ink/60">From</p>
+            <p class="font-display text-4xl font-medium text-brand-900">{{ $package->priceLabel() }}<span class="ml-1 text-sm font-semibold text-ink/60">per person</span></p>
+
+            <dl class="mt-5 divide-y divide-sand-200 border-y border-sand-200 text-sm">
+                <div class="flex justify-between py-2.5"><dt class="text-ink/60">Duration</dt><dd class="font-semibold">{{ $package->nights }} nights</dd></div>
+                @if ($package->tourType)<div class="flex justify-between py-2.5"><dt class="text-ink/60">Tour type</dt><dd class="font-semibold">{{ $package->tourType->name }}</dd></div>@endif
+                @if ($package->destination)<div class="flex justify-between py-2.5"><dt class="text-ink/60">Destination</dt><dd class="font-semibold">{{ $package->destination->name }}</dd></div>@endif
+            </dl>
+
+            <button type="button" class="btn btn-primary mt-5 w-full" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">Get a Free Quote</button>
+            <a href="{{ route('contact') }}" class="btn btn-outline mt-3 w-full text-brand-900">Ask Us a Question</a>
+
+            <ul class="mt-5 space-y-2 text-sm text-ink/80">
+                <li class="flex gap-2"><x-icon name="check" class="h-5 w-5 shrink-0 text-rust" />Free, no-obligation quote</li>
+                <li class="flex gap-2"><x-icon name="check" class="h-5 w-5 shrink-0 text-rust" />Tailored to your dates and group</li>
+                <li class="flex gap-2"><x-icon name="check" class="h-5 w-5 shrink-0 text-rust" />A travel specialist replies personally</li>
+            </ul>
         </div>
-        <details class="mt-4 rounded-2xl border border-sand-200 bg-white p-5">
-            <summary class="cursor-pointer font-semibold">Ask us a question about this tour</summary>
-            <div class="mt-4"><x-enquiry-form form="package-question" idp="pkg-question" :package="$package" submit="Ask Us a Question" /></div>
-        </details>
     </aside>
 </div>
+
+@if ($related->isNotEmpty())
+<section class="bg-sand py-14 sm:py-20" aria-labelledby="related-h">
+    <div class="container-site">
+        <x-section-heading eyebrow="More {{ $package->tourType->name }}" title="Related tour packages" id="related-h" />
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach ($related as $rp)@include('partials.package-card', ['package' => $rp])@endforeach
+        </div>
+        <p class="mt-8 text-center"><a href="{{ route('packages.index') }}" class="btn btn-secondary">View all packages</a></p>
+    </div>
+</section>
+@endif
 @endsection

@@ -32,6 +32,7 @@ See `docs/reference/LOCAL_XAMPP.md`. Short: `.env` from `.env.example`, DB `gone
 - Legal pages are starter templates, not legal advice.
 - Home page (`pages/home.blade.php`) follows the Go Germany Tours reference layout in this palette: video hero + quiz, destination ticker, intro split, package tabs, feature band, tour types, video feature, traveller tiles, steps, reviews, gallery lightbox, partners, FAQ, journal, CTA. Videos use `<x-video name="homepage_banner|feature">`: drop `public/videos/{name}.mp4` to replace the poster placeholder. Journal/traveller/gallery/partner copy is placeholder inside the view.
 - Images: only free-for-commercial-use; credit in `IMAGE_CREDITS.md`. Currently all images are generated placeholders.
+- Admin roles: `admin_users.role` = `admin` (full) or `editor` (content only: dashboard, enquiries, packages, tour types, destinations, pages, FAQs, testimonials, media). Enforced in `AdminAuthenticate` by route-name prefix (`AdminUser::EDITOR_AREAS`); a new admin area is administrators-only unless added there. Cannot demote self or the last admin.
 - Admin: separate `admin` guard + `admin_users`; login throttled 5/min; cannot delete self or last admin. Admin first user comes from `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`.
 - `SITE_NOINDEX=true` (preview/staging only) forces noindex meta, `X-Robots-Tag` and `Disallow: /` robots.txt. Must be false on the live site. See `docs/reference/SHARING_PREVIEW.md`.
 - Package routes bind by **slug** (`/admin/packages/{slug}/edit`).

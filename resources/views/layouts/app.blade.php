@@ -3,7 +3,7 @@
     $gtm = setting('gtm_id');
     $brand = setting('brand_name', 'GoNetherlandTours');
     $phone = setting('phone');
-    $tourTypes = \App\Models\TourType::active()->get();
+    $tourTypes = \App\Models\TourType::active()->with(['packages' => fn ($q) => $q->published()->orderBy('title')])->get();
     $destinations = \App\Models\Destination::active()->get();
 @endphp
 <!DOCTYPE html>
@@ -16,7 +16,10 @@
     <link rel="canonical" href="{{ $seo['canonical'] }}">
     @if ($seo['noindex'])<meta name="robots" content="noindex, nofollow">@else<meta name="robots" content="index, follow, max-image-preview:large">@endif
     <meta name="theme-color" content="#2F6285">
-    @if (setting('favicon'))<link rel="icon" href="{{ asset(setting('favicon')) }}">@else<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23437DA5'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23F2B743' font-family='Georgia' font-style='italic'%3Eg%3C/text%3E%3C/svg%3E">@endif
+    <link rel="icon" href="{{ asset("favicon.ico") }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset("images/favicon-32.png") }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset("images/favicon-192.png") }}">
+    <link rel="apple-touch-icon" href="{{ asset("images/apple-touch-icon.png") }}">
 
     <meta property="og:site_name" content="{{ $brand }}">
     <meta property="og:type" content="{{ $seo['type'] }}">

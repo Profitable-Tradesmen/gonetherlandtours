@@ -25,6 +25,7 @@
         <a href="{{ route('admin.dashboard') }}" class="mb-6 block font-display text-xl">{{ setting('brand_name', 'GoNetherlandTours') }}<span class="block text-xs font-sans text-white/60">Admin</span></a>
         <nav class="space-y-1 text-sm" aria-label="Admin">
             @foreach ($nav as [$r, $label])
+                @continue(! auth("admin")->user()->canAccessRoute($r))
                 <a href="{{ route($r) }}" @class(['block rounded-lg px-3 py-2', 'bg-accent text-ink font-semibold' => request()->routeIs(Str::beforeLast($r, '.').'*') || request()->routeIs($r), 'hover:bg-white/10' => ! request()->routeIs(Str::beforeLast($r, '.').'*')])>{{ $label }}</a>
             @endforeach
             <a href="{{ url('/') }}" target="_blank" class="block rounded-lg px-3 py-2 text-white/70 hover:bg-white/10">View site &nearr;</a>

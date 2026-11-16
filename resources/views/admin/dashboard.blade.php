@@ -10,8 +10,10 @@
 <div class="mt-8 flex flex-wrap gap-2 text-sm">
     <x-button :href="route('admin.packages.create')" variant="secondary" class="!py-2">New package</x-button>
     <x-button :href="route('admin.pages.edit', 1)" variant="secondary" class="!py-2">Edit home page</x-button>
+    @if (auth("admin")->user()->isAdmin())
     <x-button :href="route('admin.quiz.index')" variant="secondary" class="!py-2">Edit quiz</x-button>
     <x-button :href="route('admin.settings')" variant="secondary" class="!py-2">Site settings</x-button>
+    @endif
 </div>
 <h2 class="mt-10 font-display text-2xl">Recent enquiries</h2>
 <div class="mt-3 overflow-x-auto rounded-xl bg-white shadow-sm">

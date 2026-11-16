@@ -96,6 +96,9 @@ class SeoAndPagesTest extends TestCase
 
     public function test_packages_can_be_filtered(): void
     {
-        $this->get('/packages?type=coach-tours')->assertOk()->assertSee('Coach Tour')->assertDontSee('Sample: Tulip Season Self Drive');
+        $res = $this->get('/packages?type=coach-tours')->assertOk()->assertSee('Coach Tour');
+        // The header mega menu lists every package, so check only the page content below it.
+        $main = substr($res->getContent(), strpos($res->getContent(), '</header>'));
+        $this->assertStringNotContainsString('Sample: Tulip Season Self Drive', $main);
     }
 }
