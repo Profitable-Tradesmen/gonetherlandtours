@@ -315,3 +315,35 @@ Alpine.data('slider', () => ({
 }));
 
 Alpine.start();
+
+/* ---------------------------------------------------------------
+ * Scroll reveal: adds .is-in to [data-reveal] elements as they enter the
+ * viewport, then removes the attribute so hover transitions work again.
+ * Skipped (content shown immediately) without IntersectionObserver or
+ * when the visitor prefers reduced motion.
+ * ------------------------------------------------------------- */
+function initReveal() {
+    const els = [...document.querySelectorAll('[data-reveal]')];
+    if (!els.length) return;
+    const clean = (el) => {
+        el.removeAttribute('data-reveal');
+        el.classList.remove('is-in');
+        el.style.removeProperty('--d');
+    };
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(clean);
+        return;
+    }
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const el = e.target;
+            io.unobserve(el);
+            el.classList.add('is-in');
+            const delay = parseInt(el.style.getPropertyValue('--d'), 10) || 0;
+            setTimeout(() => clean(el), delay + 1000);
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach((el) => io.observe(el));
+}
+initReveal();

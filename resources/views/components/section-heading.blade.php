@@ -3,7 +3,7 @@
     @if ($eyebrow)
         <p class="label-caps mb-3 {{ $light ? 'text-accent' : 'text-rust' }}">{{ $eyebrow }}</p>
     @endif
-    <{{ $tag }} class="text-3xl sm:text-4xl lg:text-5xl font-medium {{ $light ? 'text-white' : 'text-ink' }}">{{ $title }}</{{ $tag }}>
+    <{{ $tag }} class="text-3xl sm:text-4xl lg:text-5xl font-medium {{ $light ? 'text-white' : 'text-ink' }}">{!! emphasize($title, $light ? 'text-accent' : 'text-rust') !!}</{{ $tag }}>
     @if ($subtitle)
         <p class="mt-4 text-base sm:text-lg {{ $light ? 'text-white/85' : 'text-ink/75' }}">{{ $subtitle }}</p>
     @endif

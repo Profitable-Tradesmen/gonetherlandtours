@@ -76,4 +76,52 @@ class BlogAndSearchTest extends TestCase
         // The original filter page is unchanged and still has the popup trigger
         $this->get('/packages')->assertOk()->assertSee('Alpha Journey')->assertSee('Beta Journey')->assertSee('Search by location')->assertSee('name="type"', false);
     }
+
+    public function test_home_gallery_can_be_toggled_from_the_admin(): void
+    {
+        $this->get('/')->assertSee('A glimpse of the'); // shown by default (original photos)
+
+        $this->login();
+        $home = \App\Models\Page::bySlug('home');
+        $payload = ['title' => $home->title, 'c' => ['show_gallery' => '0']];
+
+        $this->put('/admin/pages/'.$home->id, $payload)->assertSessionHasNoErrors();
+        $this->get('/')->assertOk()->assertDontSee('A glimpse of the')->assertSee('Frequently Asked Questions');
+
+        $payload['c']['show_gallery'] = '1';
+        $this->put('/admin/pages/'.$home->id, $payload);
+        $this->get('/')->assertSee('A glimpse of the');
+    }
+
+    public function test_home_gallery_content_is_editable_and_comes_after_testimonials(): void
+    {
+        $this->login();
+        $home = \App\Models\Page::bySlug('home');
+        $this->get('/admin/pages/'.$home->id.'/edit')->assertOk()->assertSee('Photo gallery section')->assertSee('gallery[items]', false);
+
+        $this->put('/admin/pages/'.$home->id, [
+            'title' => $home->title,
+            'c' => ['show_gallery' => '1'],
+            'gallery' => [
+                'eyebrow' => 'Our photos', 'title' => 'Custom Gallery Heading',
+                'items' => [
+                    ['caption' => 'Windmill dawn', 'alt' => 'A windmill at dawn', 'image' => 'images/families.webp'],
+                    ['caption' => 'No photo row', 'alt' => '', 'image' => ''],               // dropped: no photo
+                    ['caption' => 'Evil', 'alt' => 'x', 'image' => 'https://evil.test/a.jpg'], // rejected by validation
+                ],
+            ],
+        ])->assertSessionHasErrors('gallery.items.2.image');
+
+        $this->put('/admin/pages/'.$home->id, [
+            'title' => $home->title,
+            'c' => ['show_gallery' => '1'],
+            'gallery' => ['eyebrow' => 'Our photos', 'title' => 'Custom Gallery Heading', 'items' => [
+                ['caption' => 'Windmill dawn', 'alt' => 'A windmill at dawn', 'image' => 'images/families.webp'],
+                ['caption' => 'No photo row', 'alt' => '', 'image' => ''],
+            ]],
+        ])->assertSessionHasNoErrors();
+
+        $html = $this->get('/')->assertOk()->assertSee('Custom Gallery Heading')->assertSee('Windmill dawn')->assertDontSee('No photo row')->assertDontSee('A glimpse of the')->getContent();
+        $this->assertGreaterThan(strpos($html, 'What Travellers Say'), strpos($html, 'Custom Gallery Heading'), 'gallery is after the testimonials');
+    }
 }

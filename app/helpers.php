@@ -54,6 +54,14 @@ if (! function_exists('terms_version')) {
     }
 }
 
+if (! function_exists('emphasize')) {
+    /** Escape a heading and turn *word* into an italic accent word, e.g. "Planned around *you*". Safe for {!! !!}. */
+    function emphasize(?string $text, string $class = 'text-rust'): string
+    {
+        return preg_replace('/\*(.+?)\*/', '<em class="italic '.e($class).'">$1</em>', e((string) $text));
+    }
+}
+
 if (! function_exists('clean_html')) {
     /** Allow-list sanitiser for admin-entered rich text (Trix output). */
     function clean_html(?string $html): string

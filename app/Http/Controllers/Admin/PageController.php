@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Page;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -44,12 +45,52 @@ class PageController extends Controller
                 'c.why_heading' => 'nullable|string|max:120', 'c.tours_heading' => 'nullable|string|max:120', 'c.packages_heading' => 'nullable|string|max:120',
                 'c.how_heading' => 'nullable|string|max:120', 'c.testimonials_heading' => 'nullable|string|max:120', 'c.faq_heading' => 'nullable|string|max:120',
                 'c.cta_heading' => 'nullable|string|max:150', 'c.cta_text' => 'nullable|string|max:300',
+                'c.show_gallery' => 'nullable|boolean',
             ])['c'] ?? [];
-            $data['content'] = array_replace_recursive($page->content ?? [], $c);
+            // A hidden "0" input is always sent, so an unticked box saves false (never silently reverts to the "shown" default).
+            if (array_key_exists('show_gallery', $c)) {
+                $c['show_gallery'] = (bool) $c['show_gallery'];
+            }
+            $content = array_replace_recursive($page->content ?? [], $c);
+            if ($request->has('gallery')) {
+                $content['gallery'] = $this->buildGallery($request);
+            }
+            $data['content'] = $content;
         }
 
         $page->update($data);
 
         return back()->with('status', 'Page saved.');
+    }
+
+    /** Validate and store the home page gallery section (heading + a replaceable list of photos). */
+    private function buildGallery(Request $request): array
+    {
+        $g = $request->validate([
+            'gallery.eyebrow' => 'nullable|string|max:80',
+            'gallery.title' => 'nullable|string|max:150',
+            'gallery.items' => 'nullable|array|max:24',
+            'gallery.items.*.caption' => 'nullable|string|max:80',
+            'gallery.items.*.alt' => 'nullable|string|max:190',
+            // Existing photos are kept by path; only site images or uploaded media paths are accepted.
+            'gallery.items.*.image' => ['nullable', 'string', 'max:255', 'regex:#^(images|storage)/[A-Za-z0-9_./-]+$#'],
+            'gallery.items.*.image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:8192',
+        ])['gallery'] ?? [];
+
+        $items = [];
+        foreach (array_values($g['items'] ?? []) as $i => $it) {
+            $caption = trim((string) ($it['caption'] ?? ''));
+            $alt = trim((string) ($it['alt'] ?? '')) ?: $caption;
+            $image = $it['image'] ?? null;
+            if ($file = $request->file("gallery.items.$i.image_file")) {
+                $image = 'storage/'.app(ImageService::class)->store($file, $alt)->path.'-960.webp';
+            }
+            if (! $image) {
+                continue; // a row without a photo is dropped
+            }
+            $items[] = ['caption' => $caption, 'alt' => $alt, 'image' => $image];
+        }
+
+        return ['eyebrow' => trim((string) ($g['eyebrow'] ?? '')), 'title' => trim((string) ($g['title'] ?? '')) ?: 'A glimpse of the *real Netherlands*', 'items' => $items];
     }
 }

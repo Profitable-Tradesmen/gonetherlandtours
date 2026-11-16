@@ -92,6 +92,57 @@
     .prose-site a { color: var(--color-rust); text-decoration: underline; }
 }
 
+/*
+ * Motion. Scroll reveal: elements marked data-reveal="up|left|right|zoom" (optional --d delay) fade/slide in as they
+ * enter the viewport (see initReveal in app.js, which also removes the attribute afterwards so normal hover
+ * transitions come back). Only hidden when JavaScript runs (.js), so no-JS visitors see everything.
+ * Reduced-motion visitors skip it entirely.
+ */
+.js [data-reveal] { opacity: 0; transition: opacity .8s ease, transform .8s cubic-bezier(.22, .61, .36, 1); transition-delay: var(--d, 0ms); will-change: opacity, transform; }
+.js [data-reveal='up'] { transform: translateY(1.75rem); }
+.js [data-reveal='left'] { transform: translateX(-2.25rem); }
+.js [data-reveal='right'] { transform: translateX(2.25rem); }
+.js [data-reveal='zoom'] { transform: scale(.93); }
+.js [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* Page-load entrance for the hero (CSS only, works without JS). */
+.hero-in { animation: rise .9s cubic-bezier(.22, .61, .36, 1) both; animation-delay: var(--d, 0ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: none; } }
+
+/* Gentle ambient motion: a floating badge and a slow zoom on large background photos. */
+.float-slow { animation: float-slow 4.5s ease-in-out infinite; }
+@keyframes float-slow { 50% { transform: translateY(-6px); } }
+.kenburns { animation: kenburns 22s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes kenburns { to { transform: scale(1.08); } }
+
+/*
+ * Gallery pop-out: on devices with a real pointer, the hovered/focused photo grows, lifts above its neighbours and
+ * gets a deep shadow while the others dim slightly. Touch devices keep the tap-to-enlarge lightbox.
+ */
+.gallery-tile { transition: transform .45s cubic-bezier(.2, .8, .2, 1), box-shadow .45s ease, filter .45s ease; }
+@media (hover: hover) {
+    .gallery-grid:hover .gallery-tile:not(:hover):not(:focus-visible) { filter: brightness(.72) saturate(.85); transform: scale(.97); }
+    .gallery-tile:hover, .gallery-tile:focus-visible { transform: scale(1.08) translateY(-8px) rotate(-.6deg); z-index: 20; box-shadow: 0 35px 60px -18px rgb(12 13 17 / .6); }
+    .gallery-tile:nth-child(even):hover, .gallery-tile:nth-child(even):focus-visible { transform: scale(1.08) translateY(-8px) rotate(.6deg); }
+}
+
+/*
+ * Expanding photo panels (home "Journeys by traveller"). Below lg they are normal swipe/grid cards. From lg they form
+ * one row of tall panels: the hovered or focused one opens up, and the first one is open while nothing is hovered.
+ */
+@media (min-width: 1024px) {
+    .expand-strip { display: flex; gap: .75rem; height: 31rem; }
+    .expand-strip > .strip-panel { flex: 1 1 0; min-width: 0; min-height: 0; transition: flex .65s cubic-bezier(.2, .8, .2, 1); cursor: pointer; }
+    .expand-strip > .strip-panel:hover, .expand-strip > .strip-panel:focus-within { flex: 3.6 1 0; }
+    .expand-strip:not(:hover):not(:focus-within) > .strip-panel:first-child { flex: 3.6 1 0; }
+    .strip-title { font-size: 1.15rem; line-height: 1.2; transition: font-size .4s ease; }
+    .strip-panel:hover .strip-title, .strip-panel:focus-within .strip-title,
+    .expand-strip:not(:hover):not(:focus-within) > .strip-panel:first-child .strip-title { font-size: 1.75rem; }
+    .strip-more { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .5s ease, opacity .4s ease .1s; }
+    .strip-panel:hover .strip-more, .strip-panel:focus-within .strip-more,
+    .expand-strip:not(:hover):not(:focus-within) > .strip-panel:first-child .strip-more { max-height: 10rem; opacity: 1; }
+}
+
 /* Mobile slider: any grid wrapped in <x-slider> becomes a swipeable, snap-scrolling row below 640px (next card peeks in). */
 @media (max-width: 639.98px) {
     .slider { position: relative; display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 1rem; margin-inline: -1rem; padding: .25rem 1rem 1rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
