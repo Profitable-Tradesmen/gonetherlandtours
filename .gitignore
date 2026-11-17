@@ -26,3 +26,9 @@ Thumbs.db
 !/storage/app/public/.gitignore
 /public/media
 .claude/
+
+# SSH deploy keys must never be committed (keep them in ~/.ssh)
+live_deploy_key
+live_deploy_key.pub
+*_deploy_key
+*_deploy_key.pub
