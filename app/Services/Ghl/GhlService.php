@@ -16,20 +16,60 @@ class GhlService
 {
     public function enabled(): bool
     {
-        return filled(config('services.ghl.token')) && filled(config('services.ghl.location_id'));
+        return ghl_enabled();
     }
 
     private function http(): PendingRequest
     {
         return Http::baseUrl(config('services.ghl.base_url'))
-            ->withToken(config('services.ghl.token'))
+            ->withToken((string) ghl_token())
             ->withHeaders(['Version' => config('services.ghl.version')])
             ->acceptJson()->asJson()->timeout(20);
     }
 
     private function loc(): string
     {
-        return (string) config('services.ghl.location_id');
+        return (string) ghl_location_id();
+    }
+
+    /**
+     * Read-only health check for Admin > GoHighLevel. Tries each read scope on its own so a missing scope is named
+     * instead of failing the whole test. Creates nothing and sends no contact.
+     *
+     * @return array{checks:array<int,array{scope:string,label:string,required:bool,ok:bool,error:?string}>,location:?string,total:int,missing:array<int,string>}
+     */
+    public function diagnose(): array
+    {
+        $all = GhlFields::all();
+        $location = null;
+        $missing = [];
+
+        $probe = function (string $scope, string $label, bool $required, callable $call) {
+            try {
+                $call();
+
+                return ['scope' => $scope, 'label' => $label, 'required' => $required, 'ok' => true, 'error' => null];
+            } catch (\Throwable $e) {
+                $msg = str_replace((string) ghl_token(), '[token]', $e->getMessage());
+
+                return ['scope' => $scope, 'label' => $label, 'required' => $required, 'ok' => false, 'error' => \Illuminate\Support\Str::limit($msg, 200)];
+            }
+        };
+
+        $checks = [
+            $probe('locations.readonly', 'Read the sub-account name (optional)', false, function () use (&$location) {
+                $location = $this->checkLocation();
+            }),
+            $probe('locations/customFields.readonly', 'Read custom fields', true, function () use (&$missing, $all) {
+                $existing = $this->existingFields();
+                $missing = array_values(array_filter($all, fn ($n) => ! isset($existing[$n])));
+            }),
+            $probe('contacts.readonly', 'Read contacts (finds existing contacts)', true, function () {
+                $this->http()->get('/contacts/', ['locationId' => $this->loc(), 'limit' => 1])->throw();
+            }),
+        ];
+
+        return ['checks' => $checks, 'location' => $location, 'total' => count($all), 'missing' => $missing];
     }
 
     /** Check the token + location work. Returns the location name. */

@@ -21,8 +21,8 @@
         @endforeach
     </section>
     <section class="rounded-xl bg-white p-5 shadow-sm sm:p-7"><h2 class="font-display text-xl">GoHighLevel</h2>
-        <p class="mt-2 text-sm">Status: <strong>{{ ghl_enabled() ? 'ON (token and location ID found in .env)' : 'OFF (add GHL_API_TOKEN and GHL_LOCATION_ID to .env)' }}</strong></p>
-        <p class="mt-1 text-xs text-ink/60">The token is never shown or stored here. See docs/reference/GHL_INTEGRATION.md.</p></section>
+        <p class="mt-2 text-sm">Status: <strong>{{ ghl_enabled() ? 'ON (enquiries are sent to GoHighLevel)' : 'OFF (not connected or paused)' }}</strong></p>
+        <p class="mt-1 text-xs text-ink/60">Connect it, test it and create the custom fields in <a href="{{ route('admin.ghl') }}" class="underline">Admin > GoHighLevel</a>.</p></section>
     <x-button type="submit" variant="secondary">Save settings</x-button>
 </form>
 @endsection

@@ -2,7 +2,7 @@
 
 Every enquiry is saved first, then a queued job upserts the contact in GHL (API v2, `services.leadconnectorhq.com`, Private Integration Token). It never blocks or fails the enquiry.
 
-**The integration is OFF whenever `GHL_API_TOKEN` or `GHL_LOCATION_ID` is empty.** The token lives only in `.env` (never in code, git or the admin).
+**The integration is OFF** unless a token and Location ID exist and **Send enquiries to GoHighLevel** is ticked. Set them in **Admin > GoHighLevel** (administrators only; token encrypted with `APP_KEY` in the `settings` table; keys `ghl_token`, `ghl_location_id`, `ghl_enabled`). `GHL_API_TOKEN` / `GHL_LOCATION_ID` in `.env` remain a fallback when nothing is saved in the admin. Helpers: `ghl_token()`, `ghl_location_id()`, `ghl_enabled()`. Changing `APP_KEY` makes a saved token unreadable: re-enter it.
 
 ## Set up (one time)
 
@@ -14,16 +14,9 @@ Every enquiry is saved first, then a queued job upserts the contact in GHL (API 
    - `locations/customFields.write`
    - `locations.readonly` (used only by `ghl:test` to check the location)
 3. Copy the token (shown once). The **Location ID** is under **Settings > Business Profile** (or in the sub-account URL).
-4. Put them in `.env`:
-   ```
-   GHL_API_TOKEN=pit-xxxxxxxx
-   GHL_LOCATION_ID=xxxxxxxx
-   ```
-5. `php artisan config:clear`, then:
-   ```
-   php artisan ghl:test     # checks token + location, upserts then deletes a "GHL TEST" contact
-   php artisan ghl:setup    # creates every custom field below if missing (safe to re-run)
-   ```
+4. Open **Admin > GoHighLevel**, paste the Location ID and token, tick **Send enquiries to GoHighLevel** and **Save**.
+5. Click **Test connection** (read-only: checks token, Location ID and fields), then **Create missing custom fields** (safe to re-run).
+   CLI equivalents: `php artisan ghl:test` (also upserts then deletes a "GHL TEST" contact) and `php artisan ghl:setup`.
 
 ## What is sent
 

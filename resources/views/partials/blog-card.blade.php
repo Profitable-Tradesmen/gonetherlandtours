@@ -8,6 +8,6 @@
         @if ($post->label)<p class="label-caps text-rust">{{ $post->label }}</p>@endif
         <h3 class="mt-2 text-xl font-medium"><a href="{{ $url }}" class="hover:text-rust">{{ $post->title }}</a></h3>
         @if ($post->excerpt)<p class="mt-2 flex-1 text-sm text-ink/75">{{ $post->excerpt }}</p>@endif
-        <p class="mt-3 text-sm font-bold"><a href="{{ $url }}" class="text-brand-700 underline underline-offset-4 hover:text-rust" aria-label="Read more: {{ $post->title }}">Read more</a></p>
+        <p class="mt-3 text-sm font-bold"><a href="{{ $url }}" class="text-brand-700 underline underline-offset-4 hover:text-rust" >Read more<span class="sr-only"> about {{ $post->title }}</span></a></p>
     </div>
 </article>

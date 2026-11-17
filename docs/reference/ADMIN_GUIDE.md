@@ -28,7 +28,10 @@ FAQs on the home page also feed Google's FAQ rich results. Only publish **real**
 Upload images (resized and converted to WebP automatically). Alt text is required.
 
 ## Settings
-Brand name, **legal company name** (used in the consent wording), tagline, phone (click-to-call), email, address, social links, **staff notification emails**, the discount shown in the modal headline, **Google Tag Manager ID**, reCAPTCHA keys, default SEO, logo, favicon and social image. GoHighLevel shows ON/OFF here; its token is set in the `.env` file by a developer.
+Brand name, **legal company name** (used in the consent wording), tagline, phone (click-to-call), email, address, social links, **staff notification emails**, the discount shown in the modal headline, **Google Tag Manager ID**, reCAPTCHA keys, default SEO, logo, favicon and social image. GoHighLevel has its own page (below).
+
+## GoHighLevel (administrators only)
+Connect the CRM: paste the **Location ID** and **Private Integration token**, tick **Send enquiries to GoHighLevel**, **Save**, then **Test connection** (read-only) and **Create missing custom fields** (safe to repeat). The token is stored encrypted and only its last 4 characters are shown. Untick the box to pause the sync without losing credentials. New quiz steps need **Create missing custom fields** again.
 
 ## Admin users
 Add or remove people who can log in. You cannot delete yourself or the last admin. Leave the password blank when editing to keep it. Use long unique passwords.

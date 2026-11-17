@@ -347,3 +347,23 @@ function initReveal() {
     els.forEach((el) => io.observe(el));
 }
 initReveal();
+
+/* -------------------------------------------------------------
+ * Hero background video: the poster paints first (it is the LCP image);
+ * the 2 MB video is fetched only after the page has loaded, and never on
+ * phones, with Data Saver on, or when the visitor prefers reduced motion.
+ * ------------------------------------------------------------- */
+function initBgVideo() {
+    const videos = [...document.querySelectorAll('video[data-bg-video]')];
+    if (!videos.length) return;
+    const conn = navigator.connection || {};
+    if (conn.saveData || window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.matchMedia('(min-width: 768px)').matches) return;
+    const start = () => videos.forEach((v) => {
+        v.querySelectorAll('source[data-src]').forEach((s) => { s.src = s.dataset.src; });
+        v.load();
+        v.play().catch(() => {});
+    });
+    const later = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 3000 }) : setTimeout(start, 1500));
+    if (document.readyState === 'complete') later(); else window.addEventListener('load', later, { once: true });
+}
+initBgVideo();

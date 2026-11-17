@@ -11,7 +11,7 @@
     @else
         <picture>
             @if ($mobile)<source media="(max-width: 639px)" srcset="{{ asset($mobile) }}">@endif
-            <img src="{{ asset('images/GoNetherlandTours-trim.webp') }}" width="2067" height="525" alt="{{ $brand }}" class="h-8 w-auto sm:h-10 lg:h-[4.375rem]">
+            <img src="{{ asset(is_file(public_path('images/GoNetherlandTours-trim-600.webp')) ? 'images/GoNetherlandTours-trim-600.webp' : 'images/GoNetherlandTours-trim.webp') }}" width="2067" height="525" alt="{{ $brand }}" class="h-8 w-auto sm:h-10 lg:h-[4.375rem]">
         </picture>
     @endif
 </span>

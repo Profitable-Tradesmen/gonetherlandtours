@@ -80,7 +80,7 @@ Shared hosting cannot keep a worker running. The app schedules a short-lived wor
 
 1. Log in at `/admin`, change the password, fill **Settings** (company name, phone, email, GTM ID, notification emails, logo).
 2. Replace sample data and every `[CONFIRM: ...]` (see CONTENT_TO_CONFIRM.md); get the legal pages reviewed.
-3. Add GHL token and location ID to `.env`, `php artisan config:cache`, `php artisan ghl:test`, `php artisan ghl:setup`.
+3. Connect GHL in **Admin > GoHighLevel** (or set `GHL_API_TOKEN` / `GHL_LOCATION_ID` in `.env` as a fallback), then Test connection and Create missing custom fields.
 4. Submit a test enquiry on every form; check the email, admin inbox and GHL contact.
 5. Submit `https://yourdomain.com/sitemap.xml` in Google Search Console. Work through SEO_CHECKLIST.md.
 6. Force HTTPS in hPanel (SSL) so security headers and cookies behave.

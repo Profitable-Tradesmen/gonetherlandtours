@@ -38,7 +38,7 @@
         </div>
 
         <div class="mt-auto flex flex-col gap-3 pt-5 sm:flex-row-reverse sm:items-center sm:justify-between sm:pt-6">
-            <a href="{{ $url }}" class="label-caps text-xs text-white underline underline-offset-4 hover:text-accent">More info</a>
+            <a href="{{ $url }}" class="label-caps text-xs text-white underline underline-offset-4 hover:text-accent">More info<span class="sr-only"> about {{ $package->title }}</span></a>
             <button type="button" class="btn btn-primary w-full sm:w-auto" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">Get a Quote</button>
         </div>
     </div>

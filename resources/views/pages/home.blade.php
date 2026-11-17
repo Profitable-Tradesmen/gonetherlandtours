@@ -155,7 +155,7 @@
             <p class="mt-4 text-white/85">Windmills, tulip fields, cheese markets and hidden corners, seen the small-group way.</p>
         </div>
         <div class="relative overflow-hidden rounded-2xl shadow-card" x-data="{ playing: false }" data-reveal="zoom" style="--d:150ms">
-            <x-video name="homepage_banner" alt="Travellers walking along a canal-side street lined with historic houses" :background="false" class="aspect-video w-full object-cover" />
+            <x-video name="homepage_banner" poster="images/hero-video-poster.webp" alt="Travellers walking along a canal-side street lined with historic houses" :background="false" class="aspect-video w-full object-cover" />
         </div>
     </div>
 </section>
@@ -238,7 +238,7 @@
         <div x-show="open !== null" x-cloak class="fixed inset-0 z-[70] flex items-center justify-center bg-ink/90 p-4" @click="open = null" role="dialog" aria-modal="true" aria-label="Photo viewer">
             @foreach ($galItems as $i => $g)
                 <figure x-show="open === {{ $i }}" class="max-w-4xl" @click.stop>
-                    <img src="{{ asset($g['image']) }}" alt="{{ $g['alt'] ?? '' }}" class="max-h-[80vh] w-full rounded-xl object-contain">
+                    <img src="{{ asset($g['image']) }}" loading="lazy" decoding="async" alt="{{ $g['alt'] ?? '' }}" class="max-h-[80vh] w-full rounded-xl object-contain">
                     <figcaption class="mt-3 text-center text-sm text-white">{{ $g['caption'] ?? '' }}</figcaption>
                 </figure>
             @endforeach

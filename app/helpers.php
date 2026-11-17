@@ -90,10 +90,34 @@ if (! function_exists('recaptcha_secret_key')) {
     }
 }
 
+if (! function_exists('ghl_token')) {
+    /** GHL Private Integration token: saved in Admin > GoHighLevel (encrypted), else GHL_API_TOKEN in .env. */
+    function ghl_token(): ?string
+    {
+        $saved = setting('ghl_token');
+        if ($saved) {
+            try {
+                return \Illuminate\Support\Facades\Crypt::decryptString($saved);
+            } catch (\Throwable) {
+                // Unreadable (APP_KEY changed): fall back to .env.
+            }
+        }
+
+        return config('services.ghl.token') ?: null;
+    }
+}
+
+if (! function_exists('ghl_location_id')) {
+    function ghl_location_id(): ?string
+    {
+        return setting('ghl_location_id') ?: (config('services.ghl.location_id') ?: null);
+    }
+}
+
 if (! function_exists('ghl_enabled')) {
-    /** GoHighLevel sync is OFF unless both the token and location ID are set in .env. */
+    /** GoHighLevel sync is ON only when a token + Location ID exist AND it has not been paused in Admin > GoHighLevel. */
     function ghl_enabled(): bool
     {
-        return filled(config('services.ghl.token')) && filled(config('services.ghl.location_id'));
+        return setting('ghl_enabled', '1') !== '0' && filled(ghl_token()) && filled(ghl_location_id());
     }
 }
