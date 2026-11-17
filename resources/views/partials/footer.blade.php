@@ -18,7 +18,7 @@
         <nav aria-label="Tours">
             <h2 class="label-caps text-accent !font-sans">Tours</h2>
             <ul class="mt-4 space-y-2 text-sm">
-                @foreach ($tourTypes as $t)<li><a href="{{ route('packages.index', ['type' => $t->slug]) }}" class="hover:text-accent">{{ $t->name }}</a></li>@endforeach
+                @foreach ($tourTypes as $t)<li><a href="{{ route('tour-types.show', $t) }}" class="hover:text-accent">{{ $t->name }}</a></li>@endforeach
                 @foreach ($destinations as $d)<li><a href="{{ route('destinations.show', $d) }}" class="hover:text-accent">{{ $d->name }}</a></li>@endforeach
             </ul>
         </nav>
@@ -27,6 +27,8 @@
             <ul class="mt-4 space-y-2 text-sm">
                 <li><a href="{{ route('about') }}" class="hover:text-accent">About us</a></li>
                 <li><a href="{{ route('blog.index') }}" class="hover:text-accent">Blog</a></li>
+                <li><a href="{{ route('faq') }}" class="hover:text-accent">FAQ</a></li>
+                <li><a href="{{ route('testimonials') }}" class="hover:text-accent">Testimonials</a></li>
                 <li><a href="{{ route('contact') }}" class="hover:text-accent">Contact</a></li>
                 <li><a href="{{ route('terms') }}" class="hover:text-accent">Terms and Conditions</a></li>
                 <li><a href="{{ route('privacy') }}" class="hover:text-accent">Privacy Policy</a></li>

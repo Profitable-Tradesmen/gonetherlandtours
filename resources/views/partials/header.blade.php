@@ -4,8 +4,8 @@
     $aboutCards = [
         ['About Us', 'Who we are and how we plan your trip', route('about'), 'images/Intro_image_split.webp', 'A traditional Dutch canal house and windmill'],
         ['Contact', 'Talk to a travel specialist', route('contact'), 'images/Guide_1.webp', 'A travel specialist helping plan a Netherlands trip'],
-        ['Testimonials', 'What travellers say about us', route('home').'#reviews', 'images/couples.webp', 'A happy couple travelling in the Netherlands'],
-        ['FAQs', 'Answers to common questions', route('home').'#faq', 'images/feature_band.webp', 'Tulip fields stretching to the horizon'],
+        ['Testimonials', 'What travellers say about us', route('testimonials'), 'images/couples.webp', 'A happy couple travelling in the Netherlands'],
+        ['FAQs', 'Answers to common questions', route('faq'), 'images/feature_band.webp', 'Tulip fields stretching to the horizon'],
     ];
 @endphp
 <header class="sticky top-0 z-50 border-b-4 border-accent bg-white" x-data="{ menu: false, dd: null }" @keydown.escape.window="menu = false; dd = null" @mouseleave="dd = null">
@@ -37,7 +37,7 @@
         <div class="container-site grid gap-8 py-8 xl:grid-cols-3" style="grid-template-columns: repeat({{ max($tourTypes->count(), 1) }}, minmax(0, 1fr))">
             @foreach ($tourTypes as $t)
                 <div>
-                    <a href="{{ route('packages.index', ['type' => $t->slug]) }}" class="group block" @click="dd = null">
+                    <a href="{{ route('tour-types.show', $t) }}" class="group block" @click="dd = null">
                         <div class="overflow-hidden rounded-xl">
                             <x-picture :src="$t->image ?: 'images/tour-self-drive.webp'" :alt="$t->image_alt ?? ''" :width="960" :height="640" class="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                         </div>
@@ -49,7 +49,7 @@
                             <li><a href="{{ route('packages.show', $p) }}" class="flex items-center justify-between gap-3 py-2.5 hover:text-rust" @click="dd = null"><span>{{ $p->title }}</span><span class="shrink-0 text-xs text-ink/60">{{ $p->nights }} nights</span></a></li>
                         @endforeach
                     </ul>
-                    <a href="{{ route('packages.index', ['type' => $t->slug]) }}" class="label-caps mt-4 inline-flex items-center gap-2 text-xs text-rust hover:underline" @click="dd = null">View all {{ $t->name }} <x-icon name="arrow" class="h-4 w-4" /></a>
+                    <a href="{{ route('tour-types.show', $t) }}" class="label-caps mt-4 inline-flex items-center gap-2 text-xs text-rust hover:underline" @click="dd = null">View all {{ $t->name }} <x-icon name="arrow" class="h-4 w-4" /></a>
                 </div>
             @endforeach
         </div>
@@ -87,13 +87,15 @@
         <div class="container-site space-y-1 py-3 text-sm font-semibold">
             <a href="{{ route('home') }}" class="block rounded px-2 py-2.5 hover:bg-sand">Home</a>
             <p class="label-caps px-2 pt-3 text-rust">Tours</p>
-            @foreach ($tourTypes as $t)<a href="{{ route('packages.index', ['type' => $t->slug]) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $t->name }}</a>@endforeach
+            @foreach ($tourTypes as $t)<a href="{{ route('tour-types.show', $t) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $t->name }}</a>@endforeach
             <p class="label-caps px-2 pt-3 text-rust">Destinations</p>
             @foreach ($destinations as $d)<a href="{{ route('destinations.show', $d) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $d->name }}</a>@endforeach
             <p class="label-caps px-2 pt-3 text-rust">More</p>
             <a href="{{ route('packages.index') }}" class="block rounded px-2 py-2.5 hover:bg-sand">All packages</a>
             <a href="{{ route('about') }}" class="block rounded px-2 py-2.5 hover:bg-sand">About Us</a>
             <a href="{{ route('blog.index') }}" class="block rounded px-2 py-2.5 hover:bg-sand">Blog</a>
+            <a href="{{ route('faq') }}" class="block rounded px-2 py-2.5 hover:bg-sand">FAQ</a>
+            <a href="{{ route('testimonials') }}" class="block rounded px-2 py-2.5 hover:bg-sand">Testimonials</a>
             <a href="{{ route('contact') }}" class="block rounded px-2 py-2.5 hover:bg-sand">Contact</a>
             <button type="button" class="btn btn-primary mt-3 w-full" @click="menu = false; $store.modal.show()">Free Quote</button>
         </div>

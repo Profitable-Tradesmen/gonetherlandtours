@@ -55,6 +55,27 @@ class PageController extends Controller
         return view('pages.contact', ['page' => $page, 'seo' => $this->seoFor($page, ['breadcrumbs' => [['Home', url('/')], ['Contact', route('contact')]]])]);
     }
 
+    public function faq()
+    {
+        $faqs = Faq::active()->get();
+
+        return view('pages.faq', ['faqs' => $faqs, 'seo' => Seo::make([
+            'title' => 'Netherlands Tour FAQs | '.setting('brand_name', 'GoNetherlandTours'),
+            'description' => 'Answers to common questions about our Netherlands self drive, chauffeur driven and coach tours: when to go, what is included, driving and entry requirements.',
+            'breadcrumbs' => [['Home', url('/')], ['FAQ', route('faq')]],
+            'jsonld' => $faqs->isNotEmpty() ? [Seo::faqPage($faqs->map->only('question', 'answer'))] : [],
+        ])]);
+    }
+
+    public function testimonials()
+    {
+        return view('pages.testimonials', ['testimonials' => Testimonial::active()->get(), 'seo' => Seo::make([
+            'title' => 'Traveller Reviews | '.setting('brand_name', 'GoNetherlandTours'),
+            'description' => 'Read what travellers say about their Netherlands tours with '.setting('brand_name', 'GoNetherlandTours').'.',
+            'breadcrumbs' => [['Home', url('/')], ['Testimonials', route('testimonials')]],
+        ])]);
+    }
+
     public function legal(string $slug)
     {
         $page = Page::bySlug($slug);

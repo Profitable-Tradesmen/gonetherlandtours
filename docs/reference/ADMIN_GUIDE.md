@@ -13,7 +13,7 @@ Every form submission lands here. Use search, **Status**, **Source** and date fi
 - On the list: arrows reorder, **Duplicate** copies a package as a draft.
 
 ## Tour types and Destinations
-Tour types (Self Drive, Chauffeur Driven, Coach Tours) appear on the home page, the menu and package filters. Each active destination gets its own page (`/destinations/name`). You cannot delete one that still has packages.
+Tour types (Self Drive, Chauffeur Driven, Coach Tours) appear on the home page, the menu and package filters, and each active one has its own landing page (`/tours/slug`) with an editable heading, content, SEO title and meta description. Each active destination gets its own page (`/destinations/name`). You cannot delete one that still has packages.
 
 ## Quiz
 The hero quiz is built from these steps. Each step has a question, a type (**Tiles** advance when clicked; **Dropdown**, **Calendar date picker** and **Text box** have a Next button; a step with key `travel_date` is saved as the preferred travel date). The pop-up form reads its dropdown options (travellers, travel style, nights, budget) from the steps with those keys, so editing them here updates both forms and options (label, saved value, icon). Use the arrows to reorder, **Active/Off** to switch a step off, **Edit** to change options. The last "contact details" step is automatic. Avoid changing a step's **key** after leads exist; new steps need `php artisan ghl:setup` to create their GHL field.

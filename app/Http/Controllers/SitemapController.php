@@ -11,11 +11,14 @@ class SitemapController extends Controller
 {
     public function sitemap()
     {
-        $urls = [[url('/'), now()], [route('packages.index'), now()], [route('blog.index'), now()]];
+        $urls = [[url('/'), now()], [route('packages.index'), now()], [route('blog.index'), now()], [route('faq'), now()], [route('testimonials'), now()]];
 
         $slugs = Page::whereIn('slug', ['about', 'contact', 'terms', 'privacy'])->where('noindex', false)->get();
         foreach ($slugs as $p) {
             $urls[] = [route($p->slug), $p->updated_at];
+        }
+        foreach (\App\Models\TourType::active()->where('noindex', false)->get() as $t) {
+            $urls[] = [route('tour-types.show', $t), $t->updated_at];
         }
         foreach (Destination::active()->where('noindex', false)->get() as $d) {
             $urls[] = [route('destinations.show', $d), $d->updated_at];

@@ -6,6 +6,7 @@ use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\TourTypeController;
 use Illuminate\Support\Facades\Route;
 
 // Public site (all server-rendered)
@@ -16,6 +17,9 @@ Route::get('/packages/{package:slug}', [PackageController::class, 'show'])->name
 Route::get('/destinations/{destination:slug}', [DestinationController::class, 'show'])->name('destinations.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/tours/{tourType:slug}', [TourTypeController::class, 'show'])->name('tour-types.show');
+Route::get('/faq', [PageController::class, 'faq'])->name('faq');
+Route::get('/testimonials', [PageController::class, 'testimonials'])->name('testimonials');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/terms-and-conditions', fn () => app(PageController::class)->legal('terms'))->name('terms');

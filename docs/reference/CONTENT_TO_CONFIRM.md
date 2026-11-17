@@ -17,6 +17,12 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 - [ ] Why us: "[CONFIRM: team background]", "[CONFIRM: support hours]"
 - [ ] No statistics, awards, star ratings, review counts, years in business or licence/bonding numbers have been added. Add only verified ones.
 
+## Tour type pages (Admin > Tour types)
+- [ ] Self Drive, Chauffeur Driven and Coach Tours each have a page at `/tours/slug`: replace the "[CONFIRM: ... page copy]" text, SEO title and meta description
+
+## About page: Meet the team (`resources/views/pages/about.blade.php`)
+- [ ] 3 placeholder team cards ("[CONFIRM: team member n name]", role, bio): replace with real people and photos, or remove the section
+
 ## Testimonials (Admin > Testimonials)
 - [ ] 3 placeholder reviews ("[PLACEHOLDER REVIEW n ...]") to replace with real, permitted reviews (or remove the section)
 

@@ -29,7 +29,7 @@ class CatalogSeeder extends Seeder
         ];
         $typeIds = [];
         foreach ($types as $i => [$name, $slug, $icon, $summary, $image, $alt]) {
-            $typeIds[$slug] = TourType::create(compact('name', 'slug', 'icon', 'summary', 'image') + ['image_alt' => $alt, 'sort_order' => $i + 1])->id;
+            $typeIds[$slug] = TourType::create(compact('name', 'slug', 'icon', 'summary', 'image') + ['h1' => $name.' Netherlands Tours', 'body' => '<p>[CONFIRM: '.e($name).' page copy. Sample text only.]</p><p>'.e($summary).'</p>', 'image_alt' => $alt, 'sort_order' => $i + 1])->id;
         }
 
         $dests = [
