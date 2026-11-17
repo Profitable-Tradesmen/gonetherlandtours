@@ -12,7 +12,7 @@ Every enquiry is saved first, then a queued job upserts the contact in GHL (API 
    - `contacts.write`
    - `locations/customFields.readonly`
    - `locations/customFields.write`
-   - `locations.readonly` (used only by `ghl:test` to check the location)
+   - `locations.readonly` (optional: only shows the sub-account name in the test)
 3. Copy the token (shown once). The **Location ID** is under **Settings > Business Profile** (or in the sub-account URL).
 4. Open **Admin > GoHighLevel**, paste the Location ID and token, tick **Send enquiries to GoHighLevel** and **Save**.
 5. Click **Test connection** (read-only: checks token, Location ID and fields), then **Create missing custom fields** (safe to re-run).

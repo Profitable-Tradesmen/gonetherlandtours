@@ -56,13 +56,23 @@ class GhlController extends Controller
         if (blank(ghl_token()) || blank(ghl_location_id())) {
             return redirect()->route('admin.ghl')->withErrors(['ghl' => 'Save a Location ID and an API token first.']);
         }
-        try {
-            $r = $ghl->diagnose();
-        } catch (\Throwable $e) {
-            return redirect()->route('admin.ghl')->withErrors(['ghl' => 'Connection failed: '.$this->safeMessage($e)]);
+        $r = $ghl->diagnose();
+        $failed = array_values(array_filter($r['checks'], fn ($c) => ! $c['ok'] && $c['required']));
+        if ($failed) {
+            $scopes = implode(', ', array_column($failed, 'scope'));
+            $detail = (string) $failed[0]['error'];
+            $hint = str_contains($detail, '401') || str_contains($detail, 'scope')
+                ? 'In GoHighLevel open Settings > Private Integrations, edit this integration, tick the missing scope(s), save, then test again. If it still fails, create a new token and paste it here.'
+                : 'Check the Location ID and token, then test again.';
+
+            return redirect()->route('admin.ghl')->withErrors(['ghl' => 'Connection failed. Missing or rejected: '.$scopes.'. '.$hint.' GoHighLevel said: '.$detail]);
         }
 
-        $msg = 'Connected to "'.$r['location'].'". ';
+        $optional = array_values(array_filter($r['checks'], fn ($c) => ! $c['ok']));
+        $msg = $r['location'] ? 'Connected to "'.$r['location'].'". ' : 'Connected. ';
+        if ($optional) {
+            $msg .= '(Optional scope '.implode(', ', array_column($optional, 'scope')).' is not ticked, so the sub-account name is not shown. Syncing is not affected.) ';
+        }
         $msg .= $r['missing']
             ? count($r['missing']).' of '.$r['total'].' custom fields are missing. Click "Create missing custom fields". Missing: '.implode(', ', array_slice($r['missing'], 0, 8)).(count($r['missing']) > 8 ? ', ...' : '').'.'
             : 'All '.$r['total'].' custom fields exist.';

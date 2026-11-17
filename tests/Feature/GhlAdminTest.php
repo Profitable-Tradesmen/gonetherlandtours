@@ -82,12 +82,42 @@ class GhlAdminTest extends TestCase
         Http::fake([
             'services.leadconnectorhq.com/locations/LOC1/customFields*' => Http::response(['customFields' => [['id' => 'a', 'name' => GhlFields::core('travel_date')]]]),
             'services.leadconnectorhq.com/locations/LOC1' => Http::response(['location' => ['name' => 'Acme Tours']]),
+            'services.leadconnectorhq.com/contacts/*' => Http::response(['contacts' => []]),
         ]);
 
         $this->post('/admin/ghl/test')->assertRedirect(route('admin.ghl'))->assertSessionHas('status', fn ($s) => str_contains($s, 'Acme Tours') && str_contains($s, 'missing'));
 
         Http::assertNotSent(fn (Request $r) => $r->method() !== 'GET');
         Http::assertSent(fn (Request $r) => $r->hasHeader('Authorization', 'Bearer pit-secret-dec1'));
+    }
+
+    public function test_missing_optional_location_scope_does_not_fail_the_test(): void
+    {
+        $this->login();
+        $this->save();
+        Cache::flush();
+        Http::fake([
+            'services.leadconnectorhq.com/locations/LOC1/customFields*' => Http::response(['customFields' => []]),
+            'services.leadconnectorhq.com/locations/LOC1' => Http::response(['statusCode' => 401, 'message' => 'The token is not authorized for this scope.'], 401),
+            'services.leadconnectorhq.com/contacts/*' => Http::response(['contacts' => []]),
+        ]);
+
+        $this->post('/admin/ghl/test')->assertSessionHasNoErrors()->assertSessionHas('status', fn ($s) => str_contains($s, 'locations.readonly') && str_contains($s, 'Syncing is not affected'));
+    }
+
+    public function test_missing_required_scope_is_named(): void
+    {
+        $this->login();
+        $this->save();
+        Cache::flush();
+        Http::fake([
+            'services.leadconnectorhq.com/locations/LOC1/customFields*' => Http::response(['customFields' => []]),
+            'services.leadconnectorhq.com/locations/LOC1' => Http::response(['location' => ['name' => 'A']]),
+            'services.leadconnectorhq.com/contacts/*' => Http::response(['statusCode' => 401, 'message' => 'The token is not authorized for this scope.'], 401),
+        ]);
+
+        $this->post('/admin/ghl/test')->assertSessionHasErrors('ghl');
+        $this->assertStringContainsString('contacts.readonly', session('errors')->first('ghl'));
     }
 
     public function test_failed_connection_shows_error_without_leaking_token(): void

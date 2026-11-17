@@ -65,7 +65,7 @@
         <summary class="cursor-pointer font-display text-xl">How to get the Location ID and token</summary>
         <ol class="mt-4 list-decimal space-y-2 pl-5 text-sm">
             <li>In GoHighLevel open the sub-account, then <strong>Settings &gt; Private Integrations &gt; Create new integration</strong>. Name it "{{ setting('brand_name', 'GoNetherlandTours') }} website".</li>
-            <li>Tick these scopes: <code>contacts.readonly</code>, <code>contacts.write</code>, <code>locations/customFields.readonly</code>, <code>locations/customFields.write</code>, <code>locations.readonly</code>.</li>
+            <li>Tick these scopes: <code>contacts.readonly</code>, <code>contacts.write</code>, <code>locations/customFields.readonly</code>, <code>locations/customFields.write</code>. Optional: <code>locations.readonly</code> (only shows the sub-account name in the test).</li>
             <li>Create it and copy the token (it is shown once). Paste it in the API token box above.</li>
             <li>The <strong>Location ID</strong> is under <strong>Settings &gt; Business Profile</strong>, or in the sub-account URL after <code>/location/</code>.</li>
             <li>Click <strong>Save</strong>, then <strong>Test connection</strong>, then <strong>Create missing custom fields</strong>.</li>
