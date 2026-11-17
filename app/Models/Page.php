@@ -2,15 +2,27 @@
 
 namespace App\Models;
 
+use App\Support\Sections;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
+/**
+ * A page of the site: SEO fields plus an ordered list of sections (see App\Support\Sections) edited in Admin > Pages.
+ * sections = [['id' => 'ab12cd34', 'type' => 'faq', 'visible' => true, 'data' => [...]], ...]
+ */
 class Page extends Model
 {
     protected $guarded = [];
 
+    /** URL paths that custom pages may not use (they belong to the app). */
+    public const RESERVED = ['admin', 'packages', 'destinations', 'tours', 'blog', 'enquiry', 'thank-you', 'sitemap.xml', 'robots.txt', 'storage', 'build', 'images', 'videos', 'login', 'up', 'about', 'contact', 'faq', 'testimonials', 'home', 'terms-and-conditions', 'privacy-policy'];
+
+    /** System pages that live at a fixed URL. */
+    private const FIXED_URLS = ['home' => '/', 'about' => '/about', 'contact' => '/contact', 'faq' => '/faq', 'testimonials' => '/testimonials', 'terms' => '/terms-and-conditions', 'privacy' => '/privacy-policy'];
+
     protected function casts(): array
     {
-        return ['content' => 'array', 'noindex' => 'boolean'];
+        return ['content' => 'array', 'sections' => 'array', 'noindex' => 'boolean', 'is_published' => 'boolean', 'is_system' => 'boolean'];
     }
 
     public static function bySlug(string $slug): self
@@ -18,40 +30,39 @@ class Page extends Model
         return static::where('slug', $slug)->firstOrFail();
     }
 
-    /** The original hard-coded gallery. Used until an admin saves their own (and to pre-fill the admin form). */
-    public static function defaultGallery(): array
+    /** Path of this page on the site, e.g. "/about" or "/my-custom-page". */
+    public function path(): string
     {
-        return [
-            'eyebrow' => 'Visual journey',
-            'title' => 'A glimpse of the *real Netherlands*',
-            'items' => [
-                ['caption' => 'First-time visitors', 'image' => 'images/first_time_visitors.webp', 'alt' => 'Amsterdam canal houses and a canal boat on a bright morning'],
-                ['caption' => 'Couples', 'image' => 'images/couples.webp', 'alt' => 'A couple dining at a candle-lit canal-side restaurant at dusk'],
-                ['caption' => 'Families', 'image' => 'images/families.webp', 'alt' => 'A family cycling past a windmill and green fields'],
-                ['caption' => 'Culture lovers', 'image' => 'images/culture_lovers.webp', 'alt' => 'A market vendor stacking wheels of Gouda cheese'],
-                ['caption' => 'Off the beaten path', 'image' => 'images/off_the_beaten_path.webp', 'alt' => 'A quiet, empty Dutch harbour village with colourful boats in morning mist'],
-                ['caption' => 'Special occasions', 'image' => 'images/special_occasions.webp', 'alt' => 'A table set with champagne on a terrace overlooking a canal at sunset'],
-            ],
-        ];
+        return self::FIXED_URLS[$this->slug] ?? '/'.$this->slug;
     }
 
-    /** Gallery settings as saved in Admin > Pages > Home (falls back to the defaults until first saved). */
-    public function gallery(): array
+    public function url(): string
     {
-        $saved = data_get($this->content, 'gallery');
-
-        return is_array($saved) ? $saved + self::defaultGallery() : self::defaultGallery();
+        return url($this->path());
     }
 
-    /** Should the home page show the gallery? Shown by default; ticked off in the admin = hidden; also hidden when it has no photos. */
-    public function showGallery(): bool
+    /** @return array<int,array{id:string,type:string,visible:bool,data:array}> */
+    public function allSections(): array
     {
-        return (bool) data_get($this->content, 'show_gallery', true) && ! empty($this->gallery()['items']);
+        return array_values(array_filter((array) $this->sections, fn ($s) => is_array($s) && isset($s['id'], $s['type']) && Sections::definition($s['type'])));
     }
 
-    /** Fetch a structured content value (home page copy) with a fallback. */
-    public function c(string $key, string $default = ''): string
+    /** Visible sections with their data completed from the defaults, ready for the views. */
+    public function visibleSections(): array
     {
-        return (string) data_get($this->content, $key, $default);
+        return collect($this->allSections())
+            ->filter(fn ($s) => $s['visible'] ?? true)
+            ->map(fn ($s) => ['id' => $s['id'], 'type' => $s['type'], 'd' => Sections::resolve($s['type'], (array) ($s['data'] ?? []))])
+            ->values()->all();
+    }
+
+    public function hasSection(string $type): bool
+    {
+        return collect($this->visibleSections())->contains('type', $type);
+    }
+
+    public static function newSectionId(): string
+    {
+        return Str::lower(Str::random(8));
     }
 }

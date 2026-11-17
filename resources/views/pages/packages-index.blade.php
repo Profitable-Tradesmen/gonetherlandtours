@@ -5,7 +5,7 @@
     <div class="container-site">
         <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/70"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>Packages</span></nav>
         <h1 class="text-4xl font-medium sm:text-5xl">{{ $h1 }}</h1>
-        <p class="mt-3 max-w-2xl text-white/85">Browse our Netherlands tour packages and request a free, tailored quote.</p>
+        <p class="mt-3 max-w-2xl text-white/85">{{ text('packages_intro') }}</p>
     </div>
 </section>
 

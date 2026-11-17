@@ -19,7 +19,17 @@ Tour types (Self Drive, Chauffeur Driven, Coach Tours) appear on the home page, 
 The hero quiz is built from these steps. Each step has a question, a type (**Tiles** advance when clicked; **Dropdown**, **Calendar date picker** and **Text box** have a Next button; a step with key `travel_date` is saved as the preferred travel date). The pop-up form reads its dropdown options (travellers, travel style, nights, budget) from the steps with those keys, so editing them here updates both forms and options (label, saved value, icon). Use the arrows to reorder, **Active/Off** to switch a step off, **Edit** to change options. The last "contact details" step is automatic. Avoid changing a step's **key** after leads exist; new steps need `php artisan ghl:setup` to create their GHL field.
 
 ## Pages
-Edit the **Home** page text, **About**, **Contact**, **Terms and Conditions** and **Privacy Policy** (rich text editor). Each has an SEO title, meta description and a noindex switch. Terms/Privacy have a **Version**: raise it whenever you change the text (it is saved with each enquiry). Type `[Company Name]` in legal text to insert the company name. **The legal pages are starter templates, not legal advice. Get them reviewed.**
+Every page is built from **sections**. Open **Admin > Pages**, choose a page, and you see its sections in the order visitors see them:
+
+- **Edit** opens a form for that section: headings, text, buttons, photos (upload and describe each photo), and lists such as cards, steps, badges or gallery photos (use **+ Add**, the arrows and **Remove**). In headings, wrap a word in asterisks (`*word*`) to show it in the italic accent colour. A button link left blank opens the quote pop-up.
+- **Arrows** reorder sections, **Hide / Show** takes a section off the page without deleting it, **Delete** removes it.
+- **Add a section** picks a type (hero, text, photo band, cards, steps, testimonials, FAQ, gallery, team, contact form...). Each type has a short description.
+- **Add page** (top of the Pages list) creates a new page at `/page-name`. It starts as a **draft**: build its sections, click the green **Publish this page** button at the top of the page editor (it turns into a green "LIVE" box). Draft pages are not public and not in the sitemap. Built-in pages (Home, About, Contact, FAQ, Testimonials, Terms, Privacy) keep their addresses and cannot be deleted.
+- Each page has an SEO title, meta description and a *hide from search engines* switch. Terms and Privacy have a **version**: raise it when you change the legal text (it is stored with each enquiry).
+- Packages, destinations, tour types, FAQs, testimonials and blog posts are managed in their own menu items; sections such as the FAQ list and testimonials show them automatically.
+
+## Navigation (administrators only)
+**Admin > Navigation** controls the header menu and the footer links. Add a *Normal link* (a page path like `/about`, a full `https://` address or `#section`), the automatic *Tours menu* (built from Tour types), or a *Dropdown of cards*: create the dropdown, then add cards by choosing it as the parent (each card has a title, short description, link and image). The arrows reorder items within their menu. The wording around the menus (top bar, buttons, mobile menu, footer headings) is in **Settings**.
 
 ## FAQs and Testimonials
 FAQs on the home page also feed Google's FAQ rich results. Only publish **real** reviews you have permission to use, and untick *placeholder* for them.
@@ -28,7 +38,7 @@ FAQs on the home page also feed Google's FAQ rich results. Only publish **real**
 Upload images (resized and converted to WebP automatically). Alt text is required.
 
 ## Settings
-Brand name, **legal company name** (used in the consent wording), tagline, phone (click-to-call), email, address, social links, **staff notification emails**, the discount shown in the modal headline, **Google Tag Manager ID**, reCAPTCHA keys, default SEO, logo, favicon and social image. GoHighLevel has its own page (below).
+Besides the brand details below, Settings holds the **wording used around the site** (top bar, header and menu buttons, mobile menu and bar, quote pop-up, quiz title, thank-you page, footer headings): edit the text, or clear a box to hide that element. Brand name, **legal company name** (used in the consent wording), tagline, phone (click-to-call), email, address, social links, **staff notification emails**, the discount shown in the modal headline, **Google Tag Manager ID**, reCAPTCHA keys, default SEO, logo, favicon and social image. GoHighLevel has its own page (below).
 
 ## GoHighLevel (administrators only)
 Connect the CRM: paste the **Location ID** and **Private Integration token**, tick **Send enquiries to GoHighLevel**, **Save**, then **Test connection** (read-only) and **Create missing custom fields** (safe to repeat). The token is stored encrypted and only its last 4 characters are shown. Untick the box to pause the sync without losing credentials. New quiz steps need **Create missing custom fields** again.

@@ -4,93 +4,187 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Page;
-use App\Services\ImageService;
+use App\Support\Sections;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
+/** Admin > Pages: create pages, edit their SEO, and build them from sections (each section has its own edit form). */
 class PageController extends Controller
 {
     public function index()
     {
-        return view('admin.pages.index', ['pages' => Page::orderBy('id')->get()]);
+        return view('admin.pages.index', ['pages' => Page::orderByDesc('is_system')->orderBy('id')->get()]);
+    }
+
+    public function create()
+    {
+        return view('admin.pages.create');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:190',
+            'slug' => ['nullable', 'string', 'max:120', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
+        ]);
+        $slug = $this->uniqueSlug(Str::slug($data['slug'] ?? '' ?: $data['title']));
+
+        $page = Page::create([
+            'slug' => $slug, 'title' => $data['title'], 'h1' => $data['title'], 'is_system' => false, 'is_published' => false,
+            'sections' => [
+                $this->newSection('page_header'),
+                $this->newSection('rich_text', ['html' => '<p>Write your page content here.</p>']),
+            ],
+        ]);
+
+        return redirect()->route('admin.pages.edit', $page)->with('status', 'Page created as a draft. Edit its sections, then click the green "Publish this page" button at the top.');
     }
 
     public function edit(Page $page)
     {
-        return view('admin.pages.edit', ['page' => $page]);
+        return view('admin.pages.edit', ['page' => $page, 'types' => Sections::all()]);
     }
 
     public function update(Request $request, Page $page)
     {
-        $data = $request->validate([
+        $rules = [
             'title' => 'required|string|max:190',
             'h1' => 'nullable|string|max:190',
             'seo_title' => 'nullable|string|max:190',
             'meta_description' => 'nullable|string|max:320',
-            'body' => 'nullable|string',
             'version' => 'nullable|string|max:20',
-        ]);
+        ];
+        if (! $page->is_system) {
+            $rules['slug'] = ['required', 'string', 'max:120', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::notIn(Page::RESERVED), Rule::unique('pages', 'slug')->ignore($page->id)];
+        }
+        $data = $request->validate($rules, ['slug.not_in' => 'That address is used by the site itself. Choose another.', 'slug.regex' => 'Use lower-case letters, numbers and hyphens only.']);
         $data['noindex'] = $request->boolean('noindex');
-        if (array_key_exists('body', $data)) {
-            $data['body'] = clean_html($data['body']);
+        if ($page->is_system) {
+            unset($data['slug']);
         }
         if (! in_array($page->slug, ['terms', 'privacy'])) {
             unset($data['version']);
         }
-
-        if ($page->slug === 'home') {
-            $c = $request->validate([
-                'c.hero_sub' => 'nullable|string|max:400', 'c.badges' => 'nullable|array|max:3', 'c.badges.*' => 'nullable|string|max:80',
-                'c.why' => 'nullable|array|max:4', 'c.why.*.title' => 'nullable|string|max:100', 'c.why.*.text' => 'nullable|string|max:300',
-                'c.steps' => 'nullable|array|max:3', 'c.steps.*.title' => 'nullable|string|max:100', 'c.steps.*.text' => 'nullable|string|max:300',
-                'c.why_heading' => 'nullable|string|max:120', 'c.tours_heading' => 'nullable|string|max:120', 'c.packages_heading' => 'nullable|string|max:120',
-                'c.how_heading' => 'nullable|string|max:120', 'c.testimonials_heading' => 'nullable|string|max:120', 'c.faq_heading' => 'nullable|string|max:120',
-                'c.cta_heading' => 'nullable|string|max:150', 'c.cta_text' => 'nullable|string|max:300',
-                'c.show_gallery' => 'nullable|boolean',
-            ])['c'] ?? [];
-            // A hidden "0" input is always sent, so an unticked box saves false (never silently reverts to the "shown" default).
-            if (array_key_exists('show_gallery', $c)) {
-                $c['show_gallery'] = (bool) $c['show_gallery'];
-            }
-            $content = array_replace_recursive($page->content ?? [], $c);
-            if ($request->has('gallery')) {
-                $content['gallery'] = $this->buildGallery($request);
-            }
-            $data['content'] = $content;
-        }
-
         $page->update($data);
 
         return back()->with('status', 'Page saved.');
     }
 
-    /** Validate and store the home page gallery section (heading + a replaceable list of photos). */
-    private function buildGallery(Request $request): array
+    /** Publish a draft page or take a live custom page back to draft. Built-in pages are always live. */
+    public function togglePublish(Page $page)
     {
-        $g = $request->validate([
-            'gallery.eyebrow' => 'nullable|string|max:80',
-            'gallery.title' => 'nullable|string|max:150',
-            'gallery.items' => 'nullable|array|max:24',
-            'gallery.items.*.caption' => 'nullable|string|max:80',
-            'gallery.items.*.alt' => 'nullable|string|max:190',
-            // Existing photos are kept by path; only site images or uploaded media paths are accepted.
-            'gallery.items.*.image' => ['nullable', 'string', 'max:255', 'regex:#^(images|storage)/[A-Za-z0-9_./-]+$#'],
-            'gallery.items.*.image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:8192',
-        ])['gallery'] ?? [];
+        abort_if($page->is_system, 404);
+        $page->update(['is_published' => ! $page->is_published]);
 
-        $items = [];
-        foreach (array_values($g['items'] ?? []) as $i => $it) {
-            $caption = trim((string) ($it['caption'] ?? ''));
-            $alt = trim((string) ($it['alt'] ?? '')) ?: $caption;
-            $image = $it['image'] ?? null;
-            if ($file = $request->file("gallery.items.$i.image_file")) {
-                $image = 'storage/'.app(ImageService::class)->store($file, $alt)->path.'-960.webp';
-            }
-            if (! $image) {
-                continue; // a row without a photo is dropped
-            }
-            $items[] = ['caption' => $caption, 'alt' => $alt, 'image' => $image];
+        return back()->with('status', $page->is_published ? 'Page published. It is now live at '.$page->url() : 'Page unpublished. It is a draft again and hidden from visitors.');
+    }
+
+    public function destroy(Page $page)
+    {
+        if ($page->is_system) {
+            return back()->withErrors(['delete' => 'Built-in pages cannot be deleted. Unpublish or hide their sections instead.']);
+        }
+        $page->delete();
+
+        return redirect()->route('admin.pages.index')->with('status', 'Page deleted.');
+    }
+
+    // ---- sections -------------------------------------------------------------------------------------------
+
+    public function addSection(Request $request, Page $page)
+    {
+        $type = $request->validate(['type' => ['required', Rule::in(array_keys(Sections::all()))]])['type'];
+        $sections = $page->allSections();
+        $section = $this->newSection($type);
+        $sections[] = $section;
+        $page->update(['sections' => $sections]);
+
+        return redirect()->route('admin.pages.sections.edit', [$page, $section['id']])->with('status', 'Section added. Fill it in and save.');
+    }
+
+    public function editSection(Page $page, string $section)
+    {
+        [$i, $s] = $this->find($page, $section);
+
+        return view('admin.pages.section', [
+            'page' => $page, 'section' => $s, 'def' => Sections::definition($s['type']),
+            'data' => Sections::resolve($s['type'], (array) ($s['data'] ?? [])),
+        ]);
+    }
+
+    public function updateSection(Request $request, Page $page, string $section)
+    {
+        [$i, $s] = $this->find($page, $section);
+        $sections = $page->allSections();
+        $sections[$i]['data'] = Sections::sanitize($s['type'], $request);
+        $page->update(['sections' => $sections]);
+
+        return redirect()->route('admin.pages.edit', $page)->with('status', 'Section saved.');
+    }
+
+    public function moveSection(Page $page, string $section, string $dir)
+    {
+        [$i] = $this->find($page, $section);
+        $sections = $page->allSections();
+        $j = $dir === 'up' ? $i - 1 : $i + 1;
+        if (isset($sections[$j])) {
+            [$sections[$i], $sections[$j]] = [$sections[$j], $sections[$i]];
+            $page->update(['sections' => $sections]);
         }
 
-        return ['eyebrow' => trim((string) ($g['eyebrow'] ?? '')), 'title' => trim((string) ($g['title'] ?? '')) ?: 'A glimpse of the *real Netherlands*', 'items' => $items];
+        return redirect()->to(route('admin.pages.edit', $page).'#s-'.$section);
+    }
+
+    public function toggleSection(Page $page, string $section)
+    {
+        [$i] = $this->find($page, $section);
+        $sections = $page->allSections();
+        $sections[$i]['visible'] = ! ($sections[$i]['visible'] ?? true);
+        $page->update(['sections' => $sections]);
+
+        return redirect()->to(route('admin.pages.edit', $page).'#s-'.$section);
+    }
+
+    public function destroySection(Page $page, string $section)
+    {
+        [$i] = $this->find($page, $section);
+        $sections = $page->allSections();
+        array_splice($sections, $i, 1);
+        $page->update(['sections' => $sections]);
+
+        return redirect()->route('admin.pages.edit', $page)->with('status', 'Section deleted.');
+    }
+
+    // ---- helpers --------------------------------------------------------------------------------------------
+
+    private function newSection(string $type, array $data = []): array
+    {
+        return ['id' => Page::newSectionId(), 'type' => $type, 'visible' => true, 'data' => $data + Sections::defaults($type)];
+    }
+
+    /** @return array{0:int,1:array} index and section */
+    private function find(Page $page, string $id): array
+    {
+        foreach ($page->allSections() as $i => $s) {
+            if ($s['id'] === $id) {
+                return [$i, $s];
+            }
+        }
+        abort(404);
+    }
+
+    private function uniqueSlug(string $slug): string
+    {
+        $slug = $slug ?: 'page';
+        if (in_array($slug, Page::RESERVED, true)) {
+            $slug .= '-page';
+        }
+        $base = $slug;
+        for ($i = 2; Page::where('slug', $slug)->exists(); $i++) {
+            $slug = $base.'-'.$i;
+        }
+
+        return $slug;
     }
 }

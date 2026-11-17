@@ -56,16 +56,16 @@
     @include('partials.footer')
 
     {{-- Header modal enquiry form (reachable from every page) --}}
-    <x-modal title="Start your adventure">
+    <x-modal :title="text('modal_title')">
         <p x-show="$store.modal.pkg" x-cloak class="mt-2 rounded-lg bg-sand px-3 py-2 text-sm font-semibold text-brand-700" x-text="'Package: ' + ($store.modal.pkg?.name ?? '')"></p>
-        <p class="mt-1 text-sm text-ink/75">Fill out this form, save up to {{ setting('modal_discount', '[CONFIRM: discount %]') }} on your trip.</p>
+        <p class="mt-1 text-sm text-ink/75">{{ str_replace('{discount}', setting('modal_discount', '[CONFIRM: discount %]'), text('modal_intro')) }}</p>
         <div class="mt-4"><x-enquiry-form form="header-modal" idp="modal" variant="modal" submit="Send My Enquiry" /></div>
     </x-modal>
 
     {{-- Mobile sticky action bar --}}
     <div class="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-sand-200 bg-white p-2 shadow-[0_-6px_20px_-10px_rgb(0_0_0/.4)] lg:hidden">
-        @if ($phone)<a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="btn btn-secondary flex-1"><x-icon name="phone" class="h-4 w-4" /> Call</a>@endif
-        <button type="button" class="btn btn-primary flex-[2]" @click="$store.modal.show()">Get a Free Quote</button>
+        @if ($phone)<a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="btn btn-secondary flex-1"><x-icon name="phone" class="h-4 w-4" /> {{ text('mobile_bar_call_label') }}</a>@endif
+        <button type="button" class="btn btn-primary flex-[2]" @click="$store.modal.show()">{{ text('mobile_bar_quote_label') }}</button>
     </div>
     @stack('scripts')
 </body>

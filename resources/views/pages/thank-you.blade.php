@@ -3,9 +3,9 @@
 @section('content')
 <section class="container-site py-20 text-center">
     <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-800"><x-icon name="check" class="h-8 w-8" /></span>
-    <h1 class="mt-6 text-4xl font-medium sm:text-5xl">Thank you{{ $name ? ', '.$name : '' }}!</h1>
-    <p class="mx-auto mt-4 max-w-xl text-lg text-ink/80">We have received your enquiry. A Netherlands travel specialist will be in touch soon with your tailored quote.</p>
-    <p class="mt-8"><x-button :href="route('packages.index')" variant="secondary">Browse tour packages</x-button></p>
+    <h1 class="mt-6 text-4xl font-medium sm:text-5xl">{{ text('thankyou_heading') }}{{ $name ? ', '.$name : '' }}!</h1>
+    <p class="mx-auto mt-4 max-w-xl text-lg text-ink/80">{{ text('thankyou_text') }}</p>
+    <p class="mt-8"><x-button :href="route('packages.index')" variant="secondary">{{ text('thankyou_button') }}</x-button></p>
 </section>
 @endsection
 

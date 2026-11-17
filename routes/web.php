@@ -33,3 +33,6 @@ Route::get('/sitemap.xml', [SitemapController::class, 'sitemap'])->name('sitemap
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 require __DIR__.'/admin.php';
+
+// Custom pages created in Admin > Pages (must stay LAST so it never shadows a real route)
+Route::get('/{slug}', [PageController::class, 'custom'])->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')->name('pages.custom');

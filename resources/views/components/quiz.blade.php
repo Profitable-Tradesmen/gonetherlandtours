@@ -5,7 +5,7 @@
     Without JavaScript the <noscript> block shows the plain contact form instead.
 --}}
 <div id="quote" class="rounded-2xl border-4 border-accent bg-white p-5 shadow-card sm:p-7 text-ink">
-    <h2 class="label-caps text-center text-base text-brown">Start Your Adventure</h2>
+    <h2 class="label-caps text-center text-base text-brown">{{ text('quiz_title') }}</h2>
 
     <div x-data="quiz(@js(collect($steps)->pluck('key')->all()))" x-cloak>
         {{-- progress --}}

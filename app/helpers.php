@@ -121,3 +121,13 @@ if (! function_exists('ghl_enabled')) {
         return setting('ghl_enabled', '1') !== '0' && filled(ghl_token()) && filled(ghl_location_id());
     }
 }
+
+if (! function_exists('text')) {
+    /** Site-wide wording (button labels, menu headings...) edited in Admin > Settings. Falls back to config('gnt.texts'); a saved blank stays blank. */
+    function text(string $key): string
+    {
+        $all = \App\Models\Setting::all_cached();
+
+        return array_key_exists($key, $all) && $all[$key] !== null ? (string) $all[$key] : (string) config('gnt.texts.'.$key, '');
+    }
+}

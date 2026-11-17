@@ -11,11 +11,11 @@ class SitemapController extends Controller
 {
     public function sitemap()
     {
-        $urls = [[url('/'), now()], [route('packages.index'), now()], [route('blog.index'), now()], [route('faq'), now()], [route('testimonials'), now()]];
+        $urls = [[url('/'), now()], [route('packages.index'), now()], [route('blog.index'), now()]];
 
-        $slugs = Page::whereIn('slug', ['about', 'contact', 'terms', 'privacy'])->where('noindex', false)->get();
-        foreach ($slugs as $p) {
-            $urls[] = [route($p->slug), $p->updated_at];
+        // Every published, indexable page (system pages and custom pages made in Admin > Pages). FAQ/testimonials come from here too.
+        foreach (Page::where('noindex', false)->where('is_published', true)->where('slug', '!=', 'home')->get() as $p) {
+            $urls[] = [$p->url(), $p->updated_at];
         }
         foreach (\App\Models\TourType::active()->where('noindex', false)->get() as $t) {
             $urls[] = [route('tour-types.show', $t), $t->updated_at];

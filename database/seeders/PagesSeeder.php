@@ -85,5 +85,9 @@ class PagesSeeder extends Seeder
         foreach ($pages as $slug => $data) {
             Page::firstOrCreate(['slug' => $slug], $data);
         }
+
+        // Turn each page into editable sections (and create the menus). Idempotent: only fills pages that have none.
+        \App\Support\DefaultSections::fill();
+        \App\Support\DefaultSections::menus();
     }
 }

@@ -17,7 +17,7 @@
         ['admin.dashboard', 'Dashboard'], ['admin.enquiries.index', 'Enquiries'], ['admin.packages.index', 'Packages'],
         ['admin.tour-types.index', 'Tour types'], ['admin.destinations.index', 'Destinations'], ['admin.quiz.index', 'Quiz'],
         ['admin.pages.index', 'Pages'], ['admin.faqs.index', 'FAQs'], ['admin.testimonials.index', 'Testimonials'], ['admin.blog.index', 'Blog'],
-        ['admin.media.index', 'Media'], ['admin.settings', 'Settings'], ['admin.ghl', 'GoHighLevel'], ['admin.users.index', 'Admin users'],
+        ['admin.media.index', 'Media'], ['admin.navigation.index', 'Navigation'], ['admin.settings', 'Settings'], ['admin.ghl', 'GoHighLevel'], ['admin.users.index', 'Admin users'],
     ];
 @endphp
 <div class="flex min-h-screen">

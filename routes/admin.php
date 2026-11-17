@@ -31,7 +31,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('packages/{package}/move/{dir}', [Admin\PackageController::class, 'move'])->whereIn('dir', ['up', 'down'])->name('packages.move');
 
         // Simple list resources (generic CRUD)
-        foreach (['tour-types' => Admin\TourTypeController::class, 'destinations' => Admin\DestinationController::class, 'faqs' => Admin\FaqController::class, 'testimonials' => Admin\TestimonialController::class, 'blog' => Admin\BlogController::class, 'users' => Admin\AdminUserController::class] as $uri => $controller) {
+        foreach (['navigation' => Admin\NavigationController::class, 'tour-types' => Admin\TourTypeController::class, 'destinations' => Admin\DestinationController::class, 'faqs' => Admin\FaqController::class, 'testimonials' => Admin\TestimonialController::class, 'blog' => Admin\BlogController::class, 'users' => Admin\AdminUserController::class] as $uri => $controller) {
             Route::get($uri, [$controller, 'index'])->name("$uri.index");
             Route::get("$uri/create", [$controller, 'create'])->name("$uri.create");
             Route::post($uri, [$controller, 'store'])->name("$uri.store");
@@ -53,8 +53,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Pages, settings, media
         Route::get('pages', [Admin\PageController::class, 'index'])->name('pages.index');
+        Route::get('pages/create', [Admin\PageController::class, 'create'])->name('pages.create');
+        Route::post('pages', [Admin\PageController::class, 'store'])->name('pages.store');
         Route::get('pages/{page}/edit', [Admin\PageController::class, 'edit'])->name('pages.edit');
         Route::put('pages/{page}', [Admin\PageController::class, 'update'])->name('pages.update');
+        Route::post('pages/{page}/publish', [Admin\PageController::class, 'togglePublish'])->name('pages.publish');
+        Route::delete('pages/{page}', [Admin\PageController::class, 'destroy'])->name('pages.destroy');
+        Route::post('pages/{page}/sections', [Admin\PageController::class, 'addSection'])->name('pages.sections.add');
+        Route::get('pages/{page}/sections/{section}/edit', [Admin\PageController::class, 'editSection'])->name('pages.sections.edit');
+        Route::put('pages/{page}/sections/{section}', [Admin\PageController::class, 'updateSection'])->name('pages.sections.update');
+        Route::post('pages/{page}/sections/{section}/toggle', [Admin\PageController::class, 'toggleSection'])->name('pages.sections.toggle');
+        Route::post('pages/{page}/sections/{section}/move/{dir}', [Admin\PageController::class, 'moveSection'])->whereIn('dir', ['up', 'down'])->name('pages.sections.move');
+        Route::delete('pages/{page}/sections/{section}', [Admin\PageController::class, 'destroySection'])->name('pages.sections.destroy');
         Route::get('settings', [Admin\SettingsController::class, 'edit'])->name('settings');
         Route::put('settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
         Route::get('ghl', [Admin\GhlController::class, 'edit'])->name('ghl');

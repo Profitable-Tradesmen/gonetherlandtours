@@ -20,7 +20,7 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 ## Tour type pages (Admin > Tour types)
 - [ ] Self Drive, Chauffeur Driven and Coach Tours each have a page at `/tours/slug`: replace the "[CONFIRM: ... page copy]" text, SEO title and meta description
 
-## About page: Meet the team (`resources/views/pages/about.blade.php`)
+## About page: Meet the team (Admin > Pages > About > "Meet the team" section)
 - [ ] 3 placeholder team cards ("[CONFIRM: team member n name]", role, bio): replace with real people and photos, or remove the section
 
 ## Testimonials (Admin > Testimonials)
@@ -36,7 +36,7 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 - [ ] Verify each answer: best time/tulip season dates, visa/entry rules for US travellers, US licence and IDP requirements, standard inclusions
 
 ## About / destinations
-- [ ] About page (`resources/views/pages/about.blade.php`): search `[CONFIRM` in the view for support hours, accommodation standard, tulip season dates, quote inclusions and the reviews badge. Company story, team and years in business are not added. Newsletter and free-guide sections are omitted until a real form and guides exist
+- [ ] About page (Admin > Pages > About, each section): search for `[CONFIRM` for support hours, accommodation standard, tulip season dates, quote inclusions and the reviews badge. Company story, team and years in business are not added. Newsletter and free-guide sections are omitted until a real form and guides exist
 - [ ] Destination pages: real guide copy (currently one-line summaries and `[CONFIRM: destination guide copy]`)
 
 ## Legal (Admin > Pages > Terms / Privacy): STARTER TEMPLATES, NOT LEGAL ADVICE

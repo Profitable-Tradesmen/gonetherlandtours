@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GoNetherlandTours: Version control and deploy guide</title>
+<style>
+:root{--bg:#fbf8f3;--card:#fff;--ink:#1f2933;--mute:#5b6773;--line:#e4ddd0;--brand:#2f6285;--accent:#f2b134;--ok:#1e7a46;--warn:#9a5b00;--bad:#a12b1d;--code:#14202b;--codeink:#e8eef4}
+@media(prefers-color-scheme:dark){:root{--bg:#10161c;--card:#18212a;--ink:#e8eef4;--mute:#9fb0bf;--line:#2a3743;--brand:#7db7de;--accent:#f2b134;--ok:#5fd08b;--warn:#f0b35a;--bad:#ff8d7d;--code:#0a0f14;--codeink:#e8eef4}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:60rem;margin:0 auto;padding:0 16px 80px}
+header.top{background:var(--card);color:#fff;padding:32px 16px}
+header.top .wrap{padding-bottom:0}
+header.top h1{margin:0 0 6px;font-size:1.9rem;line-height:1.2}
+header.top p{margin:0;opacity:.9}
+nav.toc{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap}
+nav.toc .wrap{padding-bottom:0;display:flex;gap:4px}
+nav.toc a{display:inline-block;padding:12px 12px;color:var(--ink);text-decoration:none;font-size:.9rem;border-bottom:3px solid transparent}
+nav.toc a:hover{border-color:var(--accent)}
+h2{margin:48px 0 8px;font-size:1.5rem;scroll-margin-top:60px}
+h3{margin:28px 0 6px;font-size:1.1rem}
+p,li{max-width:70ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.vals{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))}
+.vals label{font-size:.78rem;font-weight:700;color:var(--mute);display:block}
+.vals input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:.9rem}
+.flow{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));margin:16px 0}
+.flow div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;font-size:.9rem}
+.flow b{display:block;color:var(--brand)}
+.step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.step:first-of-type{border-top:0}
+.step input[type=checkbox]{margin-top:7px;width:20px;height:20px;flex:none;accent-color:var(--ok)}
+.step .body{flex:1;min-width:0}
+.step .t{font-weight:700}
+.step.done .t{text-decoration:line-through;color:var(--mute)}
+.tag{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:middle}
+.tag.done{background:#dff3e6;color:#175c35}.tag.todo{background:#fdecc8;color:#7a4a00}.tag.opt{background:#e4ecf3;color:#2f5470}
+@media(prefers-color-scheme:dark){.tag.done{background:#173a28;color:#8ae3ae}.tag.todo{background:#4a3510;color:#f6c778}.tag.opt{background:#22364a;color:#a7cbe6}}
+.cmd{position:relative;margin:8px 0}
+.cmd pre{margin:0;background:var(--code);color:var(--codeink);border-radius:8px;padding:12px 70px 12px 14px;overflow-x:auto;font:13px/1.5 ui-monospace,Consolas,"Cascadia Mono",monospace;white-space:pre}
+.cmd button{position:absolute;top:8px;right:8px;border:0;border-radius:6px;background:var(--accent);color:#1f2933;font-weight:700;font-size:.75rem;padding:5px 10px;cursor:pointer}
+.cmd .where{font-size:.75rem;color:var(--mute);margin-bottom:2px}
+.note,.warn,.danger{border-left:4px solid;border-radius:6px;padding:10px 14px;margin:14px 0;font-size:.95rem}
+.note{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 9%,transparent)}
+.warn{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,transparent)}
+.danger{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,transparent)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;margin:10px 0}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--card)}
+code.i{background:var(--code);color:var(--codeink);padding:1px 6px;border-radius:5px;font:.85em ui-monospace,Consolas,monospace}
+.prog{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 2px}
+.prog i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+button.reset{background:none;border:1px solid var(--line);color:var(--mute);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.8rem}
+@media print{nav.toc,.cmd button,button.reset{display:none}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<h1>Version control and deploy guide</h1>
+<p>GoNetherlandTours: from your computer, to GitHub, to staging, to the live website.</p>
+</div></header>
+
+<nav class="toc" aria-label="Sections"><div class="wrap">
+<a href="#overview">Overview</a><a href="#values">Your details</a><a href="#setup">1. One-time setup</a><a href="#daily">2. Daily workflow</a><a href="#live">3. Go live</a><a href="#after">4. After launch</a><a href="#trouble">Troubleshooting</a><a href="#rules">Safety rules</a>
+</div></nav>
+
+<main class="wrap">
+
+<h2 id="overview">How it all fits together</h2>
+<p>You edit the site on your computer. <b>Git</b> records each change. <b>GitHub</b> stores the code and, through <b>GitHub Actions</b>, copies it to your Hostinger server automatically. Two branches decide where the code goes:</p>
+<div class="flow">
+<div><b>Your computer</b>edit and test</div>
+<div><b>push to <code class="i">dev</code></b>GitHub Actions runs</div>
+<div><b>Staging site</b>test and approve</div>
+<div><b>merge to <code class="i">main</code></b>GitHub Actions runs</div>
+<div><b>Live site</b>real domain</div>
+</div>
+<div class="note"><b>Key idea:</b> you never upload files by hand. Push to <code class="i">dev</code> to update staging. Merge into <code class="i">main</code> to update live. The server's own <code class="i">.env</code> file (passwords, keys) is never in git and is never overwritten.</div>
+
+<div class="card">
+<b>Progress</b> <span id="pct">0%</span> <button class="reset" id="reset" type="button">Reset ticks</button>
+<div class="prog"><i id="bar"></i></div>
+<p style="margin:6px 0 0;font-size:.85rem;color:var(--mute)">Ticks are saved in this browser only.</p>
+</div>
+
+<h2 id="values">Your details (non-secret)</h2>
+<p>Fill these in once. Every command below updates automatically. Never type passwords or private keys here.</p>
+<div class="card vals">
+<div><label for="v-host">Server IP (SSH)</label><input id="v-host" data-k="HOST" value="" placeholder="e.g. 203.0.113.10 (hPanel > SSH Access)"></div>
+<div><label for="v-port">SSH port</label><input id="v-port" data-k="PORT" value="" placeholder="e.g. 65002 (Hostinger default)"></div>
+<div><label for="v-user">SSH username</label><input id="v-user" data-k="USER" value="" placeholder="e.g. u123456789"></div>
+<div><label for="v-stg">Staging folder name</label><input id="v-stg" data-k="STG" value="" placeholder="staging domain folder in ~/domains"></div>
+<div><label for="v-dom">Live domain</label><input id="v-dom" data-k="DOM" value="" placeholder="e.g. yourdomain.com"></div>
+<div><label for="v-key">Private key file on your computer</label><input id="v-key" data-k="KEY" value="$env:USERPROFILE\.ssh\gonetherlandtours_deploy"></div>
+</div>
+
+<!-- ============ 1. SETUP ============ -->
+<h2 id="setup">1. One-time setup</h2>
+<p>These steps were used to set up staging. Repeat them for the live site, or use them to fix or rebuild the pipeline. <b>Not needed for everyday work:</b> pushing to GitHub is enough, because the deploy runs from GitHub Actions. Only whoever manages the server needs the SSH key and secrets.</p>
+
+<div class="card">
+<div class="step"><input type="checkbox" id="s1"><div class="body"><div class="t">Create a deploy key on your computer</div>
+<p>A key pair is a lock and a key. The <b>private</b> key stays on your computer and in a GitHub secret. The <b>public</b> key goes to Hostinger. Keep both outside the project folder (in <code class="i">.ssh</code>).</p>
+<div class="cmd"><div class="where">PowerShell on your computer</div><pre>ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\gonetherlandtours_deploy" -C "github-deploy-gonetherlandtours" -N '""'</pre><button type="button">Copy</button></div></div></div>
+
+<div class="step"><input type="checkbox" id="s2"><div class="body"><div class="t">Add the public key to Hostinger</div>
+<p>Show it, copy the single <code class="i">ssh-ed25519 ...</code> line, then in hPanel go to <b>Advanced &gt; SSH Access &gt; Add SSH key</b>.</p>
+<div class="cmd"><div class="where">PowerShell on your computer</div><pre>Get-Content "[KEY].pub"</pre><button type="button">Copy</button></div></div></div>
+
+<div class="step"><input type="checkbox" id="s3"><div class="body"><div class="t">Test the login from your computer</div>
+<p>It should print <code class="i">connected</code>. The first time, answer <code class="i">yes</code> to the fingerprint question.</p>
+<div class="cmd"><div class="where">PowerShell on your computer</div><pre>ssh -i "[KEY]" -p [PORT] [USER]@[HOST] "echo connected"</pre><button type="button">Copy</button></div></div></div>
+
+<div class="step"><input type="checkbox" id="s4"><div class="body"><div class="t">Add the GitHub secrets</div>
+<p>On GitHub open <b>your repository &gt; Settings &gt; Secrets and variables &gt; Actions &gt; New repository secret</b> (the repository's Settings, not your personal ones). Names must match exactly:</p>
+<table>
+<tr><th>Secret name</th><th>Value</th></tr>
+<tr><td><code class="i">STAGING_SSH_KEY</code></td><td>The whole <b>private</b> key file, including the BEGIN and END lines</td></tr>
+<tr><td><code class="i">STAGING_HOST</code></td><td>[HOST]</td></tr>
+<tr><td><code class="i">STAGING_PORT</code></td><td>[PORT]</td></tr>
+<tr><td><code class="i">STAGING_USER</code></td><td>[USER]</td></tr>
+<tr><td><code class="i">STAGING_PATH</code></td><td>/home/[USER]/domains/[STG]/app</td></tr>
+</table>
+<p>Show the private key to copy it (never paste it in chat, email or the project folder):</p>
+<div class="cmd"><div class="where">PowerShell on your computer</div><pre>Get-Content "[KEY]" -Raw</pre><button type="button">Copy</button></div></div></div>
+
+<div class="step"><input type="checkbox" id="s5"><div class="body"><div class="t">Server folder layout (already done on staging)</div>
+<p>The project lives in an <code class="i">app</code> folder and <code class="i">public_html</code> is a link to <code class="i">app/public</code>. That keeps your code and <code class="i">.env</code> out of the public web folder. The folder is a git clone, so the server can run <code class="i">git pull</code>.</p></div></div>
+
+<div class="step"><input type="checkbox" id="s6"><div class="body"><div class="t">Prove the pipeline works</div>
+<p>Push any commit to <code class="i">dev</code>, open the repo's <b>Actions</b> tab, and look for a green tick on "Deploy staging". Then open the staging site.</p></div></div>
+</div>
+
+<div class="warn"><b>"Run workflow" button missing?</b> GitHub only shows it for workflows that exist on the default branch (<code class="i">main</code>). Pushing to <code class="i">dev</code> still triggers the deploy normally.</div>
+
+<!-- ============ 2. DAILY ============ -->
+<h2 id="daily">2. Daily workflow</h2>
+<p>Use this every time you change the site.</p>
+
+<div class="card">
+<div class="step"><input type="checkbox" id="d1"><div class="body"><div class="t">Make sure you are on the <code class="i">dev</code> branch</div>
+<div class="cmd"><div class="where">PowerShell, in the project folder</div><pre>cd "PATH\TO\gonetherlandtours"   # the folder where you cloned the repo
+git checkout dev
+git pull</pre><button type="button">Copy</button></div></div></div>
+
+<div class="step"><input type="checkbox" id="d2"><div class="body"><div class="t">Make your changes and run the tests</div>
+<div class="cmd"><div class="where">Project folder</div><pre>php artisan test</pre><button type="button">Copy</button></div>
+<p>If you changed CSS, JavaScript or Tailwind classes, rebuild the assets. The server has no Node, so the built files are committed:</p>
+<div class="cmd"><div class="where">Project folder</div><pre>npm run build</pre><button type="button">Copy</button></div></div></div>
+
+<div class="step"><input type="checkbox" id="d3"><div class="body"><div class="t">Check what changed</div>
+<div class="cmd"><div class="where">Project folder</div><pre>git status</pre><button type="button">Copy</button></div>
+<p>Look for anything that should not be there: <code class="i">.env</code>, keys, passwords. Those must never be committed.</p></div></div>
+
+<div class="step"><input type="checkbox" id="d4"><div class="body"><div class="t">Commit with a clear message</div>
+<div class="cmd"><div class="where">Project folder</div><pre>git add -A
+git commit -m "Describe what you changed in one line"</pre><button type="button">Copy</button></div></div></div>
+
+<div class="step"><input type="checkbox" id="d5"><div class="body"><div class="t">Push to <code class="i">dev</code>: this updates staging</div>
+<div class="cmd"><div class="where">Project folder (or use Sync Changes in VS Code)</div><pre>git push origin dev</pre><button type="button">Copy</button></div>
+<p>Then watch <b>GitHub &gt; Actions &gt; Deploy staging</b>. Green tick = deployed (takes about 15 to 60 seconds). Red cross = open the run and read the log (see Troubleshooting).</p></div></div>
+
+<div class="step"><input type="checkbox" id="d6"><div class="body"><div class="t">Test on staging</div>
+<p>Open the staging address, check the pages you changed on phone and desktop, and send a test enquiry. Do not go live until this passes.</p></div></div>
+</div>
+
+<div class="note"><b>Good habits:</b> small commits with clear messages; pull before you start; never edit files directly on the server (the next deploy could clash with them); one change at a time so a problem is easy to undo.</div>
+
+<!-- ============ 3. LIVE ============ -->
+<h2 id="live">3. Go live <span class="tag todo">to do</span></h2>
+
+<h3>A. Before you touch the server</h3>
+<div class="card">
+<div class="step"><input type="checkbox" id="l1"><div class="body"><div class="t">Replace placeholders and sample content</div>
+<p>Everything marked <code class="i">[CONFIRM: ...]</code> or "Sample": team members, tour type page copy, prices, testimonials, FAQ answers, legal pages, real photos. The full list is in <code class="i">docs/reference/CONTENT_TO_CONFIRM.md</code>. Do it on staging first.</p></div></div>
+<div class="step"><input type="checkbox" id="l2"><div class="body"><div class="t">Real packages are indexable</div>
+<p>In Admin &gt; Packages, untick <b>Hide from search engines</b> on real packages and delete the "Sample:" packages. Sample packages are hidden from Google on purpose.</p></div></div>
+<div class="step"><input type="checkbox" id="l3"><div class="body"><div class="t">Register the live domain for reCAPTCHA</div>
+<p>At google.com/recaptcha/admin create a <b>v2 checkbox</b> key for the live domain. The test keys must not be used live (the form would be open to spam).</p></div></div>
+<div class="step"><input type="checkbox" id="l4"><div class="body"><div class="t">Point the domain at Hostinger and add the website in hPanel</div>
+<p>Add the live domain as a website in hPanel, set the nameservers or DNS as Hostinger instructs, and turn on the free SSL certificate. DNS can take from minutes to a day.</p></div></div>
+</div>
+
+<h3>B. Create the live site on the server</h3>
+<p>Same layout as staging: the project in <code class="i">app</code>, with <code class="i">public_html</code> linking to <code class="i">app/public</code>. Connect first:</p>
+<div class="cmd"><div class="where">PowerShell on your computer</div><pre>ssh -i "[KEY]" -p [PORT] [USER]@[HOST]</pre><button type="button">Copy</button></div>
+<p>Then, on the server:</p>
+<div class="card">
+<div class="step"><input type="checkbox" id="l5"><div class="body"><div class="t">Clone the <code class="i">main</code> branch into an <code class="i">app</code> folder</div>
+<div class="cmd"><div class="where">On the server</div><pre>cd ~/domains/[DOM]
+mv public_html public_html_old     # only if it is the empty default folder
+git clone -b main git@github.com:Profitable-Tradesmen/gonetherlandtours.git app
+ln -s app/public public_html</pre><button type="button">Copy</button></div>
+<p>The server already has GitHub access (the same one staging uses). If the clone says "permission denied", ask the project lead.</p></div></div>
+
+<div class="step"><input type="checkbox" id="l6"><div class="body"><div class="t">Create the database</div>
+<p>In hPanel &gt; <b>Databases</b> create a MySQL database, user and password. Note the three values for the next step.</p></div></div>
+
+<div class="step"><input type="checkbox" id="l7"><div class="body"><div class="t">Create the live <code class="i">.env</code></div>
+<div class="cmd"><div class="where">On the server</div><pre>cd ~/domains/[DOM]/app
+cp .env.example .env
+nano .env</pre><button type="button">Copy</button></div>
+<p>Set at least these (save in nano with Ctrl+O, Enter, Ctrl+X):</p>
+<div class="cmd"><pre>APP_NAME=GoNetherlandTours
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://[DOM]
+SITE_NOINDEX=false
+DB_HOST=localhost
+DB_DATABASE=...        # from hPanel
+DB_USERNAME=...
+DB_PASSWORD=...
+SESSION_DRIVER=database
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.hostinger.com
+MAIL_PORT=465
+MAIL_USERNAME=...      # your hPanel mailbox
+MAIL_PASSWORD=...
+MAIL_FROM_ADDRESS="enquiries@[DOM]"
+RECAPTCHA_SITE_KEY=... # real keys
+RECAPTCHA_SECRET_KEY=...
+ADMIN_SEED_EMAIL=you@[DOM]
+ADMIN_SEED_PASSWORD=a-long-unique-password   # delete this line after the first seed</pre><button type="button">Copy</button></div>
+<div class="danger"><b>SITE_NOINDEX must be <code class="i">false</code> on live.</b> If it is <code class="i">true</code>, the whole site tells Google not to list it. Keep it <code class="i">true</code> on staging.</div></div></div>
+
+<div class="step"><input type="checkbox" id="l8"><div class="body"><div class="t">First install (one time only)</div>
+<div class="cmd"><div class="where">On the server, in the app folder</div><pre>/opt/alt/php84/usr/bin/php $(command -v composer) install --no-dev --optimize-autoloader --no-interaction
+/opt/alt/php84/usr/bin/php artisan key:generate --force
+/opt/alt/php84/usr/bin/php artisan migrate --force --seed
+/opt/alt/php84/usr/bin/php artisan storage:link
+/opt/alt/php84/usr/bin/php artisan config:cache
+/opt/alt/php84/usr/bin/php artisan view:cache</pre><button type="button">Copy</button></div>
+<div class="danger"><b>Never run <code class="i">migrate:fresh</code> on a live site</b> (it erases the database). <code class="i">--seed</code> is for the very first install only: later deploys use plain <code class="i">migrate --force</code>, which <code class="i">deploy.sh</code> already does.</div></div></div>
+
+<div class="step"><input type="checkbox" id="l9"><div class="body"><div class="t">Add the cron job (emails and GoHighLevel sync)</div>
+<p>hPanel &gt; <b>Advanced &gt; Cron Jobs</b>, every minute:</p>
+<div class="cmd"><pre>* * * * * cd /home/[USER]/domains/[DOM]/app &amp;&amp; /opt/alt/php84/usr/bin/php artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1</pre><button type="button">Copy</button></div></div></div>
+
+<div class="step"><input type="checkbox" id="l10"><div class="body"><div class="t">Visit the site and log in</div>
+<p>Open <code class="i">https://[DOM]</code>, then <code class="i">/admin/login</code>. Change the admin password, then remove <code class="i">ADMIN_SEED_PASSWORD</code> from the live <code class="i">.env</code>.</p></div></div>
+</div>
+
+<h3>C. Connect GitHub to the live site</h3>
+<div class="card">
+<div class="step"><input type="checkbox" id="l11"><div class="body"><div class="t">Add the live secrets in GitHub</div>
+<table>
+<tr><th>Secret name</th><th>Value</th></tr>
+<tr><td><code class="i">LIVE_SSH_KEY</code></td><td>Private key (reuse the same one or make a second pair)</td></tr>
+<tr><td><code class="i">LIVE_HOST</code></td><td>[HOST]</td></tr>
+<tr><td><code class="i">LIVE_PORT</code></td><td>[PORT]</td></tr>
+<tr><td><code class="i">LIVE_USER</code></td><td>[USER]</td></tr>
+<tr><td><code class="i">LIVE_PATH</code></td><td>/home/[USER]/domains/[DOM]/app</td></tr>
+</table>
+<p>Optional but wise: create a GitHub <b>Environment</b> named <code class="i">production</code> with "Required reviewers", so every live deploy needs your approval click.</p></div></div>
+
+<div class="step"><input type="checkbox" id="l12"><div class="body"><div class="t">Final staging check</div>
+<p>Everything you want live must already work on staging, including a test enquiry reaching GoHighLevel.</p></div></div>
+
+<div class="step"><input type="checkbox" id="l13"><div class="body"><div class="t">Merge <code class="i">dev</code> into <code class="i">main</code>: this deploys live</div>
+<p>Easiest and safest: on GitHub open <b>Pull requests &gt; New pull request</b>, base <code class="i">main</code>, compare <code class="i">dev</code>, review the changes, then <b>Merge</b>. Watch <b>Actions &gt; Deploy live</b> for a green tick.</p>
+<p>Command-line alternative:</p>
+<div class="cmd"><div class="where">Project folder</div><pre>git checkout main
+git pull
+git merge dev
+git push origin main
+git checkout dev</pre><button type="button">Copy</button></div></div></div>
+</div>
+
+<h3>D. Live checks</h3>
+<div class="card">
+<div class="step"><input type="checkbox" id="l14"><div class="body"><div class="t">Check the live site</div>
+<p>Home, a package, <code class="i">/tours/self-drive</code>, <code class="i">/faq</code>, <code class="i">/testimonials</code>, <code class="i">/about</code>, <code class="i">/contact</code>; the padlock (HTTPS) shows; <code class="i">/robots.txt</code> says <code class="i">Allow: /</code> (not <code class="i">Disallow: /</code>); <code class="i">/sitemap.xml</code> lists your pages.</p></div></div>
+<div class="step"><input type="checkbox" id="l15"><div class="body"><div class="t">Connect GoHighLevel on live</div>
+<p>Admin &gt; GoHighLevel: enter the Location ID and token, tick "Send enquiries", Save, then <b>Test connection</b> and <b>Create missing custom fields</b>. Required scopes: <code class="i">contacts.readonly</code>, <code class="i">contacts.write</code>, <code class="i">locations/customFields.readonly</code>, <code class="i">locations/customFields.write</code>.</p></div></div>
+<div class="step"><input type="checkbox" id="l16"><div class="body"><div class="t">Send a test enquiry on every form</div>
+<p>Quiz, pop-up, package quote, contact. Use a <b>new email and a new phone number</b> each time (GoHighLevel merges contacts that share an email or phone). Confirm the staff email, the admin inbox and the GoHighLevel contact.</p></div></div>
+<div class="step"><input type="checkbox" id="l17"><div class="body"><div class="t">Fill Admin &gt; Settings</div>
+<p>Company name, phone, email, address, social links, notification emails, Google Tag Manager ID, logo.</p></div></div>
+</div>
+
+<!-- ============ 4. AFTER ============ -->
+<h2 id="after">4. After launch</h2>
+<div class="card">
+<div class="step"><input type="checkbox" id="a1"><div class="body"><div class="t">Google Search Console</div>
+<p>Verify the domain and submit <code class="i">https://[DOM]/sitemap.xml</code>.</p></div></div>
+<div class="step"><input type="checkbox" id="a2"><div class="body"><div class="t">Google Tag Manager and Ads conversion</div>
+<p>Attach the conversion to the <code class="i">enquiry_thank_you</code> event and test in Tag Assistant (see <code class="i">FORMS_AND_TRACKING.md</code>).</p></div></div>
+<div class="step"><input type="checkbox" id="a3"><div class="body"><div class="t">Run Lighthouse on the live URL</div>
+<p>Mobile, on Home, a package and Contact. Aim for 90+ in every category. Results from the staging build are in <code class="i">SEO_CHECKLIST.md</code>.</p></div></div>
+<div class="step"><input type="checkbox" id="a4"><div class="body"><div class="t">Work through <code class="i">docs/reference/SEO_CHECKLIST.md</code></div></div></div>
+<div class="step"><input type="checkbox" id="a5"><div class="body"><div class="t">Back up</div>
+<p>Turn on Hostinger backups, and export the database from hPanel before any big change.</p></div></div>
+</div>
+
+<!-- ============ TROUBLESHOOTING ============ -->
+<h2 id="trouble">Troubleshooting</h2>
+<table>
+<tr><th>What you see</th><th>Likely cause and fix</th></tr>
+<tr><td>Deploy run fails in a few seconds</td><td>A GitHub secret is missing or misspelled. Check all five names and values. Names are case-sensitive and secrets cannot be viewed after saving, only replaced.</td></tr>
+<tr><td>Log says <code class="i">Permission denied (publickey)</code></td><td>The public key is not in Hostinger SSH Keys, or the secret holds the wrong file. The secret must be the <b>private</b> key (starts with <code class="i">-----BEGIN OPENSSH PRIVATE KEY-----</code>).</td></tr>
+<tr><td>Log says <code class="i">git pull</code> failed or "not possible to fast-forward"</td><td>Someone changed files directly on the server. SSH in, run <code class="i">git status</code>, and ask the project lead before discarding anything.</td></tr>
+<tr><td>Deploy is green but the page looks old</td><td>Hard refresh (Ctrl+F5). If still old, the server cache may need clearing: <code class="i">php artisan optimize:clear</code> then <code class="i">config:cache</code> and <code class="i">view:cache</code>.</td></tr>
+<tr><td>Page shows "500 | Server Error"</td><td>Set <code class="i">APP_DEBUG=true</code> briefly on <b>staging only</b>, reload, read the message, then set it back. The log is <code class="i">storage/logs/laravel.log</code>.</td></tr>
+<tr><td>Styles or images missing</td><td>You changed CSS/JS but did not run <code class="i">npm run build</code> and commit <code class="i">public/build</code> before pushing.</td></tr>
+<tr><td>GoHighLevel test says "token is not authorized for this scope"</td><td>Edit the integration in GoHighLevel (Settings &gt; Private Integrations), tick the missing scope, save, test again.</td></tr>
+<tr><td>GoHighLevel keeps updating the same contact</td><td>It matches on email <b>or</b> phone. Use a different phone number for each test.</td></tr>
+<tr><td>Google does not list the site</td><td>Check <code class="i">SITE_NOINDEX=false</code> on live, packages are not set to hide from search engines, and the sitemap is submitted.</td></tr>
+</table>
+
+<h3>Undo a bad deploy</h3>
+<p>Do not edit the server. Revert the bad commit on your computer and push; the deploy puts the old behaviour back. Find the commit with <code class="i">git log --oneline</code>.</p>
+<div class="cmd"><div class="where">Project folder</div><pre>git checkout dev
+git revert COMMIT_ID
+git push origin dev</pre><button type="button">Copy</button></div>
+<p>For live, merge the fixed <code class="i">dev</code> into <code class="i">main</code> the same way as a normal release. A reverted commit that contained a database migration does not undo the database change: ask the project lead first.</p>
+
+<!-- ============ RULES ============ -->
+<h2 id="rules">Safety rules</h2>
+<div class="danger">
+<ul style="margin:0;padding-left:20px">
+<li><b>Never commit</b> <code class="i">.env</code>, private keys, passwords or API tokens. If one is committed by mistake, treat it as exposed: revoke it and make a new one. Deleting it from git is not enough because history keeps it.</li>
+<li>Keep SSH keys in <code class="i">C:\Users\Tonix\.ssh</code>, never in the project folder.</li>
+<li>Never paste a private key or token into chat, email or a document.</li>
+<li>Never run <code class="i">migrate:fresh</code> or delete the database on live.</li>
+<li>Never edit code directly on the server. Change it locally, push, let the deploy copy it.</li>
+<li>Staging keeps <code class="i">SITE_NOINDEX=true</code>. Live uses <code class="i">false</code>.</li>
+</ul>
+</div>
+
+<p style="margin-top:36px;color:var(--mute);font-size:.85rem">Related files in this project: <code class="i">docs/reference/DEPLOYMENT.md</code>, <code class="i">SEO_CHECKLIST.md</code>, <code class="i">GHL_INTEGRATION.md</code>, <code class="i">CONTENT_TO_CONFIRM.md</code>, <code class="i">deploy.sh</code>, <code class="i">.github/workflows/</code>.</p>
+</main>
+
+<script>
+(function(){
+  // ---- variable substitution in commands ([HOST] etc.) ----
+  var inputs=[].slice.call(document.querySelectorAll('.vals input'));
+  var targets=[].slice.call(document.querySelectorAll('pre, td')).filter(function(n){return /\[(HOST|PORT|USER|STG|DOM|KEY)\]/.test(n.textContent)});
+  targets.forEach(function(n){n.setAttribute('data-tpl',n.innerHTML)});
+  function store(k,v){try{localStorage.setItem('gnt-guide-'+k,v)}catch(e){}}
+  function load(k){try{return localStorage.getItem('gnt-guide-'+k)}catch(e){return null}}
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+  function render(){
+    var v={};inputs.forEach(function(i){v[i.getAttribute('data-k')]=i.value||('['+i.getAttribute('data-k')+']')});
+    targets.forEach(function(n){
+      n.innerHTML=n.getAttribute('data-tpl').replace(/\[(HOST|PORT|USER|STG|DOM|KEY)\]/g,function(m,k){return esc(v[k])});
+    });
+  }
+  inputs.forEach(function(i){var s=load('v-'+i.id);if(s!==null)i.value=s;i.addEventListener('input',function(){store('v-'+i.id,i.value);render()})});
+  render();
+
+  // ---- copy buttons ----
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.cmd button');if(!b)return;
+    var pre=b.parentNode.querySelector('pre');var text=pre.innerText;
+    function ok(){var t=b.textContent;b.textContent='Copied';setTimeout(function(){b.textContent=t},1200)}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,function(){fallback(text,ok)})}else{fallback(text,ok)}
+  });
+  function fallback(text,ok){var a=document.createElement('textarea');a.value=text;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){}document.body.removeChild(a)}
+
+  // ---- progress checkboxes ----
+  var boxes=[].slice.call(document.querySelectorAll('.step input[type=checkbox]'));
+  function update(){
+    var n=0;boxes.forEach(function(b){var d=b.checked;if(d)n++;b.closest('.step').classList.toggle('done',d)});
+    var p=Math.round(100*n/boxes.length);document.getElementById('bar').style.width=p+'%';document.getElementById('pct').textContent=p+'% ('+n+' of '+boxes.length+')';
+  }
+  boxes.forEach(function(b){
+    if(load('c-'+b.id)==='1')b.checked=true;
+    b.addEventListener('change',function(){store('c-'+b.id,b.checked?'1':'0');update()});
+  });
+  document.getElementById('reset').addEventListener('click',function(){boxes.forEach(function(b){b.checked=false;store('c-'+b.id,'0')});update()});
+  update();
+})();
+</script>
+</body>
+</html>
