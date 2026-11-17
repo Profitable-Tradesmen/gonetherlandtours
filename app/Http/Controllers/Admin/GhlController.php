@@ -91,7 +91,14 @@ class GhlController extends Controller
             return redirect()->route('admin.ghl')->withErrors(['ghl' => 'Could not create the fields: '.$this->safeMessage($e)]);
         }
 
-        return redirect()->route('admin.ghl')->with('status', count($r['created']).' custom fields created, '.count($r['existing']).' already existed.');
+        $msg = count($r['created']).' custom fields created, '.count($r['existing']).' already existed.';
+        if ($r['skipped']) {
+            $msg .= ' Not created: '.implode(', ', $r['skipped']).'. GoHighLevel already has a field with the same key under another name. In GoHighLevel (Settings > Custom Fields) rename it to exactly that name, or delete it, then run this again.';
+
+            return redirect()->route('admin.ghl')->withErrors(['ghl' => $msg]);
+        }
+
+        return redirect()->route('admin.ghl')->with('status', $msg);
     }
 
     /** Message only (never headers), shortened, so the token cannot leak into the page. */

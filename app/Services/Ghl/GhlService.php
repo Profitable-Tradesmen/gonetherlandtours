@@ -80,12 +80,32 @@ class GhlService
         return (string) ($res->json('location.name') ?? $res->json('name') ?? 'unknown');
     }
 
-    /** @return array<string,string> existing contact custom fields, name => id */
+    /**
+     * Existing contact custom fields, name => id. GoHighLevel derives a field's key from its name ("Special Request" becomes
+     * contact.special_request) and refuses a second field with the same key. So a field that exists under a slightly
+     * different name (e.g. "special request") but the same key is also returned under OUR name, and is reused instead of re-created.
+     *
+     * @return array<string,string>
+     */
     public function existingFields(): array
     {
         $res = $this->http()->get('/locations/'.$this->loc().'/customFields', ['model' => 'contact'])->throw();
+        $fields = collect($res->json('customFields', []));
+        $map = $fields->pluck('id', 'name')->all();
 
-        return collect($res->json('customFields', []))->pluck('id', 'name')->all();
+        $byKey = [];
+        foreach ($fields as $f) {
+            if (! empty($f['fieldKey'])) {
+                $byKey[GhlFields::normalizeKey((string) $f['fieldKey'])] = $f['id'];
+            }
+        }
+        foreach (GhlFields::all() as $name) {
+            if (! isset($map[$name]) && isset($byKey[GhlFields::keyFor($name)])) {
+                $map[$name] = $byKey[GhlFields::keyFor($name)];
+            }
+        }
+
+        return $map;
     }
 
     /** Field name => id map, cached for an hour. */
@@ -98,24 +118,30 @@ class GhlService
         return Cache::remember('ghl.field_ids', 3600, fn () => $this->existingFields());
     }
 
-    /** Create any missing custom fields. Safe to re-run. @return array{created:array,existing:array} */
+    /** Create any missing custom fields. Safe to re-run. @return array{created:array,existing:array,skipped:array} */
     public function setupFields(): array
     {
         $existing = $this->existingFields();
         $created = [];
+        $skipped = [];
         foreach (GhlFields::all() as $name) {
             if (isset($existing[$name])) {
                 continue;
             }
             $dataType = in_array($name, [GhlFields::core('special_request'), GhlFields::core('quiz_answers')], true) ? 'LARGE_TEXT' : 'TEXT';
-            $this->http()->post('/locations/'.$this->loc().'/customFields', [
+            $res = $this->http()->post('/locations/'.$this->loc().'/customFields', [
                 'name' => $name, 'dataType' => $dataType, 'model' => 'contact',
-            ])->throw();
+            ]);
+            if ($res->status() === 400 && str_contains((string) $res->body(), 'already exists')) {
+                $skipped[] = $name; // key taken by a field we cannot see by name: report it instead of failing
+                continue;
+            }
+            $res->throw();
             $created[] = $name;
         }
         Cache::forget('ghl.field_ids');
 
-        return ['created' => $created, 'existing' => array_values(array_diff(GhlFields::all(), $created))];
+        return ['created' => $created, 'skipped' => $skipped, 'existing' => array_values(array_diff(GhlFields::all(), $created, $skipped))];
     }
 
     /** Field name => value pairs for one enquiry (first-touch included only when $withFirst). */

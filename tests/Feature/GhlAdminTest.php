@@ -140,6 +140,42 @@ class GhlAdminTest extends TestCase
         Http::assertNothingSent();
     }
 
+    public function test_field_with_same_key_under_another_name_is_reused_not_recreated(): void
+    {
+        $this->login();
+        $this->save();
+        Cache::flush();
+        Http::fake(fn (Request $r) => $r->method() === 'GET'
+            ? Http::response(['customFields' => [['id' => 'sr1', 'name' => 'special request', 'fieldKey' => 'contact.special_request']]])
+            : Http::response(['customField' => ['id' => 'n']]));
+
+        $this->post('/admin/ghl/setup')->assertSessionHasNoErrors();
+
+        Http::assertNotSent(fn (Request $r) => $r->method() === 'POST' && ($r->data()['name'] ?? null) === 'Special Request');
+        Cache::flush();
+        $this->assertSame('sr1', app(\App\Services\Ghl\GhlService::class)->existingFields()['Special Request']);
+    }
+
+    public function test_key_clash_we_cannot_see_is_reported_not_a_crash(): void
+    {
+        $this->login();
+        $this->save();
+        Cache::flush();
+        Http::fake(function (Request $r) {
+            if ($r->method() === 'GET') {
+                return Http::response(['customFields' => []]);
+            }
+
+            return ($r->data()['name'] ?? '') === 'Special Request'
+                ? Http::response(['statusCode' => 400, 'message' => 'contact.special_request already exists. Please input a different name or fieldKey.'], 400)
+                : Http::response(['customField' => ['id' => 'n']]);
+        });
+
+        $this->post('/admin/ghl/setup')->assertSessionHasErrors('ghl');
+        $this->assertStringContainsString('Special Request', session('errors')->first('ghl'));
+        $this->assertStringContainsString('custom fields created', session('errors')->first('ghl'));
+    }
+
     public function test_setup_creates_missing_fields(): void
     {
         $this->login();

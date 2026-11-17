@@ -30,6 +30,9 @@ class GhlSetup extends Command
         foreach ($result['created'] as $n) {
             $this->line("  <info>created</info>  $n");
         }
+        foreach ($result['skipped'] as $n) {
+            $this->line("  <comment>not created</comment>  $n (GHL already has a field with this key under another name: rename or delete it in GHL)");
+        }
         foreach ($result['existing'] as $n) {
             $this->line("  skipped  $n (already exists)");
         }

@@ -48,6 +48,18 @@ class GhlFields
         return self::TRACKING[$key].' ('.ucfirst($touch).')';   // e.g. "UTM Source (First)"
     }
 
+    /** The key GoHighLevel derives from a field name: lower case, non-alphanumerics to "_" (e.g. "UTM Source (First)" = utm_source_first). */
+    public static function keyFor(string $name): string
+    {
+        return trim((string) preg_replace('/[^a-z0-9]+/', '_', strtolower($name)), '_');
+    }
+
+    /** "contact.special_request" or "{{ contact.special_request }}" to "special_request". */
+    public static function normalizeKey(string $fieldKey): string
+    {
+        return self::keyFor((string) preg_replace('/^\W*contact\./i', '', trim($fieldKey)));
+    }
+
     public static function quiz(string $stepKey): string
     {
         return 'Quiz: '.Str::headline($stepKey);
