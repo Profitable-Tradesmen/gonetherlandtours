@@ -195,7 +195,7 @@ class GhlService
     public function upsert(Enquiry $e): string
     {
         $ids = $this->fieldIds();
-        $existingId = $this->findContactId($e->email);
+        $existingId = $this->findContactId($e->email, $e->phone_e164);
         $withFirst = true;
 
         if ($existingId) {
@@ -237,11 +237,17 @@ class GhlService
         return $id;
     }
 
-    private function findContactId(string $email): ?string
+    /** GHL treats a matching email OR phone as the same contact, so look up both (email first). */
+    private function findContactId(string $email, ?string $phone = null): ?string
     {
-        $res = $this->http()->get('/contacts/search/duplicate', ['locationId' => $this->loc(), 'email' => $email]);
+        foreach (array_filter(['email' => $email, 'number' => $phone]) as $param => $value) {
+            $res = $this->http()->get('/contacts/search/duplicate', ['locationId' => $this->loc(), $param => $value]);
+            if ($res->successful() && $res->json('contact.id')) {
+                return $res->json('contact.id');
+            }
+        }
 
-        return $res->successful() ? $res->json('contact.id') : null;
+        return null;
     }
 
     /** @return array<string,mixed> field id => value for an existing contact */
