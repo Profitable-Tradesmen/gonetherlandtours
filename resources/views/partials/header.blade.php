@@ -2,7 +2,7 @@
      auto mega menu of tour types, an item with children shows a dropdown of image cards, other items are plain links.
      $tourTypes (with published packages) and $destinations come from the layout. Labels come from Admin > Settings. --}}
 @php
-    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm xl:px-4 font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-sand';
+    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-[0.9rem] font-medium xl:px-4 text-ink transition-colors hover:bg-sand';
     $menu = \App\Models\MenuItem::tree('header');
     $hasTours = $menu->contains('kind', 'tours');
     $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header is fully transparent over it (white links, white logo) until you scroll, then it becomes a white bar
@@ -15,7 +15,7 @@
     <div class="container-site flex h-16 items-center justify-between gap-4 lg:h-20">
         <a href="{{ route('home') }}" @mouseenter="dd = null"><span class="hdr-logo inline-block">@include('partials.logo')</span></a>
 
-        <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
+        <nav class="hidden items-center gap-1 lg:ml-auto lg:flex" aria-label="Main">
             @foreach ($menu as $item)
                 @if ($item->kind === 'tours')
                     <button type="button" class="{{ $navBtn }}" :class="dd === 'tours' && 'bg-sand'" @click="dd = dd === 'tours' ? null : 'tours'" @mouseenter="dd = 'tours'" :aria-expanded="dd === 'tours'" aria-controls="mega-tours">
