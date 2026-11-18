@@ -347,6 +347,13 @@ class DesignRefreshTest extends TestCase
         $this->assertStringContainsString('>Demo<', $html);
         $this->assertStringNotContainsString('Self Drive Packages', $html);
 
+        // a blank or missing button label never leaves an empty button: the built-in wording is used
+        \App\Models\Setting::put('card_quote_label', '');
+        \App\Models\Setting::put('card_details_label', '');
+        $blank = $this->get('/')->getContent();
+        $this->assertStringContainsString('>Get a Quote</button>', $blank);
+        $this->assertStringContainsString('>Details<span class="sr-only">', $blank);
+
         \App\Models\Setting::put('row_packages_suffix', '');
         $this->assertStringContainsString('</span>Self Drive</h3>', $this->get('/')->getContent(), 'blank suffix shows just the tour type name');
     }
