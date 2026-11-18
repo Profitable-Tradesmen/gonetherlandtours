@@ -27,23 +27,33 @@ class DesignRefreshTest extends TestCase
         return collect($page->fresh()->allSections())->firstWhere('type', $type);
     }
 
-    public function test_hero_is_a_responsive_photo_with_a_preload_and_sits_below_a_solid_navy_header(): void
+    public function test_hero_is_a_responsive_photo_with_a_preload_and_floats_a_transparent_header_over_it(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('images/hero-home.webp', $html);
         $this->assertStringContainsString('hero-home-800.webp 800w', $html, 'phones get the small copy');
         $this->assertMatchesRegularExpression('/<link rel="preload" as="image"[^>]+imagesrcset=/', $html);
-        $this->assertStringContainsString('bg-white/95 backdrop-blur', $html, 'light header bar');
-        $this->assertStringNotContainsString('hdr-plate', $html, 'the transparent logo sits straight on the header, no plate');
-        $this->assertStringNotContainsString('hdr-overlay', $html, 'the header no longer floats over the hero');
+        $this->assertStringContainsString('hdr-overlay', $html, 'transparent over the hero until scrolled');
+        $this->assertStringContainsString('hdr-logo', $html, 'the transparent logo is shown white, with no plate');
+        $this->assertStringNotContainsString('hdr-plate', $html);
         $this->assertStringNotContainsString('hero-video-poster', $html, 'the abstract placeholder illustration is gone');
     }
 
-    public function test_header_is_a_solid_bar_on_every_page(): void
+    public function test_header_is_solid_on_pages_without_a_hero_and_floats_on_pages_that_start_with_one(): void
     {
-        foreach (['/', '/about', '/contact', '/faq', '/packages', '/blog', '/packages/sample-tulip-season-self-drive'] as $url) {
+        foreach (['/', '/about', '/packages/sample-tulip-season-self-drive'] as $url) {
+            $this->assertStringContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
+        }
+        foreach (['/contact', '/faq', '/packages', '/blog'] as $url) {
             $this->assertStringNotContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
         }
+    }
+
+    public function test_top_bar_shows_placeholder_phone_and_email_until_settings_are_filled(): void
+    {
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('+1 000-000-0000', $html);
+        $this->assertStringContainsString('info@gonetherlandtours.com', $html);
     }
 
     public function test_reference_layout_home_order_value_strip_journey_cards_and_packages_by_tour_type(): void
@@ -120,7 +130,7 @@ class DesignRefreshTest extends TestCase
     public function test_top_bar_is_hidden_on_phones_and_h1_is_smaller(): void
     {
         $html = $this->get('/')->getContent();
-        $this->assertMatchesRegularExpression('/class="hidden bg-ink text-white text-xs sm:block/', $html);
+        $this->assertMatchesRegularExpression('/class="hidden bg-brand-900 text-white text-xs sm:block/', $html);
         $this->assertStringContainsString('lg:text-6xl', $html);
         $this->assertStringNotContainsString('lg:text-7xl', $html);
     }

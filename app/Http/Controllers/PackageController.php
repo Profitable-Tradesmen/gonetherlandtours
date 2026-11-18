@@ -83,7 +83,7 @@ class PackageController extends Controller
         ]);
 
         return view('pages.package-show', [
-            'overlayHeader' => false,
+            'overlayHeader' => true,
             'package' => $package,
             'related' => $related,
             'seo' => Seo::make([

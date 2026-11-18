@@ -2,27 +2,27 @@
      auto mega menu of tour types, an item with children shows a dropdown of image cards, other items are plain links.
      $tourTypes (with published packages) and $destinations come from the layout. Labels come from Admin > Settings. --}}
 @php
-    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm xl:px-4 font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-sand';
+    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm xl:px-4 font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/10';
     $menu = \App\Models\MenuItem::tree('header');
     $hasTours = $menu->contains('kind', 'tours');
-    $overlay = false;   // light header bar on every page so the transparent navy-and-orange logo is always readable
+    $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header floats transparent over it (white logo and links) until you scroll, then turns navy
 @endphp
-<header class="hdr sticky top-0 z-50 border-b-4 border-accent bg-white/95 backdrop-blur {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
+<header class="hdr sticky top-0 z-50 border-b-4 border-accent bg-brand-900 {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
         x-data="{ menu: false, dd: null, solid: false }" x-init="solid = window.scrollY > 24"
         @scroll.window.passive="solid = window.scrollY > 24"
         :class="{ 'is-solid': solid || menu || dd }"
         @keydown.escape.window="menu = false; dd = null" @mouseleave="dd = null">
     <div class="container-site flex h-16 items-center justify-between gap-4 lg:h-20">
-        <a href="{{ route('home') }}" @mouseenter="dd = null"><span class="inline-block">@include('partials.logo')</span></a>
+        <a href="{{ route('home') }}" @mouseenter="dd = null"><span class="hdr-logo inline-block">@include('partials.logo')</span></a>
 
         <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
             @foreach ($menu as $item)
                 @if ($item->kind === 'tours')
-                    <button type="button" class="{{ $navBtn }}" :class="dd === 'tours' && 'bg-sand'" @click="dd = dd === 'tours' ? null : 'tours'" @mouseenter="dd = 'tours'" :aria-expanded="dd === 'tours'" aria-controls="mega-tours">
+                    <button type="button" class="{{ $navBtn }}" :class="dd === 'tours' && 'bg-white/10'" @click="dd = dd === 'tours' ? null : 'tours'" @mouseenter="dd = 'tours'" :aria-expanded="dd === 'tours'" aria-controls="mega-tours">
                         {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'tours' && 'rotate-180'" />
                     </button>
                 @elseif ($item->kind === 'cards' && $item->children->isNotEmpty())
-                    <button type="button" class="{{ $navBtn }}" :class="dd === 'm{{ $item->id }}' && 'bg-sand'" @click="dd = dd === 'm{{ $item->id }}' ? null : 'm{{ $item->id }}'" @mouseenter="dd = 'm{{ $item->id }}'" :aria-expanded="dd === 'm{{ $item->id }}'" aria-controls="mega-{{ $item->id }}">
+                    <button type="button" class="{{ $navBtn }}" :class="dd === 'm{{ $item->id }}' && 'bg-white/10'" @click="dd = dd === 'm{{ $item->id }}' ? null : 'm{{ $item->id }}'" @mouseenter="dd = 'm{{ $item->id }}'" :aria-expanded="dd === 'm{{ $item->id }}'" aria-controls="mega-{{ $item->id }}">
                         {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'm{{ $item->id }}' && 'rotate-180'" />
                     </button>
                 @else
@@ -33,7 +33,7 @@
 
         <div class="flex items-center gap-2">
             @if (text('header_button_label'))<x-button class="hidden sm:inline-flex lg:hidden !py-2.5" @click="$store.modal.show()">{{ text('header_button_label') }}</x-button>@endif
-            <button type="button" class="hdr-link rounded p-2 text-ink hover:bg-sand lg:hidden" @click="menu = !menu" :aria-expanded="menu" aria-controls="mobile-menu" aria-label="Menu">
+            <button type="button" class="hdr-link rounded p-2 text-white hover:bg-white/10 lg:hidden" @click="menu = !menu" :aria-expanded="menu" aria-controls="mobile-menu" aria-label="Menu">
                 <x-icon name="menu" x-show="!menu" /><x-icon name="close" x-show="menu" x-cloak />
             </button>
         </div>
