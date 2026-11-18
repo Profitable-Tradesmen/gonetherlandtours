@@ -55,7 +55,7 @@ class PageBuilderTest extends TestCase
 
         $this->get(route('admin.pages.sections.edit', [$home, $hero['id']]))->assertOk()->assertSee('Edit section: Hero: video and quiz');
 
-        $this->put(route('admin.pages.sections.update', [$home, $hero['id']]), ['data' => ['heading' => 'Brand *New* Heading', 'subheading' => 'Fresh sub', 'primary_label' => 'Quote me', 'secondary_label' => '', 'badges' => [['text' => 'Badge A'], ['text' => '']]]])
+        $this->put(route('admin.pages.sections.update', [$home, $hero['id']]), ['data' => ['layout' => 'split', 'heading' => 'Brand *New* Heading', 'subheading' => 'Fresh sub', 'primary_label' => 'Quote me', 'secondary_label' => '', 'badges' => [['text' => 'Badge A'], ['text' => '']]]])
             ->assertRedirect(route('admin.pages.edit', $home));
 
         $this->get('/')->assertOk()->assertSee('Brand')->assertSee('Fresh sub')->assertSee('Quote me')->assertSee('Badge A')->assertDontSee('Explore packages');

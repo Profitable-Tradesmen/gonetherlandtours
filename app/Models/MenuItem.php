@@ -26,12 +26,18 @@ class MenuItem extends Model
             return $where.' > '.$p->label.' (card)';
         }
 
-        return $where.match ($this->kind) { 'tours' => ' (Tours menu)', 'cards' => ' (dropdown)', default => '' };
+        return $where.match ($this->kind) { 'tours' => ' (Tours menu)', 'cards' => ' (dropdown)', 'tourtype' => ' (tour type dropdown)', default => '' };
     }
 
     public function getLinkLabelAttribute(): string
     {
         return $this->kind === 'tours' ? '(automatic)' : (string) $this->url;
+    }
+
+    /** For a "tourtype" item: the tour type its link (/tours/<slug>) points to, taken from the already-loaded list. */
+    public function tourType($tourTypes)
+    {
+        return preg_match('#^/tours/([A-Za-z0-9_-]+)/?$#', (string) $this->url, $m) ? $tourTypes->firstWhere('slug', $m[1]) : null;
     }
 
     /** Top-level active items of a menu, with their active children. */

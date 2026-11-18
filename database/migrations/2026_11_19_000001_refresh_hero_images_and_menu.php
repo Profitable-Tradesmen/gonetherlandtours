@@ -47,9 +47,10 @@ return new class extends Migration
             }
         }
 
-        if (! DB::table('menu_items')->where('menu', 'header')->whereNull('parent_id')->where('url', '/destinations')->exists()) {
-            $tours = DB::table('menu_items')->where('menu', 'header')->whereNull('parent_id')->where('kind', 'tours')->value('sort_order');
-            $after = $tours ?? 0;
+        // only the older "Tours" menu gets a Destinations link (the newer menu has per-tour-type dropdowns instead)
+        $tours = DB::table('menu_items')->where('menu', 'header')->whereNull('parent_id')->where('kind', 'tours')->value('sort_order');
+        if ($tours !== null && ! DB::table('menu_items')->where('menu', 'header')->whereNull('parent_id')->where('url', '/destinations')->exists()) {
+            $after = $tours;
             DB::table('menu_items')->where('menu', 'header')->whereNull('parent_id')->where('sort_order', '>', $after)->increment('sort_order');
             DB::table('menu_items')->insert([
                 'menu' => 'header', 'parent_id' => null, 'kind' => 'link', 'label' => 'Destinations', 'description' => null, 'url' => '/destinations',

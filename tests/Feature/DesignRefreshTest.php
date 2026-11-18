@@ -33,16 +33,15 @@ class DesignRefreshTest extends TestCase
         $this->assertStringContainsString('images/hero-home.webp', $html);
         $this->assertStringContainsString('hero-home-800.webp 800w', $html, 'phones get the small copy');
         $this->assertMatchesRegularExpression('/<link rel="preload" as="image"[^>]+imagesrcset=/', $html);
-        $this->assertStringContainsString('hdr-overlay', $html);
-        $this->assertStringContainsString('hdr-plate', $html, 'logo sits on a white plate while transparent');
+        $this->assertStringNotContainsString('hdr-overlay', $html, 'the header no longer floats over the hero');
+        $this->assertStringNotContainsString('hdr-plate', $html, 'the transparent logo sits straight on the light header, no plate');
+        $this->assertStringContainsString('bg-white/95 backdrop-blur', $html);
         $this->assertStringNotContainsString('hero-video-poster', $html, 'the abstract placeholder illustration is gone');
     }
 
     public function test_header_is_solid_on_pages_without_a_hero_and_floats_on_pages_that_start_with_one(): void
     {
-        $this->assertStringContainsString('hdr-overlay', $this->get('/about')->getContent());
-        $this->assertStringContainsString('hdr-overlay', $this->get('/packages/sample-tulip-season-self-drive')->getContent());
-        foreach (['/contact', '/faq', '/packages', '/blog'] as $url) {
+        foreach (['/', '/about', '/packages/sample-tulip-season-self-drive', '/contact', '/faq', '/packages', '/blog'] as $url) {
             $this->assertStringNotContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
         }
     }
@@ -184,5 +183,97 @@ class DesignRefreshTest extends TestCase
         $about->update(['kind' => 'link']);
         $migration->up();
         $this->assertNull($blog->fresh()->parent_id);
+    }
+
+    public function test_goscottish_layout_home_order_centered_hero_feature_strip_and_travel_style_cards(): void
+    {
+        $types = collect(Page::bySlug('home')->visibleSections())->pluck('type')->all();
+        $this->assertSame(['hero_video_quiz', 'feature_strip', 'split_list', 'tour_types', 'promo_band', 'packages_tabs'], array_slice($types, 0, 6));
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('hero-in label-caps inline-flex', $html, 'centered hero with the line-and-dot label');
+        $this->assertStringContainsString('max-w-2xl text-left', $html, 'the quiz sits centered under the headline');
+        $this->assertStringContainsString('Clear, Upfront Quotes', $html);
+        // travel-style cards: tag, three bullets and three actions
+        $this->assertStringContainsString('Guided small-group tour', $html);
+        $this->assertStringContainsString('Led by a local guide', $html);
+        $this->assertStringContainsString('Ask Us a Question', $html);
+        $this->assertStringContainsString('More Info', $html);
+        // packages: one row per tour type, each with a "view more" button
+        $this->assertStringContainsString('Self Drive Packages', $html);
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'View more packages'));
+        // heading label motif
+        $this->assertStringContainsString('h-px w-7', $html);
+    }
+
+    public function test_split_hero_layout_still_available(): void
+    {
+        $this->login();
+        $home = Page::bySlug('home');
+        $hero = $this->section($home, 'hero_video_quiz');
+        $this->put(route('admin.pages.sections.update', [$home, $hero['id']]), ['data' => ['layout' => 'split', 'heading' => 'Split *Hero*', 'primary_label' => 'Quote me']])->assertSessionHasNoErrors();
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('lg:grid-cols-[1.1fr_0.9fr]', $html);
+        $this->assertStringContainsString('Quote me', $html);
+    }
+
+    public function test_tour_type_card_tag_and_points_are_editable_in_admin(): void
+    {
+        $this->login();
+        $t = \App\Models\TourType::where('slug', 'self-drive')->firstOrFail();
+        $this->put(route('admin.tour-types.update', $t), ['name' => $t->name, 'card_tag' => 'My own tag', 'card_points' => "One\nTwo\nThree\nFour", 'is_active' => '1'])->assertSessionHasNoErrors();
+        $this->assertSame(['One', 'Two', 'Three', 'Four'], $t->fresh()->cardPointList());
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('My own tag', $html);
+        $this->assertStringContainsString('Three', $html);
+        $this->assertStringNotContainsString('>Four<', $html, 'only the first three points are shown');
+    }
+
+    public function test_header_has_a_dropdown_per_tour_type_listing_its_packages_and_a_meet_the_team_page(): void
+    {
+        $html = $this->get('/')->getContent();
+        preg_match('#<nav class="hidden[^>]*aria-label="Main">(.*?)</nav>#s', $html, $nav);
+        foreach (['Home', 'Self Drive', 'Chauffeur Driven', 'Coach Tours', 'About Us'] as $label) {
+            $this->assertStringContainsString($label, $nav[1], $label);
+        }
+        $this->assertStringContainsString('aria-controls="mega-t', $nav[1], 'tour type dropdown buttons');
+        $this->assertStringContainsString('Sample: Tulip Season Self Drive', $html, 'the package is listed in the Self Drive dropdown');
+        $this->get('/meet-the-team')->assertOk()->assertSee('Meet the Team');
+        $this->assertStringContainsString('/meet-the-team', $html);
+    }
+
+    public function test_migration_switches_only_the_seeded_menu_and_reorders_only_the_seeded_home(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_21_000002_goscottish_layout_menu_and_team_page.php');
+
+        // an admin-customised menu is left alone
+        \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->where('label', 'Home')->update(['label' => 'Start here']);
+        $migration->up();
+        $this->assertTrue(\App\Models\MenuItem::where('menu', 'header')->where('label', 'Start here')->exists());
+
+        // the old seeded menu is replaced
+        \Illuminate\Support\Facades\DB::table('menu_items')->where('menu', 'header')->delete();
+        $now = now();
+        foreach ([['Tours', 'tours'], ['Destinations', 'link'], ['Packages', 'link'], ['About Us', 'cards'], ['Contact', 'link']] as $i => [$label, $kind]) {
+            \Illuminate\Support\Facades\DB::table('menu_items')->insert(['menu' => 'header', 'label' => $label, 'kind' => $kind, 'url' => '/x', 'sort_order' => $i + 1, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
+        }
+        $migration->up();
+        $this->assertSame(['Home', 'Self Drive', 'Chauffeur Driven', 'Coach Tours', 'About Us'], \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->orderBy('sort_order')->pluck('label')->all());
+
+        // home page: previous order is converted (old ticker kept hidden), a re-arranged one is untouched
+        $home = Page::bySlug('home');
+        $by = collect($home->allSections())->keyBy('type');
+        $old = [$by['hero_video_quiz'], ['id' => 'tick', 'type' => 'ticker', 'visible' => true, 'data' => ['items' => []]], $by['split_list'], $by['packages_tabs'], $by['feature_band'], $by['tour_types'],
+            $by['video_feature'], $by['image_strip'], $by['steps'], $by['testimonials'], $by['gallery'], $by['text_cta'], $by['faq'], $by['blog_latest'], $by['cta_banner']];
+        $home->update(['sections' => $old]);
+        $migration->up();
+        $now = collect($home->fresh()->allSections());
+        $this->assertSame(['hero_video_quiz', 'feature_strip', 'split_list', 'tour_types', 'promo_band', 'packages_tabs'], $now->pluck('type')->take(6)->all());
+        $this->assertSame(['ticker', false], [$now->last()['type'], $now->last()['visible']]);
+
+        $custom = array_reverse($old);
+        $home->update(['sections' => $custom]);
+        $migration->up();
+        $this->assertSame(array_column($custom, 'type'), collect($home->fresh()->allSections())->pluck('type')->all());
     }
 }

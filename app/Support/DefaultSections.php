@@ -91,21 +91,19 @@ class DefaultSections
                 'badges' => array_map(fn ($b) => ['text' => $b], $c['badges'] ?? []),
                 'poster_alt' => '',
             ]),
-            self::s('ticker', ['items' => array_map(fn ($t) => ['text' => $t], [
-                'Authentic Dutch Culture', 'Small Group Experiences', 'Hidden Gems & Local Secrets', 'Expertly Crafted Itineraries',
-                'Windmills & Tulip Fields', 'Cheese Markets & Local Traditions', 'Flexible Itineraries', 'Free, No-Obligation Quote',
-            ])]),
+            self::featureStrip(),
             self::s('split_list', [
                 'image1_alt' => 'A quiet Dutch canal town at dawn with gabled brick houses reflected in still water',
                 'image2_alt' => 'A traditional windmill beside rows of tulips at golden hour',
                 'items' => array_map(fn ($w) => ['title' => $w['title'] ?? '', 'text' => $w['text'] ?? ''], $why),
             ]),
+            self::s('tour_types', ['heading' => $c['tours_heading'] ?? 'Choose How You Want to *Explore*']),
+            self::promoBand(),
             self::s('packages_tabs', ['heading' => $c['packages_heading'] ?? 'Signature Netherlands Journeys']),
             self::s('feature_band', [
                 'image_alt' => 'Dutch countryside at sunrise with windmills along a river',
                 'bullets' => array_map(fn ($t) => ['text' => $t], ['Authentic Dutch culture, not a checklist', 'Small groups with flexible itineraries', 'Hidden gems beyond the tourist hotspots', 'Expertly crafted routes and attractions']),
             ]),
-            self::s('tour_types', ['heading' => $c['tours_heading'] ?? 'Choose How You Want to Explore']),
             self::s('video_feature', ['poster_alt' => 'Travellers walking along a canal-side street lined with historic houses']),
             self::s('image_strip', ['items' => array_map(fn ($t) => ['title' => $t[0], 'text' => $t[1], 'image' => $t[2], 'image_alt' => $t[3]], $trav)]),
             self::s('steps', ['heading' => $c['how_heading'] ?? 'How It Works', 'items' => array_map(fn ($x) => ['title' => $x['title'] ?? '', 'text' => $x['text'] ?? ''], $steps)]),
@@ -209,31 +207,71 @@ class DefaultSections
     }
 
     /** Header and footer menus as they were hard-coded. Only inserted when the menu table is empty. */
+    /** Four selling points in a dark band right under the hero. */
+    public static function featureStrip(): array
+    {
+        return self::s('feature_strip', ['items' => self::rows([
+            ['money', 'Clear, Upfront Quotes', 'Know what is included before you decide'],
+            ['tulip', 'Authentic Dutch Culture', 'Real traditions and local places, not a checklist'],
+            ['map', 'Expertly Crafted Itineraries', 'Designed around your dates, pace and interests'],
+            ['phone', 'Real People to Help', 'Personal support from first inquiry to your return home'],
+        ], ['icon', 'title', 'text'])]);
+    }
+
+    /** A light reassurance band between the travel styles and the packages. No invented discount: it promises only what the site already does. */
+    public static function promoBand(): array
+    {
+        return self::s('promo_band', ['points' => array_map(fn ($t) => ['text' => $t], ['Free, no-obligation quote', 'Free consultation', 'Clear, personalized itinerary'])]);
+    }
+
     public static function menus(): void
     {
         if (DB::table('menu_items')->exists()) {
             return;
         }
+        self::resetHeaderMenu();
+        $now = now();
+        foreach ([['About us', '/about'], ['Meet the team', '/meet-the-team'], ['Blog', '/blog'], ['FAQ', '/faq'], ['Testimonials', '/testimonials'], ['Contact', '/contact'], ['Terms and Conditions', '/terms-and-conditions'], ['Privacy Policy', '/privacy-policy']] as $i => [$label, $url]) {
+            DB::table('menu_items')->insert(['menu' => 'footer', 'label' => $label, 'url' => $url, 'sort_order' => $i + 1, 'kind' => 'link', 'description' => null, 'image' => null, 'image_alt' => null, 'parent_id' => null, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
+        }
+    }
+
+    /**
+     * The main menu of the reference design: Home, one dropdown per tour type (its packages are listed automatically) and an
+     * About Us dropdown of image cards. Replaces ALL header menu rows, so callers must check that the admin has not customized the menu first.
+     */
+    public static function resetHeaderMenu(): void
+    {
+        DB::table('menu_items')->where('menu', 'header')->delete();
         $now = now();
         $add = function (array $row) use ($now) {
-            return DB::table('menu_items')->insertGetId($row + ['kind' => 'link', 'description' => null, 'image' => null, 'image_alt' => null, 'parent_id' => null, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
+            return DB::table('menu_items')->insertGetId($row + ['menu' => 'header', 'kind' => 'link', 'description' => null, 'image' => null, 'image_alt' => null, 'parent_id' => null, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
         };
         $n = 0;
-        $add(['menu' => 'header', 'label' => 'Tours', 'kind' => 'tours', 'url' => null, 'sort_order' => ++$n]);
-        $add(['menu' => 'header', 'label' => 'Packages', 'url' => '/packages', 'sort_order' => ++$n]);
-        $about = $add(['menu' => 'header', 'label' => 'About Us', 'kind' => 'cards', 'url' => '/about', 'sort_order' => ++$n]);
-        $add(['menu' => 'header', 'label' => 'Contact', 'url' => '/contact', 'sort_order' => ++$n]);
+        $add(['label' => 'Home', 'url' => '/', 'sort_order' => ++$n]);
+        $add(['label' => 'Self Drive', 'kind' => 'tourtype', 'url' => '/tours/self-drive', 'sort_order' => ++$n]);
+        $add(['label' => 'Chauffeur Driven', 'kind' => 'tourtype', 'url' => '/tours/chauffeur-driven', 'sort_order' => ++$n]);
+        $add(['label' => 'Coach Tours', 'kind' => 'tourtype', 'url' => '/tours/coach-tours', 'sort_order' => ++$n]);
+        $about = $add(['label' => 'About Us', 'kind' => 'cards', 'url' => '/about', 'sort_order' => ++$n]);
         foreach ([
             ['About Us', 'Who we are and how we plan your trip', '/about', 'images/Intro_image_split.webp', 'A traditional Dutch canal house and windmill'],
-            ['Contact', 'Talk to a travel specialist', '/contact', 'images/Guide_1.webp', 'A travel specialist helping plan a Netherlands trip'],
-            ['Testimonials', 'What travellers say about us', '/testimonials', 'images/couples.webp', 'A happy couple travelling in the Netherlands'],
+            ['Meet the Team', 'The people planning your trip', '/meet-the-team', 'images/Guide_1.webp', 'A travel specialist helping plan a Netherlands trip'],
+            ['Testimonials', 'What travelers say about us', '/testimonials', 'images/couples.webp', 'A happy couple traveling in the Netherlands'],
             ['FAQs', 'Answers to common questions', '/faq', 'images/feature_band.webp', 'Tulip fields stretching to the horizon'],
             ['Blog', 'Travel guides and inspiration', '/blog', 'images/Guide_2.webp', 'A Dutch canal-side street with historic gabled houses'],
+            ['Contact', 'Talk to a travel specialist', '/contact', 'images/Guide_1.webp', 'A travel specialist helping plan a Netherlands trip'],
         ] as $i => [$label, $desc, $url, $img, $alt]) {
-            $add(['menu' => 'header', 'parent_id' => $about, 'label' => $label, 'description' => $desc, 'url' => $url, 'image' => $img, 'image_alt' => $alt, 'sort_order' => $i + 1]);
+            $add(['parent_id' => $about, 'label' => $label, 'description' => $desc, 'url' => $url, 'image' => $img, 'image_alt' => $alt, 'sort_order' => $i + 1]);
         }
-        foreach ([['About us', '/about'], ['Blog', '/blog'], ['FAQ', '/faq'], ['Testimonials', '/testimonials'], ['Contact', '/contact'], ['Terms and Conditions', '/terms-and-conditions'], ['Privacy Policy', '/privacy-policy']] as $i => [$label, $url]) {
-            $add(['menu' => 'footer', 'label' => $label, 'url' => $url, 'sort_order' => $i + 1]);
-        }
+    }
+
+    /** The Meet the Team page: title bar, team cards, closing call to action. */
+    public static function teamPage(): array
+    {
+        return [
+            self::s('page_header', ['heading' => 'Meet the Team', 'subtitle' => 'The people who plan your trip and look after you along the way.']),
+            self::s('team', ['items' => array_map(fn ($n) => ['name' => "[CONFIRM: team member $n name]", 'role' => '[CONFIRM: role]', 'bio' => '[CONFIRM: short bio and why they love the Netherlands. Sample text only.]', 'image' => '', 'image_alt' => ''], [1, 2, 3])]),
+            self::s('cta_banner', ['image_alt' => 'Tulip fields and a distant windmill at sunset', 'heading' => 'Ready to Discover the Real Netherlands?', 'text' => 'Tell us what you have in mind and a travel specialist will reply with a clear, no-obligation quote.']),
+        ];
     }
 }

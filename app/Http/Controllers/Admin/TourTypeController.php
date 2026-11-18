@@ -24,6 +24,8 @@ class TourTypeController extends ResourceController
                 ['name' => 'h1', 'label' => 'Page heading (H1)', 'type' => 'text', 'rules' => 'nullable|string|max:190'],
                 ['name' => 'icon', 'label' => 'Icon name (car, guide, coach)', 'type' => 'text', 'rules' => 'nullable|string|max:40'],
                 ['name' => 'summary', 'label' => 'Short summary', 'type' => 'textarea', 'rules' => 'nullable|string|max:500'],
+                ['name' => 'card_tag', 'label' => 'Small tag on the home page card (for example Guided small-group tour)', 'type' => 'text', 'rules' => 'nullable|string|max:80'],
+                ['name' => 'card_points', 'label' => 'Home page card bullet points (one per line, up to 3)', 'type' => 'textarea', 'rules' => 'nullable|string|max:400'],
                 ['name' => 'body', 'label' => 'Page content', 'type' => 'rich', 'rules' => 'nullable|string'],
                 ['name' => 'image', 'label' => 'Image (JPG, PNG or WebP)', 'type' => 'image'],
                 ['name' => 'seo_title', 'label' => 'SEO title', 'type' => 'text', 'rules' => 'nullable|string|max:190'],

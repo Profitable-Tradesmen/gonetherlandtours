@@ -2,24 +2,28 @@
      auto mega menu of tour types, an item with children shows a dropdown of image cards, other items are plain links.
      $tourTypes (with published packages) and $destinations come from the layout. Labels come from Admin > Settings. --}}
 @php
-    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm xl:px-4 font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-sand';
+    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm xl:px-4 font-medium text-ink transition-colors hover:bg-sand';
     $menu = \App\Models\MenuItem::tree('header');
     $hasTours = $menu->contains('kind', 'tours');
-    $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header floats transparent over it until you scroll
+    $overlay = false;   // the header is a light bar on every page so the (transparent, navy-and-orange) logo is always readable
 @endphp
-<header class="hdr sticky top-0 z-50 border-b-4 border-accent bg-white {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
+<header class="hdr sticky top-0 z-50 border-b-4 border-accent bg-white/95 backdrop-blur {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
         x-data="{ menu: false, dd: null, solid: false }" x-init="solid = window.scrollY > 24"
         @scroll.window.passive="solid = window.scrollY > 24"
         :class="{ 'is-solid': solid || menu || dd }"
         @keydown.escape.window="menu = false; dd = null" @mouseleave="dd = null">
     <div class="container-site flex h-16 items-center justify-between gap-4 lg:h-20">
-        <a href="{{ route('home') }}" @mouseenter="dd = null"><span class="hdr-plate inline-block">@include('partials.logo')</span></a>
+        <a href="{{ route('home') }}" @mouseenter="dd = null"><span class="inline-block">@include('partials.logo')</span></a>
 
         <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
             @foreach ($menu as $item)
                 @if ($item->kind === 'tours')
                     <button type="button" class="{{ $navBtn }}" :class="dd === 'tours' && 'bg-sand'" @click="dd = dd === 'tours' ? null : 'tours'" @mouseenter="dd = 'tours'" :aria-expanded="dd === 'tours'" aria-controls="mega-tours">
                         {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'tours' && 'rotate-180'" />
+                    </button>
+                @elseif ($item->kind === 'tourtype' && $item->tourType($tourTypes))
+                    <button type="button" class="{{ $navBtn }}" :class="dd === 't{{ $item->id }}' && 'bg-sand'" @click="dd = dd === 't{{ $item->id }}' ? null : 't{{ $item->id }}'" @mouseenter="dd = 't{{ $item->id }}'" :aria-expanded="dd === 't{{ $item->id }}'" aria-controls="mega-t{{ $item->id }}">
+                        {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 't{{ $item->id }}' && 'rotate-180'" />
                     </button>
                 @elseif ($item->kind === 'cards' && $item->children->isNotEmpty())
                     <button type="button" class="{{ $navBtn }}" :class="dd === 'm{{ $item->id }}' && 'bg-sand'" @click="dd = dd === 'm{{ $item->id }}' ? null : 'm{{ $item->id }}'" @mouseenter="dd = 'm{{ $item->id }}'" :aria-expanded="dd === 'm{{ $item->id }}'" aria-controls="mega-{{ $item->id }}">
@@ -32,8 +36,8 @@
         </nav>
 
         <div class="flex items-center gap-2">
-            @if (text('header_button_label'))<x-button class="hidden sm:inline-flex !py-2.5" @click="$store.modal.show()">{{ text('header_button_label') }}</x-button>@endif
-            <button type="button" class="hdr-link rounded p-2 lg:hidden" @click="menu = !menu" :aria-expanded="menu" aria-controls="mobile-menu" aria-label="Menu">
+            @if (text('header_button_label'))<x-button class="hidden sm:inline-flex lg:hidden !py-2.5" @click="$store.modal.show()">{{ text('header_button_label') }}</x-button>@endif
+            <button type="button" class="hdr-link rounded p-2 text-ink hover:bg-sand lg:hidden" @click="menu = !menu" :aria-expanded="menu" aria-controls="mobile-menu" aria-label="Menu">
                 <x-icon name="menu" x-show="!menu" /><x-icon name="close" x-show="menu" x-cloak />
             </button>
         </div>
@@ -78,6 +82,38 @@
     </div>
     @endif
 
+    {{-- Tour type dropdown (kind "tourtype"): a feature card for the tour type on the left, its published packages as a list on the right. --}}
+    @foreach ($menu->where('kind', 'tourtype') as $item)
+        @php $tt = $item->tourType($tourTypes); @endphp
+        @continue(! $tt)
+        <div id="mega-t{{ $item->id }}" x-show="dd === 't{{ $item->id }}'" x-cloak
+             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             class="absolute inset-x-0 top-full hidden border-b-4 border-accent bg-sand shadow-card lg:block" @click.outside="dd === 't{{ $item->id }}' && (dd = null)">
+            <div class="container-site grid items-stretch gap-6 py-7 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+                <a href="{{ $item->href() }}" class="group relative isolate flex min-h-[15rem] flex-col justify-end overflow-hidden rounded-2xl text-white" @click="dd = null">
+                    <x-picture :src="$tt->image ?: 'images/tour-self-drive.webp'" :alt="$tt->image_alt ?? ''" :width="960" :height="640" sizes="(min-width:1024px) 36vw, 100vw" class="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <span class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/30 to-transparent"></span>
+                    <span class="p-6"><span class="block font-display text-2xl font-medium">{{ $tt->name }}</span><span class="mt-1 block text-sm text-white/90">{{ $tt->summary }}</span><span class="label-caps mt-3 inline-flex items-center gap-2 text-xs text-accent">{{ text('mega_view_all_label') }} {{ $tt->name }} <x-icon name="arrow" class="h-4 w-4" /></span></span>
+                </a>
+                <div>
+                    <p class="label-caps text-xs text-rust">{{ $tt->name }} {{ \Illuminate\Support\Str::lower(text('mobile_tours_heading')) }}</p>
+                    <ul class="mt-3 grid gap-x-6 sm:grid-cols-2">
+                        @forelse ($tt->packages as $p)
+                            <li class="border-b border-sand-200"><a href="{{ route('packages.show', $p) }}" class="group/row flex items-center justify-between gap-3 py-3 text-sm font-semibold transition-colors hover:text-rust" @click="dd = null"><span class="min-w-0">{{ $p->title }}<span class="block text-xs font-normal text-ink/60">{{ $p->nights }} {{ \Illuminate\Support\Str::plural('night', $p->nights) }}</span></span><x-icon name="arrow" class="h-4 w-4 shrink-0 text-rust opacity-0 transition group-hover/row:opacity-100" /></a></li>
+                        @empty
+                            <li class="py-3 text-sm text-ink/70">{{ text('mega_help_text') }}</li>
+                        @endforelse
+                    </ul>
+                    <div class="mt-5 flex flex-wrap gap-3">
+                        @if (text('mega_all_packages_label'))<a href="{{ route('packages.index') }}" class="btn btn-outline !py-2.5 text-brand-900" @click="dd = null">{{ text('mega_all_packages_label') }}</a>@endif
+                        @if (text('mega_quote_label'))<x-button class="!py-2.5" @click="dd = null; $store.modal.show()">{{ text('mega_quote_label') }}</x-button>@endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
     {{-- Dropdown menus made of image cards (items with children in Admin > Navigation).
          Wide screens (xl): intro panel on the left, cards on the right, cards stretch to the intro panel's height.
          Narrower desktops: the intro becomes a slim banner above a full-width row of cards, so nothing is cramped. --}}
@@ -120,7 +156,7 @@
         </div>
     @endforeach
 
-    <nav id="mobile-menu" x-show="menu" x-cloak class="max-h-[80vh] overflow-y-auto border-t border-sand-200 bg-white lg:hidden" aria-label="Mobile">
+    <nav id="mobile-menu" x-show="menu" x-cloak class="max-h-[80vh] overflow-y-auto border-t border-sand-200 bg-white text-ink lg:hidden" aria-label="Mobile">
         <div class="container-site space-y-1 py-3 text-sm font-semibold">
             <a href="{{ route('home') }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ text('mobile_home_label') }}</a>
             @if ($hasTours)

@@ -63,3 +63,16 @@ Visible focus ring (gold), skip link, labelled controls, `aria-invalid` and `rol
 3. Replace images in `public/images/` (same filenames) and update IMAGE_CREDITS.md.
 4. Update `config/gnt.php`, the seeders (copy, FAQs, quiz) and `docs`.
 5. `npm run build`, run tests, run Lighthouse.
+
+## Layout inspired by goscottishtours.com
+
+Same fonts (Playfair Display, Montserrat) and palette; only the layout changed.
+
+- **Header:** transparent over the hero, solid navy (`brand-900`) once scrolled or on pages without a hero; white nav links; logo on a white plate. Menu: Home, Self Drive, Chauffeur Driven, Coach Tours (each a **tour type dropdown** that lists that tour type's packages automatically), About Us (image cards, includes Meet the Team). Menu item type "Tour type dropdown": set the link to `/tours/<slug>`.
+- **Hero:** centered (label with a line and dot, headline, intro, the quiz in a framed card, trust row). The old two-column hero is still available via the section's Layout setting.
+- **Home order:** hero, feature strip (4 round-icon points on navy), intro (photo + ticked list), travel-style cards (navy cards: photo, tag, summary, 3 bullets, More Info, Get a Quote, Ask Us a Question), offer/reassurance band, packages in one row per tour type, then the rest.
+- **Tour type card text:** Admin > Tour types > "Small tag" and "bullet points" (one per line, first three shown).
+- **Headings:** small label with a short line and a dot; italic emphasised words carry a thin rust underline.
+- New section types: **Feature strip**, **Offer / reassurance band**. "Featured packages" has a Layout choice (one row per tour type, or tabs).
+- New page **Meet the Team** (`/meet-the-team`, normal custom page).
+- Migrations `2026_11_21_000001` (card fields) and `2026_11_21_000002` (home order, menu, Meet the Team page) only change a home page and menu that are still the seeded ones.

@@ -73,19 +73,31 @@ class Sections
                 $t('button_label', 'Button under the text (opens the quote pop-up)', '', 'Leave blank for no button.'),
             ]],
             'hero_video_quiz' => ['label' => 'Hero: video and quiz', 'description' => 'Full-screen hero with background video poster, heading, buttons, trust badges and the enquiry quiz.', 'fields' => [
+                ['name' => 'layout', 'label' => 'Layout', 'type' => 'select', 'options' => ['centered' => 'Centered: text, then the quiz below it', 'split' => 'Split: text on the left, quiz on the right'], 'default' => 'centered'],
                 $t('eyebrow', 'Small label', 'The Netherlands Collection'),
                 $t('heading', 'Heading (H1)', 'Discover the Authentic Netherlands'),
                 $ta('subheading', 'Sub-heading'),
+                $t('survey_line', 'Line above the quiz (centered layout)', 'Answer a few quick questions for your free, no-obligation quote'),
                 $t('primary_label', 'Main button (opens the quote pop-up)', 'Get a free quote'),
                 $t('secondary_label', 'Second button label', 'Explore packages'),
                 self::link('secondary_url', 'Second button link', '/packages'),
                 self::rep('badges', 'Trust badges (up to 3)', 'badge', [$t('text', 'Badge text')], 3),
                 self::img('poster', 'Hero photo (shown first and on phones; the video plays over it on desktop)', 'images/hero-home.webp'),
             ]],
+            'feature_strip' => ['label' => 'Feature strip (4 icon points)', 'description' => 'A dark band with up to four centered selling points, each with a round icon, a title and one line.', 'fields' => [
+                self::rep('items', 'Points', 'point', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Short text')], 4),
+            ]],
+            'promo_band' => ['label' => 'Offer / reassurance band', 'description' => 'A light band with a big heading, a short paragraph, up to three ticked points and a button. Good for an offer or a promise.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Plan with confidence'),
+                $t('heading', 'Heading', 'Start planning and get your *free quote.*'),
+                $ta('text', 'Text', 'Tell us what you have in mind and a travel specialist will reply with a clear, personalized quote. No pressure and no obligation.'),
+                self::rep('points', 'Ticked points (up to 3)', 'point', [$t('text', 'Text')], 3),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Get my free quote'),
+            ]],
             'ticker' => ['label' => 'Highlights ticker', 'description' => 'A thin scrolling strip of short selling points.', 'fields' => [
                 self::rep('items', 'Highlights', 'highlight', [$t('text', 'Text')], 16),
             ]],
-            'split_list' => ['label' => 'Intro: photos and numbered list', 'description' => 'Two photos on one side, a heading and a numbered list of reasons on the other.', 'fields' => [
+            'split_list' => ['label' => 'Intro: photo and ticked list', 'description' => 'A large photo (with an optional badge and a smaller second photo) on one side, a heading and a ticked list of reasons on the other.', 'fields' => [
                 self::img('image1', 'Photo 1', 'images/Intro_image_split.webp'),
                 self::img('image2', 'Photo 2', 'images/Intro_image_split1.webp'),
                 $t('badge', 'Floating badge on the photos', 'Free, no-obligation quote'),
@@ -96,7 +108,10 @@ class Sections
             ]],
             'packages_tabs' => ['label' => 'Featured packages', 'description' => 'Your featured packages with tabs by tour type. Choose which packages are featured in Admin > Packages.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Signature journeys'),
-                $t('heading', 'Heading', 'Signature Netherlands Journeys'),
+                $t('heading', 'Heading', 'Signature Netherlands *Journeys*'),
+                ['name' => 'layout', 'label' => 'Layout', 'type' => 'select', 'options' => ['by_type' => 'One row per tour type', 'tabs' => 'One carousel with tabs'], 'default' => 'by_type'],
+                $ta('intro', 'Intro text under the heading', 'Every journey is fully customizable. These are our most loved itineraries, perfected over years of delighting travelers.'),
+                $t('more_label', 'Per-row button (one row per tour type)', 'View more packages'),
                 $t('all_label', 'First tab label', 'All'),
                 $t('button_label', 'Button under the packages', 'See all packages'),
             ]],
@@ -110,10 +125,12 @@ class Sections
                 self::link('secondary_url', 'Second button link', '/packages'),
             ]],
             'tour_types' => ['label' => 'Tour types', 'description' => 'Cards for each active tour type (managed in Admin > Tour types).', 'fields' => [
-                $t('eyebrow', 'Small label', 'Tour types'),
-                $t('heading', 'Heading', 'Choose How You Want to Explore'),
-                $t('quote_label', 'Quote link label', 'Get a Quote'),
-                $t('ask_label', 'Question link label', 'Ask Us a Question'),
+                $t('eyebrow', 'Small label', 'Signature vacations'),
+                $t('heading', 'Heading', 'Choose How You Want to *Explore*'),
+                $ta('intro', 'Intro text under the heading', 'Choose the travel style that suits you, each carefully designed for comfort, ease and memorable experiences.'),
+                $t('more_label', 'Link under each card', 'More Info'),
+                $t('quote_label', 'Quote button label', 'Get a Quote'),
+                $t('ask_label', 'Question button label', 'Ask Us a Question'),
             ]],
             'video_feature' => ['label' => 'Video feature', 'description' => 'A dark band with text and a click-to-play video.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Watch'),
