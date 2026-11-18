@@ -55,3 +55,7 @@ Add or remove people who can log in. You cannot delete yourself or the last admi
 ## Tour type pages (Self Drive, Chauffeur Driven, Coach Tours)
 
 The hero (heading, summary, "how you travel" note) of `/tours/<name>` is edited in **Admin > Tour types**. Everything under the hero is built from sections, edited in **Admin > Pages > "<Tour type> page"** exactly like the home page: value strip, intro with photo and ticked list, the packages of that tour type (a carousel), why-us strip, offer band, reviews, three steps and a closing call to action. You can reorder, hide, add or remove sections there. If you delete a tour type's page, the older fixed layout is used until it is recreated (deploy runs `migrate`, or use the seeder). Text marked `[CONFIRM: ...]` needs your real facts (support hours, coach group size).
+
+## Destination pages
+
+The hero (heading, summary, photo) of `/destinations/<name>` is edited in **Admin > Destinations**. Everything under the hero is built from sections in **Admin > Pages > "<Destination> page"**, the same blocks as the tour type pages: value strip, intro with photos and ticked list, the tours that visit the destination, why-us strip, "when to go / how you can travel", offer band, reviews, three steps and a closing call to action. The guide text in Admin > Destinations (highlights, when to go) is used only if the destination's page is deleted. Text marked `[CONFIRM: ...]` needs your real itinerary facts.

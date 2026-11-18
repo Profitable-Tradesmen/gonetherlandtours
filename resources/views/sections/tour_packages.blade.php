@@ -1,7 +1,7 @@
 @php
-    // On a tour type page ($tourType is passed by the controller) show that tour type's packages; anywhere else show the featured ones.
+    // On a tour type page ($tourType) or a destination page ($destination) the controller passes it, and that tour type's / destination's packages are shown; anywhere else the featured ones.
     $packages = \App\Models\Package::published()
-        ->when(isset($tourType), fn ($q) => $q->where('tour_type_id', $tourType->id), fn ($q) => $q->where('is_featured', true))
+        ->when(isset($tourType), fn ($q) => $q->where('tour_type_id', $tourType->id), fn ($q) => $q->when(isset($destination), fn ($q) => $q->where('destination_id', $destination->id), fn ($q) => $q->where('is_featured', true)))
         ->with(['tourType', 'destination', 'images'])->orderBy('sort_order')->take(12)->get();
 @endphp
 <section class="bg-white py-16 sm:py-24" aria-labelledby="tp-{{ $sid }}">

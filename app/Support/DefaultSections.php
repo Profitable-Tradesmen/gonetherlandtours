@@ -39,7 +39,7 @@ class DefaultSections
         }
 
         foreach (DB::table('pages')->get() as $page) {
-            $update = ['is_system' => in_array($page->slug, self::SYSTEM, true) || ($page->is_system && str_starts_with($page->slug, 'tour-'))];
+            $update = ['is_system' => in_array($page->slug, self::SYSTEM, true) || ($page->is_system && (str_starts_with($page->slug, 'tour-') || str_starts_with($page->slug, 'dest-')))];
             if (blank($page->sections)) {
                 $content = json_decode((string) $page->content, true) ?: [];
                 $sections = match ($page->slug) {

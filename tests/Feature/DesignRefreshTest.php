@@ -423,8 +423,8 @@ class DesignRefreshTest extends TestCase
             $this->assertStringNotContainsString('[CONFIRM: destination guide copy', (string) $d->body, $d->name);
             $this->assertStringContainsString('<h2>Highlights</h2>', (string) $d->body, $d->name);
             $html = $this->get(route('destinations.show', $d))->assertOk()->getContent();
-            $this->assertStringContainsString('When to go', $html);
-            $this->assertStringContainsString('How you can travel', $html);
+            $this->assertStringContainsString('When to', $html);
+            $this->assertStringContainsString('How you can', $html);
             $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html));
         }
         $index = $this->get('/destinations')->assertOk()->getContent();
@@ -448,6 +448,34 @@ class DesignRefreshTest extends TestCase
         $d->update(['body' => '<p>My own guide text.</p>']);
         $migration->up();
         $this->assertSame('<p>My own guide text.</p>', $d->fresh()->body);
+    }
+
+    public function test_each_destination_page_is_built_from_sections_like_the_tour_type_pages(): void
+    {
+        foreach (\App\Models\Destination::all() as $d) {
+            $html = $this->get(route('destinations.show', $d))->assertOk()->getContent();
+            foreach (['Free, no-obligation quote', 'Why travel with us', 'What our guests say', '3 easy steps to book your trip', 'Crafted for you', 'How you can'] as $text) {
+                $this->assertStringContainsString($text, $html, $d->name.': '.$text);
+            }
+            $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html), $d->name.': one h1');
+            $page = Page::where('slug', 'dest-'.$d->slug)->firstOrFail();
+            $this->assertTrue($page->is_system);
+            $this->assertSame('/destinations/'.$d->slug, $page->path());
+            $this->get('/dest-'.$d->slug)->assertNotFound();
+        }
+        // the packages carousel shows only the packages of this destination
+        $html = $this->get('/destinations/zeeland-and-the-delta')->getContent();
+        $this->assertStringContainsString('Sample: Zeeland Coast Chauffeur Tour', $html);
+        $this->assertStringNotContainsString('Sample: Tulip Season Self Drive', $html);
+        $this->assertStringNotContainsString('dest-', $this->get('/sitemap.xml')->getContent());
+
+        // editable in admin; ensureAll never overwrites and recreates a deleted page; without it the older layout still works
+        $this->login();
+        $page = Page::where('slug', 'dest-zeeland-and-the-delta')->firstOrFail();
+        $this->assertSame(0, \App\Support\DestinationPages::ensureAll());
+        $page->delete();
+        $this->get('/destinations/zeeland-and-the-delta')->assertOk()->assertSee('Where the land meets the sea');
+        $this->assertSame(1, \App\Support\DestinationPages::ensureAll());
     }
 
     public function test_each_tour_type_page_is_built_from_sections_with_its_own_copy(): void

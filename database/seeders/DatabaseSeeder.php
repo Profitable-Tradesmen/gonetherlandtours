@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
             BlogSeeder::class,
         ]);
         \App\Support\TourTypePages::ensureAll();   // the Self Drive / Chauffeur Driven / Coach Tours page sections
+        \App\Support\DestinationPages::ensureAll();   // the destination page sections
     }
 }

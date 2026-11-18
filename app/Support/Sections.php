@@ -97,7 +97,7 @@ class Sections
                 self::rep('points', 'Ticked points (up to 3)', 'point', [$t('text', 'Text')], 3),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Get my free quote'),
             ]],
-            'tour_packages' => ['label' => 'Packages of this tour type', 'description' => 'A carousel with the published packages of the tour type this page belongs to (used on the Self Drive, Chauffeur Driven and Coach Tours pages). On any other page it shows all featured packages.', 'fields' => [
+            'tour_packages' => ['label' => 'Packages of this page (tour type or destination)', 'description' => 'A carousel with the published packages of the tour type or destination this page belongs to (used on the Self Drive, Chauffeur Driven, Coach Tours and destination pages). On any other page it shows the featured packages.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Signature journeys'),
                 $t('heading', 'Heading', 'Our packages'),
                 $ta('intro', 'Intro text', ''),
