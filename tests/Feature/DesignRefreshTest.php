@@ -136,8 +136,22 @@ class DesignRefreshTest extends TestCase
         $this->assertStringNotContainsString('lg:text-7xl', $html);
     }
 
-    public function test_featured_packages_render_as_a_carousel_with_icon_tabs_and_stacked_cards(): void
+    public function test_featured_packages_render_as_three_columns_one_per_tour_type(): void
     {
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('md:grid-cols-2 lg:grid-cols-3', $html);
+        $this->assertStringContainsString('Self Drive Packages', $html);
+        $this->assertStringContainsString('Chauffeur Driven Packages', $html);
+        $this->assertStringContainsString('Coach Tours Packages', $html);
+        $this->assertStringNotContainsString('aria-label="Next packages"', $html, 'no carousel in the columns layout');
+    }
+
+    public function test_featured_packages_tabs_layout_is_a_carousel_with_icon_tabs_and_stacked_cards(): void
+    {
+        $this->login();
+        $home = Page::bySlug('home');
+        $sec = $this->section($home, 'packages_tabs');
+        $this->put(route('admin.pages.sections.update', [$home, $sec['id']]), ['data' => ['layout' => 'tabs', 'heading' => 'Packages', 'all_label' => 'All', 'button_label' => 'See all']])->assertSessionHasNoErrors();
         $html = $this->get('/')->getContent();
         $this->assertStringContainsString('x-data="carousel"', $html);
         $this->assertStringContainsString('carousel-track', $html);
