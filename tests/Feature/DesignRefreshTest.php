@@ -419,7 +419,7 @@ class DesignRefreshTest extends TestCase
         $html = $this->get('/')->getContent();
         $this->assertStringNotContainsString('Plan with', $html);
         $this->assertStringNotContainsString('Frequently Asked Questions', $html);
-        $this->get('/faq')->assertOk()->assertSee('Frequently Asked Questions');   // the FAQ page itself stays
+        $this->get('/faq')->assertOk()->assertSee('Frequently asked questions');   // the FAQ page itself stays
 
         $migration = require base_path('database/migrations/2026_11_24_000007_remove_home_plan_and_faq_sections.php');
         $home = Page::bySlug('home');
