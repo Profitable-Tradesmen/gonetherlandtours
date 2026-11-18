@@ -136,7 +136,7 @@ class Sections
                 self::img('poster', 'Poster image', 'images/hero-about.webp'),
                 $t('video_name', 'Video file name', 'homepage_banner', 'The video file is public/videos/NAME.mp4 on the server.'),
             ]],
-            'image_strip' => ['label' => 'Photo panels (journeys by traveler)', 'description' => 'Swipeable photo cards on phones, an expanding strip of panels on desktop.', 'fields' => [
+            'image_strip' => ['label' => 'Photo panels (journeys by traveler)', 'description' => 'Photo cards with a number, title, text and a link: a swipe row on phones, a grid on larger screens.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Journeys by traveler'),
                 $t('heading', 'Heading', 'Find the journey that *fits you*'),
                 $t('button_label', 'Panel button (opens the quote pop-up)', 'Plan this trip'),
