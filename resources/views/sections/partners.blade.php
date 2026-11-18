@@ -4,7 +4,7 @@
 {{-- Dark brown band (so it differs from the navy sections around it): label, heading and a short text on the left, a thin divider, and a row of (white or transparent) partner logos on the right. --}}
 <section class="bg-brown py-14 text-white sm:py-20" aria-labelledby="pt-{{ $sid }}">
     <div class="container-site grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:gap-0">
-        <div class="max-w-xl lg:pr-12" data-reveal="left">
+        <div class="max-w-xl lg:col-start-1 lg:row-start-1 lg:pr-12" data-reveal="left">
             @if ($d['eyebrow'])
                 <p class="label-caps text-white">{{ $d['eyebrow'] }}</p>
                 <span class="mb-4 mt-2 flex gap-1.5" aria-hidden="true"><i class="h-[3px] w-7 bg-white/70"></i><i class="h-[3px] w-7 bg-accent"></i><i class="h-[3px] w-7 bg-white/70"></i></span>
@@ -20,7 +20,7 @@
             while ($group->count() < 8) { $group = $group->concat($logos->values()); }
             $speed = max(24, $group->count() * 5);   // seconds for one full group
         @endphp
-        <div class="marquee overflow-hidden lg:border-l lg:border-white/25 lg:pl-12" data-reveal="right" role="group" aria-label="{{ $d['eyebrow'] ?: 'Partners' }}">
+        <div class="marquee w-full min-w-0 overflow-hidden lg:col-start-2 lg:row-start-1 lg:border-l lg:border-white/25 lg:pl-12" data-reveal="right" role="group" aria-label="{{ $d['eyebrow'] ?: 'Partners' }}">
             <div class="marquee-track" style="--marquee-time: {{ $speed }}s">
                 @foreach ([0, 1] as $copy)
                     <ul class="marquee-group" @if ($copy === 1) aria-hidden="true" inert @endif>
