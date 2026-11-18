@@ -27,24 +27,22 @@ class DesignRefreshTest extends TestCase
         return collect($page->fresh()->allSections())->firstWhere('type', $type);
     }
 
-    public function test_hero_is_a_responsive_photo_with_a_preload_and_floats_a_transparent_header_over_it(): void
+    public function test_hero_is_a_responsive_photo_with_a_preload_and_sits_below_a_light_header(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('images/hero-home.webp', $html);
         $this->assertStringContainsString('hero-home-800.webp 800w', $html, 'phones get the small copy');
         $this->assertMatchesRegularExpression('/<link rel="preload" as="image"[^>]+imagesrcset=/', $html);
-        $this->assertStringContainsString('hdr-overlay', $html, 'transparent over the hero until scrolled');
-        $this->assertStringContainsString('hdr-logo', $html, 'the transparent logo is shown white, with no plate');
+        $this->assertStringNotContainsString('hdr-overlay', $html, 'the header does not float over the hero');
+        $this->assertStringContainsString('bg-white/95 backdrop-blur', $html, 'light bar: the full-color transparent logo sits straight on it');
         $this->assertStringNotContainsString('hdr-plate', $html);
+        $this->assertStringNotContainsString('hdr-logo', $html, 'no white-silhouette filter on the logo');
         $this->assertStringNotContainsString('hero-video-poster', $html, 'the abstract placeholder illustration is gone');
     }
 
     public function test_header_is_solid_on_pages_without_a_hero_and_floats_on_pages_that_start_with_one(): void
     {
-        foreach (['/', '/about', '/packages/sample-tulip-season-self-drive'] as $url) {
-            $this->assertStringContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
-        }
-        foreach (['/contact', '/faq', '/packages', '/blog'] as $url) {
+        foreach (['/', '/about', '/packages/sample-tulip-season-self-drive', '/contact', '/faq', '/packages', '/blog'] as $url) {
             $this->assertStringNotContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
         }
     }

@@ -71,7 +71,7 @@ Visible focus ring (gold), skip link, labelled controls, `aria-invalid` and `rol
 
 Same fonts (Playfair Display, Montserrat) and palette as before; only the layout changed.
 
-- **Header:** transparent over a photo hero (solid navy once scrolled and on pages without a hero), the transparent logo shown as a white silhouette (no plate), and white nav links. The top bar above it holds phone, email and an outlined "Start Your Adventure" button. The old transparent-over-hero header is gone.
+- **Header:** a light, slightly see-through white bar on every page with a gold bottom line, the full-color transparent logo straight on it (no plate), and dark nav links. The top bar above it holds phone, email and an outlined "Start Your Adventure" button. The old transparent-over-hero header is gone.
 - **Menu (Admin > Navigation):** Home, Self Drive, Chauffeur Driven, Coach Tours, Destinations, About Us (a dropdown of image cards that includes Meet the Team and Blog). The automatic "Tours" mega menu still exists as a menu item kind if you want it back.
 - **Home order:** hero, value strip, intro (photo + ticked list), journey cards (edge-to-edge photos), packages (one row per tour type), dark "why us" tiles, proof section, then the rest.
 - **Section headings:** small label with three short bars (blue, rust, blue) beneath it.
