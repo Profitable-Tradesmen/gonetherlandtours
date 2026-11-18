@@ -135,12 +135,15 @@ class DefaultSections
     /** Dark "why choose us" band: photo and four reason tiles (the same four selling points as the footer/USP text). */
     public static function whyBand(): array
     {
-        $t = config('gnt.texts', []);
-
         return self::s('why_band', [
             'heading' => 'Why we are the *right choice* for you',
             'image_alt' => 'Dutch countryside at sunrise with windmills along a river',
-            'items' => array_map(fn ($n) => ['title' => $t["usp_{$n}_title"] ?? '', 'text' => $t["usp_{$n}_text"] ?? ''], [1, 2, 3, 4]),
+            'items' => self::rows([
+                ['tulip', 'Real Dutch culture', 'Cheese markets, windmills, tulip fields and living local traditions, not just a checklist of sights.'],
+                ['guide', 'Private or small group', 'Self drive and chauffeur tours are just your own party. Coach tours are small guided groups.'],
+                ['search', 'Hidden gems, local secrets', 'Quiet canal towns and lesser-known corners beyond the usual tourist hotspots.'],
+                ['map', 'Itineraries built around you', 'Routes shaped by your dates, pace and interests, with hotels and driving distances planned for you.'],
+            ], ['icon', 'title', 'text']),
         ]);
     }
 

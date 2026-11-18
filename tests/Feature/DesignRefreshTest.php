@@ -297,6 +297,40 @@ class DesignRefreshTest extends TestCase
         $this->assertNull($blog->fresh()->parent_id);
     }
 
+    public function test_why_band_has_intro_button_numbered_icon_tiles_and_updated_content(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('Why we are the', $html);
+        $this->assertStringContainsString('Four things we promise on every trip', $html);
+        foreach (['Real Dutch culture', 'Private or small group', 'Hidden gems, local secrets', 'Itineraries built around you'] as $title) {
+            $this->assertStringContainsString($title, $html, $title);
+        }
+        $this->assertStringContainsString('Coach tours are small guided groups', $html, 'accurate small-group claim');
+        $this->assertStringContainsString('>01<', $html);
+    }
+
+    public function test_migration_refreshes_only_the_untouched_why_band_reasons(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000004_refresh_why_band_content.php');
+        $home = Page::bySlug('home');
+        $sections = $home->allSections();
+        foreach ($sections as &$s) {
+            if ($s['type'] === 'why_band') {
+                $s['data']['items'] = [
+                    ['title' => 'Authentic Dutch culture', 'text' => 'Windmills, tulip fields, cheese markets and local traditions.'],
+                    ['title' => 'Hidden gems & local secrets', 'text' => 'My own wording about hidden places.'],
+                ];
+            }
+        }
+        unset($s);
+        $home->update(['sections' => $sections]);
+
+        $migration->up();
+        $items = collect($home->fresh()->allSections())->firstWhere('type', 'why_band')['data']['items'];
+        $this->assertSame(['tulip', 'Real Dutch culture'], [$items[0]['icon'], $items[0]['title']]);
+        $this->assertSame('My own wording about hidden places.', $items[1]['text'], 'edited text is never replaced');
+    }
+
     public function test_migration_moves_tour_types_above_the_signature_collection(): void
     {
         $migration = require base_path('database/migrations/2026_11_24_000002_move_tour_types_above_signature_collection.php');

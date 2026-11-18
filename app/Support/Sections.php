@@ -205,9 +205,12 @@ class Sections
                 $ta('right_text', 'Right text'),
                 self::rep('right_bullets', 'Right checklist', 'point', [$t('text', 'Text')], 10),
             ]],
-            'why_band' => ['label' => 'Dark list with photo', 'description' => 'A dark band with a heading, a ticked list of reasons and a photo.', 'fields' => [
+            'why_band' => ['label' => 'Dark "why us" tiles with photo', 'description' => 'A dark band with a heading, a short intro, a button, reason tiles (each with an icon) and a photo.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Why choose us'),
                 $t('heading', 'Heading'),
-                self::rep('items', 'Reasons', 'reason', [$t('title', 'Title'), $ta('text', 'Text')], 10),
+                $ta('intro', 'Intro text', 'Four things we promise on every trip, whether you drive yourself, travel with a chauffeur or join a small guided group.'),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
+                self::rep('items', 'Reasons', 'reason', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Text')], 8),
                 self::img('image', 'Photo', 'images/feature_band.webp'),
             ]],
             'team' => ['label' => 'Meet the team', 'description' => 'Cards for team members. Remove the section if you do not want to show a team.', 'fields' => [
