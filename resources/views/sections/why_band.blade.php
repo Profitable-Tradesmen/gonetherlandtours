@@ -1,4 +1,26 @@
-<section class="bg-brand-900 py-16 text-white sm:py-24" aria-labelledby="wb-{{ $sid }}">
+@php
+    $bg = (string) ($d['bg'] ?? '');
+    $ext = strtolower(pathinfo($bg, PATHINFO_EXTENSION));
+    $isVideo = $bg !== '' && in_array($ext, ['mp4', 'webm'], true);
+    $isGif = $bg !== '' && $ext === 'gif';
+    $overlay = ['light' => 'bg-brand-900/60', 'medium' => 'bg-brand-900/75', 'strong' => 'bg-brand-900/90'][$d['overlay'] ?? 'medium'] ?? 'bg-brand-900/75';
+    $hasSide = ! empty($d['image']);
+@endphp
+{{-- Dark "why us" band. The background is a photo, an animated GIF or a short video chosen in the admin (a dark tint keeps the text readable);
+     with no background it is plain navy. A video loads after the page and plays on tablets and desktops only (initBgVideo in app.js);
+     phones, Data Saver and "reduce motion" visitors see the fallback photo instead. --}}
+<section class="relative isolate overflow-hidden bg-brand-900 py-16 text-white sm:py-24" aria-labelledby="wb-{{ $sid }}">
+    @if ($bg !== '')
+        @if (! empty($d['poster']))<x-picture :src="$d['poster']" :alt="$d['poster_alt'] ?? ''" :width="1600" :height="900" class="absolute inset-0 -z-30 h-full w-full object-cover" sizes="100vw" />@endif
+        @if ($isVideo)
+            <video muted loop playsinline aria-hidden="true" preload="none" data-bg-video class="absolute inset-0 -z-20 h-full w-full object-cover"><source data-src="{{ asset($bg) }}" type="video/{{ $ext }}"></video>
+        @elseif ($isGif)
+            <img src="{{ asset($bg) }}" alt="" loading="lazy" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover">
+        @else
+            <x-picture :src="$bg" alt="" :width="1600" :height="900" class="absolute inset-0 -z-20 h-full w-full object-cover" sizes="100vw" />
+        @endif
+        <div class="absolute inset-0 -z-10 {{ $overlay }}"></div>
+    @endif
     <div class="container-site">
         {{-- Heading on the left, a short intro and the quote button on the right (below on phones). --}}
         <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
@@ -10,16 +32,16 @@
             @if ($d['button_label'])<div data-reveal="up"><x-button @click="$store.modal.show()">{{ $d['button_label'] }}</x-button></div>@endif
         </div>
 
-        {{-- Photo on one side, a 2 x 2 grid of reason tiles on the other (stacked on phones). Tile content is centered in the tile so there is no empty gap. --}}
-        <div class="mt-10 grid gap-5 {{ $d['image'] ? 'lg:grid-cols-[0.9fr_1.1fr]' : '' }}">
-            @if ($d['image'])<x-picture :src="$d['image']" :alt="$d['image_alt']" :width="900" :height="1100" class="hidden h-full min-h-[22rem] w-full rounded-2xl object-cover shadow-card lg:block" />@endif
-            <ul class="grid gap-5 sm:grid-cols-2 sm:grid-rows-2">
+        {{-- Reason tiles. With a side photo: photo + a 2 x 2 grid. Without one: all tiles in one row on desktop (two columns on tablets, stacked on phones). --}}
+        <div class="mt-10 grid gap-5 {{ $hasSide ? 'lg:grid-cols-[0.9fr_1.1fr]' : '' }}">
+            @if ($hasSide)<x-picture :src="$d['image']" :alt="$d['image_alt']" :width="900" :height="1100" class="hidden h-full min-h-[22rem] w-full rounded-2xl object-cover shadow-card lg:block" />@endif
+            <ul class="grid gap-5 sm:grid-cols-2 {{ $hasSide ? 'sm:grid-rows-2' : 'lg:grid-cols-4' }}">
                 @foreach ($d['items'] as $i => $r)
-                    <li class="group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl bg-white/10 p-6 text-center ring-1 ring-white/15 transition duration-300 hover:-translate-y-0.5 hover:bg-white/15 sm:p-8" data-reveal="up" style="--d:{{ $i * 100 }}ms">
+                    <li class="group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl p-6 text-center ring-1 ring-white/15 transition duration-300 hover:-translate-y-0.5 sm:p-8 {{ $bg !== '' ? 'bg-brand-900/55 backdrop-blur-sm hover:bg-brand-900/70' : 'bg-white/10 hover:bg-white/15' }}" data-reveal="up" style="--d:{{ $i * 100 }}ms">
                         @if ($d['show_numbers'] ?? true)<span class="absolute right-4 top-3 font-display text-4xl font-medium text-white/10" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>@endif
                         <span class="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-ink shadow-card transition-transform duration-300 group-hover:scale-105"><x-icon :name="($r['icon'] ?? '') ?: 'check'" class="h-7 w-7" /></span>
                         <h3 class="mt-5 font-display text-xl font-medium sm:text-2xl">{{ $r['title'] }}</h3>
-                        <p class="mt-2 text-sm leading-relaxed text-white/85 sm:text-base">{{ $r['text'] }}</p>
+                        <p class="mt-2 text-sm leading-relaxed text-white/90 sm:text-base">{{ $r['text'] }}</p>
                     </li>
                 @endforeach
             </ul>

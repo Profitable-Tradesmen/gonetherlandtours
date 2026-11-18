@@ -4,13 +4,15 @@ namespace App\Support;
 
 use App\Services\ImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
  * The page builder's section catalog. Each section type = a Blade view (resources/views/sections/{type}.blade.php)
  * + a field schema that drives the admin form, validation/sanitising and defaults.
  *
- * Field types: text, textarea, rich, link, image, select, checkbox, number, repeater.
+ * Field types: text, textarea, rich, link, image, media, select, checkbox, number, repeater.
+ *  - media (top-level only): one background that can be a photo, an animated GIF or a short video (mp4/webm). Saves the path in "name".
  *  - text/textarea headings accept *word* for an italic accent word.
  *  - image fields save the path in "name" and the alt text in "name_alt".
  *  - repeater: "fields" = sub-fields (no nested repeaters), "max" = item limit, "label" = what one item is called.
@@ -216,9 +218,12 @@ class Sections
                 $t('heading', 'Heading'),
                 $ta('intro', 'Intro text', 'Four things we promise on every trip, whether you drive yourself, travel with a chauffeur or join a small guided group.'),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
+                ['name' => 'bg', 'label' => 'Background: photo, animated GIF or video', 'type' => 'media', 'default' => 'images/feature_band.webp', 'help' => 'Upload a JPG, PNG, WebP or GIF (up to 8 MB) or a short MP4 / WebM video (up to 25 MB, kept short and silent works best). Remove it for a plain navy background. A video plays on tablets and desktops only; phones show the photo below.'],
+                self::img('poster', 'Photo for phones and while a video loads (only used with a video)'),
+                ['name' => 'overlay', 'label' => 'Dark tint over the background (for readable text)', 'type' => 'select', 'options' => ['light' => 'Light', 'medium' => 'Medium', 'strong' => 'Strong'], 'default' => 'medium'],
                 ['name' => 'show_numbers', 'label' => 'Show the faint 01, 02, 03 numbers on the tiles', 'type' => 'checkbox', 'default' => true],
                 self::rep('items', 'Reasons', 'reason', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Text')], 8),
-                self::img('image', 'Photo', 'images/feature_band.webp'),
+                self::img('image', 'Photo beside the tiles (optional)'),
             ]],
             'team' => ['label' => 'Meet the team', 'description' => 'Cards for team members. Remove the section if you do not want to show a team.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Our people'),
@@ -362,6 +367,25 @@ class Sections
                 $v = trim(strip_tags((string) $v));
 
                 return [$n => preg_match('#^(/[A-Za-z0-9_./?=&%\#-]*|https?://[^\s"<>]+|\#[A-Za-z0-9_-]+|tel:[+0-9 ()-]+|mailto:[^\s"<>]+)?$#', $v) ? $v : ''];
+            case 'media':
+                $media = (string) ($v ?? '');
+                $media = preg_match('#^(images|storage|videos)/[A-Za-z0-9_./-]+$#', $media) ? $media : '';
+                if (! empty($in[$n.'_remove'])) {
+                    $media = '';
+                }
+                if ($file = $request->file($path.'.'.$n.'_file')) {
+                    $ext = strtolower($file->getClientOriginalExtension());
+                    $mime = (string) $file->getMimeType();
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true) && $file->getSize() <= 8 * 1024 * 1024) {
+                        $media = 'storage/'.app(ImageService::class)->store($file, '')->path.'-1600.webp';
+                    } elseif ($ext === 'gif' && $mime === 'image/gif' && $file->getSize() <= 8 * 1024 * 1024) {
+                        $media = 'storage/'.Storage::disk('public')->putFileAs('section-media', $file, Str::random(24).'.gif');
+                    } elseif (in_array($ext, ['mp4', 'webm'], true) && in_array($mime, ['video/mp4', 'video/webm'], true) && $file->getSize() <= 25 * 1024 * 1024) {
+                        $media = 'storage/'.Storage::disk('public')->putFileAs('section-media', $file, Str::random(24).'.'.$ext);
+                    }
+                }
+
+                return [$n => $media];
             case 'image':
                 $alt = Str::limit(trim(strip_tags((string) ($in[$n.'_alt'] ?? ''))), 190, '');
                 $image = (string) ($v ?? '');

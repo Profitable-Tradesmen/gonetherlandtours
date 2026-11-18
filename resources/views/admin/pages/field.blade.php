@@ -26,6 +26,23 @@
             <label class="field-label" for="{{ $id }}">{{ $f['label'] }}</label>
             <input id="{{ $id }}" type="number" min="0" max="999" name="data[{{ $n }}]" value="{{ $v }}" class="field max-w-[8rem]">
             @break
+        @case('media')
+            @php $ext = strtolower(pathinfo((string) $v, PATHINFO_EXTENSION)); @endphp
+            <label class="field-label" for="{{ $id }}">{{ $f['label'] }}</label>
+            <div class="grid gap-3 rounded-lg border border-sand-200 p-3 sm:grid-cols-[8rem_1fr]">
+                <div>
+                    @if ($v && in_array($ext, ['mp4', 'webm'], true))<video src="{{ asset($v) }}" class="h-24 w-32 rounded-lg object-cover" muted preload="metadata"></video>
+                    @elseif ($v)<img src="{{ asset($v) }}" alt="" class="h-24 w-32 rounded-lg object-cover" width="128" height="96">
+                    @else<p class="flex h-24 w-32 items-center justify-center rounded-lg bg-sand text-xs text-ink/60">Plain color</p>@endif
+                </div>
+                <div class="space-y-2">
+                    <input type="hidden" name="data[{{ $n }}]" value="{{ $v }}">
+                    <input id="{{ $id }}" type="file" name="data[{{ $n }}_file]" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" class="field" aria-label="{{ $v ? 'Replace background' : 'Upload background' }}">
+                    @if ($v)<p class="text-xs text-ink/60">Current: {{ in_array($ext, ['mp4', 'webm'], true) ? 'video' : ($ext === 'gif' ? 'animated GIF' : 'photo') }}</p>
+                    <label class="flex items-center gap-2 text-xs"><input type="checkbox" name="data[{{ $n }}_remove]" value="1"> Remove it (plain navy background)</label>@endif
+                </div>
+            </div>
+            @break
         @case('image')
             <label class="field-label" for="{{ $id }}">{{ $f['label'] }}</label>
             <div class="grid gap-3 rounded-lg border border-sand-200 p-3 sm:grid-cols-[8rem_1fr]">

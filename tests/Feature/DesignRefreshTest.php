@@ -411,6 +411,71 @@ class DesignRefreshTest extends TestCase
         $this->assertSame(1, count(array_keys(collect($home->fresh()->allSections())->pluck('type')->all(), 'partners')), 'not added twice');
     }
 
+    public function test_why_band_background_can_be_a_photo_a_gif_a_video_or_plain_navy(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+        $this->login();
+        $home = Page::bySlug('home');
+        $band = $this->section($home, 'why_band');
+        $url = route('admin.pages.sections.update', [$home, $band['id']]);
+        $base = ['heading' => 'Why us', 'overlay' => 'strong', 'items' => [['icon' => 'check', 'title' => 'A', 'text' => 'b']]];
+
+        // default: the photo is the background (full bleed, tinted), tiles in one row, no side photo
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('feature_band', $html);
+        $this->assertStringContainsString('lg:grid-cols-4', $html);
+
+        // animated GIF
+        $this->put($url, ['data' => $base + ['bg' => '', 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('loop.gif', 200, 'image/gif')]])->assertSessionHasNoErrors();
+        $bg = $this->section($home, 'why_band')['data']['bg'];
+        $this->assertMatchesRegularExpression('#^storage/section-media/[A-Za-z0-9]+\.gif$#', $bg);
+        $this->assertStringContainsString('<img src="'.asset($bg).'" alt=""', $this->get('/')->getContent());
+        $this->assertStringContainsString('bg-brand-900/90', $this->get('/')->getContent(), 'strong tint');
+
+        // video: plays through the existing lazy background video loader (data-bg-video), never autoloaded
+        $this->put($url, ['data' => $base + ['bg' => '', 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('loop.mp4', 2000, 'video/mp4')]])->assertSessionHasNoErrors();
+        $bg = $this->section($home, 'why_band')['data']['bg'];
+        $this->assertMatchesRegularExpression('#^storage/section-media/[A-Za-z0-9]+\.mp4$#', $bg);
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('data-bg-video', $html);
+        $this->assertStringContainsString('<source data-src="'.asset($bg).'" type="video/mp4">', $html);
+
+        // wrong file types and oversized files are ignored (the previous background is kept)
+        $kept = $bg;
+        $this->put($url, ['data' => $base + ['bg' => $kept, 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('evil.php', 10, 'application/x-php')]]);
+        $this->put($url, ['data' => $base + ['bg' => $kept, 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('huge.mp4', 30000, 'video/mp4')]]);
+        $this->assertSame($kept, $this->section($home, 'why_band')['data']['bg']);
+
+        // an address outside images/, storage/ or videos/ is rejected
+        $this->put($url, ['data' => $base + ['bg' => 'https://evil.test/x.mp4']]);
+        $this->assertSame('', $this->section($home, 'why_band')['data']['bg']);
+
+        // removed: plain navy, no background layer
+        $this->put($url, ['data' => $base + ['bg' => $kept, 'bg_remove' => '1']]);
+        $this->assertSame('', $this->section($home, 'why_band')['data']['bg']);
+        $this->assertStringNotContainsString(asset($kept), $this->get('/')->getContent());
+    }
+
+    public function test_migration_turns_the_default_side_photo_of_the_why_band_into_its_background(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000008_why_band_background_media.php');
+        $home = Page::bySlug('home');
+        $secs = $home->allSections();
+        foreach ($secs as &$s) {
+            if ($s['type'] === 'why_band') {
+                unset($s['data']['bg']);
+                $s['data']['image'] = 'images/feature_band.webp';   // the previous layout: photo beside the tiles
+            }
+        }
+        unset($s);
+        $home->update(['sections' => $secs]);
+
+        $migration->up();
+        $data = collect($home->fresh()->allSections())->firstWhere('type', 'why_band')['data'];
+        $this->assertSame('images/feature_band.webp', $data['bg']);
+        $this->assertSame('', $data['image']);
+    }
+
     public function test_home_has_no_plan_with_peace_of_mind_or_faq_section_and_the_migration_removes_or_hides_them(): void
     {
         $types = collect(Page::bySlug('home')->allSections())->pluck('type')->all();
