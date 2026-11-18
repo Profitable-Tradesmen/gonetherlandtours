@@ -33,16 +33,15 @@ class DesignRefreshTest extends TestCase
         $this->assertStringContainsString('images/hero-home.webp', $html);
         $this->assertStringContainsString('hero-home-800.webp 800w', $html, 'phones get the small copy');
         $this->assertMatchesRegularExpression('/<link rel="preload" as="image"[^>]+imagesrcset=/', $html);
-        $this->assertStringContainsString('hdr-overlay', $html);
-        $this->assertStringContainsString('hdr-plate', $html, 'logo sits on a white plate while transparent');
+        $this->assertStringNotContainsString('hdr-overlay', $html, 'the header no longer floats over the hero');
+        $this->assertStringNotContainsString('hdr-plate', $html, 'the transparent logo sits straight on the light header, no plate');
+        $this->assertStringContainsString('bg-white/95 backdrop-blur', $html);
         $this->assertStringNotContainsString('hero-video-poster', $html, 'the abstract placeholder illustration is gone');
     }
 
     public function test_header_is_solid_on_pages_without_a_hero_and_floats_on_pages_that_start_with_one(): void
     {
-        $this->assertStringContainsString('hdr-overlay', $this->get('/about')->getContent());
-        $this->assertStringContainsString('hdr-overlay', $this->get('/packages/sample-tulip-season-self-drive')->getContent());
-        foreach (['/contact', '/faq', '/packages', '/blog'] as $url) {
+        foreach (['/', '/about', '/packages/sample-tulip-season-self-drive', '/contact', '/faq', '/packages', '/blog'] as $url) {
             $this->assertStringNotContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
         }
     }
