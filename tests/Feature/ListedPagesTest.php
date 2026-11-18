@@ -35,6 +35,15 @@ class ListedPagesTest extends TestCase
         $this->get('/faq')->assertOk()->assertSee('Frequently asked questions')->assertSee('"@type":"FAQPage"', false)->assertSee('BreadcrumbList', false);
     }
 
+    public function test_faq_items_form_an_exclusive_accordion(): void
+    {
+        $html = $this->get('/faq')->assertOk()->getContent();
+        preg_match_all('/<details name="([^"]+)"/', $html, $m);
+        $this->assertGreaterThan(1, count($m[1]), 'FAQ items are <details> with a group name');
+        $this->assertCount(1, array_unique($m[1]), 'all items of one list share one group, so only one opens at a time');
+        $this->assertStringContainsString('toggle', file_get_contents(base_path('resources/js/app.js')), 'script fallback for older browsers');
+    }
+
     public function test_testimonials_page_renders(): void
     {
         $this->get('/testimonials')->assertOk()->assertSee('What our travellers say')->assertSee('Sample review');

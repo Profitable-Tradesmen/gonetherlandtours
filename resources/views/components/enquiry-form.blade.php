@@ -18,7 +18,7 @@
     $siteKey = recaptcha_site_key();
     $oldHere = old('_form_id') === $idp;
     // Dropdown options for the pop-up come from the quiz steps (Admin > Quiz) so both forms stay consistent.
-    $opts = fn (string $key) => \App\Models\QuizStep::where('key', $key)->first()?->activeOptions()->get(['label', 'value']) ?? collect();
+    $opts = fn (string $key) => \App\Support\SiteData::quizOptions($key);
 @endphp
 <form method="POST" action="{{ route('enquiry.store') }}" x-data="enquiryForm" @submit.prevent="submit($event)"
       data-form-name="{{ $form }}" novalidate class="relative" aria-label="{{ config('gnt.form_names.'.$form, 'Enquiry') }} enquiry form">
@@ -46,9 +46,9 @@
         <input id="{{ $idp }}-hp" type="text" name="company_website" tabindex="-1" autocomplete="off">
     </div>
 
-    <div x-show="success" x-cloak class="rounded-xl bg-emerald-50 p-6 text-center" role="status">
-        <p class="font-display text-2xl text-emerald-900">Thank you!</p>
-        <p class="mt-2 text-emerald-900">Your enquiry has been sent. Taking you to the next step...</p>
+    <div x-show="success" x-cloak class="rounded-xl bg-brand/10 p-6 text-center" role="status">
+        <p class="font-display text-2xl text-brand-900">Thank you!</p>
+        <p class="mt-2 text-brand-900">Your enquiry has been sent. Taking you to the next step...</p>
     </div>
 
     <div x-show="!success" class="grid gap-3 sm:grid-cols-2">
@@ -107,7 +107,7 @@
             <x-form-field name="destination" label="Destination" :idp="$idp" span>
                 <select id="{{ $idp }}-destination" name="destination" class="field">
                     <option value="">Select (optional)</option>
-                    @foreach (\App\Models\Destination::active()->pluck('name') as $dName)<option>{{ $dName }}</option>@endforeach
+                    @foreach (\App\Support\SiteData::destinations()->pluck('name') as $dName)<option>{{ $dName }}</option>@endforeach
                     <option>Not sure yet</option>
                 </select>
             </x-form-field>

@@ -13,6 +13,8 @@ Every form submission lands here. Use search, **Status**, **Source** and date fi
 - On the list: arrows reorder, **Duplicate** copies a package as a draft.
 
 ## Tour types and Destinations
+The **Destinations** page (`/destinations`, linked in the header) lists every active destination as a photo card; its heading and intro are in Settings. In a package's **Day-by-day itinerary** you can pick, for each day, one of that package's own gallery photos to show beside the day (upload the photos in *Gallery images* first, save, then choose them).
+
 Tour types (Self Drive, Chauffeur Driven, Coach Tours) appear on the home page, the menu and package filters, and each active one has its own landing page (`/tours/slug`) with an editable heading, content, SEO title and meta description. Each active destination gets its own page (`/destinations/name`). You cannot delete one that still has packages.
 
 ## Quiz
@@ -27,6 +29,8 @@ Every page is built from **sections**. Open **Admin > Pages**, choose a page, an
 - **Add page** (top of the Pages list) creates a new page at `/page-name`. It starts as a **draft**: build its sections, click the green **Publish this page** button at the top of the page editor (it turns into a green "LIVE" box). Draft pages are not public and not in the sitemap. Built-in pages (Home, About, Contact, FAQ, Testimonials, Terms, Privacy) keep their addresses and cannot be deleted.
 - Each page has an SEO title, meta description and a *hide from search engines* switch. Terms and Privacy have a **version**: raise it when you change the legal text (it is stored with each enquiry).
 - Packages, destinations, tour types, FAQs, testimonials and blog posts are managed in their own menu items; sections such as the FAQ list and testimonials show them automatically.
+
+Section styles worth knowing: **Numbered steps** can be a connected timeline or simple columns; **Testimonials** can be dark cards, light cards or a one-at-a-time *spotlight* with a picker; **Hero** sections show a photo (upload yours in the section; the video plays over it on desktop if one has been uploaded to the server).
 
 ## Navigation (administrators only)
 **Admin > Navigation** controls the header menu and the footer links. Add a *Normal link* (a page path like `/about`, a full `https://` address or `#section`), the automatic *Tours menu* (built from Tour types), or a *Dropdown of cards*: create the dropdown, then add cards by choosing it as the parent (each card has a title, short description, link and image). The arrows reorder items within their menu. The wording around the menus (top bar, buttons, mobile menu, footer headings) is in **Settings**.

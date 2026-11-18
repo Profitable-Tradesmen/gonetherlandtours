@@ -63,16 +63,10 @@ if (! function_exists('emphasize')) {
 }
 
 if (! function_exists('clean_html')) {
-    /** Allow-list sanitiser for admin-entered rich text (Trix output). */
+    /** Allow-list sanitiser for admin-entered rich text (Trix output). DOM based: see App\Support\HtmlSanitizer. */
     function clean_html(?string $html): string
     {
-        $allowed = '<p><br><strong><b><em><i><u><ul><ol><li><h2><h3><h4><a><blockquote><div><span>';
-        $html = strip_tags((string) $html, $allowed);
-        // Drop inline event handlers and javascript: URLs.
-        $html = preg_replace('/\son\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $html);
-        $html = preg_replace('/href\s*=\s*(["\'])\s*javascript:[^"\']*\1/i', 'href="#"', $html);
-
-        return $html;
+        return \App\Support\HtmlSanitizer::clean($html);
     }
 }
 
@@ -129,5 +123,21 @@ if (! function_exists('text')) {
         $all = \App\Models\Setting::all_cached();
 
         return array_key_exists($key, $all) && $all[$key] !== null ? (string) $all[$key] : (string) config('gnt.texts.'.$key, '');
+    }
+}
+
+if (! function_exists('static_srcset')) {
+    /** srcset for a static image under public/ that has a "-800" copy beside it (see <x-picture>), or null. */
+    function static_srcset(?string $path): ?string
+    {
+        if (! $path || ! str_ends_with($path, '.webp') || ! is_file(public_path($path))) {
+            return null;
+        }
+        $small = preg_replace('/\.webp$/', '-800.webp', $path);
+        if ($small === $path || ! is_file(public_path($small))) {
+            return null;
+        }
+
+        return asset($small).' 800w, '.asset($path).' '.(getimagesize(public_path($path))[0] ?? 1600).'w';
     }
 }

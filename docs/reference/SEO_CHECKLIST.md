@@ -54,3 +54,6 @@ Keep it above 90 when editing:
 - Round slider/icon buttons must stay at least 24 x 24 px.
 - Link text such as "More info" needs the sr-only suffix pattern used in `partials/package-card.blade.php`.
 - Re-run: `npx lighthouse <url> --form-factor=mobile` (Chrome needed). Measure against a gzip-enabled server: `php artisan serve` alone does not compress and understates scores.
+
+### After the design refresh (photo hero, transparent header, packages carousel)
+Home 93-94 (6 featured packages), About 97, Destinations 99, package page 96 for performance; accessibility 100 and best practices 100 everywhere; SEO 100 (a `noindex` sample package scores lower on SEO by design). Costs to watch: the hero photo is the LCP image (`hero-home-800.webp` is about 60 KB on phones), the carousel adds Alpine start-up work (kept low by `content-visibility` on lower sections), and every new featured package adds cards. Re-run Lighthouse after adding many featured packages.

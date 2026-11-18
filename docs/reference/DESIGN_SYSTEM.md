@@ -18,6 +18,19 @@ Everything visual is defined once in `resources/css/app.css` inside the `@theme`
 | `--font-sans` | Montserrat Variable | Body, buttons, wide-caps labels (echoes the "ORÍMA" reference) |
 | `--container-site`, `--radius-card`, `--shadow-card` | | Layout |
 
+## Brand palette (from the supplied mood board)
+
+The live palette is the five-colour set on the right of the mood board (Copenhagen waterfront photo), sampled from the image: steel blue `#437DA5`, gold `#F2B743`, rust `#A54225`, brown `#5A2D1A`, near-black `#0C0D11`. Everything else is a shade or tint of these plus the warm neutral sand (`#F6F1EA`). **Rule: use only the tokens above (Tailwind classes such as `bg-accent`), never other Tailwind colours (`emerald`, `red`, `amber`...) or raw hex values on public pages.** `tests/Feature/PaletteTest.php` fails if a public view or the CSS uses an off-palette colour. The standalone `errors/500` and `errors/503` pages cannot use the build, so they hard-code the same hex values.
+
+The mood board also holds a second, four-colour Copenhagen set that is **not** applied: gold `#F6C463`, off-white `#F0F1EB`, navy `#012B53`, coral `#D24F45`. To switch to it, change only the `@theme` block (for example `--color-accent: #F6C463`, `--color-brand-*` from the navy, `--color-rust: #D24F45`, `--color-sand: #F0F1EB`), then check text contrast (WCAG AA) and run `npm run build`.
+
+## Header, hero and cards
+- **Transparent header:** on pages that start with a photo hero the header floats over it (white nav, logo on a white plate) and turns solid white with a shadow after 24px of scrolling or when a menu opens. CSS lives at the end of `app.css`, unlayered.
+- **Hero:** a responsive photo (1600w + 800w WebP) with dark gradients for legibility; headline `lg:text-6xl`.
+- **Package card:** image on top, chips for nights / tour type / destination, price, then "Get a Quote" + "More info".
+- **Mega menus (Tours, About Us dropdown):** soft sand backdrop, white rounded cards with a subtle ring that lift 2px on hover, photo overlays, count/icon chips and small arrow buttons that turn gold on hover. The About dropdown shows the intro panel beside the cards from 1280px up and as a slim banner above a full-width card row below that. Keep new effects this quiet: no heavy shadows, gradients or motion.
+- **Carousel:** native scroll-snap row with arrow buttons on desktop.
+
 Use tokens as Tailwind classes: `bg-brand-700`, `text-rust`, `bg-accent`, `font-display`, `shadow-card`.
 
 Fonts are self-hosted via Fontsource (`@fontsource-variable/*`), loaded with `font-display: swap`. To change fonts: `npm i @fontsource-variable/<font>`, swap the `@import` lines and the two `--font-*` tokens.

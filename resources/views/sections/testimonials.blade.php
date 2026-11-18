@@ -1,8 +1,41 @@
 @php
-    $dark = $d['variant'] === 'dark';
+    $variant = $d['variant'];
+    $dark = $variant === 'dark';
+    $spot = $variant === 'spotlight';
     $items = \App\Models\Testimonial::active()->when((int) $d['limit'] > 0, fn ($q) => $q->take((int) $d['limit']))->get();
 @endphp
-@if ($items->isNotEmpty())
+@if ($items->isNotEmpty() && $spot)
+{{-- Spotlight: one review at a time with a picker (initials), arrows and swipe-free keyboard use. All reviews are in the HTML. --}}
+<section class="bg-brand-900 py-16 text-white sm:py-24" aria-labelledby="te-{{ $sid }}">
+    <div class="container-site" x-data="{ i: 0, n: {{ $items->count() }}, go(k) { this.i = (k + this.n) % this.n } }" role="region" aria-roledescription="carousel" aria-label="{{ $d['heading'] ?: 'Reviews' }}">
+        @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" light :id="'te-'.$sid" />@endif
+        <div class="mx-auto max-w-3xl text-center">
+            <span class="font-display text-7xl leading-none text-accent" aria-hidden="true">&ldquo;</span>
+            <div class="-mt-4">
+                @foreach ($items as $k => $t)
+                    <figure x-show="i === {{ $k }}" @if ($k > 0) x-cloak @endif x-transition.opacity.duration.250ms>
+                        <blockquote class="font-display text-2xl leading-snug sm:text-3xl">{{ $t->quote }}</blockquote>
+                        <figcaption class="mt-6 text-sm font-semibold text-accent">
+                            @if ($t->is_placeholder)<span class="label-caps mb-1 block text-[0.65rem] text-white/60">Sample review</span>@endif
+                            {{ $t->name }}@if ($t->location), <span class="font-normal text-white/75">{{ $t->location }}</span>@endif
+                        </figcaption>
+                    </figure>
+                @endforeach
+            </div>
+            @if ($items->count() > 1)
+                <div class="mt-8 flex items-center justify-center gap-2 sm:gap-3">
+                    <button type="button" class="flex h-11 w-11 items-center justify-center rounded-full border border-white/40 hover:bg-white/10" @click="go(i - 1)" aria-label="Previous review"><x-icon name="arrow" class="h-5 w-5 rotate-180" /></button>
+                    @foreach ($items as $k => $t)
+                        <button type="button" class="flex h-12 w-12 items-center justify-center rounded-full border-2 font-display text-lg transition" :class="i === {{ $k }} ? 'border-accent bg-accent text-ink' : 'border-white/30 text-white/80 hover:border-white'" @click="i = {{ $k }}" :aria-current="i === {{ $k }}" aria-label="Show review {{ $k + 1 }} from {{ $t->name }}">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($t->name, 0, 1)) }}</button>
+                    @endforeach
+                    <button type="button" class="flex h-11 w-11 items-center justify-center rounded-full border border-white/40 hover:bg-white/10" @click="go(i + 1)" aria-label="Next review"><x-icon name="arrow" class="h-5 w-5" /></button>
+                </div>
+            @endif
+            @if ($d['button_label'])<div class="mt-10"><x-button @click="$store.modal.show()">{{ $d['button_label'] }}</x-button></div>@endif
+        </div>
+    </div>
+</section>
+@elseif ($items->isNotEmpty())
 <section class="{{ $dark ? 'bg-brand-900 text-white' : 'bg-sand' }} py-16 sm:py-24" aria-labelledby="te-{{ $sid }}">
     <div class="container-site">
         @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :light="$dark" :id="'te-'.$sid" />@endif
@@ -18,6 +51,6 @@
         @if ($d['button_label'])<div class="mt-12 text-center"><x-button @click="$store.modal.show()">{{ $d['button_label'] }}</x-button></div>@endif
     </div>
 </section>
-@elseif (! $dark && $d['heading'] === '')
+@elseif (! $dark && ! $spot && $d['heading'] === '')
     <section class="container-site py-16 text-center"><p>Reviews are coming soon.</p></section>
 @endif

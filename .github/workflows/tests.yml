@@ -1,0 +1,45 @@
+name: Tests
+
+# Runs the whole test suite. Used three ways:
+#  - on every pull request (so a change is checked before it is merged)
+#  - by the deploy workflows (a failing test blocks the deploy: see `needs: tests` there)
+#  - by hand (Actions > Tests > Run workflow)
+on:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, sqlite3, gd, intl, zip, curl, fileinfo, dom, xml
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run tests
+        run: php artisan test
+
+      - name: Check Composer packages for known vulnerabilities
+        run: composer audit --no-interaction
+        continue-on-error: true   # report only: a new advisory should not block an urgent fix

@@ -80,7 +80,7 @@ class Sections
                 $t('secondary_label', 'Second button label', 'Explore packages'),
                 self::link('secondary_url', 'Second button link', '/packages'),
                 self::rep('badges', 'Trust badges (up to 3)', 'badge', [$t('text', 'Badge text')], 3),
-                self::img('poster', 'Hero image shown before the video loads', 'images/hero-video-poster.webp'),
+                self::img('poster', 'Hero photo (shown first and on phones; the video plays over it on desktop)', 'images/hero-home.webp'),
             ]],
             'ticker' => ['label' => 'Highlights ticker', 'description' => 'A thin scrolling strip of short selling points.', 'fields' => [
                 self::rep('items', 'Highlights', 'highlight', [$t('text', 'Text')], 16),
@@ -119,7 +119,7 @@ class Sections
                 $t('eyebrow', 'Small label', 'Watch'),
                 $t('heading', 'Heading', 'See the Netherlands *before you go*'),
                 $ta('text', 'Text', 'Windmills, tulip fields, cheese markets and hidden corners, seen the small-group way.'),
-                self::img('poster', 'Poster image', 'images/hero-video-poster.webp'),
+                self::img('poster', 'Poster image', 'images/hero-about.webp'),
                 $t('video_name', 'Video file name', 'homepage_banner', 'The video file is public/videos/NAME.mp4 on the server.'),
             ]],
             'image_strip' => ['label' => 'Photo panels (journeys by traveller)', 'description' => 'Swipeable photo cards on phones, an expanding strip of panels on desktop.', 'fields' => [
@@ -129,12 +129,13 @@ class Sections
                 self::rep('items', 'Panels', 'panel', [$t('title', 'Title'), $ta('text', 'Text'), self::img('image', 'Photo')], 12),
             ]],
             'steps' => ['label' => 'Numbered steps', 'description' => 'Three or more numbered steps, such as "How it works".', 'fields' => [
+                ['name' => 'style', 'label' => 'Style', 'type' => 'select', 'options' => ['timeline' => 'Connected timeline', 'cards' => 'Simple columns'], 'default' => 'timeline'],
                 $t('eyebrow', 'Small label', 'Simple'),
                 $t('heading', 'Heading', 'How It Works'),
                 self::rep('items', 'Steps', 'step', [$t('title', 'Title'), $ta('text', 'Text')], 6),
             ]],
             'testimonials' => ['label' => 'Testimonials', 'description' => 'Reviews from Admin > Testimonials.', 'fields' => [
-                ['name' => 'variant', 'label' => 'Style', 'type' => 'select', 'options' => ['dark' => 'Dark blue background', 'light' => 'Light background'], 'default' => 'dark'],
+                ['name' => 'variant', 'label' => 'Style', 'type' => 'select', 'options' => ['dark' => 'Dark blue background', 'light' => 'Light background', 'spotlight' => 'Spotlight: one review at a time, with a picker'], 'default' => 'dark'],
                 $t('eyebrow', 'Small label', 'Reviews'),
                 $t('heading', 'Heading', 'What Travellers Say'),
                 ['name' => 'limit', 'label' => 'How many to show (0 = all)', 'type' => 'number', 'default' => 0],
@@ -177,7 +178,7 @@ class Sections
                 $t('phone_label', 'Call button text (the number is added)', 'Call'),
             ]],
             'hero_seasons' => ['label' => 'Hero: centred with season picker', 'description' => 'Centred hero with intro text, a "when to visit" picker and badges.', 'fields' => [
-                self::img('image', 'Background photo', 'images/hero.webp'),
+                self::img('image', 'Background photo', 'images/hero-about.webp'),
                 $t('eyebrow', 'Small label'),
                 $t('heading', 'Heading (H1)'),
                 $ta('text', 'Intro text'),
@@ -263,6 +264,31 @@ class Sections
         }
 
         return $out;
+    }
+
+    /** Labels of photos that were saved without alt text (accessibility + SEO), e.g. ['Photo 1 of Photos']. */
+    public static function missingAlt(string $type, array $data): array
+    {
+        $missing = [];
+        foreach (self::all()[$type]['fields'] ?? [] as $f) {
+            if ($f['type'] === 'image' && ! empty($data[$f['name']]) && blank($data[$f['name'].'_alt'] ?? '')) {
+                $missing[] = $f['label'];
+            }
+            if ($f['type'] === 'repeater') {
+                foreach ($f['fields'] as $sf) {
+                    if ($sf['type'] !== 'image') {
+                        continue;
+                    }
+                    foreach ((array) ($data[$f['name']] ?? []) as $j => $row) {
+                        if (! empty($row[$sf['name']]) && blank($row[$sf['name'].'_alt'] ?? '')) {
+                            $missing[] = ucfirst($f['item']).' '.($j + 1).' ('.$sf['label'].')';
+                        }
+                    }
+                }
+            }
+        }
+
+        return $missing;
     }
 
     /** Validate + clean one section's submitted form data against its schema (and store uploaded images). */

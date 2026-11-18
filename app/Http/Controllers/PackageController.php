@@ -16,7 +16,7 @@ class PackageController extends Controller
         $type = TourType::where('slug', $request->query('type'))->first();
         $destination = Destination::where('slug', $request->query('destination'))->first();
 
-        $packages = Package::published()->with(['tourType', 'images'])
+        $packages = Package::published()->with(['tourType', 'destination', 'images'])
             ->when($type, fn ($q) => $q->where('tour_type_id', $type->id))
             ->when($destination, fn ($q) => $q->where('destination_id', $destination->id))
             ->orderBy('sort_order')->get();
@@ -25,8 +25,8 @@ class PackageController extends Controller
 
         return view('pages.packages-index', [
             'packages' => $packages,
-            'tourTypes' => TourType::active()->get(),
-            'destinations' => Destination::active()->get(),
+            'tourTypes' => \App\Support\SiteData::tourTypes(),
+            'destinations' => \App\Support\SiteData::destinations(),
             'h1' => $h1,
             'seo' => Seo::make([
                 'title' => $h1.' | '.setting('brand_name', 'GoNetherlandTours'),
@@ -83,6 +83,7 @@ class PackageController extends Controller
         ]);
 
         return view('pages.package-show', [
+            'overlayHeader' => true,
             'package' => $package,
             'related' => $related,
             'seo' => Seo::make([

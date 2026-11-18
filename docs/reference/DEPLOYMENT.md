@@ -10,7 +10,7 @@ Shared hosting usually has no Node. Build on your PC and upload the result:
 npm ci
 npm run build          # creates public/build
 ```
-`public/build` is git-ignored, so upload it (SFTP/File Manager), or commit it to a deploy branch.
+`public/build` is **committed to git** (the server has no Node), so after changing CSS, JS or Tailwind classes run `npm run build` and commit the result before pushing. The deploy workflows (`.github/workflows/`) run the test suite first and only deploy if it passes; see DEPLOY_GUIDE.html.
 
 ## 2. Folder layout
 
@@ -31,6 +31,10 @@ Create `.env` on the server (never commit it):
 APP_NAME=GoNetherlandTours
 APP_ENV=production
 APP_DEBUG=false
+LOG_STACK=daily
+LOG_LEVEL=warning
+SITE_NOINDEX=false          # true on staging, false on the live site
+SESSION_SECURE_COOKIE=true  # default in production; keep true on HTTPS
 APP_URL=https://yourdomain.com
 DB_CONNECTION=mysql
 DB_HOST=localhost

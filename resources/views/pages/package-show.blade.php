@@ -5,54 +5,92 @@
     $fallback = $package->tourType?->image ?: 'images/tour-self-drive.webp';
 @endphp
 
+@push('head')
+    @if ($cover)<link rel="preload" as="image" href="{{ $cover->url(960) }}" imagesrcset="{{ $cover->srcset() }}" imagesizes="100vw" fetchpriority="high">@endif
+@endpush
+
 @section('content')
-<section class="bg-brown py-10 text-white sm:py-14">
+{{-- Photo-led hero: the cover photo runs behind the (transparent) header, with the key facts as pills. --}}
+<section class="relative isolate overflow-hidden bg-brown pb-10 pt-28 text-white sm:pb-14 sm:pt-36">
+    @if ($cover)
+        <x-picture :media="$cover" :alt="''" priority sizes="100vw" class="absolute inset-0 -z-20 h-full w-full object-cover" />
+    @else
+        <x-picture :src="$fallback" alt="" :width="960" :height="1430" priority sizes="100vw" class="absolute inset-0 -z-20 h-full w-full object-cover" />
+    @endif
+    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/55 to-ink/40"></div>
+    <div class="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-ink/60 to-transparent"></div>
     <div class="container-site">
-        <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/70">
+        <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80">
             <a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <a href="{{ route('packages.index') }}" class="hover:text-accent">Packages</a> / <span>{{ $package->title }}</span>
         </nav>
-        <p class="label-caps text-accent">{{ $package->tourType?->name }} &middot; {{ $package->destination?->name }} &middot; {{ $package->nights }} nights</p>
-        <h1 class="mt-3 text-4xl font-medium sm:text-5xl">{{ $package->title }}</h1>
-        <p class="mt-3 max-w-2xl text-white/85">{{ $package->summary }}</p>
+        <div class="flex flex-wrap gap-2 text-[0.72rem] font-bold uppercase tracking-wider">
+            <span class="rounded-full bg-accent px-3 py-1.5 text-ink">{{ $package->nights }} {{ \Illuminate\Support\Str::plural('night', $package->nights) }}</span>
+            @if ($package->tourType)<a href="{{ route('tour-types.show', $package->tourType) }}" class="rounded-full bg-white/20 px-3 py-1.5 text-white hover:bg-white/30">{{ $package->tourType->name }}</a>@endif
+            @if ($package->destination)<a href="{{ route('destinations.show', $package->destination) }}" class="rounded-full border border-white/50 px-3 py-1.5 text-white hover:bg-white/10">{{ $package->destination->name }}</a>@endif
+        </div>
+        <h1 class="mt-4 max-w-3xl text-4xl font-medium sm:text-5xl">{{ $package->title }}</h1>
+        <p class="mt-3 max-w-2xl text-white/90 sm:text-lg">{{ $package->summary }}</p>
+        <div class="mt-6 flex flex-wrap items-end gap-x-6 gap-y-3">
+            <div>
+                <p class="label-caps text-[0.68rem] text-white/70">From</p>
+                <p class="font-display text-3xl font-medium text-accent">{{ $package->priceLabel() }}<span class="ml-1 text-sm font-semibold text-accent/80">per person</span></p>
+            </div>
+            <button type="button" class="btn btn-primary" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">Get a Free Quote</button>
+        </div>
     </div>
 </section>
 
 <div class="container-site grid gap-10 py-10 lg:grid-cols-[1.4fr_1fr] lg:py-14">
-    <div class="min-w-0 space-y-10">
-        @if ($cover)
-            <x-picture :media="$cover" :alt="$cover->alt" priority class="aspect-[16/9] max-h-[26rem] w-full rounded-2xl object-cover" sizes="(min-width:1024px) 60vw, 100vw" />
-        @else
-            <x-picture :src="$fallback" :alt="$package->tourType?->image_alt ?? ''" :width="960" :height="640" priority class="aspect-[16/9] max-h-[26rem] w-full rounded-2xl object-cover" />
-        @endif
-
+    <div class="min-w-0 space-y-12">
         @if ($package->description)<div class="prose-site">{!! clean_html($package->description) !!}</div>@endif
 
         @if ($package->highlights)
-            <section aria-labelledby="hl"><h2 id="hl" class="text-2xl font-medium">Highlights</h2>
-                <ul class="mt-3 grid gap-2 sm:grid-cols-2">@foreach ($package->highlights as $h)<li class="flex gap-2"><x-icon name="check" class="mt-0.5 h-5 w-5 shrink-0 text-rust" />{{ $h }}</li>@endforeach</ul>
+            <section aria-labelledby="hl"><h2 id="hl" class="text-2xl font-medium sm:text-3xl">Highlights</h2>
+                <ul class="mt-4 grid gap-3 sm:grid-cols-2">@foreach ($package->highlights as $h)
+                    <li class="flex items-start gap-3 rounded-xl bg-sand p-4 font-semibold"><span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-ink"><x-icon name="check" class="h-4 w-4" /></span>{{ $h }}</li>
+                @endforeach</ul>
             </section>
         @endif
 
         @if ($package->itinerary)
-            <section aria-labelledby="it"><h2 id="it" class="text-2xl font-medium">Itinerary</h2>
-                <div class="mt-3 space-y-3">@foreach ($package->itinerary as $day)<x-faq-item :question="$day['title']">{{ $day['body'] }}</x-faq-item>@endforeach</div>
+            <section aria-labelledby="it"><h2 id="it" class="text-2xl font-medium sm:text-3xl">Day by day</h2>
+                <div class="mt-4 space-y-3">
+                    @foreach ($package->itinerary as $n => $day)
+                        @php $dayImg = $package->images->firstWhere('id', $day['image'] ?? null); @endphp
+                        <details class="group overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm" @if ($n === 0) open @endif>
+                            <summary class="flex cursor-pointer list-none items-center gap-4 p-3 sm:p-4 [&::-webkit-details-marker]:hidden">
+                                @if ($dayImg)
+                                    <x-picture :media="$dayImg" :alt="''" class="h-16 w-16 shrink-0 rounded-xl object-cover" sizes="64px" />
+                                @else
+                                    <span class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-brown font-display text-2xl text-accent" aria-hidden="true">{{ $n + 1 }}</span>
+                                @endif
+                                <span class="min-w-0 flex-1 font-display text-lg font-medium leading-snug sm:text-xl">{{ $day['title'] }}</span>
+                                <x-icon name="chevron" class="h-5 w-5 shrink-0 text-rust transition-transform group-open:rotate-180" />
+                            </summary>
+                            <div class="grid gap-4 px-4 pb-5 sm:px-5 {{ $dayImg ? 'sm:grid-cols-[13rem_1fr]' : '' }}">
+                                @if ($dayImg)<x-picture :media="$dayImg" :alt="$dayImg->alt" class="aspect-[4/3] w-full rounded-xl object-cover" sizes="(min-width:640px) 13rem, 100vw" />@endif
+                                <p class="leading-relaxed text-ink/80">{{ $day['body'] ?? '' }}</p>
+                            </div>
+                        </details>
+                    @endforeach
+                </div>
             </section>
         @endif
 
         <div class="grid gap-6 sm:grid-cols-2">
-            @if ($package->inclusions)<section aria-labelledby="inc"><h2 id="inc" class="text-xl font-medium">Included</h2><ul class="mt-3 space-y-1.5 text-sm">@foreach ($package->inclusions as $i)<li class="flex gap-2"><x-icon name="check" class="h-5 w-5 shrink-0 text-emerald-700" />{{ $i }}</li>@endforeach</ul></section>@endif
-            @if ($package->exclusions)<section aria-labelledby="exc"><h2 id="exc" class="text-xl font-medium">Not included</h2><ul class="mt-3 space-y-1.5 text-sm">@foreach ($package->exclusions as $i)<li class="flex gap-2"><x-icon name="no" class="h-5 w-5 shrink-0 text-rust" />{{ $i }}</li>@endforeach</ul></section>@endif
+            @if ($package->inclusions)<section aria-labelledby="inc" class="rounded-2xl bg-sand p-5"><h2 id="inc" class="text-xl font-medium">Included</h2><ul class="mt-3 space-y-2 text-sm">@foreach ($package->inclusions as $i)<li class="flex gap-2"><x-icon name="check" class="h-5 w-5 shrink-0 text-brand-700" />{{ $i }}</li>@endforeach</ul></section>@endif
+            @if ($package->exclusions)<section aria-labelledby="exc" class="rounded-2xl bg-sand p-5"><h2 id="exc" class="text-xl font-medium">Not included</h2><ul class="mt-3 space-y-2 text-sm">@foreach ($package->exclusions as $i)<li class="flex gap-2"><x-icon name="no" class="h-5 w-5 shrink-0 text-rust" />{{ $i }}</li>@endforeach</ul></section>@endif
         </div>
 
         @if ($package->images->count() > 1)
-            <section aria-labelledby="gal"><h2 id="gal" class="text-2xl font-medium">Gallery</h2>
-                <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">@foreach ($package->images->skip(1) as $img)<x-picture :media="$img" :alt="$img->alt" class="aspect-[4/3] w-full rounded-xl object-cover" sizes="(min-width:640px) 20vw, 50vw" />@endforeach</div>
+            <section aria-labelledby="gal"><h2 id="gal" class="text-2xl font-medium sm:text-3xl">Gallery</h2>
+                <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">@foreach ($package->images->skip(1) as $img)<x-picture :media="$img" :alt="$img->alt" class="aspect-[4/3] w-full rounded-xl object-cover" sizes="(min-width:640px) 20vw, 50vw" />@endforeach</div>
             </section>
         @endif
 
         @if ($package->faqs)
-            <section aria-labelledby="pf"><h2 id="pf" class="text-2xl font-medium">Questions about this tour</h2>
-                <div class="mt-3 space-y-3">@foreach ($package->faqs as $f)<x-faq-item :question="$f['question']">{{ $f['answer'] }}</x-faq-item>@endforeach</div>
+            <section aria-labelledby="pf"><h2 id="pf" class="text-2xl font-medium sm:text-3xl">Questions about this tour</h2>
+                <div class="mt-4 space-y-3">@foreach ($package->faqs as $f)<x-faq-item :question="$f['question']" name="faq-package">{{ $f['answer'] }}</x-faq-item>@endforeach</div>
             </section>
         @endif
     </div>

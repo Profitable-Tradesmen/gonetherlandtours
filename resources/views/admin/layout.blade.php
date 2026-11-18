@@ -40,6 +40,7 @@
         </div>
         <main class="mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">
             @if (session('status'))<div class="mb-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">{{ session('status') }}</div>@endif
+            @if (session('warning'))<div class="mb-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status">{{ session('warning') }}</div>@endif
             @if ($errors->any())
                 <div class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-900" role="alert"><p class="font-semibold">Please fix the following:</p><ul class="list-disc pl-5">@foreach ($errors->all() as $err)<li>{{ $err }}</li>@endforeach</ul></div>
             @endif

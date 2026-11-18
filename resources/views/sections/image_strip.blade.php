@@ -12,7 +12,7 @@
                     <h3 class="strip-title mt-1 text-2xl font-medium">{{ $p['title'] }}</h3>
                     <div class="strip-more">
                         <p class="mt-1 text-sm text-white/85">{{ $p['text'] }}</p>
-                        @if ($d['button_label'])<button type="button" class="mt-3 self-start text-sm font-bold text-accent underline underline-offset-4" @click="$store.modal.show()">{{ $d['button_label'] }}</button>@endif
+                        @if ($d['button_label'])<button type="button" class="inline-flex min-h-[2.75rem] items-center mt-1 self-start text-sm font-bold text-accent underline underline-offset-4" @click="$store.modal.show()">{{ $d['button_label'] }}</button>@endif
                     </div>
                 </article>
             @endforeach

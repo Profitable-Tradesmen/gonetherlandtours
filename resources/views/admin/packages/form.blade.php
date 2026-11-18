@@ -42,8 +42,9 @@
         <template x-for="(row, i) in rows" :key="i"><div class="mt-3 rounded-lg border border-sand-200 p-3">
             <label class="field-label">Day title</label><input class="field" :name="'itinerary[' + i + '][title]'" x-model="row.title">
             <label class="field-label mt-2">Description</label><textarea rows="3" class="field" :name="'itinerary[' + i + '][body]'" x-model="row.body"></textarea>
+            @if ($package->exists && $package->images->isNotEmpty())<label class="field-label mt-2">Photo for this day (from the gallery below)</label><select class="field" :name="'itinerary[' + i + '][image]'" x-model="row.image"><option value="">No photo</option>@foreach ($package->images as $n => $gi)<option value="{{ $gi->id }}">Gallery image {{ $n + 1 }}: {{ \Illuminate\Support\Str::limit($gi->alt, 40) }}</option>@endforeach</select>@endif
             <button type="button" class="mt-2 text-sm text-rust underline" @click="rows.splice(i, 1)">Remove day</button></div></template>
-        <button type="button" class="mt-3 text-sm font-semibold text-brand-700 underline" @click="rows.push({title: 'Day ' + (rows.length + 1) + ': ', body: ''})">+ Add day</button>
+        <button type="button" class="mt-3 text-sm font-semibold text-brand-700 underline" @click="rows.push({title: 'Day ' + (rows.length + 1) + ': ', body: '', image: ''})">+ Add day</button>
     </section>
 
     <section class="rounded-xl bg-white p-5 shadow-sm sm:p-7" x-data="{ rows: @js(old('faqs', $package->faqs ?? [])) }"><h2 class="font-display text-xl">Package FAQs</h2>

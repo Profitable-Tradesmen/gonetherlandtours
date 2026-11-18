@@ -11,7 +11,7 @@ class SitemapController extends Controller
 {
     public function sitemap()
     {
-        $urls = [[url('/'), now()], [route('packages.index'), now()], [route('blog.index'), now()]];
+        $urls = [[url('/'), now()], [route('packages.index'), now()], [route('blog.index'), now()], [route('destinations.index'), now()]];
 
         // Every published, indexable page (system pages and custom pages made in Admin > Pages). FAQ/testimonials come from here too.
         foreach (Page::where('noindex', false)->where('is_published', true)->where('slug', '!=', 'home')->get() as $p) {

@@ -120,7 +120,12 @@ class PageController extends Controller
         $sections[$i]['data'] = Sections::sanitize($s['type'], $request);
         $page->update(['sections' => $sections]);
 
-        return redirect()->route('admin.pages.edit', $page)->with('status', 'Section saved.');
+        $redirect = redirect()->route('admin.pages.edit', $page)->with('status', 'Section saved.');
+        if ($missing = Sections::missingAlt($s['type'], $sections[$i]['data'])) {
+            $redirect->with('warning', 'Saved, but these photos have no description (alt text): '.implode(', ', array_slice($missing, 0, 6)).(count($missing) > 6 ? ' and more' : '').'. Alt text helps visitors using screen readers and helps search engines. Edit the section to add it.');
+        }
+
+        return $redirect;
     }
 
     public function moveSection(Page $page, string $section, string $dir)

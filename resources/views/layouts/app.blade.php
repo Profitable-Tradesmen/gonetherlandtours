@@ -3,8 +3,8 @@
     $gtm = setting('gtm_id');
     $brand = setting('brand_name', 'GoNetherlandTours');
     $phone = setting('phone');
-    $tourTypes = \App\Models\TourType::active()->with(['packages' => fn ($q) => $q->published()->orderBy('title')])->get();
-    $destinations = \App\Models\Destination::active()->get();
+    $tourTypes = \App\Support\SiteData::tourTypes();
+    $destinations = \App\Support\SiteData::destinations();
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +49,7 @@
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[100] focus:rounded focus:bg-accent focus:px-4 focus:py-2">Skip to main content</a>
 
     @include('partials.topbar')
-    @include('partials.header')
+    @include('partials.header', ['overlayHeader' => $overlayHeader ?? false])
 
     <main id="main">@yield('content')</main>
 

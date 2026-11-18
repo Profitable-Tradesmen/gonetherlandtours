@@ -51,6 +51,8 @@ class SettingsController extends Controller
             'modal_intro' => ['Quote pop-up: intro', 'text', 'Use {discount} where the discount from "Modal headline discount" below should appear.'],
             'quiz_title' => ['Hero quiz card title', 'text', ''],
             'packages_intro' => ['Packages page: intro text', 'text', ''],
+            'destinations_heading' => ['Destinations page: heading', 'text', ''],
+            'destinations_intro' => ['Destinations page: intro text', 'textarea', ''],
             'thankyou_heading' => ['Thank-you page: heading', 'text', 'The visitor\x27s first name is added after it.'],
             'thankyou_text' => ['Thank-you page: text', 'textarea', ''],
             'thankyou_button' => ['Thank-you page: button', 'text', ''],

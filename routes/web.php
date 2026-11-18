@@ -14,6 +14,7 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/packages', [PackageController::class, 'index'])->name('packages.index');
 Route::get('/packages/search', [PackageController::class, 'search'])->middleware('throttle:60,1')->name('packages.search');
 Route::get('/packages/{package:slug}', [PackageController::class, 'show'])->name('packages.show');
+Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations.index');
 Route::get('/destinations/{destination:slug}', [DestinationController::class, 'show'])->name('destinations.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{post:slug}', [BlogController::class, 'show'])->name('blog.show');

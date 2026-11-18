@@ -109,7 +109,7 @@ class DefaultSections
             self::s('video_feature', ['poster_alt' => 'Travellers walking along a canal-side street lined with historic houses']),
             self::s('image_strip', ['items' => array_map(fn ($t) => ['title' => $t[0], 'text' => $t[1], 'image' => $t[2], 'image_alt' => $t[3]], $trav)]),
             self::s('steps', ['heading' => $c['how_heading'] ?? 'How It Works', 'items' => array_map(fn ($x) => ['title' => $x['title'] ?? '', 'text' => $x['text'] ?? ''], $steps)]),
-            self::s('testimonials', ['variant' => 'dark', 'heading' => $c['testimonials_heading'] ?? 'What Travellers Say']),
+            self::s('testimonials', ['variant' => 'spotlight', 'heading' => $c['testimonials_heading'] ?? 'What Travellers Say']),
             self::s('gallery', ['eyebrow' => $gallery['eyebrow'] ?? 'Visual journey', 'heading' => $gallery['title'] ?? 'A glimpse of the *real Netherlands*', 'items' => $galleryRows], (bool) ($c['show_gallery'] ?? true)),
             self::s('text_cta', [
                 'heading' => 'Plan with *peace of mind*',
@@ -222,13 +222,13 @@ class DefaultSections
         $add(['menu' => 'header', 'label' => 'Tours', 'kind' => 'tours', 'url' => null, 'sort_order' => ++$n]);
         $add(['menu' => 'header', 'label' => 'Packages', 'url' => '/packages', 'sort_order' => ++$n]);
         $about = $add(['menu' => 'header', 'label' => 'About Us', 'kind' => 'cards', 'url' => '/about', 'sort_order' => ++$n]);
-        $add(['menu' => 'header', 'label' => 'Blog', 'url' => '/blog', 'sort_order' => ++$n]);
         $add(['menu' => 'header', 'label' => 'Contact', 'url' => '/contact', 'sort_order' => ++$n]);
         foreach ([
             ['About Us', 'Who we are and how we plan your trip', '/about', 'images/Intro_image_split.webp', 'A traditional Dutch canal house and windmill'],
             ['Contact', 'Talk to a travel specialist', '/contact', 'images/Guide_1.webp', 'A travel specialist helping plan a Netherlands trip'],
             ['Testimonials', 'What travellers say about us', '/testimonials', 'images/couples.webp', 'A happy couple travelling in the Netherlands'],
             ['FAQs', 'Answers to common questions', '/faq', 'images/feature_band.webp', 'Tulip fields stretching to the horizon'],
+            ['Blog', 'Travel guides and inspiration', '/blog', 'images/Guide_2.webp', 'A Dutch canal-side street with historic gabled houses'],
         ] as $i => [$label, $desc, $url, $img, $alt]) {
             $add(['menu' => 'header', 'parent_id' => $about, 'label' => $label, 'description' => $desc, 'url' => $url, 'image' => $img, 'image_alt' => $alt, 'sort_order' => $i + 1]);
         }

@@ -117,6 +117,7 @@ class PackageController extends Controller
             'itinerary' => 'nullable|array|max:40',
             'itinerary.*.title' => 'nullable|string|max:190',
             'itinerary.*.body' => 'nullable|string|max:3000',
+            'itinerary.*.image' => 'nullable|integer',
             'faqs' => 'nullable|array|max:30',
             'faqs.*.question' => 'nullable|string|max:255',
             'faqs.*.answer' => 'nullable|string|max:3000',
@@ -152,7 +153,10 @@ class PackageController extends Controller
             'highlights' => $this->lines($data['highlights_text'] ?? ''),
             'inclusions' => $this->lines($data['inclusions_text'] ?? ''),
             'exclusions' => $this->lines($data['exclusions_text'] ?? ''),
-            'itinerary' => collect($data['itinerary'] ?? [])->filter(fn ($d) => filled($d['title'] ?? null))->values()->all(),
+            // A day may show one of the package's own gallery photos (stored as its media id; anything else is dropped).
+            'itinerary' => collect($data['itinerary'] ?? [])->filter(fn ($d) => filled($d['title'] ?? null))
+                ->map(fn ($d) => ['title' => $d['title'], 'body' => $d['body'] ?? '', 'image' => in_array((int) ($d['image'] ?? 0), $package->exists ? $package->images()->pluck('media.id')->all() : [], true) ? (int) $d['image'] : null])
+                ->values()->all(),
             'faqs' => collect($data['faqs'] ?? [])->filter(fn ($f) => filled($f['question'] ?? null))->values()->all(),
             'seo_title' => $data['seo_title'] ?? null,
             'meta_description' => $data['meta_description'] ?? null,

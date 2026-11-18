@@ -60,6 +60,7 @@ return [
         'footer_tours_heading' => 'Tours', 'footer_company_heading' => 'Company', 'footer_copyright' => 'All rights reserved.',
         'modal_title' => 'Start your adventure', 'modal_intro' => 'Fill out this form, save up to {discount} on your trip.',
         'quiz_title' => 'Start Your Adventure',
+        'destinations_heading' => 'Destinations', 'destinations_intro' => 'Six places worth slowing down for: pick a region and see the tours that visit it.',
         'packages_intro' => 'Browse our Netherlands tour packages and request a free, tailored quote.',
         'thankyou_heading' => 'Thank you', 'thankyou_text' => 'We have received your enquiry. A Netherlands travel specialist will be in touch soon with your tailored quote.', 'thankyou_button' => 'Browse tour packages',
     ],

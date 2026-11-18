@@ -28,7 +28,7 @@
 @if ($faqs->isNotEmpty())
 <section class="py-14"><div class="container-site max-w-3xl">
     <x-section-heading eyebrow="FAQ" title="Questions we are asked" />
-    <div class="space-y-3">@foreach ($faqs as $f)<x-faq-item :question="$f->question">{{ $f->answer }}</x-faq-item>@endforeach</div>
+    <div class="space-y-3">@foreach ($faqs as $f)<x-faq-item :question="$f->question" name="faq-tour-type">{{ $f->answer }}</x-faq-item>@endforeach</div>
     <p class="mt-6 text-center"><a href="{{ route('faq') }}" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust">Read all FAQs</a></p>
 </div></section>
 @endif

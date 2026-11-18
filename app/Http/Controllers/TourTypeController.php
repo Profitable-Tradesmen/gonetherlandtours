@@ -18,7 +18,7 @@ class TourTypeController extends Controller
 
         return view('pages.tour-type-show', [
             'tourType' => $tourType,
-            'packages' => Package::published()->where('tour_type_id', $tourType->id)->with(['tourType', 'images'])->orderBy('sort_order')->get(),
+            'packages' => Package::published()->where('tour_type_id', $tourType->id)->with(['tourType', 'destination', 'images'])->orderBy('sort_order')->get(),
             'faqs' => $faqs,
             'seo' => Seo::make([
                 'title' => $tourType->seo_title ?: $name.' Netherlands Tours | '.setting('brand_name', 'GoNetherlandTours'),

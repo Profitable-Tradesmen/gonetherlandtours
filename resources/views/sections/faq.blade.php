@@ -4,7 +4,7 @@
         @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'fq-'.$sid" />@endif
         @if ($faqs->isNotEmpty())
             <div class="space-y-3" data-reveal="up">
-                @foreach ($faqs as $f)<x-faq-item :question="$f->question">{{ $f->answer }}</x-faq-item>@endforeach
+                @foreach ($faqs as $f)<x-faq-item :question="$f->question" :name="'faq-'.$sid">{{ $f->answer }}</x-faq-item>@endforeach
             </div>
         @else
             <p class="text-center">No questions have been published yet.</p>

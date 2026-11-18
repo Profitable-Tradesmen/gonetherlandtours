@@ -159,7 +159,7 @@ git commit -m "Describe what you changed in one line"</pre><button type="button"
 
 <div class="step"><input type="checkbox" id="d5"><div class="body"><div class="t">Push to <code class="i">dev</code>: this updates staging</div>
 <div class="cmd"><div class="where">Project folder (or use Sync Changes in VS Code)</div><pre>git push origin dev</pre><button type="button">Copy</button></div>
-<p>Then watch <b>GitHub &gt; Actions &gt; Deploy staging</b>. Green tick = deployed (takes about 15 to 60 seconds). Red cross = open the run and read the log (see Troubleshooting).</p></div></div>
+<p>Then watch <b>GitHub &gt; Actions &gt; Deploy staging</b>. The run now has two jobs: <b>tests</b> (about a minute, runs the whole test suite) and then <b>deploy</b>. If a test fails, nothing is deployed: open the failed <b>tests</b> job, read which test broke, fix it and push again. Green tick on both = deployed. Red cross on <b>deploy</b> = open the log (see Troubleshooting).</p></div></div>
 
 <div class="step"><input type="checkbox" id="d6"><div class="body"><div class="t">Test on staging</div>
 <p>Open the staging address, check the pages you changed on phone and desktop, and send a test enquiry. Do not go live until this passes.</p></div></div>
@@ -299,6 +299,7 @@ git checkout dev</pre><button type="button">Copy</button></div></div></div>
 <h2 id="trouble">Troubleshooting</h2>
 <table>
 <tr><th>What you see</th><th>Likely cause and fix</th></tr>
+<tr><td>The <b>tests</b> job fails and the deploy is skipped</td><td>This is the safety net working. Open the failed job, find the red test name and message, fix the code (or the test if the behaviour was meant to change), and push again. Never disable the tests to force a deploy.</td></tr>
 <tr><td>Deploy run fails in a few seconds</td><td>A GitHub secret is missing or misspelled. Check all five names and values. Names are case-sensitive and secrets cannot be viewed after saving, only replaced.</td></tr>
 <tr><td>Log says <code class="i">Permission denied (publickey)</code></td><td>The public key is not in Hostinger SSH Keys, or the secret holds the wrong file. The secret must be the <b>private</b> key (starts with <code class="i">-----BEGIN OPENSSH PRIVATE KEY-----</code>).</td></tr>
 <tr><td>Log says <code class="i">git pull</code> failed or "not possible to fast-forward"</td><td>Someone changed files directly on the server. SSH in, run <code class="i">git status</code>, and ask the project lead before discarding anything.</td></tr>

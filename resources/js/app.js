@@ -314,6 +314,36 @@ Alpine.data('slider', () => ({
     },
 }));
 
+/* -------------------------------------------------------------
+ * Carousel (featured packages): the track is a native scroll-snap row, so touch swipe, trackpad and keyboard scroll
+ * work with no JavaScript help. This only drives the arrow buttons and their enabled state.
+ * ------------------------------------------------------------- */
+Alpine.data('carousel', () => ({
+    atStart: true,
+    atEnd: false,
+    init() {
+        // Measure after the first paint (not during Alpine start-up) so it does not force an early layout.
+        requestAnimationFrame(() => requestAnimationFrame(() => this.sync()));
+        window.addEventListener('resize', () => this.sync(), { passive: true });
+    },
+    sync() {
+        const t = this.$refs.track;
+        if (!t) return;
+        this.atStart = t.scrollLeft <= 4;
+        this.atEnd = t.scrollLeft + t.clientWidth >= t.scrollWidth - 4;
+    },
+    reset() {
+        if (this.$refs.track) this.$refs.track.scrollLeft = 0;
+        this.sync();
+    },
+    step(dir) {
+        const t = this.$refs.track;
+        const card = [...t.querySelectorAll('[data-slide]')].find((c) => c.offsetParent !== null);
+        const w = (card ? card.getBoundingClientRect().width : 320) + 20;
+        t.scrollBy({ left: dir * w, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    },
+}));
+
 Alpine.start();
 
 /* ---------------------------------------------------------------
@@ -367,3 +397,14 @@ function initBgVideo() {
     if (document.readyState === 'complete') later(); else window.addEventListener('load', later, { once: true });
 }
 initBgVideo();
+
+/* Accordions (FAQ): <details name="x"> already opens one at a time in current browsers; this gives older ones the same behaviour. */
+document.addEventListener(
+    'toggle',
+    (e) => {
+        const d = e.target;
+        if (!(d instanceof HTMLDetailsElement) || !d.open || !d.name) return;
+        document.querySelectorAll(`details[name="` + CSS.escape(d.name) + `"][open]`).forEach((o) => { if (o !== d) o.open = false; });
+    },
+    true,
+);
