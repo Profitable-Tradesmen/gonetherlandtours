@@ -411,6 +411,34 @@ class DesignRefreshTest extends TestCase
         $this->assertSame(1, count(array_keys(collect($home->fresh()->allSections())->pluck('type')->all(), 'partners')), 'not added twice');
     }
 
+    public function test_reviews_show_stars_photo_or_initial_trip_and_a_chosen_background(): void
+    {
+        $this->login();
+        \App\Models\Testimonial::query()->delete();
+        \App\Models\Testimonial::create(['name' => 'Jo Walker', 'location' => 'Denver, Colorado', 'trip' => '8-night coach tour', 'quote' => 'A wonderful trip.', 'rating' => 4, 'is_placeholder' => false, 'sort_order' => 1]);
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('Rated 4 out of 5', $html);
+        $this->assertStringContainsString('8-night coach tour', $html);
+        $this->assertStringContainsString('Denver, Colorado', $html);
+        $this->assertMatchesRegularExpression('#rounded-full bg-accent font-display text-ink[^>]*>\s*J\s*</span>#', $html, 'no photo: the initial on a gold circle');
+        $this->assertStringContainsString('images/couples', $html, 'default photo background behind the reviews');
+
+        // admin: the new fields are on the form
+        $form = $this->get(route('admin.testimonials.create'))->assertOk()->getContent();
+        foreach (['Star rating', 'Trip taken', 'Traveler photo'] as $label) {
+            $this->assertStringContainsString($label, $form, $label);
+        }
+
+        // stars can be switched off and the background removed (plain navy)
+        $home = Page::bySlug('home');
+        $sec = $this->section($home, 'testimonials');
+        $this->put(route('admin.pages.sections.update', [$home, $sec['id']]), ['data' => ['variant' => 'spotlight', 'heading' => 'Reviews', 'show_stars' => '0', 'bg' => 'images/couples.webp', 'bg_remove' => '1', 'overlay' => 'light']])->assertSessionHasNoErrors();
+        $html = $this->get('/')->getContent();
+        $this->assertStringNotContainsString('Rated 4 out of 5', $html);
+        $this->assertSame('', $this->section($home, 'testimonials')['data']['bg']);
+    }
+
     public function test_why_band_background_can_be_a_photo_a_gif_a_video_or_plain_navy(): void
     {
         \Illuminate\Support\Facades\Storage::fake('public');

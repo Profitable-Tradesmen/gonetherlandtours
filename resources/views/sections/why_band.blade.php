@@ -1,26 +1,12 @@
 @php
     $bg = (string) ($d['bg'] ?? '');
-    $ext = strtolower(pathinfo($bg, PATHINFO_EXTENSION));
-    $isVideo = $bg !== '' && in_array($ext, ['mp4', 'webm'], true);
-    $isGif = $bg !== '' && $ext === 'gif';
-    $overlay = ['light' => 'bg-brand-900/30', 'medium' => 'bg-brand-900/45', 'strong' => 'bg-brand-900/65'][$d['overlay'] ?? 'medium'] ?? 'bg-brand-900/75';
     $hasSide = ! empty($d['image']);
 @endphp
 {{-- Dark "why us" band. The background is a photo, an animated GIF or a short video chosen in the admin (a dark tint keeps the text readable);
      with no background it is plain navy. A video loads after the page and plays on tablets and desktops only (initBgVideo in app.js);
      phones, Data Saver and "reduce motion" visitors see the fallback photo instead. --}}
 <section class="relative isolate overflow-hidden bg-brand-900 py-16 text-white sm:py-24" aria-labelledby="wb-{{ $sid }}">
-    @if ($bg !== '')
-        @if (! empty($d['poster']))<x-picture :src="$d['poster']" :alt="$d['poster_alt'] ?? ''" :width="1600" :height="900" class="absolute inset-0 -z-30 h-full w-full object-cover" sizes="100vw" />@endif
-        @if ($isVideo)
-            <video muted loop playsinline aria-hidden="true" preload="none" data-bg-video class="absolute inset-0 -z-20 h-full w-full object-cover"><source data-src="{{ asset($bg) }}" type="video/{{ $ext }}"></video>
-        @elseif ($isGif)
-            <img src="{{ asset($bg) }}" alt="" loading="lazy" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover">
-        @else
-            <x-picture :src="$bg" alt="" :width="1600" :height="900" class="absolute inset-0 -z-20 h-full w-full object-cover" sizes="100vw" />
-        @endif
-        <div class="absolute inset-0 -z-10 {{ $overlay }}"></div>
-    @endif
+    @include('partials.section-bg', ['bg' => $bg, 'poster' => $d['poster'] ?? '', 'posterAlt' => $d['poster_alt'] ?? '', 'tint' => $d['overlay'] ?? 'medium'])
     <div class="container-site">
         {{-- Heading on the left, a short intro and the quote button on the right (below on phones). --}}
         <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">

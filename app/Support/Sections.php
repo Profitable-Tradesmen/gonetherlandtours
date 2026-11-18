@@ -154,6 +154,10 @@ class Sections
                 $t('heading', 'Heading', 'What Travelers Say'),
                 ['name' => 'limit', 'label' => 'How many to show (0 = all)', 'type' => 'number', 'default' => 0],
                 $t('button_label', 'Button under the reviews (opens the quote pop-up)', ''),
+                ['name' => 'show_stars', 'label' => 'Show the star ratings', 'type' => 'checkbox', 'default' => true],
+                ['name' => 'bg', 'label' => 'Background (dark and spotlight styles): photo, animated GIF or video', 'type' => 'media', 'default' => 'images/couples.webp', 'help' => 'Upload a JPG, PNG, WebP or GIF (up to 8 MB) or a short MP4 / WebM video (up to 25 MB). Remove it for a plain navy background. A video plays on tablets and desktops only; phones show the photo below.'],
+                self::img('poster', 'Photo for phones and while a video loads (only used with a video)'),
+                ['name' => 'overlay', 'label' => 'Dark tint over the background', 'type' => 'select', 'options' => ['light' => 'Light', 'medium' => 'Medium', 'strong' => 'Strong'], 'default' => 'medium'],
             ]],
             'gallery' => ['label' => 'Photo gallery', 'description' => 'A mosaic of photos that enlarge when clicked. Use 6, 12 or 18 photos for a gap-free grid.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Visual journey'),
