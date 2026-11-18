@@ -5,9 +5,11 @@
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'tt-'.$sid" />
     </div>
     {{-- Edge-to-edge photo cards: the title, a short line and the quote button sit on the photo. --}}
-    <div class="grid gap-3 px-3 md:grid-cols-3 md:gap-5 md:px-5">
+    {{-- Phones: a swipeable row (next card peeking, dash indicators). From md: three columns. --}}
+    <div x-data="carousel" role="region" aria-roledescription="carousel" aria-label="{{ $d['heading'] }}">
+    <div x-ref="track" @scroll.passive="sync()" class="carousel-track flex snap-x snap-mandatory gap-3 overflow-x-auto px-3 pb-2 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-5 md:pb-0">
         @foreach ($types as $i => $t)
-            <article class="group relative isolate flex min-h-[26rem] flex-col justify-end overflow-hidden rounded-2xl text-white sm:min-h-[30rem] lg:min-h-[34rem]" data-reveal="up" style="--d:{{ $i * 120 }}ms">
+            <article data-slide class="group relative isolate flex min-h-[26rem] w-[85%] shrink-0 snap-center md:w-auto flex-col justify-end overflow-hidden rounded-2xl text-white sm:min-h-[30rem] lg:min-h-[34rem]" data-reveal="up" style="--d:{{ $i * 120 }}ms">
                 <x-picture :src="$t->image" :alt="$t->image_alt" :width="960" :height="640" class="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:768px) 33vw, 100vw" />
                 <span class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent"></span>
                 <div class="p-6 sm:p-8">
@@ -20,6 +22,12 @@
                 </div>
             </article>
         @endforeach
+    </div>
+                <div class="mt-3 flex justify-center gap-2 md:hidden" x-show="count > 1" x-cloak>
+                    <template x-for="n in count" :key="n">
+                        <button type="button" class="h-1.5 w-10 rounded-sm transition-colors" :class="n - 1 === idx ? 'bg-brand-700' : 'bg-brand-700/25'" @click="go(n - 1)" :aria-label="'Show tour type ' + n" :aria-current="n - 1 === idx"></button>
+                    </template>
+                </div>
     </div>
 </section>
 @endif

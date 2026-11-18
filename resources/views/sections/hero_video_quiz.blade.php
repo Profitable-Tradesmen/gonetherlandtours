@@ -17,7 +17,7 @@
         <div>
             @if ($d['eyebrow'])<p class="hero-in label-caps text-center text-accent lg:text-left">{{ $d['eyebrow'] }}</p>@endif
             <h1 style="--d:120ms" class="hero-in mt-4 text-center text-4xl font-medium sm:text-5xl lg:text-left lg:text-6xl">{!! emphasize($d['heading'], 'text-accent') !!}</h1>
-            @if ($d['subheading'])<p style="--d:240ms" class="hero-in mt-4 line-clamp-3 max-w-xl text-center text-sm text-white/90 sm:mx-auto sm:mt-5 sm:line-clamp-none sm:text-lg lg:mx-0 lg:text-left">{{ $d['subheading'] }}</p>@endif
+            @if ($d['subheading'])<p style="--d:240ms" class="hero-in mt-4 hidden max-w-xl text-center text-sm text-white/90 sm:mx-auto sm:mt-5 sm:block sm:text-lg lg:mx-0 lg:text-left">{{ $d['subheading'] }}</p>@endif
             <div style="--d:360ms" class="hero-in mt-7 hidden flex-wrap gap-3 sm:flex sm:justify-center lg:justify-start">
                 @if ($d['primary_label'])<x-button @click="$store.modal.show()">{{ $d['primary_label'] }}</x-button>@endif
                 @if ($d['secondary_label'])<x-cta-button variant="outline" :label="$d['secondary_label']" :url="$d['secondary_url']" class="text-white" />@endif

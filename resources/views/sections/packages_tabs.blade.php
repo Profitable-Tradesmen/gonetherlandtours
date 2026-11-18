@@ -6,6 +6,20 @@
 <section class="bg-sand py-16 sm:py-24" aria-labelledby="pk-{{ $sid }}">
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :subtitle="$d['intro'] ?: null" :id="'pk-'.$sid" />
+        {{-- Phones: ONE swipeable carousel of all featured packages (horizontal cards, next one peeking, dash indicators). --}}
+        <div class="md:hidden" x-data="carousel" role="region" aria-roledescription="carousel" aria-label="{{ $d['heading'] }}">
+            <div x-ref="track" @scroll.passive="sync()" class="carousel-track relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4">
+                @foreach ($featured->take(12) as $p)
+                    <div data-slide class="flex w-[88%] shrink-0 snap-start"><div class="w-full">@include('partials.package-card', ['package' => $p])</div></div>
+                @endforeach
+            </div>
+            <div class="mt-1 flex justify-center gap-2" x-show="count > 1" x-cloak>
+                <template x-for="n in count" :key="n">
+                    <button type="button" class="h-1.5 w-8 rounded-sm transition-colors" :class="n - 1 === idx ? 'bg-brand-700' : 'bg-brand-700/25'" @click="go(n - 1)" :aria-label="'Show package ' + n" :aria-current="n - 1 === idx"></button>
+                </template>
+            </div>
+        </div>
+        <div class="hidden md:block">
         {{-- One carousel row per tour type that has a featured package: heading, its summary, a "view more" button, a swipeable row of cards and dash indicators. --}}
         @foreach ($types as $t)
             @php $rowPackages = $featured->where('tour_type_id', $t->id)->take(9); @endphp
@@ -35,6 +49,7 @@
                 </div>
             </div>
         @endforeach
+        </div>
         @if ($d['button_label'])<p class="mt-10 text-center"><x-button variant="secondary" :href="route('packages.index')">{{ $d['button_label'] }}</x-button></p>@endif
     </div>
 </section>
