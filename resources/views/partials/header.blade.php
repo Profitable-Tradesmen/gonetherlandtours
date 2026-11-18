@@ -5,7 +5,7 @@
     $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm xl:px-4 font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-sand';
     $menu = \App\Models\MenuItem::tree('header');
     $hasTours = $menu->contains('kind', 'tours');
-    $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header is fully transparent over it (white links, full-color logo with a soft white halo) until you scroll, then it becomes a white bar
+    $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header is fully transparent over it (white links, full-color logo) until you scroll, then it becomes a white bar
 @endphp
 <header class="hdr sticky top-0 z-50 border-b-4 border-accent bg-white/95 backdrop-blur {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
         x-data="{ menu: false, dd: null, solid: false }" x-init="solid = window.scrollY > 24"
