@@ -159,7 +159,7 @@
 .carousel-track { scrollbar-width: none; scroll-padding-inline: 1rem; }
 .carousel-track::-webkit-scrollbar { display: none; }
 /* The logo sits on a white plate in the navy header; keep it inside the 80px bar. */
-@media (min-width: 1024px) { .hdr-plate img { height: 3.1rem; } }
+
 
 /* Sections well below the first screen are laid out only when they get near the viewport (smaller start-up cost). The
    "auto" size remembers each section's real height once seen, so the page does not jump. */
