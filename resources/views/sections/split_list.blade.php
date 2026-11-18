@@ -1,4 +1,4 @@
-<section class="bg-sand py-16 sm:py-24" aria-labelledby="sl-{{ $sid }}">
+<section class="hidden bg-sand py-16 sm:block sm:py-24" aria-labelledby="sl-{{ $sid }}">
     <div class="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
         {{-- One large photo; the badge sits on it as a dark tile and an optional second photo overlaps its corner. --}}
         <div class="relative">
