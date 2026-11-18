@@ -296,4 +296,24 @@ class DesignRefreshTest extends TestCase
         $migration->up();
         $this->assertNull($blog->fresh()->parent_id);
     }
+
+    public function test_migration_moves_tour_types_above_the_signature_collection(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000002_move_tour_types_above_signature_collection.php');
+        $home = Page::bySlug('home');
+        $secs = collect($home->allSections());
+        $tt = $secs->firstWhere('type', 'tour_types');
+        $swapped = $secs->reject(fn ($s) => $s['type'] === 'tour_types')->values()->all();
+        $at = array_search('packages_tabs', array_column($swapped, 'type'), true);
+        array_splice($swapped, $at + 1, 0, [$tt]);   // old order: packages first, tour types after
+        $home->update(['sections' => $swapped]);
+
+        $migration->up();
+        $types = collect($home->fresh()->allSections())->pluck('type')->all();
+        $this->assertSame(array_search('packages_tabs', $types, true) - 1, array_search('tour_types', $types, true));
+
+        $before = $types;
+        $migration->up();
+        $this->assertSame($before, collect($home->fresh()->allSections())->pluck('type')->all(), 'running it again changes nothing');
+    }
 }
