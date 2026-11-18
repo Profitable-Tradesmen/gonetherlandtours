@@ -126,9 +126,9 @@ class DefaultSections
     {
         return self::s('value_strip', ['items' => self::rows([
             ['money', 'Clear, upfront quotes', 'Know what is included before you decide.'],
-            ['tulip', 'Authentic Dutch culture', 'Real traditions and local places, not a checklist.'],
-            ['guide', 'Small groups and private tours', 'Your own party, or a small group with a guide who knows your name.'],
-            ['phone', 'Real people to help', 'Personal support from first inquiry to your return home.'],
+            ['tulip', 'Real Dutch culture', 'Local traditions, not a checklist.'],
+            ['guide', 'Private or small group', 'Your own party, or a small guided group.'],
+            ['phone', 'Real people to help', 'Help from first inquiry to return home.'],
         ], ['icon', 'title', 'text'])]);
     }
 

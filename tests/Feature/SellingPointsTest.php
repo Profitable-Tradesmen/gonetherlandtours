@@ -40,7 +40,7 @@ class SellingPointsTest extends TestCase
         $html = $this->get('/')->getContent();
         $this->assertStringContainsString('private self drive and chauffeur tours or small-group coach tours', $html);
         $this->assertStringContainsString('just your own party', $html);
-        $this->assertStringContainsString('a small group with a guide who knows your name', $html, 'value strip: small group only on guided tours');
+        $this->assertStringContainsString('Your own party, or a small guided group', $html, 'value strip: small group only on guided tours');
         $this->assertStringNotContainsString('Small groups with flexible itineraries', $html);
         $this->assertStringNotContainsString('on small-group and tailor-made tours', $html, 'old blanket claim is gone');
         $this->assertStringContainsString('Private self drive and chauffeur tours or small-group coach tours', $html, 'meta description');
