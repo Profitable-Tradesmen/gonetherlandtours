@@ -82,6 +82,12 @@ class Sections
                 self::rep('badges', 'Trust badges (up to 3)', 'badge', [$t('text', 'Badge text')], 3),
                 self::img('poster', 'Hero photo (shown first and on phones; the video plays over it on desktop)', 'images/hero-home.webp'),
             ]],
+            'partners' => ['label' => 'Partner logos', 'description' => 'A dark brown band with a heading, a short text and a row of partner logos. White or transparent logos look best on the dark background.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Travel partners'),
+                $t('heading', 'Heading', 'Our Best Trusted *Partners*'),
+                $ta('text', 'Text', 'Our journeys are supported by trusted partners who share our commitment to exceptional service, seamless travel and unforgettable experiences.'),
+                self::rep('items', 'Logos', 'logo', [self::img('image', 'Logo'), self::link('url', 'Link (optional)', '', 'A full https:// address or a page path. Leave blank for no link.')], 8),
+            ]],
             'ticker' => ['label' => 'Highlights ticker', 'description' => 'A thin scrolling strip of short selling points.', 'fields' => [
                 self::rep('items', 'Highlights', 'highlight', [$t('text', 'Text')], 16),
             ]],

@@ -370,6 +370,45 @@ class DesignRefreshTest extends TestCase
         $this->assertStringNotContainsString($mark, $this->get('/')->getContent());
     }
 
+    public function test_partner_logos_band_sits_right_after_how_it_works_and_is_editable(): void
+    {
+        $types = collect(Page::bySlug('home')->visibleSections())->pluck('type')->all();
+        $this->assertSame(array_search('steps', $types, true) + 1, array_search('partners', $types, true), 'right after How it works');
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('Our Best Trusted', $html);
+        foreach (['go-rail-travel.png', 'go-asian-tours.png', 'go-italia-trips.webp'] as $file) {
+            $this->assertFileExists(public_path('images/partners/'.$file));
+            $this->assertStringContainsString('images/partners/'.$file, $html);
+        }
+        $this->assertStringContainsString('alt="Go Asian Tours"', $html);
+
+        // editable: one logo with a link, an empty row is dropped
+        $this->login();
+        $home = Page::bySlug('home');
+        $sec = $this->section($home, 'partners');
+        $this->put(route('admin.pages.sections.update', [$home, $sec['id']]), ['data' => ['heading' => 'Friends', 'items' => [
+            ['image' => 'images/partners/go-asian-tours.png', 'image_alt' => 'Go Asian Tours', 'url' => 'https://example.com'], ['image' => '', 'url' => ''],
+        ]]])->assertSessionHasNoErrors();
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('href="https://example.com"', $html);
+        $this->assertStringNotContainsString('go-italia-trips.webp', $html);
+    }
+
+    public function test_migration_adds_the_partners_band_after_how_it_works_once(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000006_add_partners_band_to_home.php');
+        $home = Page::bySlug('home');
+        $without = collect($home->allSections())->reject(fn ($s) => $s['type'] === 'partners')->values()->all();
+        $home->update(['sections' => $without]);
+
+        $migration->up();
+        $types = collect($home->fresh()->allSections())->pluck('type')->all();
+        $this->assertSame(array_search('steps', $types, true) + 1, array_search('partners', $types, true));
+        $migration->up();
+        $this->assertSame(1, count(array_keys(collect($home->fresh()->allSections())->pluck('type')->all(), 'partners')), 'not added twice');
+    }
+
     public function test_home_has_no_video_band_and_the_migration_removes_or_hides_an_existing_one(): void
     {
         $types = collect(Page::bySlug('home')->allSections())->pluck('type')->all();

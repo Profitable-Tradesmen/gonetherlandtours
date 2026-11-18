@@ -103,6 +103,7 @@ class DefaultSections
             self::uspProof(),
             self::s('image_strip', ['items' => array_map(fn ($t) => ['title' => $t[0], 'text' => $t[1], 'image' => $t[2], 'image_alt' => $t[3]], $trav)]),
             self::s('steps', ['heading' => $c['how_heading'] ?? 'How It Works', 'items' => array_map(fn ($x) => ['title' => $x['title'] ?? '', 'text' => $x['text'] ?? ''], $steps)]),
+            self::partners(),
             self::s('testimonials', ['variant' => 'spotlight', 'heading' => $c['testimonials_heading'] ?? 'What Travelers Say']),
             self::s('gallery', ['eyebrow' => $gallery['eyebrow'] ?? 'Visual journey', 'heading' => $gallery['title'] ?? 'A glimpse of the *real Netherlands*', 'items' => $galleryRows], (bool) ($c['show_gallery'] ?? true)),
             self::s('text_cta', [
@@ -118,6 +119,16 @@ class DefaultSections
                 'text' => $c['cta_text'] ?? '',
             ]),
         ];
+    }
+
+    /** Partner logos band after "How it works". White or transparent logos on the dark band; replace or remove them in Admin > Pages. */
+    public static function partners(): array
+    {
+        return self::s('partners', ['items' => self::rows([
+            ['images/partners/go-rail-travel.png', 'Go Rail Travel', ''],
+            ['images/partners/go-asian-tours.png', 'Go Asian Tours', ''],
+            ['images/partners/go-italia-trips.webp', 'Go Italia Trips', ''],
+        ], ['image', 'image_alt', 'url'])]);
     }
 
     /** Four short selling points in a clean row right under the hero. */
