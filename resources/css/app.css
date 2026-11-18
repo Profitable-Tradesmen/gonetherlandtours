@@ -178,3 +178,16 @@ main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 
 .review-fig { opacity: 0; visibility: hidden; transform: translateY(.5rem); transition: opacity .3s ease, transform .3s ease, visibility 0s linear .3s; }
 .review-fig.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity .5s ease .3s, transform .5s ease .3s, visibility 0s linear 0s; }
 @media (prefers-reduced-motion: reduce) { .review-fig, .review-fig.is-active { transition-delay: 0s !important; transform: none; } }
+
+/* Partner logos marquee (see sections/partners.blade.php): the track holds two identical groups and slides left by one group, forever. */
+.marquee { -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
+.marquee-track { display: flex; width: max-content; animation: marquee var(--marquee-time, 30s) linear infinite; }
+.marquee-group { display: flex; flex-shrink: 0; align-items: center; gap: 4rem; padding-right: 4rem; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+    .marquee { -webkit-mask-image: none; mask-image: none; }
+    .marquee-track { animation: none; width: auto; justify-content: center; }
+    .marquee-group { flex-wrap: wrap; justify-content: center; gap: 2rem 2.5rem; padding-right: 0; }
+    .marquee-group[aria-hidden='true'], .marquee-repeat { display: none; }
+}

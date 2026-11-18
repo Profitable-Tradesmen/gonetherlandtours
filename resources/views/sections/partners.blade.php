@@ -12,18 +12,33 @@
             <h2 id="pt-{{ $sid }}" class="text-3xl font-medium sm:text-4xl lg:text-5xl">{!! emphasize($d['heading'], 'text-accent') !!}</h2>
             @if ($d['text'])<p class="mt-5 text-base leading-relaxed text-white/90 sm:text-lg">{{ $d['text'] }}</p>@endif
         </div>
-        <ul class="flex flex-wrap items-center justify-center gap-x-10 gap-y-8 lg:border-l lg:border-white/25 lg:pl-12" data-reveal="right">
-            @foreach ($logos as $it)
-                @php
-                    $url = trim((string) ($it['url'] ?? ''));
-                    $size = @getimagesize(public_path($it['image'])) ?: [0, 0];
-                    $img = '<img src="'.e(asset($it['image'])).'" alt="'.e($it['image_alt'] ?? '').'"'.($size[0] ? ' width="'.$size[0].'" height="'.$size[1].'"' : '').' loading="lazy" decoding="async" class="h-10 w-auto max-w-[11rem] object-contain opacity-90 transition-opacity hover:opacity-100 sm:h-12 sm:max-w-[13rem]">';
-                @endphp
-                <li class="flex items-center">
-                    @if ($url !== '')<a href="{{ str_starts_with($url, '/') ? url($url) : $url }}" @if (! str_starts_with($url, '/')) target="_blank" rel="noopener" @endif class="inline-flex min-h-[2.75rem] items-center">{!! $img !!}</a>@else{!! $img !!}@endif
-                </li>
-            @endforeach
-        </ul>
+        {{-- The logos slide slowly from right to left in a loop (a marquee). The list is repeated until one group is wider than the band, then the
+             group is shown twice and the track moves by exactly one group, so the loop has no jump. Pauses on hover and focus; with
+             "reduce motion" the logos simply sit still, wrapped, one group only. --}}
+        @php
+            $group = collect();
+            while ($group->count() < 8) { $group = $group->concat($logos->values()); }
+            $speed = max(24, $group->count() * 5);   // seconds for one full group
+        @endphp
+        <div class="marquee overflow-hidden lg:border-l lg:border-white/25 lg:pl-12" data-reveal="right" role="group" aria-label="{{ $d['eyebrow'] ?: 'Partners' }}">
+            <div class="marquee-track" style="--marquee-time: {{ $speed }}s">
+                @foreach ([0, 1] as $copy)
+                    <ul class="marquee-group" @if ($copy === 1) aria-hidden="true" inert @endif>
+                        @foreach ($group as $it)
+                            @php
+                                $url = trim((string) ($it['url'] ?? ''));
+                                $size = @getimagesize(public_path($it['image'])) ?: [0, 0];
+                                $img = '<img src="'.e(asset($it['image'])).'" alt="'.($copy === 1 || $loop->index >= $logos->count() ? '' : e($it['image_alt'] ?? '')).'"'.($size[0] ? ' width="'.$size[0].'" height="'.$size[1].'"' : '').' loading="lazy" decoding="async" class="h-10 w-auto max-w-[11rem] object-contain opacity-90 transition-opacity hover:opacity-100 sm:h-12 sm:max-w-[13rem]">';
+                            @endphp
+                            @php $repeat = $loop->index >= $logos->count(); @endphp
+                            <li class="flex shrink-0 items-center {{ $repeat ? 'marquee-repeat' : '' }}" @if ($repeat) aria-hidden="true" @endif>
+                                @if ($url !== '')<a href="{{ str_starts_with($url, '/') ? url($url) : $url }}" @if (! str_starts_with($url, '/')) target="_blank" rel="noopener" @endif @if ($repeat) tabindex="-1" @endif class="inline-flex min-h-[2.75rem] items-center">{!! $img !!}</a>@else{!! $img !!}@endif
+                            </li>
+                        @endforeach
+                    </ul>
+                @endforeach
+            </div>
+        </div>
     </div>
 </section>
 @endif
