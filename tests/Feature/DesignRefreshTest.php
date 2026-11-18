@@ -411,6 +411,50 @@ class DesignRefreshTest extends TestCase
         $this->assertSame(1, count(array_keys(collect($home->fresh()->allSections())->pluck('type')->all(), 'partners')), 'not added twice');
     }
 
+    public function test_each_tour_type_page_is_built_from_sections_with_its_own_copy(): void
+    {
+        $expect = [
+            'self-drive' => ['The Ultimate Netherlands Self Drive Experience', 'Self drive vacations with', 'Start planning your self drive tour', 'Self drive packages', 'Sample: Tulip Season Self Drive'],
+            'chauffeur-driven' => ['Private Chauffeur Driven Netherlands Tours', 'Chauffeur driven tours with', 'Plan my chauffeur tour', 'Chauffeur driven packages', 'Sample: Dutch Highlights Chauffeur Tour'],
+            'coach-tours' => ['Small Group Netherlands Coach Tours', 'Guided coach tours for', 'Plan my coach tour', 'Coach tour packages', 'Sample: Netherlands in Bloom Coach Tour'],
+        ];
+        foreach ($expect as $slug => $texts) {
+            $html = $this->get('/tours/'.$slug)->assertOk()->getContent();
+            foreach ($texts as $text) {
+                $this->assertStringContainsString($text, $html, $slug.': '.$text);
+            }
+            foreach (['3 easy steps to book your Netherlands', 'What our guests say', 'Why travel with us', 'Crafted for you'] as $common) {
+                $this->assertStringContainsString($common, $html, $slug.': '.$common);
+            }
+            $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html), $slug.': one h1');
+
+            $page = Page::where('slug', 'tour-'.$slug)->firstOrFail();
+            $this->assertTrue($page->is_system);
+            $this->assertSame('/tours/'.$slug, $page->path(), 'its public address is the tour type page');
+            $this->get('/tour-'.$slug)->assertNotFound();   // the companion record is not a public page of its own
+        }
+        $this->assertStringNotContainsString('tour-self-drive', $this->get('/sitemap.xml')->getContent());
+    }
+
+    public function test_tour_type_page_sections_are_editable_in_admin_and_ensure_all_never_overwrites(): void
+    {
+        $this->login();
+        $this->get(route('admin.pages.index'))->assertOk()->assertSee('Self Drive page');
+        $page = Page::where('slug', 'tour-self-drive')->firstOrFail();
+        $sec = collect($page->allSections())->firstWhere('type', 'promo_band');
+        $this->put(route('admin.pages.sections.update', [$page, $sec['id']]), ['data' => ['heading' => 'My own *heading*', 'text' => 'Mine', 'button_label' => 'Go']])->assertSessionHasNoErrors();
+        $this->assertStringContainsString('My own', $this->get('/tours/self-drive')->getContent());
+
+        // running the creator again changes nothing, and a deleted tour type page is not re-created over an existing one
+        $this->assertSame(0, \App\Support\TourTypePages::ensureAll());
+        $this->assertStringContainsString('My own', $this->get('/tours/self-drive')->getContent());
+
+        // without a companion page the older fixed layout still works
+        $page->delete();
+        $this->get('/tours/self-drive')->assertOk()->assertSee('Sample: Tulip Season Self Drive');
+        $this->assertSame(1, \App\Support\TourTypePages::ensureAll(), 'it comes back for the tour type that lost its page');
+    }
+
     public function test_reviews_show_stars_photo_or_initial_trip_and_a_chosen_background(): void
     {
         $this->login();

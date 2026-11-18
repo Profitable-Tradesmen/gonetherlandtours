@@ -90,6 +90,20 @@ class Sections
                 $ta('text', 'Text', 'Our journeys are supported by trusted partners who share our commitment to exceptional service, seamless travel and unforgettable experiences.'),
                 self::rep('items', 'Logos', 'logo', [self::img('image', 'Logo'), self::link('url', 'Link (optional)', '', 'A full https:// address or a page path. Leave blank for no link.')], 8),
             ]],
+            'promo_band' => ['label' => 'Offer / reassurance band', 'description' => 'A light band with a big heading, a short paragraph, up to three ticked points and a button. Good for an offer or a promise.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Plan with confidence'),
+                $t('heading', 'Heading', 'Start planning and get your *free quote.*'),
+                $ta('text', 'Text', 'Tell us what you have in mind and a travel specialist will reply with a clear, personalized quote. No pressure and no obligation.'),
+                self::rep('points', 'Ticked points (up to 3)', 'point', [$t('text', 'Text')], 3),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Get my free quote'),
+            ]],
+            'tour_packages' => ['label' => 'Packages of this tour type', 'description' => 'A carousel with the published packages of the tour type this page belongs to (used on the Self Drive, Chauffeur Driven and Coach Tours pages). On any other page it shows all featured packages.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Signature journeys'),
+                $t('heading', 'Heading', 'Our packages'),
+                $ta('intro', 'Intro text', ''),
+                $t('button_label', 'Button under the packages', 'See all packages'),
+                $t('empty_text', 'Text when there are no packages yet', 'No packages are published yet.'),
+            ]],
             'ticker' => ['label' => 'Highlights ticker', 'description' => 'A thin scrolling strip of short selling points.', 'fields' => [
                 self::rep('items', 'Highlights', 'highlight', [$t('text', 'Text')], 16),
             ]],

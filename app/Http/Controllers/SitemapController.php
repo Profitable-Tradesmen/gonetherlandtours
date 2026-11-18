@@ -14,7 +14,7 @@ class SitemapController extends Controller
         $urls = [[url('/'), now()], [route('packages.index'), now()], [route('blog.index'), now()], [route('destinations.index'), now()]];
 
         // Every published, indexable page (system pages and custom pages made in Admin > Pages). FAQ/testimonials come from here too.
-        foreach (Page::where('noindex', false)->where('is_published', true)->where('slug', '!=', 'home')->get() as $p) {
+        foreach (Page::where('noindex', false)->where('is_published', true)->where('slug', '!=', 'home')->where('slug', 'not like', 'tour-%')->get() as $p) {
             $urls[] = [$p->url(), $p->updated_at];
         }
         foreach (\App\Models\TourType::active()->where('noindex', false)->get() as $t) {

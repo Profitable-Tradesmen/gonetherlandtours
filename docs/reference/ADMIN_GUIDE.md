@@ -51,3 +51,7 @@ Connect the CRM: paste the **Location ID** and **Private Integration token**, ti
 
 ## Admin users
 Add or remove people who can log in. You cannot delete yourself or the last admin. Leave the password blank when editing to keep it. Use long unique passwords.
+
+## Tour type pages (Self Drive, Chauffeur Driven, Coach Tours)
+
+The hero (heading, summary, "how you travel" note) of `/tours/<name>` is edited in **Admin > Tour types**. Everything under the hero is built from sections, edited in **Admin > Pages > "<Tour type> page"** exactly like the home page: value strip, intro with photo and ticked list, the packages of that tour type (a carousel), why-us strip, offer band, reviews, three steps and a closing call to action. You can reorder, hide, add or remove sections there. If you delete a tour type's page, the older fixed layout is used until it is recreated (deploy runs `migrate`, or use the seeder). Text marked `[CONFIRM: ...]` needs your real facts (support hours, coach group size).

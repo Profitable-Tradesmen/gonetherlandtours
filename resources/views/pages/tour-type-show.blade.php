@@ -17,6 +17,12 @@
     <div class="prose-site max-w-3xl">{!! clean_html($tourType->body) !!}</div>
 </section>
 @endif
+@if (! empty($sections))
+    {{-- The rest of the page is built from sections (Admin > Pages > "{{ $tourType->name }} page"), the same blocks as the home page. --}}
+    @foreach ($sections as $section)
+        @include('sections.'.$section['type'], ['d' => $section['d'], 'sid' => $section['id'], 'tourType' => $tourType])
+    @endforeach
+@else
 <section class="bg-sand py-14"><div class="container-site">
     <x-section-heading :title="$tourType->name.' packages'" />
     @if ($packages->isNotEmpty())
@@ -27,7 +33,8 @@
     <p class="mt-8 text-center"><a href="{{ route('packages.index') }}" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust">See all Netherlands packages</a></p>
 </div></section>
 @include('partials.why-us')
-@if ($faqs->isNotEmpty())
+@endif
+@if (empty($sections) && $faqs->isNotEmpty())
 <section class="py-14"><div class="container-site max-w-3xl">
     <x-section-heading eyebrow="FAQ" title="Questions we are asked" />
     <div class="space-y-3">@foreach ($faqs as $f)<x-faq-item :question="$f->question" name="faq-tour-type">{{ $f->answer }}</x-faq-item>@endforeach</div>
