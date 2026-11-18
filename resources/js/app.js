@@ -125,7 +125,7 @@ Alpine.data('enquiryForm', () => ({
         this.message = '';
 
         if (!form.querySelector('[name=consent]').checked) {
-            this.errors = { consent: ['Please tick the box to agree before sending your enquiry.'] };
+            this.errors = { consent: ['Please tick the box to agree before sending your inquiry.'] };
             this.message = 'Please check the highlighted fields.';
             return;
         }
@@ -270,7 +270,7 @@ Alpine.data('countrySelect', (initial, list, flagBase) => ({
 /* Header modal */
 Alpine.store('modal', {
     open: false,
-    pkg: null, // {id, name} when opened from a package card, so the enquiry is tied to that package
+    pkg: null, // {id, name} when opened from a package card, so the inquiry is tied to that package
     show(pkg = null) {
         this.pkg = pkg;
         this.open = true;

@@ -42,6 +42,11 @@
         <script>window.dataLayer=window.dataLayer||[];</script>
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{{ e($gtm) }}');</script>
     @endif
+    {{-- Preload the two fonts every page uses (body + headings) so text is laid out once with the final fonts (no re-wrap / layout shift). --}}
+    @foreach (['montserrat'] as $font)
+        @php $fontUrl = rescue(fn () => Vite::asset('node_modules/@fontsource-variable/'.$font.'/files/'.$font.'-latin-wght-normal.woff2'), null, false); @endphp
+        @if ($fontUrl)<link rel="preload" as="font" type="font/woff2" href="{{ $fontUrl }}" crossorigin>@endif
+    @endforeach
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body x-data class="min-h-screen bg-white pb-16 lg:pb-0">
@@ -59,7 +64,7 @@
     <x-modal :title="text('modal_title')">
         <p x-show="$store.modal.pkg" x-cloak class="mt-2 rounded-lg bg-sand px-3 py-2 text-sm font-semibold text-brand-700" x-text="'Package: ' + ($store.modal.pkg?.name ?? '')"></p>
         <p class="mt-1 text-sm text-ink/75">{{ str_replace('{discount}', setting('modal_discount', '[CONFIRM: discount %]'), text('modal_intro')) }}</p>
-        <div class="mt-4"><x-enquiry-form form="header-modal" idp="modal" variant="modal" submit="Send My Enquiry" /></div>
+        <div class="mt-4"><x-enquiry-form form="header-modal" idp="modal" variant="modal" submit="Send My Inquiry" /></div>
     </x-modal>
 
     {{-- Mobile sticky action bar --}}

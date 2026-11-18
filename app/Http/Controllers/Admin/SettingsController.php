@@ -37,6 +37,13 @@ class SettingsController extends Controller
             'nav_promo_text' => ['Dropdown menu panel: text', 'text', ''],
             'nav_promo_button' => ['Dropdown menu panel: button', 'text', ''],
         ],
+        'Why choose us (strip on package, tour type and destination pages)' => [
+            'usp_heading' => ['Strip heading', 'text', 'Your four selling points, shown as a short strip on package, tour type and destination pages (and in the "Why choose us strip" page section).'],
+            'usp_1_title' => ['Point 1: title', 'text', ''], 'usp_1_text' => ['Point 1: short line', 'text', ''],
+            'usp_2_title' => ['Point 2: title', 'text', ''], 'usp_2_text' => ['Point 2: short line', 'text', ''],
+            'usp_3_title' => ['Point 3: title', 'text', ''], 'usp_3_text' => ['Point 3: short line', 'text', ''],
+            'usp_4_title' => ['Point 4: title', 'text', ''], 'usp_4_text' => ['Point 4: short line', 'text', ''],
+        ],
         'Mobile menu and bar' => [
             'mobile_home_label' => ['Mobile menu: Home link', 'text', ''],
             'mobile_tours_heading' => ['Mobile menu: tours heading', 'text', ''],

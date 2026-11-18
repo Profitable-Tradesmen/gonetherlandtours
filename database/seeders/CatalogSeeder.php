@@ -10,7 +10,7 @@ use App\Models\Testimonial;
 use Illuminate\Database\Seeder;
 
 /**
- * Starter catalogue. EVERYTHING here is SAMPLE data: prices are blank on purpose
+ * Starter catalog. EVERYTHING here is SAMPLE data: prices are blank on purpose
  * ([CONFIRM: price] shows on the site) and testimonials are marked placeholders.
  * See docs/reference/CONTENT_TO_CONFIRM.md.
  */
@@ -29,7 +29,7 @@ class CatalogSeeder extends Seeder
         ];
         $typeIds = [];
         foreach ($types as $i => [$name, $slug, $icon, $summary, $image, $alt]) {
-            $typeIds[$slug] = TourType::create(compact('name', 'slug', 'icon', 'summary', 'image') + ['h1' => $name.' Netherlands Tours', 'body' => '<p>[CONFIRM: '.e($name).' page copy. Sample text only.]</p><p>'.e($summary).'</p>', 'image_alt' => $alt, 'sort_order' => $i + 1])->id;
+            $typeIds[$slug] = TourType::create(compact('name', 'slug', 'icon', 'summary', 'image') + ['h1' => $name.' Netherlands Tours', 'style_note' => ['self-drive' => 'Private: just you and your own party, at your own pace', 'chauffeur-driven' => 'Private: your own party with a local driver-guide', 'coach-tours' => 'Small group with a guide'][$slug] ?? null, 'body' => '<p>[CONFIRM: '.e($name).' page copy. Sample text only.]</p><p>'.e($summary).'</p>', 'image_alt' => $alt, 'sort_order' => $i + 1])->id;
         }
 
         $dests = [
@@ -80,9 +80,9 @@ class CatalogSeeder extends Seeder
         $faqs = [
             ['When is the best time to visit the Netherlands?', 'Spring is popular for tulip season and summer for long, bright days. Autumn and winter are quieter. [CONFIRM: exact tulip season dates and advice]'],
             ['Do I need a visa to visit the Netherlands from the US?', 'Entry rules change. Please check the official Dutch government and US State Department websites before you travel. [CONFIRM: wording reviewed by the team]'],
-            ['Can I drive in the Netherlands with a US licence?', 'Car hire rules vary by company. We will confirm licence requirements with your quote. [CONFIRM: licence and IDP requirements]'],
+            ['Can I drive in the Netherlands with a US license?', 'Car hire rules vary by company. We will confirm license requirements with your quote. [CONFIRM: license and IDP requirements]'],
             ['What is included in a package?', 'Each package lists exactly what is included and excluded on its page. [CONFIRM: standard inclusions]'],
-            ['How do I get a quote?', 'Answer a few quick questions or send an enquiry. A travel specialist will come back to you with a tailored quote.'],
+            ['How do I get a quote?', 'Answer a few quick questions or send an inquiry. A travel specialist will come back to you with a tailored quote.'],
             ['Can you tailor a trip for me?', 'Yes. Every itinerary can be adjusted to your dates, group size and interests.'],
         ];
         foreach ($faqs as $i => [$q, $a]) {
@@ -93,7 +93,7 @@ class CatalogSeeder extends Seeder
         $reviews = [
             ['Sarah M.', 'Portland, Oregon', 'We wanted to see the real Netherlands, not just the postcard version. Our small group got to visit a cheese market, wander through quiet villages and ride bikes past the windmills. It felt personal from the first email to the last day.'],
             ['David & Karen L.', 'Charlotte, North Carolina', 'The itinerary was beautifully planned. Every stop made sense, nothing felt rushed, and we found little towns we would never have found on our own. We have already recommended it to our friends.'],
-            ['Michelle T.', 'Austin, Texas', 'Travelling in a small group made all the difference. Our guide adjusted the plan to what we enjoyed most, and we came home with real friendships and a camera full of tulips. Planning the trip was easy too.'],
+            ['Michelle T.', 'Austin, Texas', 'Traveling in a small group made all the difference. Our guide adjusted the plan to what we enjoyed most, and we came home with real friendships and a camera full of tulips. Planning the trip was easy too.'],
         ];
         foreach ($reviews as $i => [$name, $location, $quote]) {
             Testimonial::create(['name' => $name, 'location' => $location, 'quote' => $quote, 'is_placeholder' => true, 'sort_order' => $i + 1]);

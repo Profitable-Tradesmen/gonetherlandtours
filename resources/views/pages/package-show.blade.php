@@ -30,6 +30,7 @@
         </div>
         <h1 class="mt-4 max-w-3xl text-4xl font-medium sm:text-5xl">{{ $package->title }}</h1>
         <p class="mt-3 max-w-2xl text-white/90 sm:text-lg">{{ $package->summary }}</p>
+        @if ($package->tourType?->style_note)<p class="mt-3 flex min-h-[2.5rem] items-start gap-2 text-sm font-semibold text-white sm:min-h-0 sm:items-center"><x-icon name="guide" class="mt-0.5 h-5 w-5 shrink-0 text-accent sm:mt-0" />{{ $package->tourType->style_note }}</p>@endif
         <div class="mt-6 flex flex-wrap items-end gap-x-6 gap-y-3">
             <div>
                 <p class="label-caps text-[0.68rem] text-white/70">From</p>
@@ -103,6 +104,7 @@
             <dl class="mt-5 divide-y divide-sand-200 border-y border-sand-200 text-sm">
                 <div class="flex justify-between py-2.5"><dt class="text-ink/60">Duration</dt><dd class="font-semibold">{{ $package->nights }} nights</dd></div>
                 @if ($package->tourType)<div class="flex justify-between py-2.5"><dt class="text-ink/60">Tour type</dt><dd class="font-semibold">{{ $package->tourType->name }}</dd></div>@endif
+                @if ($package->tourType?->style_note)<div class="flex justify-between gap-4 py-2.5"><dt class="shrink-0 text-ink/60">Travel style</dt><dd class="text-right font-semibold">{{ $package->tourType->style_note }}</dd></div>@endif
                 @if ($package->destination)<div class="flex justify-between py-2.5"><dt class="text-ink/60">Destination</dt><dd class="font-semibold">{{ $package->destination->name }}</dd></div>@endif
             </dl>
 
@@ -117,6 +119,8 @@
         </div>
     </aside>
 </div>
+
+@include('partials.why-us')
 
 @if ($related->isNotEmpty())
 <section class="bg-sand py-14 sm:py-20" aria-labelledby="related-h">

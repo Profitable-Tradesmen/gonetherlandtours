@@ -17,6 +17,11 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 - [ ] Why us: "[CONFIRM: team background]", "[CONFIRM: support hours]"
 - [ ] No statistics, awards, star ratings, review counts, years in business or licence/bonding numbers have been added. Add only verified ones.
 
+## Selling points: proof (Admin > Pages > Home > "Selling points with proof")
+- [ ] The four "In practice" boxes now have drafted copy with a few `[CONFIRM: ...]` markers left for facts only you know: (1) which of the named traditions (Alkmaar and Gouda cheese markets, Kinderdijk windmills, Giethoorn) are really on your itineraries, and re-check the market days and seasons; (2) your coach-tour maximum group size (replace `N`); (3) the three lesser-known places you actually use (Zierikzee, Veere and Dordrecht are suggestions); (4) who plans the trips and their experience. Remove any claim you cannot back up, or delete the section.
+- [ ] Check the wording of the group-size claim: only coach tours are described as small-group; self drive and chauffeur tours as private. Change it if that is not how you operate.
+- [ ] "Travel style" note per tour type (Admin > Tour types): confirm the three sample notes.
+
 ## Tour type pages (Admin > Tour types)
 - [ ] Self Drive, Chauffeur Driven and Coach Tours each have a page at `/tours/slug`: replace the "[CONFIRM: ... page copy]" text, SEO title and meta description
 

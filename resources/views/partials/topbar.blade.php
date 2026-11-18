@@ -13,7 +13,7 @@
                     <button type="button" @click="$store.modal.show()" class="hover:text-accent underline-offset-4 hover:underline">{{ text('topbar_link_label') }}</button>
                 @endif
             @endif
-            @if (text('topbar_button_label'))<button type="button" @click="$store.modal.show()" class="hidden rounded-full bg-accent px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-wider text-ink hover:bg-accent-600 sm:inline-block">{{ text('topbar_button_label') }}</button>@endif
+            @if (text('topbar_button_label'))<button type="button" @click="$store.modal.show()" class="hidden border-2 border-white px-5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-ink sm:inline-block">{{ text('topbar_button_label') }}</button>@endif
         </div>
     </div>
 </div>

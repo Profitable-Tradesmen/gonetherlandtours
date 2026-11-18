@@ -25,7 +25,7 @@ class BlogSeeder extends Seeder
                 'title' => 'Why a small group changes the way you see the Netherlands',
                 'excerpt' => 'Placeholder summary. Replace with a real guide on flexible itineraries and personal attention.',
                 'image' => 'images/Guide_2.webp',
-                'image_alt' => 'A guide pointing out a canal view to a small group of travellers',
+                'image_alt' => 'A guide pointing out a canal view to a small group of travelers',
             ],
         ];
 

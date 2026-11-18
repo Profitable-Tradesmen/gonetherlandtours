@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 /**
- * The page builder's section catalogue. Each section type = a Blade view (resources/views/sections/{type}.blade.php)
+ * The page builder's section catalog. Each section type = a Blade view (resources/views/sections/{type}.blade.php)
  * + a field schema that drives the admin form, validation/sanitising and defaults.
  *
  * Field types: text, textarea, rich, link, image, select, checkbox, number, repeater.
@@ -61,18 +61,18 @@ class Sections
         $ta = fn (...$a) => self::ta(...$a);
 
         return $all = [
-            'page_header' => ['label' => 'Page title bar', 'description' => 'A coloured bar with the page heading and breadcrumb. Use it at the top of ordinary pages.', 'fields' => [
+            'page_header' => ['label' => 'Page title bar', 'description' => 'A colored bar with the page heading and breadcrumb. Use it at the top of ordinary pages.', 'fields' => [
                 $t('heading', 'Heading (H1)', '', 'Leave blank to use the page\'s main heading.'),
                 $ta('subtitle', 'Short text under the heading'),
-                ['name' => 'align', 'label' => 'Alignment', 'type' => 'select', 'options' => ['left' => 'Left', 'center' => 'Centred'], 'default' => 'left'],
-                ['name' => 'tone', 'label' => 'Colour', 'type' => 'select', 'options' => ['brown' => 'Dark brown', 'blue' => 'Dark blue'], 'default' => 'brown'],
+                ['name' => 'align', 'label' => 'Alignment', 'type' => 'select', 'options' => ['left' => 'Left', 'center' => 'Centered'], 'default' => 'left'],
+                ['name' => 'tone', 'label' => 'Color', 'type' => 'select', 'options' => ['brown' => 'Dark brown', 'blue' => 'Dark blue'], 'default' => 'brown'],
             ]],
             'rich_text' => ['label' => 'Text', 'description' => 'A block of formatted text (headings, lists, links). Used for About, legal pages and any article.', 'fields' => [
                 ['name' => 'html', 'label' => 'Content', 'type' => 'rich', 'default' => ''],
                 ['name' => 'show_version', 'label' => 'Show the page version at the bottom (for Terms / Privacy)', 'type' => 'checkbox', 'default' => false],
                 $t('button_label', 'Button under the text (opens the quote pop-up)', '', 'Leave blank for no button.'),
             ]],
-            'hero_video_quiz' => ['label' => 'Hero: video and quiz', 'description' => 'Full-screen hero with background video poster, heading, buttons, trust badges and the enquiry quiz.', 'fields' => [
+            'hero_video_quiz' => ['label' => 'Hero: video and quiz', 'description' => 'Full-screen hero with background video poster, heading, buttons, trust badges and the inquiry quiz.', 'fields' => [
                 $t('eyebrow', 'Small label', 'The Netherlands Collection'),
                 $t('heading', 'Heading (H1)', 'Discover the Authentic Netherlands'),
                 $ta('subheading', 'Sub-heading'),
@@ -85,7 +85,10 @@ class Sections
             'ticker' => ['label' => 'Highlights ticker', 'description' => 'A thin scrolling strip of short selling points.', 'fields' => [
                 self::rep('items', 'Highlights', 'highlight', [$t('text', 'Text')], 16),
             ]],
-            'split_list' => ['label' => 'Intro: photos and numbered list', 'description' => 'Two photos on one side, a heading and a numbered list of reasons on the other.', 'fields' => [
+            'value_strip' => ['label' => 'Value strip (4 icon points)', 'description' => 'A clean row of up to four short selling points, each with an icon. Sits right under the hero.', 'fields' => [
+                self::rep('items', 'Points', 'point', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Short text')], 4),
+            ]],
+            'split_list' => ['label' => 'Intro: photo and ticked list', 'description' => 'A large photo (with an optional badge and a smaller second photo) on one side, a heading and a ticked list of reasons on the other.', 'fields' => [
                 self::img('image1', 'Photo 1', 'images/Intro_image_split.webp'),
                 self::img('image2', 'Photo 2', 'images/Intro_image_split1.webp'),
                 $t('badge', 'Floating badge on the photos', 'Free, no-obligation quote'),
@@ -97,6 +100,9 @@ class Sections
             'packages_tabs' => ['label' => 'Featured packages', 'description' => 'Your featured packages with tabs by tour type. Choose which packages are featured in Admin > Packages.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Signature journeys'),
                 $t('heading', 'Heading', 'Signature Netherlands Journeys'),
+                ['name' => 'layout', 'label' => 'Layout', 'type' => 'select', 'options' => ['by_type' => 'One row per tour type', 'tabs' => 'One carousel with tabs'], 'default' => 'by_type'],
+                $ta('intro', 'Intro text under the heading', 'Every journey is fully customizable. These are our most loved itineraries, perfected over years of delighting travelers.'),
+                $t('more_label', 'Per-row button (one row per tour type)', 'View more packages'),
                 $t('all_label', 'First tab label', 'All'),
                 $t('button_label', 'Button under the packages', 'See all packages'),
             ]],
@@ -122,8 +128,8 @@ class Sections
                 self::img('poster', 'Poster image', 'images/hero-about.webp'),
                 $t('video_name', 'Video file name', 'homepage_banner', 'The video file is public/videos/NAME.mp4 on the server.'),
             ]],
-            'image_strip' => ['label' => 'Photo panels (journeys by traveller)', 'description' => 'Swipeable photo cards on phones, an expanding strip of panels on desktop.', 'fields' => [
-                $t('eyebrow', 'Small label', 'Journeys by traveller'),
+            'image_strip' => ['label' => 'Photo panels (journeys by traveler)', 'description' => 'Swipeable photo cards on phones, an expanding strip of panels on desktop.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Journeys by traveler'),
                 $t('heading', 'Heading', 'Find the journey that *fits you*'),
                 $t('button_label', 'Panel button (opens the quote pop-up)', 'Plan this trip'),
                 self::rep('items', 'Panels', 'panel', [$t('title', 'Title'), $ta('text', 'Text'), self::img('image', 'Photo')], 12),
@@ -137,7 +143,7 @@ class Sections
             'testimonials' => ['label' => 'Testimonials', 'description' => 'Reviews from Admin > Testimonials.', 'fields' => [
                 ['name' => 'variant', 'label' => 'Style', 'type' => 'select', 'options' => ['dark' => 'Dark blue background', 'light' => 'Light background', 'spotlight' => 'Spotlight: one review at a time, with a picker'], 'default' => 'dark'],
                 $t('eyebrow', 'Small label', 'Reviews'),
-                $t('heading', 'Heading', 'What Travellers Say'),
+                $t('heading', 'Heading', 'What Travelers Say'),
                 ['name' => 'limit', 'label' => 'How many to show (0 = all)', 'type' => 'number', 'default' => 0],
                 $t('button_label', 'Button under the reviews (opens the quote pop-up)', ''),
             ]],
@@ -148,7 +154,7 @@ class Sections
                 $t('closing_heading', 'Text under the gallery', 'Seen enough to start planning?'),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
             ]],
-            'text_cta' => ['label' => 'Centred text with buttons', 'description' => 'A heading, short text and up to three buttons on a light background.', 'fields' => [
+            'text_cta' => ['label' => 'Centered text with buttons', 'description' => 'A heading, short text and up to three buttons on a light background.', 'fields' => [
                 $t('heading', 'Heading', '', 'Wrap a word in *asterisks* to italicise it.'),
                 $ta('text', 'Text'),
                 self::rep('buttons', 'Buttons', 'button', [$t('label', 'Label'), self::link('url', 'Link')], 3),
@@ -177,7 +183,7 @@ class Sections
                 ['name' => 'show_phone', 'label' => 'Show a call button (uses the phone number in Settings)', 'type' => 'checkbox', 'default' => true],
                 $t('phone_label', 'Call button text (the number is added)', 'Call'),
             ]],
-            'hero_seasons' => ['label' => 'Hero: centred with season picker', 'description' => 'Centred hero with intro text, a "when to visit" picker and badges.', 'fields' => [
+            'hero_seasons' => ['label' => 'Hero: centered with season picker', 'description' => 'Centered hero with intro text, a "when to visit" picker and badges.', 'fields' => [
                 self::img('image', 'Background photo', 'images/hero-about.webp'),
                 $t('eyebrow', 'Small label'),
                 $t('heading', 'Heading (H1)'),
@@ -209,7 +215,16 @@ class Sections
                 $t('heading', 'Heading', 'Meet the *team*'),
                 self::rep('items', 'Team members', 'member', [$t('name', 'Name'), $t('role', 'Role'), $ta('bio', 'Short bio'), self::img('image', 'Photo (optional)')], 12),
             ]],
-            'contact_details' => ['label' => 'Contact details and form', 'description' => 'Your text and contact details (from Settings) beside the enquiry form.', 'fields' => [
+            'why_us' => ['label' => 'Why choose us strip', 'description' => 'Your four selling points as a compact strip. The wording is set once in Admin > Settings ("Why choose us"), so it matches the strip on package, tour type and destination pages.', 'fields' => [
+                $t('heading', 'Heading (blank = use the Settings wording)', ''),
+            ]],
+            'usp_proof' => ['label' => 'Selling points with proof', 'description' => 'Each selling point with a real example behind it and a link to read more. Replace the [CONFIRM] examples with facts you can prove.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Our promise'),
+                $t('heading', 'Heading', 'What that looks like in practice'),
+                $t('proof_label', 'Label above each example', 'In practice'),
+                self::rep('items', 'Selling points', 'point', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Claim'), $ta('proof', 'Proof: a real, checkable example'), $t('link_label', 'Link text'), self::link('link', 'Link')], 6),
+            ]],
+            'contact_details' => ['label' => 'Contact details and form', 'description' => 'Your text and contact details (from Settings) beside the inquiry form.', 'fields' => [
                 ['name' => 'intro', 'label' => 'Text beside the form', 'type' => 'rich', 'default' => ''],
                 $t('submit_label', 'Form button', 'Send Message'),
             ]],

@@ -27,24 +27,94 @@ class DesignRefreshTest extends TestCase
         return collect($page->fresh()->allSections())->firstWhere('type', $type);
     }
 
-    public function test_hero_is_a_responsive_photo_with_a_preload_and_the_header_floats_over_it(): void
+    public function test_hero_is_a_responsive_photo_with_a_preload_and_sits_below_a_solid_navy_header(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('images/hero-home.webp', $html);
         $this->assertStringContainsString('hero-home-800.webp 800w', $html, 'phones get the small copy');
         $this->assertMatchesRegularExpression('/<link rel="preload" as="image"[^>]+imagesrcset=/', $html);
-        $this->assertStringContainsString('hdr-overlay', $html);
-        $this->assertStringContainsString('hdr-plate', $html, 'logo sits on a white plate while transparent');
+        $this->assertStringContainsString('bg-brand-900 text-white', $html, 'solid navy header');
+        $this->assertStringContainsString('hdr-plate', $html, 'logo sits on a white plate');
+        $this->assertStringNotContainsString('hdr-overlay', $html, 'the header no longer floats over the hero');
         $this->assertStringNotContainsString('hero-video-poster', $html, 'the abstract placeholder illustration is gone');
     }
 
-    public function test_header_is_solid_on_pages_without_a_hero_and_floats_on_pages_that_start_with_one(): void
+    public function test_header_is_a_solid_bar_on_every_page(): void
     {
-        $this->assertStringContainsString('hdr-overlay', $this->get('/about')->getContent());
-        $this->assertStringContainsString('hdr-overlay', $this->get('/packages/sample-tulip-season-self-drive')->getContent());
-        foreach (['/contact', '/faq', '/packages', '/blog'] as $url) {
+        foreach (['/', '/about', '/contact', '/faq', '/packages', '/blog', '/packages/sample-tulip-season-self-drive'] as $url) {
             $this->assertStringNotContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
         }
+    }
+
+    public function test_reference_layout_home_order_value_strip_journey_cards_and_packages_by_tour_type(): void
+    {
+        $home = Page::bySlug('home');
+        $types = collect($home->visibleSections())->pluck('type')->all();
+        $this->assertSame(['hero_video_quiz', 'value_strip', 'split_list', 'tour_types', 'packages_tabs', 'why_band', 'usp_proof'], array_slice($types, 0, 7));
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('Clear, upfront quotes', $html);
+        $this->assertStringContainsString('Why we are the', $html);
+        // one packages row per tour type that has a featured package, each with a "view more" button
+        $this->assertStringContainsString('Self Drive Packages', $html);
+        $this->assertStringContainsString('Chauffeur Driven Packages', $html);
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'View more packages'));
+        // the three small bars under each section label
+        $this->assertStringContainsString('h-[3px] w-7', $html);
+    }
+
+    public function test_header_menu_follows_the_reference_and_meet_the_team_page_exists(): void
+    {
+        $html = $this->get('/')->getContent();
+        preg_match('#<nav class="hidden[^>]*aria-label="Main">(.*?)</nav>#s', $html, $nav);
+        foreach (['Home', 'Self Drive', 'Chauffeur Driven', 'Coach Tours', 'Destinations', 'About Us'] as $label) {
+            $this->assertStringContainsString($label, $nav[1], $label);
+        }
+        $this->get('/meet-the-team')->assertOk()->assertSee('Meet the Team');
+        $this->assertStringContainsString('/meet-the-team', $html, 'linked from the About Us dropdown');
+    }
+
+    public function test_menu_migration_switches_only_the_seeded_menu(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_23_000002_reference_menu_and_team_page.php');
+
+        // an admin-customised menu is left alone
+        \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->where('label', 'Home')->update(['label' => 'Start here']);
+        $migration->up();
+        $this->assertTrue(\App\Models\MenuItem::where('menu', 'header')->where('label', 'Start here')->exists());
+
+        // the old seeded menu is replaced by the reference one
+        \Illuminate\Support\Facades\DB::table('menu_items')->where('menu', 'header')->delete();
+        $now = now();
+        foreach ([['Tours', 'tours'], ['Destinations', 'link'], ['Packages', 'link'], ['About Us', 'cards'], ['Contact', 'link']] as $i => [$label, $kind]) {
+            \Illuminate\Support\Facades\DB::table('menu_items')->insert(['menu' => 'header', 'label' => $label, 'kind' => $kind, 'url' => '/x', 'sort_order' => $i + 1, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
+        }
+        $migration->up();
+        $this->assertSame(['Home', 'Self Drive', 'Chauffeur Driven', 'Coach Tours', 'Destinations', 'About Us'], \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->orderBy('sort_order')->pluck('label')->all());
+    }
+
+    public function test_home_migration_reorders_only_the_previously_seeded_home(): void
+    {
+        $home = Page::bySlug('home');
+        $current = $home->allSections();
+        $by = collect($current)->keyBy('type');
+        $old = [$by['hero_video_quiz'], ['id' => 'tick', 'type' => 'ticker', 'visible' => true, 'data' => ['items' => []]], $by['split_list'], $by['packages_tabs'],
+            ['id' => 'band', 'type' => 'feature_band', 'visible' => true, 'data' => []], $by['usp_proof'], $by['tour_types'], $by['video_feature'], $by['image_strip'], $by['steps'],
+            $by['testimonials'], $by['gallery'], $by['text_cta'], $by['faq'], $by['blog_latest'], $by['cta_banner']];
+        $migration = require base_path('database/migrations/2026_11_23_000001_reference_home_layout.php');
+
+        $home->update(['sections' => $old]);
+        $migration->up();
+        $types = collect($home->fresh()->allSections())->pluck('type')->all();
+        $this->assertSame(['hero_video_quiz', 'value_strip', 'split_list', 'tour_types', 'packages_tabs', 'why_band', 'usp_proof'], array_slice($types, 0, 7));
+        $this->assertSame(['ticker', 'feature_band'], array_slice($types, -2), 'old sections are kept, hidden');
+        $this->assertSame([false, false], collect($home->fresh()->allSections())->take(-2)->pluck('visible')->all());
+
+        // an admin who re-arranged the page: untouched
+        $custom = array_reverse($old);
+        $home->update(['sections' => $custom]);
+        $migration->up();
+        $this->assertSame(array_column($custom, 'type'), collect($home->fresh()->allSections())->pluck('type')->all());
     }
 
     public function test_top_bar_is_hidden_on_phones_and_h1_is_smaller(): void
@@ -123,6 +193,10 @@ class DesignRefreshTest extends TestCase
         $this->assertStringContainsString('aria-label="Next review"', $html);
         $this->assertStringContainsString('aria-label="Previous review"', $html);
         $this->assertGreaterThanOrEqual(3, substr_count($html, 'aria-label="Show review'));
+        // reviews share one grid cell (no height jump) and fade via the .review-fig rule; without JS only the first shows
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'class="review-fig col-start-1 row-start-1'));
+        $this->assertSame(1, substr_count($html, 'review-fig col-start-1 row-start-1 is-active'), 'only the first review is active before JavaScript runs');
+        $this->assertStringContainsString('.review-fig.is-active', file_get_contents(base_path('resources/css/app.css')));
         $this->assertStringContainsString('Sample review', $html);
     }
 

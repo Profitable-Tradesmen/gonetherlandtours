@@ -88,10 +88,10 @@ class HardeningTest extends TestCase
     {
         $this->login();
         $page = Page::bySlug('home');
-        $band = collect($page->allSections())->firstWhere('type', 'feature_band');
+        $band = collect($page->allSections())->firstWhere('type', 'why_band');
 
         $this->put(route('admin.pages.sections.update', [$page, $band['id']]), ['data' => ['heading' => 'H', 'image' => 'images/feature_band.webp', 'image_alt' => '']])
-            ->assertSessionHas('warning', fn ($w) => str_contains($w, 'alt text') && str_contains($w, 'Background photo'));
+            ->assertSessionHas('warning', fn ($w) => str_contains($w, 'alt text') && str_contains($w, 'Photo'));
 
         $this->put(route('admin.pages.sections.update', [$page, $band['id']]), ['data' => ['heading' => 'H', 'image' => 'images/feature_band.webp', 'image_alt' => 'Windmills at sunrise']])
             ->assertSessionMissing('warning');

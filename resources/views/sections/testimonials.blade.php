@@ -11,9 +11,11 @@
         @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" light :id="'te-'.$sid" />@endif
         <div class="mx-auto max-w-3xl text-center">
             <span class="font-display text-7xl leading-none text-accent" aria-hidden="true">&ldquo;</span>
-            <div class="-mt-4">
+            {{-- All reviews sit in the same grid cell, so the block never changes height. Switching is a gentle sequence: the old review
+                 fades out (0.3s), then the new one fades in with a small upward drift (0.5s). Without JavaScript the first review shows. --}}
+            <div class="-mt-4 grid">
                 @foreach ($items as $k => $t)
-                    <figure x-show="i === {{ $k }}" @if ($k > 0) x-cloak @endif x-transition.opacity.duration.250ms>
+                    <figure class="review-fig col-start-1 row-start-1 {{ $k === 0 ? 'is-active' : '' }}" :class="{ 'is-active': i === {{ $k }} }" :aria-hidden="i !== {{ $k }}" :inert="i !== {{ $k }}">
                         <blockquote class="font-display text-2xl leading-snug sm:text-3xl">{{ $t->quote }}</blockquote>
                         <figcaption class="mt-6 text-sm font-semibold text-accent">
                             @if ($t->is_placeholder)<span class="label-caps mb-1 block text-[0.65rem] text-white/60">Sample review</span>@endif

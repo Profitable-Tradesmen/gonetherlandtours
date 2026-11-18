@@ -20,4 +20,5 @@
     <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">@foreach ($packages as $p)@include('partials.package-card', ['package' => $p])@endforeach</x-slider>
 </div></section>
 @endif
+@include('partials.why-us')
 @endsection

@@ -8,6 +8,7 @@
         <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/70"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <a href="{{ route('packages.index') }}" class="hover:text-accent">Packages</a> / <span>{{ $tourType->name }}</span></nav>
         <h1 class="text-4xl font-medium sm:text-5xl">{{ $tourType->h1 ?: $tourType->name.' Netherlands Tours' }}</h1>
         <p class="mt-3 max-w-2xl text-white/90">{{ $tourType->summary }}</p>
+        @if ($tourType->style_note)<p class="mt-3 flex min-h-[2.5rem] items-start gap-2 text-sm font-semibold text-white sm:min-h-0 sm:items-center"><x-icon name="guide" class="mt-0.5 h-5 w-5 shrink-0 text-accent sm:mt-0" />{{ $tourType->style_note }}</p>@endif
         <x-button class="mt-6" @click="$store.modal.show()">Get a Free Quote</x-button>
     </div>
 </section>
@@ -25,6 +26,7 @@
     @endif
     <p class="mt-8 text-center"><a href="{{ route('packages.index') }}" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust">See all Netherlands packages</a></p>
 </div></section>
+@include('partials.why-us')
 @if ($faqs->isNotEmpty())
 <section class="py-14"><div class="container-site max-w-3xl">
     <x-section-heading eyebrow="FAQ" title="Questions we are asked" />

@@ -6,7 +6,7 @@
  */
 return [
     // Exact consent wording. [Company Name] is replaced with the legal company name from settings.
-    // Do NOT reword this without legal review: it is evidence stored with every enquiry.
+    // Do NOT reword this without legal review: it is evidence stored with every inquiry.
     'consent_template' => 'I agree to the Terms and Conditions and Privacy Policy provided by [Company Name]. By providing my phone number, I consent to receive SMS messages from [Company Name] regarding my enquiry, booking updates, itinerary updates, reminders, and customer support. Message and data rates may apply. Reply STOP to unsubscribe or HELP for assistance. Consent is not a condition of purchase.',
 
     // Set SITE_NOINDEX=true on preview/staging sites: noindex meta + X-Robots-Tag + "Disallow: /" robots.txt.
@@ -60,8 +60,13 @@ return [
         'footer_tours_heading' => 'Tours', 'footer_company_heading' => 'Company', 'footer_copyright' => 'All rights reserved.',
         'modal_title' => 'Start your adventure', 'modal_intro' => 'Fill out this form, save up to {discount} on your trip.',
         'quiz_title' => 'Start Your Adventure',
+        'usp_heading' => 'Why travel with us',
+        'usp_1_title' => 'Authentic Dutch culture', 'usp_1_text' => 'Windmills, tulip fields, cheese markets and local traditions.',
+        'usp_2_title' => 'Small-group & private tours', 'usp_2_text' => 'Personal attention and flexible itineraries, with your own party or a small group.',
+        'usp_3_title' => 'Hidden gems & local secrets', 'usp_3_text' => 'Lesser-known places beyond the tourist hotspots.',
+        'usp_4_title' => 'Expertly crafted itineraries', 'usp_4_text' => 'Thoughtfully designed routes and carefully selected attractions.',
         'destinations_heading' => 'Destinations', 'destinations_intro' => 'Six places worth slowing down for: pick a region and see the tours that visit it.',
         'packages_intro' => 'Browse our Netherlands tour packages and request a free, tailored quote.',
-        'thankyou_heading' => 'Thank you', 'thankyou_text' => 'We have received your enquiry. A Netherlands travel specialist will be in touch soon with your tailored quote.', 'thankyou_button' => 'Browse tour packages',
+        'thankyou_heading' => 'Thank you', 'thankyou_text' => 'We have received your inquiry. A Netherlands travel specialist will be in touch soon with your tailored quote.', 'thankyou_button' => 'Browse tour packages',
     ],
 ];

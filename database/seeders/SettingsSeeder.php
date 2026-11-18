@@ -24,7 +24,7 @@ class SettingsSeeder extends Seeder
             'recaptcha_site_key' => '',                    // blank = fall back to .env
             'recaptcha_secret_key' => '',
             'modal_discount' => '[CONFIRM: discount %]',
-            'footer_text' => 'Tailor-made tours of the Netherlands for American travellers.',
+            'footer_text' => 'Tailor-made tours of the Netherlands for American travelers.',
             'default_seo_title' => 'GoNetherlandTours | Self Drive, Chauffeur & Coach Tours of the Netherlands',
             'default_meta_description' => 'Plan your Netherlands trip with local experts. Self drive, chauffeur driven and coach tours, tailor-made for you. Get a free quote in minutes.',
             'default_social_image' => '',

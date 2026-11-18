@@ -9,7 +9,7 @@
     'variant' => 'default',       // default (contact/package) | quiz (short: contact details only) | modal (pop-up: full trip details)
 ])
 {{--
-    THE enquiry form. Every form on the site renders this component and posts to the same route
+    THE inquiry form. Every form on the site renders this component and posts to the same route
     (EnquiryController@store), so reCAPTCHA, consent, honeypot and validation are identical everywhere.
     Rules are documented in docs/reference/FORMS_AND_TRACKING.md and CLAUDE.md.
 --}}
@@ -48,7 +48,7 @@
 
     <div x-show="success" x-cloak class="rounded-xl bg-brand/10 p-6 text-center" role="status">
         <p class="font-display text-2xl text-brand-900">Thank you!</p>
-        <p class="mt-2 text-brand-900">Your enquiry has been sent. Taking you to the next step...</p>
+        <p class="mt-2 text-brand-900">Your inquiry has been sent. Taking you to the next step...</p>
     </div>
 
     <div x-show="!success" class="grid gap-3 sm:grid-cols-2">
@@ -111,11 +111,11 @@
                     <option>Not sure yet</option>
                 </select>
             </x-form-field>
-            <x-form-field name="group_size" label="Number of travellers" :idp="$idp">
+            <x-form-field name="group_size" label="Number of travelers" :idp="$idp">
                 <select id="{{ $idp }}-group_size" name="group_size" class="field"><option value="">Select</option>@foreach ($opts('group_size') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
             </x-form-field>
             <x-form-field name="travel_date" label="Preferred travel dates" type="date" :min="now()->toDateString()" :idp="$idp" hint="An approximate date is fine." />
-            <x-form-field name="travel_style" label="What is your favourite way to see a new country?" :idp="$idp" span>
+            <x-form-field name="travel_style" label="What is your favorite way to see a new country?" :idp="$idp" span>
                 <select id="{{ $idp }}-travel_style" name="travel_style" class="field"><option value="">Select</option>@foreach ($opts('travel_style') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
             </x-form-field>
             <x-form-field name="nights" label="Number of nights" :idp="$idp">

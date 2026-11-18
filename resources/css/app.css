@@ -151,25 +151,22 @@
     .slider > * { flex: 0 0 84%; min-width: 0; scroll-snap-align: start; }
 }
 
-/* Transparent header over a photo hero. partials/header adds .hdr-overlay on pages that start with a hero and toggles
-   .is-solid (scrolled, or a menu is open). Without JavaScript the header simply stays solid white.
-   Deliberately NOT inside @layer: unlayered rules beat Tailwind utilities such as text-ink / hover:bg-sand. */
-.hdr { transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease; }
+/* Header: solid navy bar on every page; gains a soft shadow once the page is scrolled. */
+.hdr { transition: box-shadow .25s ease; }
 .hdr.is-solid { box-shadow: 0 8px 24px -16px rgb(12 13 17 / .45); }
-.hdr-plate { transition: background-color .25s ease, padding .25s ease, border-radius .25s ease; }
-.js .hdr-overlay:not(.is-solid) { background-color: transparent; border-bottom-color: transparent; box-shadow: none; }
-.js .hdr-overlay:not(.is-solid) .hdr-link { color: #fff; }
-.js .hdr-overlay:not(.is-solid) .hdr-link:hover { background-color: rgb(255 255 255 / .16); }
-.js .hdr-overlay:not(.is-solid) .hdr-plate { background-color: #fff; border-radius: .75rem; padding: .2rem .6rem; }
 
 /* Carousel track: hide the scrollbar (swipe, trackpad and the arrow buttons scroll it). */
 .carousel-track { scrollbar-width: none; scroll-padding-inline: 1rem; }
 .carousel-track::-webkit-scrollbar { display: none; }
-/* On desktop the logo plate must fit inside the 80px header bar while the header is transparent. */
-@media (min-width: 1024px) {
-    .js .hdr-overlay:not(.is-solid) .hdr-plate img { height: 3.1rem; }
-}
+/* The logo sits on a white plate in the navy header; keep it inside the 80px bar. */
+@media (min-width: 1024px) { .hdr-plate img { height: 3.1rem; } }
 
 /* Sections well below the first screen are laid out only when they get near the viewport (smaller start-up cost). The
    "auto" size remembers each section's real height once seen, so the page does not jump. */
 main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 720px; }
+
+/* Reviews "spotlight": all reviews share one grid cell (no height jump). The old one fades out (0.3s), then the new one
+   fades in with a small upward drift (0.5s). Hidden reviews are also visibility:hidden so they are not read or tabbed to. */
+.review-fig { opacity: 0; visibility: hidden; transform: translateY(.5rem); transition: opacity .3s ease, transform .3s ease, visibility 0s linear .3s; }
+.review-fig.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity .5s ease .3s, transform .5s ease .3s, visibility 0s linear 0s; }
+@media (prefers-reduced-motion: reduce) { .review-fig, .review-fig.is-active { transition-delay: 0s !important; transform: none; } }

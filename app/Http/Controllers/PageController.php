@@ -69,7 +69,7 @@ class PageController extends Controller
 
         return view('pages.show', [
             'page' => $page,
-            'overlayHeader' => in_array($firstType, ['hero_video_quiz', 'hero_seasons'], true),
+            'overlayHeader' => false,   // solid navy header on every page (reference design); heroes start below it
             'draft' => $draft,
             'sections' => $page->visibleSections(),
             'seo' => Seo::make([

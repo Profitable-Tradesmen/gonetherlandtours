@@ -80,16 +80,16 @@ class PageBuilderTest extends TestCase
     {
         $this->login();
         $home = Page::bySlug('home');
-        $band = $this->section($home, 'feature_band');
+        $band = $this->section($home, 'cta_banner');
+        $cta = $this->section($home, 'text_cta');
 
-        $this->put(route('admin.pages.sections.update', [$home, $band['id']]), ['data' => [
-            'heading' => '<script>alert(1)</script>Safe heading', 'image' => 'https://evil.test/x.jpg', 'secondary_label' => 'Go', 'secondary_url' => 'javascript:alert(1)',
-        ]]);
+        $this->put(route('admin.pages.sections.update', [$home, $band['id']]), ['data' => ['heading' => '<script>alert(1)</script>Safe heading', 'image' => 'https://evil.test/x.jpg']]);
+        $this->put(route('admin.pages.sections.update', [$home, $cta['id']]), ['data' => ['heading' => 'Go', 'buttons' => [['label' => 'Go', 'url' => 'javascript:alert(1)']]]]);
 
-        $d = $this->section($home, 'feature_band')['data'];
+        $d = $this->section($home, 'cta_banner')['data'];
         $this->assertStringNotContainsString('<script', $d['heading']);
         $this->assertSame('', $d['image'], 'only images/ or storage/ paths are accepted');
-        $this->assertSame('', $d['secondary_url'], 'javascript: links are rejected');
+        $this->assertSame('', $this->section($home, 'text_cta')['data']['buttons'][0]['url'], 'javascript: links are rejected');
 
         $legal = Page::bySlug('terms');
         $rt = $this->section($legal, 'rich_text');
