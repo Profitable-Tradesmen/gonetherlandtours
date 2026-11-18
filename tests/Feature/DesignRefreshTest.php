@@ -147,7 +147,7 @@ class DesignRefreshTest extends TestCase
         $this->assertGreaterThanOrEqual(3, substr_count($html, 'x-data="carousel"'));
         $this->assertStringContainsString('carousel-track', $html);
         $this->assertStringContainsString('aria-label="Next packages"', $html);
-        $this->assertStringContainsString("'Show package '", $html, 'dash indicators');
+        $this->assertStringContainsString('Show package', $html, 'dash indicators');
         $this->assertStringContainsString('w-[88%]', $html, 'phones: one wide horizontal card per slide, the next one peeking');
     }
 
@@ -329,6 +329,37 @@ class DesignRefreshTest extends TestCase
         $items = collect($home->fresh()->allSections())->firstWhere('type', 'why_band')['data']['items'];
         $this->assertSame(['tulip', 'Real Dutch culture'], [$items[0]['icon'], $items[0]['title']]);
         $this->assertSame('My own wording about hidden places.', $items[1]['text'], 'edited text is never replaced');
+    }
+
+    public function test_package_card_and_row_wording_is_editable_in_settings(): void
+    {
+        $this->login();
+        $this->assertStringContainsString('Package cards and carousels', $this->get(route('admin.settings'))->assertOk()->getContent());
+
+        \App\Models\Setting::put('card_quote_label', 'Request a quote');
+        \App\Models\Setting::put('card_details_label', 'Full itinerary');
+        \App\Models\Setting::put('row_packages_suffix', 'Journeys');
+        \App\Models\Setting::put('card_sample_badge', 'Demo');
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('Request a quote', $html);
+        $this->assertStringContainsString('Full itinerary', $html);
+        $this->assertStringContainsString('Self Drive Journeys', $html);
+        $this->assertStringContainsString('>Demo<', $html);
+        $this->assertStringNotContainsString('Self Drive Packages', $html);
+
+        \App\Models\Setting::put('row_packages_suffix', '');
+        $this->assertStringContainsString('</span>Self Drive</h3>', $this->get('/')->getContent(), 'blank suffix shows just the tour type name');
+    }
+
+    public function test_why_band_numbers_can_be_switched_off(): void
+    {
+        $this->login();
+        $home = Page::bySlug('home');
+        $band = $this->section($home, 'why_band');
+        $mark = 'font-display text-4xl font-medium text-white/10';
+        $this->assertStringContainsString($mark, $this->get('/')->getContent());
+        $this->put(route('admin.pages.sections.update', [$home, $band['id']]), ['data' => ['heading' => 'Why us', 'items' => [['icon' => 'check', 'title' => 'A', 'text' => 'b']]]])->assertSessionHasNoErrors();
+        $this->assertStringNotContainsString($mark, $this->get('/')->getContent());
     }
 
     public function test_migration_moves_tour_types_above_the_signature_collection(): void

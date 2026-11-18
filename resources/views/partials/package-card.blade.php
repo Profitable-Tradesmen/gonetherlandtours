@@ -2,7 +2,7 @@
     $cover = $package->images->first();
     $fallback = $package->tourType?->image ?: 'images/tour-self-drive.webp';
     $hasPrice = (bool) $package->price_from;
-    $badge = $package->is_sample ? 'Sample' : null;
+    $badge = $package->is_sample ? (text('card_sample_badge') ?: null) : null;
     $url = route('packages.show', $package);
     $points = collect($package->highlights ?? [])->map(fn ($h) => is_array($h) ? ($h['text'] ?? $h['title'] ?? '') : (string) $h)->filter()->take(3);
     $nights = $package->nights.' '.\Illuminate\Support\Str::plural('night', $package->nights);
@@ -34,9 +34,9 @@
         <p class="mt-2 hidden line-clamp-2 text-sm leading-relaxed text-ink/75 sm:block">{{ $package->summary }}</p>
 
         <div class="mt-3 sm:mt-4 sm:border-t sm:border-sand-200 sm:pt-4">
-            <p class="label-caps text-[0.65rem] text-white/60 sm:text-ink/60">From</p>
+            <p class="label-caps text-[0.65rem] text-white/60 sm:text-ink/60">{{ text('card_from_label') }}</p>
             @if ($hasPrice)
-                <p class="font-display text-xl font-medium text-accent sm:text-3xl sm:text-brand-900">{{ $package->priceLabel() }}<span class="ml-1 text-xs font-semibold text-white/60 sm:text-ink/60">pp</span></p>
+                <p class="font-display text-xl font-medium text-accent sm:text-3xl sm:text-brand-900">{{ $package->priceLabel() }}@if (text('card_per_person'))<span class="ml-1 text-xs font-semibold text-white/60 sm:text-ink/60">{{ text('card_per_person') }}</span>@endif</p>
             @else
                 <p class="font-display text-lg font-medium text-accent sm:text-xl sm:text-brand-900">{{ $package->priceLabel() }}</p>
             @endif
@@ -49,9 +49,9 @@
         @endif
 
         <div class="mt-auto flex flex-col items-start gap-3 pt-4 sm:grid sm:grid-cols-2 sm:pt-5">
-            <a href="{{ $url }}" class="label-caps min-h-[2.75rem] inline-flex items-center text-xs underline underline-offset-4 hover:text-accent sm:hidden">More info<span class="sr-only"> about {{ $package->title }}</span></a>
-            <button type="button" class="btn btn-primary w-full !px-3" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">Get a Quote</button>
-            <a href="{{ $url }}" class="btn btn-outline hidden w-full !px-3 text-brand-900 sm:inline-flex">Details<span class="sr-only"> about {{ $package->title }}</span></a>
+            <a href="{{ $url }}" class="label-caps min-h-[2.75rem] inline-flex items-center text-xs underline underline-offset-4 hover:text-accent sm:hidden">{{ text('card_more_info_label') }}<span class="sr-only"> about {{ $package->title }}</span></a>
+            <button type="button" class="btn btn-primary w-full !px-3" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">{{ text('card_quote_label') }}</button>
+            <a href="{{ $url }}" class="btn btn-outline hidden w-full !px-3 text-brand-900 sm:inline-flex">{{ text('card_details_label') }}<span class="sr-only"> about {{ $package->title }}</span></a>
         </div>
     </div>
 </article>

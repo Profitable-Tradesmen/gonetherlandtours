@@ -15,7 +15,7 @@
             </div>
             <div class="mt-1 flex justify-center gap-2" x-show="count > 1" x-cloak>
                 <template x-for="n in count" :key="n">
-                    <button type="button" class="h-1.5 w-8 rounded-sm transition-colors" :class="n - 1 === idx ? 'bg-brand-700' : 'bg-brand-700/25'" @click="go(n - 1)" :aria-label="'Show package ' + n" :aria-current="n - 1 === idx"></button>
+                    <button type="button" class="h-1.5 w-8 rounded-sm transition-colors" :class="n - 1 === idx ? 'bg-brand-700' : 'bg-brand-700/25'" @click="go(n - 1)" :aria-label="@js(text('carousel_dash_label')) + ' ' + n" :aria-current="n - 1 === idx"></button>
                 </template>
             </div>
         </div>
@@ -27,7 +27,7 @@
             <div class="{{ $loop->first ? '' : 'mt-14' }}" x-data="carousel" role="region" aria-roledescription="carousel" aria-label="{{ $t->name }}">
                 <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
                     <div class="min-w-0 max-w-2xl">
-                        <h3 class="flex items-center gap-3 text-2xl font-medium sm:text-3xl"><span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-900 text-accent"><x-icon :name="$t->icon ?: 'check'" class="h-5 w-5" /></span>{{ $t->name }} Packages</h3>
+                        <h3 class="flex items-center gap-3 text-2xl font-medium sm:text-3xl"><span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-900 text-accent"><x-icon :name="$t->icon ?: 'check'" class="h-5 w-5" /></span>{{ trim($t->name.' '.text('row_packages_suffix')) }}</h3>
                         @if ($t->summary)<p class="mt-2 text-ink/75">{{ $t->summary }}</p>@endif
                     </div>
                     @if ($d['more_label'])<x-button :href="route('tour-types.show', $t)" class="shrink-0">{{ $d['more_label'] }} <x-icon name="arrow" class="h-4 w-4" /></x-button>@endif
@@ -38,13 +38,13 @@
                             <div data-slide class="flex w-[88%] shrink-0 snap-start sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.85rem)]"><div class="w-full">@include('partials.package-card', ['package' => $p])</div></div>
                         @endforeach
                     </div>
-                    <button type="button" class="carousel-arrow absolute -left-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(-1)" :disabled="atStart" aria-label="Previous packages"><x-icon name="arrow" class="h-5 w-5 rotate-180" /></button>
-                    <button type="button" class="carousel-arrow absolute -right-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(1)" :disabled="atEnd" aria-label="Next packages"><x-icon name="arrow" class="h-5 w-5" /></button>
+                    <button type="button" class="carousel-arrow absolute -left-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(-1)" :disabled="atStart" aria-label="{{ text('carousel_prev_label') }}"><x-icon name="arrow" class="h-5 w-5 rotate-180" /></button>
+                    <button type="button" class="carousel-arrow absolute -right-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(1)" :disabled="atEnd" aria-label="{{ text('carousel_next_label') }}"><x-icon name="arrow" class="h-5 w-5" /></button>
                 </div>
                 {{-- dash indicators: one per card, the visible one is filled; tap to jump --}}
                 <div class="mt-2 flex justify-center gap-2" x-show="count > 1" x-cloak>
                     <template x-for="n in count" :key="n">
-                        <button type="button" class="h-1.5 w-10 rounded-sm transition-colors sm:w-14" :class="n - 1 === idx ? 'bg-brand-700' : 'bg-brand-700/25'" @click="go(n - 1)" :aria-label="'Show package ' + n" :aria-current="n - 1 === idx"></button>
+                        <button type="button" class="h-1.5 w-10 rounded-sm transition-colors sm:w-14" :class="n - 1 === idx ? 'bg-brand-700' : 'bg-brand-700/25'" @click="go(n - 1)" :aria-label="@js(text('carousel_dash_label')) + ' ' + n" :aria-current="n - 1 === idx"></button>
                     </template>
                 </div>
             </div>
@@ -73,8 +73,8 @@
                     </div>
                 @endforeach
             </div>
-            <button type="button" class="carousel-arrow absolute -left-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(-1)" :disabled="atStart" aria-label="Previous packages"><x-icon name="arrow" class="h-5 w-5 rotate-180" /></button>
-            <button type="button" class="carousel-arrow absolute -right-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(1)" :disabled="atEnd" aria-label="Next packages"><x-icon name="arrow" class="h-5 w-5" /></button>
+            <button type="button" class="carousel-arrow absolute -left-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(-1)" :disabled="atStart" aria-label="{{ text('carousel_prev_label') }}"><x-icon name="arrow" class="h-5 w-5 rotate-180" /></button>
+            <button type="button" class="carousel-arrow absolute -right-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(1)" :disabled="atEnd" aria-label="{{ text('carousel_next_label') }}"><x-icon name="arrow" class="h-5 w-5" /></button>
         </div>
 
         @if ($d['button_label'])<p class="mt-8 text-center"><x-button variant="secondary" :href="route('packages.index')">{{ $d['button_label'] }}</x-button></p>@endif

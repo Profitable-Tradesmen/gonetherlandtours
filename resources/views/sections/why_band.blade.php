@@ -16,7 +16,7 @@
             <ul class="grid gap-5 sm:grid-cols-2 sm:grid-rows-2">
                 @foreach ($d['items'] as $i => $r)
                     <li class="group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl bg-white/10 p-6 text-center ring-1 ring-white/15 transition duration-300 hover:-translate-y-0.5 hover:bg-white/15 sm:p-8" data-reveal="up" style="--d:{{ $i * 100 }}ms">
-                        <span class="absolute right-4 top-3 font-display text-4xl font-medium text-white/10" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
+                        @if ($d['show_numbers'] ?? true)<span class="absolute right-4 top-3 font-display text-4xl font-medium text-white/10" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>@endif
                         <span class="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-ink shadow-card transition-transform duration-300 group-hover:scale-105"><x-icon :name="($r['icon'] ?? '') ?: 'check'" class="h-7 w-7" /></span>
                         <h3 class="mt-5 font-display text-xl font-medium sm:text-2xl">{{ $r['title'] }}</h3>
                         <p class="mt-2 text-sm leading-relaxed text-white/85 sm:text-base">{{ $r['text'] }}</p>

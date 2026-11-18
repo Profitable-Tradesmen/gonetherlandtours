@@ -50,6 +50,8 @@ return [
 
     // Default wording for site-wide labels. Admin > Settings overrides each one (a saved blank hides it where that makes sense).
     'texts' => [
+        'card_quote_label' => 'Get a Quote', 'card_details_label' => 'Details', 'card_more_info_label' => 'More info', 'card_from_label' => 'From', 'card_per_person' => 'pp', 'card_sample_badge' => 'Sample',
+        'row_packages_suffix' => 'Packages', 'carousel_prev_label' => 'Previous packages', 'carousel_next_label' => 'Next packages', 'carousel_dash_label' => 'Show package', 'carousel_dash_type_label' => 'Show tour type',
         'topbar_link_label' => 'Get Instant Quote', 'topbar_link_url' => '', 'topbar_button_label' => 'Start Your Adventure',
         'header_button_label' => 'Free Quote',
         'mega_view_all_label' => 'View all', 'mega_help_text' => 'Not sure which suits you? We will plan it around you.',

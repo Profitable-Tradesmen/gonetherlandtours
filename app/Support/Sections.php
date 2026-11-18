@@ -210,6 +210,7 @@ class Sections
                 $t('heading', 'Heading'),
                 $ta('intro', 'Intro text', 'Four things we promise on every trip, whether you drive yourself, travel with a chauffeur or join a small guided group.'),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
+                ['name' => 'show_numbers', 'label' => 'Show the faint 01, 02, 03 numbers on the tiles', 'type' => 'checkbox', 'default' => true],
                 self::rep('items', 'Reasons', 'reason', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Text')], 8),
                 self::img('image', 'Photo', 'images/feature_band.webp'),
             ]],

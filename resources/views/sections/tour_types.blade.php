@@ -25,7 +25,7 @@
     </div>
                 <div class="mt-3 flex justify-center gap-2 md:hidden" x-show="count > 1" x-cloak>
                     <template x-for="n in count" :key="n">
-                        <button type="button" class="h-1.5 w-10 rounded-sm transition-colors" :class="n - 1 === idx ? 'bg-brand-700' : 'bg-brand-700/25'" @click="go(n - 1)" :aria-label="'Show tour type ' + n" :aria-current="n - 1 === idx"></button>
+                        <button type="button" class="h-1.5 w-10 rounded-sm transition-colors" :class="n - 1 === idx ? 'bg-brand-700' : 'bg-brand-700/25'" @click="go(n - 1)" :aria-label="@js(text('carousel_dash_type_label')) + ' ' + n" :aria-current="n - 1 === idx"></button>
                     </template>
                 </div>
     </div>
