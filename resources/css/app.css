@@ -157,6 +157,8 @@
 .hdr { transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease; }
 .js .hdr-overlay:not(.is-solid) { background-color: transparent; border-bottom-color: transparent; box-shadow: none; }
 .js .hdr-overlay:not(.is-solid) .hdr-link { color: #fff; text-shadow: 0 1px 6px rgb(12 13 17 / .55); }
+/* The logo is full color on a transparent background. Over the dark photo it gets a faint white edge so the navy lettering stays readable. */
+.js .hdr-overlay:not(.is-solid) .hdr-logo img { filter: drop-shadow(0 0 1px rgb(255 255 255 / .9)) drop-shadow(0 0 3px rgb(255 255 255 / .5)); }
 .js .hdr-overlay:not(.is-solid) .hdr-link:hover { background-color: rgb(255 255 255 / .16); }
 
 /* Carousel track: hide the scrollbar (swipe, trackpad and the arrow buttons scroll it). */
