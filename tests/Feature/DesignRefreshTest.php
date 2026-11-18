@@ -377,7 +377,7 @@ class DesignRefreshTest extends TestCase
 
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('Our Best Trusted', $html);
-        foreach (['go-rail-travel.png', 'go-asian-tours.png', 'go-italia-trips.webp'] as $file) {
+        foreach (['hen-it.png', 'go-asian-tours.png', 'go-italia-trips.webp'] as $file) {
             $this->assertFileExists(public_path('images/partners/'.$file));
             $this->assertStringContainsString('images/partners/'.$file, $html);
         }

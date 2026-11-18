@@ -125,7 +125,7 @@ class DefaultSections
     public static function partners(): array
     {
         return self::s('partners', ['items' => self::rows([
-            ['images/partners/go-rail-travel.png', 'Go Rail Travel', ''],
+            ['images/partners/hen-it.png', 'HEN IT, Ireland leading hen company', ''],
             ['images/partners/go-asian-tours.png', 'Go Asian Tours', ''],
             ['images/partners/go-italia-trips.webp', 'Go Italia Trips', ''],
         ], ['image', 'image_alt', 'url'])]);
