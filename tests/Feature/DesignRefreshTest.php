@@ -34,7 +34,7 @@ class DesignRefreshTest extends TestCase
         $this->assertStringContainsString('hero-home-800.webp 800w', $html, 'phones get the small copy');
         $this->assertMatchesRegularExpression('/<link rel="preload" as="image"[^>]+imagesrcset=/', $html);
         $this->assertStringContainsString('hdr-overlay', $html, 'transparent over the hero until scrolled');
-        $this->assertStringContainsString('hdr-logo', $html, 'the full-color transparent logo gets a faint white edge while the header is transparent');
+        $this->assertStringContainsString('hdr-logo', $html, 'the logo is white while the header is transparent and full color on the white bar');
         $this->assertStringContainsString('bg-white/95 backdrop-blur', $html, 'white bar once scrolled');
         $this->assertStringNotContainsString('hdr-plate', $html);
         $this->assertStringNotContainsString('hero-video-poster', $html, 'the abstract placeholder illustration is gone');
