@@ -366,7 +366,7 @@ class DesignRefreshTest extends TestCase
         $this->login();
         $home = Page::bySlug('home');
         $band = $this->section($home, 'why_band');
-        $mark = 'font-display text-4xl font-medium text-white/10';
+        $mark = 'font-display text-4xl font-medium text-white/40';
         $this->assertStringContainsString($mark, $this->get('/')->getContent());
         $this->put(route('admin.pages.sections.update', [$home, $band['id']]), ['data' => ['heading' => 'Why us', 'items' => [['icon' => 'check', 'title' => 'A', 'text' => 'b']]]])->assertSessionHasNoErrors();
         $this->assertStringNotContainsString($mark, $this->get('/')->getContent());
@@ -430,7 +430,7 @@ class DesignRefreshTest extends TestCase
         $bg = $this->section($home, 'why_band')['data']['bg'];
         $this->assertMatchesRegularExpression('#^storage/section-media/[A-Za-z0-9]+\.gif$#', $bg);
         $this->assertStringContainsString('<img src="'.asset($bg).'" alt=""', $this->get('/')->getContent());
-        $this->assertStringContainsString('bg-brand-900/90', $this->get('/')->getContent(), 'strong tint');
+        $this->assertStringContainsString('bg-brand-900/65', $this->get('/')->getContent(), 'strong tint');
 
         // video: plays through the existing lazy background video loader (data-bg-video), never autoloaded
         $this->put($url, ['data' => $base + ['bg' => '', 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('loop.mp4', 2000, 'video/mp4')]])->assertSessionHasNoErrors();
