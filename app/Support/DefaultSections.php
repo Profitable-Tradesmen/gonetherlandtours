@@ -101,7 +101,6 @@ class DefaultSections
             self::s('packages_tabs', ['heading' => $c['packages_heading'] ?? 'Signature Collection']),
             self::whyBand(),
             self::uspProof(),
-            self::s('video_feature', ['poster_alt' => 'Travelers walking along a canal-side street lined with historic houses']),
             self::s('image_strip', ['items' => array_map(fn ($t) => ['title' => $t[0], 'text' => $t[1], 'image' => $t[2], 'image_alt' => $t[3]], $trav)]),
             self::s('steps', ['heading' => $c['how_heading'] ?? 'How It Works', 'items' => array_map(fn ($x) => ['title' => $x['title'] ?? '', 'text' => $x['text'] ?? ''], $steps)]),
             self::s('testimonials', ['variant' => 'spotlight', 'heading' => $c['testimonials_heading'] ?? 'What Travelers Say']),

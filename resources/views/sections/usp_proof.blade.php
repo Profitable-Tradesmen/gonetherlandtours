@@ -1,5 +1,5 @@
 @if (count($d['items']))
-<section class="bg-sand py-16 sm:py-24" aria-labelledby="up-{{ $sid }}">
+<section class="bg-white py-16 sm:py-24" aria-labelledby="up-{{ $sid }}">
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'up-'.$sid" />
         {{-- Each selling point with something checkable behind it: a real example (the "proof" box) and a link to read more.
