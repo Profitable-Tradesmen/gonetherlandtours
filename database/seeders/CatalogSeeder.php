@@ -33,18 +33,18 @@ class CatalogSeeder extends Seeder
         }
 
         $dests = [
-            ['Amsterdam & the Cities', 'amsterdam-and-the-cities', 'Canals, world-class museums and historic Dutch cities such as Utrecht, Haarlem and Delft.', 'images/dest-amsterdam.webp', 'Amsterdam canal houses reflected in the water'],
-            ['Tulips & Countryside', 'tulips-and-countryside', 'Flower fields, windmills and quiet villages in the Dutch countryside.', 'images/dest-tulips.webp', 'A windmill beside a Dutch canal'],
-            ['Zeeland & the Delta', 'zeeland-and-the-delta', 'Coastline, sea defences and charming small towns in the south-west.', 'images/dest-zeeland.webp', 'Dutch coastline with dunes'],
+            ['Amsterdam & the Cities', 'amsterdam-and-the-cities', 'Canals, world-class museums and historic Dutch cities such as Utrecht, Haarlem and Delft.', 'images/dest-amsterdam.webp', 'Amsterdam canal houses and a canal boat on a bright morning'],
+            ['Tulips & Countryside', 'tulips-and-countryside', 'Flower fields, windmills and quiet villages in the Dutch countryside.', 'images/dest-tulips.webp', 'A traditional windmill beside rows of tulips at golden hour'],
+            ['Zeeland & the Delta', 'zeeland-and-the-delta', 'Coastline, sea defenses and charming small towns in the south-west.', 'images/dest-zeeland.webp', 'A quiet Dutch harbor village with historic sailing boats in morning mist'],
         ];
         $destIds = [];
         foreach ($dests as $i => [$name, $slug, $summary, $image, $alt]) {
             $destIds[$slug] = Destination::create([
-                'name' => $name, 'slug' => $slug, 'h1' => $name.' Tours', 'summary' => $summary,
-                'body' => '<p>[CONFIRM: destination guide copy for '.e($name).'. Sample text only.]</p><p>'.e($summary).'</p>',
+                'name' => $name, 'slug' => $slug, 'h1' => \App\Support\DestinationCopy::all()[$slug]['h1'] ?? $name.' Tours', 'summary' => $summary,
+                'body' => \App\Support\DestinationCopy::all()[$slug]['body'] ?? '<p>[CONFIRM: destination guide copy for '.e($name).'. Sample text only.]</p><p>'.e($summary).'</p>',
                 'image' => $image, 'image_alt' => $alt, 'sort_order' => $i + 1,
-                'seo_title' => $name.' Tours | '.'GoNetherlandTours',
-                'meta_description' => 'Explore '.$name.' with GoNetherlandTours. '.$summary,
+                'seo_title' => \App\Support\DestinationCopy::all()[$slug]['seo_title'] ?? $name.' Tours | GoNetherlandTours',
+                'meta_description' => \App\Support\DestinationCopy::all()[$slug]['meta_description'] ?? 'Explore '.$name.' with GoNetherlandTours. '.$summary,
             ])->id;
         }
 

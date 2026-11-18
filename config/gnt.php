@@ -67,7 +67,7 @@ return [
         'usp_2_title' => 'Small-group & private tours', 'usp_2_text' => 'Personal attention and flexible itineraries, with your own party or a small group.',
         'usp_3_title' => 'Hidden gems & local secrets', 'usp_3_text' => 'Lesser-known places beyond the tourist hotspots.',
         'usp_4_title' => 'Expertly crafted itineraries', 'usp_4_text' => 'Thoughtfully designed routes and carefully selected attractions.',
-        'destinations_heading' => 'Destinations', 'destinations_intro' => 'Six places worth slowing down for: pick a region and see the tours that visit it.',
+        'destinations_heading' => 'Destinations', 'destinations_intro' => 'Regions worth slowing down for: pick one and see the tours that visit it.',
         'packages_intro' => 'Browse our Netherlands tour packages and request a free, tailored quote.',
         'thankyou_heading' => 'Thank you', 'thankyou_text' => 'We have received your inquiry. A Netherlands travel specialist will be in touch soon with your tailored quote.', 'thankyou_button' => 'Browse tour packages',
     ],

@@ -411,6 +411,45 @@ class DesignRefreshTest extends TestCase
         $this->assertSame(1, count(array_keys(collect($home->fresh()->allSections())->pluck('type')->all(), 'partners')), 'not added twice');
     }
 
+    public function test_destinations_have_real_photos_and_guide_copy(): void
+    {
+        foreach (['amsterdam', 'tulips', 'zeeland'] as $name) {
+            $file = public_path('images/dest-'.$name.'.webp');
+            $this->assertFileExists($file);
+            $this->assertGreaterThan(60000, filesize($file), $name.': a real photo, not the small text placeholder');
+            $this->assertFileExists(public_path('images/dest-'.$name.'-800.webp'));
+        }
+        foreach (\App\Models\Destination::all() as $d) {
+            $this->assertStringNotContainsString('[CONFIRM: destination guide copy', (string) $d->body, $d->name);
+            $this->assertStringContainsString('<h2>Highlights</h2>', (string) $d->body, $d->name);
+            $html = $this->get(route('destinations.show', $d))->assertOk()->getContent();
+            $this->assertStringContainsString('When to go', $html);
+            $this->assertStringContainsString('How you can travel', $html);
+            $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html));
+        }
+        $index = $this->get('/destinations')->assertOk()->getContent();
+        $this->assertStringNotContainsString('Six places', $index);
+        $this->assertStringContainsString('Zeeland and the Delta', $this->get('/destinations/zeeland-and-the-delta')->getContent());
+    }
+
+    public function test_destination_migration_replaces_only_untouched_seeded_values(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000011_destination_guide_copy.php');
+        $d = \App\Models\Destination::where('slug', 'tulips-and-countryside')->firstOrFail();
+        $d->update(['body' => '<p>[CONFIRM: destination guide copy for Tulips & Countryside. Sample text only.]</p>', 'h1' => 'Tulips & Countryside Tours', 'image_alt' => 'A windmill beside a Dutch canal', 'seo_title' => 'My own SEO title']);
+
+        $migration->up();
+        $d->refresh();
+        $this->assertStringContainsString('Windmills, flower fields and slow villages', $d->body);
+        $this->assertSame('Tulips and the Dutch Countryside', $d->h1);
+        $this->assertSame('A traditional windmill beside rows of tulips at golden hour', $d->image_alt);
+        $this->assertSame('My own SEO title', $d->seo_title, 'edited values are never replaced');
+
+        $d->update(['body' => '<p>My own guide text.</p>']);
+        $migration->up();
+        $this->assertSame('<p>My own guide text.</p>', $d->fresh()->body);
+    }
+
     public function test_each_tour_type_page_is_built_from_sections_with_its_own_copy(): void
     {
         $expect = [
