@@ -66,10 +66,8 @@ class DesignRefreshTest extends TestCase
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('Clear, upfront quotes', $html);
         $this->assertStringContainsString('Why we are the', $html);
-        // one packages row per tour type that has a featured package, each with a "view more" button
-        $this->assertStringContainsString('Self Drive Packages', $html);
-        $this->assertStringContainsString('Chauffeur Driven Packages', $html);
-        $this->assertGreaterThanOrEqual(3, substr_count($html, 'View more packages'));
+        // the packages section is three plain columns of cards (no per-column heading block)
+        $this->assertStringContainsString('Sample: Tulip Season Self Drive', $html);
         // the three small bars under each section label
         $this->assertStringContainsString('h-[3px] w-7', $html);
     }
@@ -140,10 +138,11 @@ class DesignRefreshTest extends TestCase
     {
         $html = $this->get('/')->getContent();
         $this->assertStringContainsString('md:grid-cols-2 lg:grid-cols-3', $html);
-        $this->assertStringContainsString('Self Drive Packages', $html);
-        $this->assertStringContainsString('Chauffeur Driven Packages', $html);
-        $this->assertStringContainsString('Coach Tours Packages', $html);
+        $this->assertStringNotContainsString('Self Drive Packages', $html, 'no per-column heading block any more');
         $this->assertStringNotContainsString('aria-label="Next packages"', $html, 'no carousel in the columns layout');
+        foreach (['Sample: Tulip Season Self Drive', 'Sample: Dutch Highlights Chauffeur Tour', 'Sample: Netherlands in Bloom Coach Tour'] as $title) {
+            $this->assertStringContainsString($title, $html, $title);
+        }
     }
 
     public function test_featured_packages_tabs_layout_is_a_carousel_with_icon_tabs_and_stacked_cards(): void
