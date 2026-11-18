@@ -108,6 +108,8 @@ class DesignRefreshTest extends TestCase
         $current = $home->allSections();
         $by = collect($current)->keyBy('type');
         $by['video_feature'] = ['id' => 'vid', 'type' => 'video_feature', 'visible' => true, 'data' => []];   // the previous release's home page had a video band
+        $by['text_cta'] = ['id' => 'cta1', 'type' => 'text_cta', 'visible' => true, 'data' => []];   // ... and a text band and an FAQ list
+        $by['faq'] = ['id' => 'faq1', 'type' => 'faq', 'visible' => true, 'data' => []];
         $old = [$by['hero_video_quiz'], ['id' => 'tick', 'type' => 'ticker', 'visible' => true, 'data' => ['items' => []]], $by['split_list'], $by['packages_tabs'],
             ['id' => 'band', 'type' => 'feature_band', 'visible' => true, 'data' => []], $by['usp_proof'], $by['tour_types'], $by['video_feature'], $by['image_strip'], $by['steps'],
             $by['testimonials'], $by['gallery'], $by['text_cta'], $by['faq'], $by['blog_latest'], $by['cta_banner']];
@@ -407,6 +409,31 @@ class DesignRefreshTest extends TestCase
         $this->assertSame(array_search('steps', $types, true) + 1, array_search('partners', $types, true));
         $migration->up();
         $this->assertSame(1, count(array_keys(collect($home->fresh()->allSections())->pluck('type')->all(), 'partners')), 'not added twice');
+    }
+
+    public function test_home_has_no_plan_with_peace_of_mind_or_faq_section_and_the_migration_removes_or_hides_them(): void
+    {
+        $types = collect(Page::bySlug('home')->allSections())->pluck('type')->all();
+        $this->assertNotContains('text_cta', $types);
+        $this->assertNotContains('faq', $types);
+        $html = $this->get('/')->getContent();
+        $this->assertStringNotContainsString('Plan with', $html);
+        $this->assertStringNotContainsString('Frequently Asked Questions', $html);
+        $this->get('/faq')->assertOk()->assertSee('Frequently Asked Questions');   // the FAQ page itself stays
+
+        $migration = require base_path('database/migrations/2026_11_24_000007_remove_home_plan_and_faq_sections.php');
+        $home = Page::bySlug('home');
+        $secs = $home->allSections();
+        $secs[] = ['id' => 'c1', 'type' => 'text_cta', 'visible' => true, 'data' => ['heading' => 'Plan with *peace of mind*']];
+        $secs[] = ['id' => 'f1', 'type' => 'faq', 'visible' => true, 'data' => ['heading' => 'Frequently Asked Questions']];
+        $secs[] = ['id' => 'f2', 'type' => 'faq', 'visible' => true, 'data' => ['heading' => 'My own FAQ heading']];
+        $home->update(['sections' => $secs]);
+
+        $migration->up();
+        $after = collect($home->fresh()->allSections());
+        $this->assertNull($after->firstWhere('id', 'c1'));
+        $this->assertNull($after->firstWhere('id', 'f1'));
+        $this->assertFalse($after->firstWhere('id', 'f2')['visible'], 'an edited FAQ band is hidden, not deleted');
     }
 
     public function test_home_has_no_video_band_and_the_migration_removes_or_hides_an_existing_one(): void

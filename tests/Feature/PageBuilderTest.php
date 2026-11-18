@@ -81,15 +81,15 @@ class PageBuilderTest extends TestCase
         $this->login();
         $home = Page::bySlug('home');
         $band = $this->section($home, 'cta_banner');
-        $cta = $this->section($home, 'text_cta');
+        $partners = $this->section($home, 'partners');
 
         $this->put(route('admin.pages.sections.update', [$home, $band['id']]), ['data' => ['heading' => '<script>alert(1)</script>Safe heading', 'image' => 'https://evil.test/x.jpg']]);
-        $this->put(route('admin.pages.sections.update', [$home, $cta['id']]), ['data' => ['heading' => 'Go', 'buttons' => [['label' => 'Go', 'url' => 'javascript:alert(1)']]]]);
+        $this->put(route('admin.pages.sections.update', [$home, $partners['id']]), ['data' => ['heading' => 'Go', 'items' => [['image' => 'images/partners/go-asian-tours.png', 'image_alt' => 'x', 'url' => 'javascript:alert(1)']]]]);
 
         $d = $this->section($home, 'cta_banner')['data'];
         $this->assertStringNotContainsString('<script', $d['heading']);
         $this->assertSame('', $d['image'], 'only images/ or storage/ paths are accepted');
-        $this->assertSame('', $this->section($home, 'text_cta')['data']['buttons'][0]['url'], 'javascript: links are rejected');
+        $this->assertSame('', $this->section($home, 'partners')['data']['items'][0]['url'], 'javascript: links are rejected');
 
         $legal = Page::bySlug('terms');
         $rt = $this->section($legal, 'rich_text');
@@ -174,9 +174,10 @@ class PageBuilderTest extends TestCase
     {
         $this->login();
         $home = Page::bySlug('home');
-        $faq = $this->section($home, 'faq');
-        $this->post(route('admin.pages.sections.toggle', [$home, $faq['id']]));
-        $this->get('/')->assertOk()->assertDontSee('Frequently Asked Questions');
+        $gallery = $this->section($home, 'gallery');
+        $this->get('/')->assertOk()->assertSee('A glimpse of the');
+        $this->post(route('admin.pages.sections.toggle', [$home, $gallery['id']]));
+        $this->get('/')->assertOk()->assertDontSee('A glimpse of the');
     }
 
     public function test_navigation_items_are_editable_and_shown_in_header_and_footer(): void

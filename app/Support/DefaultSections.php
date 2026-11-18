@@ -106,12 +106,6 @@ class DefaultSections
             self::partners(),
             self::s('testimonials', ['variant' => 'spotlight', 'heading' => $c['testimonials_heading'] ?? 'What Travelers Say']),
             self::s('gallery', ['eyebrow' => $gallery['eyebrow'] ?? 'Visual journey', 'heading' => $gallery['title'] ?? 'A glimpse of the *real Netherlands*', 'items' => $galleryRows], (bool) ($c['show_gallery'] ?? true)),
-            self::s('text_cta', [
-                'heading' => 'Plan with *peace of mind*',
-                'text' => 'We design thoughtful routes with carefully selected attractions, in small groups or privately, with room to explore. Real people, clear quotes, no pressure. [CONFIRM: company story]',
-                'buttons' => [['label' => 'About us', 'url' => '/about'], ['label' => 'Contact us', 'url' => '/contact']],
-            ]),
-            self::s('faq', ['heading' => $c['faq_heading'] ?? 'Frequently Asked Questions']),
             self::s('blog_latest', []),
             self::s('cta_banner', [
                 'image_alt' => 'Tulip fields and a distant windmill at sunset',

@@ -151,6 +151,7 @@ class SellingPointsTest extends TestCase
         $sections = collect($home->allSections())->reject(fn ($s) => $s['type'] === 'usp_proof')->values()->all();
         // the previous release's home page had a ticker and a photo band (the reference layout no longer seeds them)
         array_splice($sections, 1, 0, [
+            ['id' => 'oldfaq1', 'type' => 'faq', 'visible' => true, 'data' => ['heading' => 'Frequently Asked Questions']],   // the FAQ list used to be on the home page
             ['id' => 'oldtick1', 'type' => 'ticker', 'visible' => true, 'data' => ['items' => [['text' => 'Authentic Dutch Culture'], ['text' => 'Small Group Experiences']]]],
             ['id' => 'oldband1', 'type' => 'feature_band', 'visible' => true, 'data' => ['bullets' => [['text' => 'Authentic Dutch culture, not a checklist'], ['text' => 'Small groups with flexible itineraries']]]],
         ]);

@@ -44,11 +44,12 @@ class SeoAndPagesTest extends TestCase
         }
     }
 
-    public function test_home_has_faq_jsonld_and_travel_agency_schema(): void
+    public function test_home_has_travel_agency_schema_and_the_faq_page_has_faq_schema(): void
     {
         $html = $this->get('/')->getContent();
-        $this->assertStringContainsString('"@type":"FAQPage"', $html);
         $this->assertStringContainsString('"@type":"TravelAgency"', $html);
+        $this->assertStringNotContainsString('"@type":"FAQPage"', $html, 'the FAQ list is no longer on the home page');
+        $this->assertStringContainsString('"@type":"FAQPage"', $this->get('/faq')->getContent());
     }
 
     public function test_package_page_has_trip_schema_and_breadcrumbs(): void
