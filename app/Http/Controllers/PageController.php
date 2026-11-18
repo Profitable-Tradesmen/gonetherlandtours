@@ -69,7 +69,7 @@ class PageController extends Controller
 
         return view('pages.show', [
             'page' => $page,
-            'overlayHeader' => false,   // light header bar on every page; heroes start below it
+            'overlayHeader' => in_array($firstType, ['hero_video_quiz', 'hero_seasons'], true),
             'draft' => $draft,
             'sections' => $page->visibleSections(),
             'seo' => Seo::make([

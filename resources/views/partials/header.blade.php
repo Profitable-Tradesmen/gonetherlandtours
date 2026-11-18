@@ -5,7 +5,7 @@
     $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm xl:px-4 font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-sand';
     $menu = \App\Models\MenuItem::tree('header');
     $hasTours = $menu->contains('kind', 'tours');
-    $overlay = false;   // light header bar on every page so the full-color transparent logo is always readable
+    $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header is fully transparent over it (white links, full-color logo with a soft white halo) until you scroll, then it becomes a white bar
 @endphp
 <header class="hdr sticky top-0 z-50 border-b-4 border-accent bg-white/95 backdrop-blur {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
         x-data="{ menu: false, dd: null, solid: false }" x-init="solid = window.scrollY > 24"
@@ -13,7 +13,7 @@
         :class="{ 'is-solid': solid || menu || dd }"
         @keydown.escape.window="menu = false; dd = null" @mouseleave="dd = null">
     <div class="container-site flex h-16 items-center justify-between gap-4 lg:h-20">
-        <a href="{{ route('home') }}" @mouseenter="dd = null"><span class="inline-block">@include('partials.logo')</span></a>
+        <a href="{{ route('home') }}" @mouseenter="dd = null"><span class="hdr-logo inline-block">@include('partials.logo')</span></a>
 
         <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
             @foreach ($menu as $item)

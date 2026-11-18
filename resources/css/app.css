@@ -156,6 +156,9 @@
 /* Over a photo hero the header is transparent; it turns navy once you scroll or open a menu (.is-solid). */
 .hdr { transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease; }
 .js .hdr-overlay:not(.is-solid) { background-color: transparent; border-bottom-color: transparent; box-shadow: none; }
+.js .hdr-overlay:not(.is-solid) .hdr-link { color: #fff; text-shadow: 0 1px 6px rgb(12 13 17 / .55); }
+/* The logo is full color on a transparent background. Over the dark photo it gets a soft white halo so the navy lettering stays readable. */
+.js .hdr-overlay:not(.is-solid) .hdr-logo img { filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 5px rgb(255 255 255 / .85)); }
 .js .hdr-overlay:not(.is-solid) .hdr-link:hover { background-color: rgb(255 255 255 / .16); }
 
 /* Carousel track: hide the scrollbar (swipe, trackpad and the arrow buttons scroll it). */
