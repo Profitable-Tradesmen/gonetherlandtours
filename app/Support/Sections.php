@@ -99,7 +99,7 @@ class Sections
             ]],
             'packages_tabs' => ['label' => 'Featured packages', 'description' => 'Your featured packages with tabs by tour type. Choose which packages are featured in Admin > Packages.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Signature journeys'),
-                $t('heading', 'Heading', 'Signature Netherlands Journeys'),
+                $t('heading', 'Heading', 'Signature Collection'),
                 ['name' => 'layout', 'label' => 'Layout', 'type' => 'select', 'options' => ['by_type' => 'One row per tour type', 'tabs' => 'One carousel with tabs'], 'default' => 'by_type'],
                 $ta('intro', 'Intro text under the heading', 'Every journey is fully customizable. These are our most loved itineraries, perfected over years of delighting travelers.'),
                 $t('more_label', 'Per-row button (one row per tour type)', 'View more packages'),

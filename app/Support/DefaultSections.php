@@ -98,7 +98,7 @@ class DefaultSections
                 'items' => array_map(fn ($w) => ['title' => $w['title'] ?? '', 'text' => $w['text'] ?? ''], $why),
             ]),
             self::s('tour_types', ['heading' => $c['tours_heading'] ?? 'Choose How You Want to Explore']),
-            self::s('packages_tabs', ['heading' => $c['packages_heading'] ?? 'Signature Netherlands Journeys']),
+            self::s('packages_tabs', ['heading' => $c['packages_heading'] ?? 'Signature Collection']),
             self::whyBand(),
             self::uspProof(),
             self::s('video_feature', ['poster_alt' => 'Travelers walking along a canal-side street lined with historic houses']),

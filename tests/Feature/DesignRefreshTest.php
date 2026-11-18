@@ -134,15 +134,29 @@ class DesignRefreshTest extends TestCase
         $this->assertStringNotContainsString('lg:text-7xl', $html);
     }
 
-    public function test_featured_packages_render_as_three_columns_one_per_tour_type(): void
+    public function test_signature_collection_is_a_carousel_row_per_tour_type_with_dashes_and_the_section_order_is_right(): void
+    {
+        $types = collect(Page::bySlug('home')->visibleSections())->pluck('type')->all();
+        $this->assertSame(['split_list', 'tour_types', 'packages_tabs'], array_slice($types, 2, 3), 'Why book with us, Tour types, Signature Collection');
+
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('Signature Collection', $html);
+        $this->assertStringContainsString('Self Drive Packages', $html);
+        $this->assertStringContainsString('Chauffeur Driven Packages', $html);
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'View more packages'));
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'x-data="carousel"'));
+        $this->assertStringContainsString('carousel-track', $html);
+        $this->assertStringContainsString('aria-label="Next packages"', $html);
+        $this->assertStringContainsString("'Show package '", $html, 'dash indicators');
+        $this->assertStringContainsString('w-[88%]', $html, 'phones: one wide horizontal card per slide, the next one peeking');
+    }
+
+    public function test_package_card_is_a_horizontal_navy_card_on_phones_and_a_white_card_from_640px(): void
     {
         $html = $this->get('/')->getContent();
-        $this->assertStringContainsString('md:grid-cols-2 lg:grid-cols-3', $html);
-        $this->assertStringNotContainsString('Self Drive Packages', $html, 'no per-column heading block any more');
-        $this->assertStringNotContainsString('aria-label="Next packages"', $html, 'no carousel in the columns layout');
-        foreach (['Sample: Tulip Season Self Drive', 'Sample: Dutch Highlights Chauffeur Tour', 'Sample: Netherlands in Bloom Coach Tour'] as $title) {
-            $this->assertStringContainsString($title, $html, $title);
-        }
+        $this->assertStringContainsString('flex-row overflow-hidden rounded-2xl bg-brand-900 text-white shadow-card sm:flex-col sm:bg-white sm:text-ink', $html);
+        $this->assertStringContainsString('More info', $html, 'phones: underlined More info link');
+        $this->assertStringContainsString('sm:hidden', $html);
     }
 
     public function test_featured_packages_tabs_layout_is_a_carousel_with_icon_tabs_and_stacked_cards(): void
@@ -156,10 +170,9 @@ class DesignRefreshTest extends TestCase
         $this->assertStringContainsString('carousel-track', $html);
         $this->assertStringContainsString('aria-label="Next packages"', $html);
         $this->assertStringContainsString('role="tablist"', $html);
-        // cards: image on top at every size (no side-by-side "flex-row"), chips for nights/type, two actions in a grid
-        $this->assertStringNotContainsString('flex h-full flex-row', $html);
+        // cards: chips for nights/type, two actions in a grid from 640px
         $this->assertStringContainsString('rounded-full bg-accent px-2.5 py-1 text-ink', $html);
-        $this->assertStringContainsString('grid grid-cols-2 gap-3 pt-5', $html);
+        $this->assertStringContainsString('sm:grid sm:grid-cols-2', $html);
     }
 
     public function test_package_page_has_photo_hero_pills_highlight_cards_and_day_cards(): void

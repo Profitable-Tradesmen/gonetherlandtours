@@ -28,7 +28,7 @@ class PagesSeeder extends Seeder
                         ['title' => 'Expertly Crafted Itineraries', 'text' => 'Make the most of your vacation with thoughtfully designed routes and carefully selected attractions.'],
                     ],
                     'tours_heading' => 'Choose How You Want to Explore',
-                    'packages_heading' => 'Signature Netherlands Journeys',
+                    'packages_heading' => 'Signature Collection',
                     'how_heading' => 'How It Works',
                     'steps' => [
                         ['title' => 'Tell us what you love', 'text' => 'Share when you want to travel, who is coming and what you hope to see.'],

@@ -321,6 +321,8 @@ Alpine.data('slider', () => ({
 Alpine.data('carousel', () => ({
     atStart: true,
     atEnd: false,
+    count: 0,   // number of cards (for the dash indicators)
+    idx: 0,     // index of the card at the left edge
     init() {
         // Measure after the first paint (not during Alpine start-up) so it does not force an early layout.
         requestAnimationFrame(() => requestAnimationFrame(() => this.sync()));
@@ -331,6 +333,20 @@ Alpine.data('carousel', () => ({
         if (!t) return;
         this.atStart = t.scrollLeft <= 4;
         this.atEnd = t.scrollLeft + t.clientWidth >= t.scrollWidth - 4;
+        const slides = [...t.querySelectorAll('[data-slide]')].filter((c) => c.offsetParent !== null);
+        this.count = slides.length;
+        if (slides.length) {
+            // the card whose left edge is closest to the left edge of the track; the last dash when scrolled to the end
+            let best = 0;
+            slides.forEach((c, i) => { if (Math.abs(c.offsetLeft - t.offsetLeft - t.scrollLeft) < Math.abs(slides[best].offsetLeft - t.offsetLeft - t.scrollLeft)) best = i; });
+            this.idx = this.atEnd && !this.atStart ? slides.length - 1 : best;
+        }
+    },
+    go(i) {
+        const t = this.$refs.track;
+        const slides = [...t.querySelectorAll('[data-slide]')].filter((c) => c.offsetParent !== null);
+        if (!slides[i]) return;
+        t.scrollTo({ left: slides[i].offsetLeft - t.offsetLeft, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     },
     reset() {
         if (this.$refs.track) this.$refs.track.scrollLeft = 0;
