@@ -104,7 +104,7 @@ class DefaultSections
             self::s('image_strip', ['items' => array_map(fn ($t) => ['title' => $t[0], 'text' => $t[1], 'image' => $t[2], 'image_alt' => $t[3]], $trav)]),
             self::s('steps', ['heading' => $c['how_heading'] ?? 'How It Works', 'items' => array_map(fn ($x) => ['title' => $x['title'] ?? '', 'text' => $x['text'] ?? ''], $steps)]),
             self::partners(),
-            self::s('testimonials', ['variant' => 'spotlight', 'heading' => $c['testimonials_heading'] ?? 'What Travelers Say']),
+            self::s('testimonials', ['variant' => 'dark', 'heading' => $c['testimonials_heading'] ?? 'What Travelers Say']),   // three review cards over a photo ("Spotlight" = one review at a time is still available)
             self::s('gallery', ['eyebrow' => $gallery['eyebrow'] ?? 'Visual journey', 'heading' => $gallery['title'] ?? 'A glimpse of the *real Netherlands*', 'items' => $galleryRows], (bool) ($c['show_gallery'] ?? true)),
             self::s('blog_latest', []),
             self::s('cta_banner', [

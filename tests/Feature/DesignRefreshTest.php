@@ -233,8 +233,49 @@ class DesignRefreshTest extends TestCase
         $this->assertStringNotContainsString('ring-4 ring-white', $this->get('/')->getContent());
     }
 
+    public function test_home_reviews_are_three_cards_over_a_photo(): void
+    {
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('ring-white/20', $html, 'frosted review cards');
+        $this->assertStringNotContainsString('aria-label="Next review"', $html, 'no one-at-a-time picker on the home page');
+        $this->assertSame(3, substr_count($html, 'Rated 5 out of 5'), 'three cards with stars');
+        $this->assertStringContainsString('images/couples', $html, 'photo behind the cards');
+    }
+
+    public function test_migration_turns_the_seeded_spotlight_home_reviews_into_cards_only_on_home(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_25_000002_home_reviews_as_cards.php');
+        $home = Page::bySlug('home');
+        $secs = $home->allSections();
+        foreach ($secs as &$s) {
+            if ($s['type'] === 'testimonials') {
+                $s['data']['variant'] = 'spotlight';
+            }
+        }
+        unset($s);
+        $home->update(['sections' => $secs]);
+        $migration->up();
+        $this->assertSame('dark', $this->section($home, 'testimonials')['data']['variant']);
+
+        // a "light" choice is never changed
+        $secs = $home->fresh()->allSections();
+        foreach ($secs as &$s) {
+            if ($s['type'] === 'testimonials') {
+                $s['data']['variant'] = 'light';
+            }
+        }
+        unset($s);
+        $home->update(['sections' => $secs]);
+        $migration->up();
+        $this->assertSame('light', $this->section($home, 'testimonials')['data']['variant']);
+    }
+
     public function test_testimonials_spotlight_has_a_picker_and_all_reviews_in_the_html(): void
     {
+        $this->login();
+        $home = Page::bySlug('home');
+        $sec = $this->section($home, 'testimonials');
+        $this->put(route('admin.pages.sections.update', [$home, $sec['id']]), ['data' => ['variant' => 'spotlight', 'heading' => 'What Travelers Say', 'bg' => 'images/couples.webp']])->assertSessionHasNoErrors();
         $html = $this->get('/')->getContent();
         $this->assertStringContainsString('aria-label="Next review"', $html);
         $this->assertStringContainsString('aria-label="Previous review"', $html);
