@@ -159,8 +159,10 @@
 .js .hdr-overlay:not(.is-solid) .hdr-link { color: #fff; text-shadow: 0 1px 6px rgb(12 13 17 / .55); }
 /* The logo file is full color on a transparent background. While the header is transparent over the dark photo it is shown as a white silhouette;
    once the header turns into the white bar (scrolled, menu open, or a page without a hero) the full-color logo shows. */
-.js .hdr-overlay:not(.is-solid) .hdr-logo img { filter: brightness(0) invert(1); }
-.hdr-logo img { transition: filter .25s ease; }
+/* base state (transparent header over a photo): white logo; sticky/solid state: full-color logo */
+.hdr-logo .logo-white { display: none; }
+.js .hdr-overlay:not(.is-solid) .hdr-logo .logo-color { display: none; }
+.js .hdr-overlay:not(.is-solid) .hdr-logo .logo-white { display: inline-block; }
 .js .hdr-overlay:not(.is-solid) .hdr-link:hover { background-color: rgb(255 255 255 / .16); }
 
 /* Carousel track: hide the scrollbar (swipe, trackpad and the arrow buttons scroll it). */
