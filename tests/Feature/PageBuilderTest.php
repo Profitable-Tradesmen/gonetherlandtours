@@ -58,7 +58,7 @@ class PageBuilderTest extends TestCase
         $this->put(route('admin.pages.sections.update', [$home, $hero['id']]), ['data' => ['heading' => 'Brand *New* Heading', 'subheading' => 'Fresh sub', 'primary_label' => 'Quote me', 'secondary_label' => '', 'badges' => [['text' => 'Badge A'], ['text' => '']]]])
             ->assertRedirect(route('admin.pages.edit', $home));
 
-        $this->get('/')->assertOk()->assertSee('Brand')->assertSee('Fresh sub')->assertSee('Quote me')->assertSee('Badge A')->assertDontSee('Explore packages');
+        $this->get('/')->assertOk()->assertSee('Brand')->assertSee('Fresh sub')->assertDontSee('Quote me')->assertSee('Badge A')->assertDontSee('Explore packages');
     }
 
     public function test_repeater_rows_are_saved_and_empty_rows_dropped(): void
@@ -206,13 +206,12 @@ class PageBuilderTest extends TestCase
     public function test_site_wide_text_is_editable_and_blank_hides_it(): void
     {
         $this->login();
-        $this->get('/')->assertSee('Get Instant Quote')->assertSee('Start Your Adventure');
+        $this->get('/')->assertDontSee('Get Instant Quote')->assertSee('Start Your Adventure');
 
         Setting::put('topbar_link_label', 'Talk to us today');
         Setting::put('topbar_button_label', '');
         $html = $this->get('/')->getContent();
         $this->assertStringContainsString('Talk to us today', $html);
-        $this->assertStringNotContainsString('Get Instant Quote', $html);
 
         $this->get(route('admin.settings'))->assertOk()->assertSee('Top bar link text')->assertSee('Talk to us today');
     }

@@ -9,7 +9,7 @@
 <section class="bg-brand-900 py-10 text-white sm:py-12" aria-label="{{ $stripHeading ?: 'Why travel with us' }}">
     <div class="container-site">
         @if ($stripHeading)<p class="label-caps mb-5 text-center text-accent">{{ $stripHeading }}</p>@endif
-        <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <x-slider tag="ul" :light="true" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($points as $p)
                 <li class="flex items-start gap-3">
                     <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon :name="$p['icon']" class="h-5 w-5" /></span>
@@ -19,7 +19,7 @@
                     </div>
                 </li>
             @endforeach
-        </ul>
+        </x-slider>
     </div>
 </section>
 @endif

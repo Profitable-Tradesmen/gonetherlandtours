@@ -164,55 +164,52 @@ class DefaultSections
 
     public static function about(): array
     {
+        // Layout follows the reference About page: the home banner (photo + quiz), a slim trust strip, welcome text + photo, about text + photo,
+        // dark "why us" tiles, articles, reviews, three numbered steps and a closing banner.
         return [
-            self::s('hero_seasons', [
-                'image_alt' => 'Dutch countryside with a windmill and tulip fields at sunrise',
-                'eyebrow' => 'About GoNetherlandTours',
-                'heading' => 'About Us',
-                'text' => 'At GoNetherlandTours, we plan Netherlands holidays for American travelers who want the real thing: tulip fields in bloom, windmills along the polders, canal-side towns and world-class museums. Our travel specialists handle the planning, the drivers and the logistics, so you can enjoy every day.',
-                'seasons' => self::rows([['spring', 'Spring', 'Tulip season'], ['summer', 'Summer', 'Long days, coast and canals'], ['autumn', 'Autumn', 'Golden light, quiet cities'], ['winter', 'Winter', 'Christmas markets, cozy canals']], ['icon', 'name', 'note']),
-                'badges' => self::rows([['shield', 'Local Netherlands specialists'], ['map', 'Tailor-made itineraries'], ['car', 'Self drive, chauffeur and coach options'], ['star', '[CONFIRM: traveler reviews badge]']], ['icon', 'text']),
+            self::s('hero_video_quiz', [   // same banner as the home page (heading, badges, quiz) but a photo only, no background video
+                'eyebrow' => 'Explore tours today',
+                'heading' => 'About *GoNetherlandTours*',
+                'subheading' => 'We plan unforgettable Netherlands journeys for American travelers, with tulip fields, windmills and canal towns, expert planning and personal service.',
+                'secondary_label' => 'Explore packages',
+                'secondary_url' => '/packages',
+                'badges' => self::rows([['Local Netherlands specialists'], ['Tailor-made itineraries'], ['Self drive, chauffeur and coach']], ['text']),
+                'poster' => 'images/hero-about.webp',
+                'show_video' => false,
             ]),
-            self::s('feature_cards', ['items' => self::rows([
-                ['map', 'Tailor-Made Trips', 'Every itinerary is built around your dates, pace and interests, not a one-size-fits-all template.'],
-                ['car', 'Your Way to Travel', 'Choose self drive, chauffeur driven or coach touring, whichever suits you best.'],
-                ['shield', 'Built for US Travelers', 'Prices in EUR, plain-English planning and help with the things first-time visitors ask about, like driving rules and entry requirements.'],
-                ['phone', 'Support When You Need It', 'A real travel specialist plans your trip and is there to answer questions before you go. [CONFIRM: support hours / in-trip support]'],
+            self::s('feature_cards', ['style' => 'strip', 'items' => self::rows([
+                ['shield', 'Tailor-Made Trips', 'Every itinerary is built around your dates, pace and interests.'],
+                ['guide', 'Local Specialists', 'Real Netherlands travel specialists plan your trip and answer your questions.'],
+                ['money', 'Clear, Honest Quotes', 'Prices in EUR and a tailored quote with no obligation.'],
             ], ['icon', 'title', 'text'])]),
-            self::s('split_columns', [
-                'left_image_alt' => 'A quiet Dutch canal town at dawn with gabled brick houses reflected in still water',
-                'left_heading' => 'Netherlands Journeys *Designed for Discovery*',
-                'left_text' => 'At GoNetherlandTours, we believe a great trip is more than a list of sights. The Netherlands is compact, beautiful and easy to love: you can wake up in a canal house in Amsterdam, spend the afternoon among the windmills of Kinderdijk and finish the day in a Delft café. We design routes that make the most of that variety without rushing you. We plan self drive, chauffeur driven and coach tours for American travelers, with clear pricing and a specialist who knows the country.',
-                'right_image_alt' => 'A traditional windmill beside rows of tulips at golden hour',
-                'right_heading' => 'Discover the Netherlands Your Way',
-                'right_text' => 'From the tulip fields of the Bollenstreek to the Dutch Golden Age cities, we shape trips around what matters to you. Whether it is your first visit or a return trip to see the places you missed, we will build something that fits.',
-                'right_bullets' => array_map(fn ($t) => ['text' => $t], [
-                    'Tailor-made Netherlands itineraries', 'Self drive, chauffeur driven and coach tours',
-                    'Handpicked hotels, from canal-house boutiques to countryside stays [CONFIRM: accommodation standard]',
-                    'Timed-entry planning for top sights such as Keukenhof and the Rijksmuseum',
-                    'Pre-trip guidance on driving, travel documents and packing',
-                    'Support from a Netherlands travel specialist [CONFIRM: hours]',
-                ]),
+            self::s('text_image', [
+                'image_side' => 'right', 'background' => 'sand', 'image' => 'images/first_time_visitors.webp',
+                'image_alt' => 'Amsterdam canal houses and a canal boat on a bright morning',
+                'heading' => 'Welcome to the Best Netherlands Tours',
+                'text' => "GoNetherlandTours plans Netherlands holidays for American travelers who want the real thing: tulip fields in bloom, windmills along the polders, canal-side towns and world-class museums.\n\nOur travel specialists handle the planning, the drivers and the logistics, so you can enjoy every day. Whether it is your first visit or a return trip to see the places you missed, we build something that fits.",
             ]),
-            self::s('why_band', [
-                'heading' => 'Why Tour With GoNetherlandTours?',
-                'image_alt' => 'Dutch countryside at sunrise with windmills along a river',
-                'items' => self::rows([
-                    ['The Best of the Netherlands', 'From Amsterdam and the Dutch coast to Utrecht, Delft, Haarlem, Rotterdam and the villages of Giethoorn. We balance famous highlights with quieter places.'],
-                    ['Chosen for the Season', 'Tulip season, summer by the sea, autumn color or Christmas markets. We plan around what the Netherlands looks like when you are there. [CONFIRM: tulip season dates]'],
-                    ['Three Ways to Travel', 'Drive yourself with a route and bookings in place, relax with a private chauffeur, or join a coach tour. Same destinations, your choice of pace.'],
-                    ['Hassle-Free Planning', 'We help organize the details, including accommodation, transfers, route planning and timed entries, so you do not have to piece it together yourself.'],
-                    ['Local Knowledge', 'Dutch trips come with practical details: when to book the Anne Frank House, how cycle lanes work for drivers, and where to go when the tulip fields are crowded.'],
-                    ['Clear, Honest Quotes', 'Tell us what you want and we will send a tailored quote with no obligation. Prices are in EUR. [CONFIRM: what is included in a standard quote]'],
-                ], ['title', 'text']),
+            self::s('text_image', [
+                'image_side' => 'left', 'background' => 'white', 'image' => 'images/culture_lovers.webp',
+                'image_alt' => 'A market vendor stacking wheels of Gouda cheese',
+                'heading' => 'About GoNetherlandTours',
+                'quote' => '"We believe the best journeys leave lasting memories."',
+                'text' => "The Netherlands is compact, beautiful and easy to love: you can wake up in a canal house in Amsterdam, spend the afternoon among the windmills of Kinderdijk and finish the day in a Delft cafe. We design routes that make the most of that variety without rushing you.\n\nWe plan self drive, chauffeur driven and coach tours with clear pricing and a specialist who knows the country. Each trip is tailor-made to your travel goals.",
+                'button_label' => 'Get Instant Quote',
             ]),
+            self::whyBand(),   // the same "Why choose us" section as the home page
+            self::s('blog_latest', ['eyebrow' => '', 'heading' => 'Our Articles', 'intro' => 'Guides, insights and stories to inspire your next Netherlands trip.', 'count' => 3, 'button_label' => '']),
             self::s('team', ['items' => array_map(fn ($n) => ['name' => "[CONFIRM: team member $n name]", 'role' => '[CONFIRM: role]', 'bio' => '[CONFIRM: short bio and why they love the Netherlands. Sample text only.]', 'image' => '', 'image_alt' => ''], [1, 2, 3])]),
-            self::s('testimonials', ['variant' => 'light', 'eyebrow' => '', 'heading' => 'What Our Travelers Say']),
+            self::s('testimonials', ['variant' => 'dark', 'eyebrow' => '', 'heading' => 'What Our Travelers Say']),
+            self::s('steps', ['style' => 'tiles', 'heading' => '3 Easy Steps to Book Your Netherlands Tour', 'intro' => 'Follow three easy steps to choose your tour, shape your trip and get ready for an unforgettable adventure.', 'button_label' => 'Start Your Netherlands Dream Trip', 'items' => self::rows([
+                ['Get Your Free Quote', 'Tell us your travel plans and preferences.'],
+                ['Review Your Itinerary', 'Receive a personalized itinerary and pricing, tailored just for you.'],
+                ['Travel With Confidence', 'We handle hotels, transport and experiences, so you simply arrive and enjoy the Netherlands.'],
+            ], ['title', 'text'])]),
             self::s('cta_banner', [
                 'image_alt' => 'Tulip fields and a distant windmill at sunset',
-                'heading' => 'Planning your first Dutch trip?',
-                'text' => 'Answer a few quick questions and we will help you work out the right season, route and style of travel.',
-                'button_label' => 'Get a free quote',
+                'heading' => 'Ready to Start?',
+                'text' => 'Experience the tulip fields, windmills and canal towns of the Netherlands on expertly planned tours.',
+                'button_label' => 'Get Free Quote',
                 'phone_label' => 'Talk to a Netherlands travel specialist:',
             ]),
         ];

@@ -54,6 +54,7 @@
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[100] focus:rounded focus:bg-accent focus:px-4 focus:py-2">Skip to main content</a>
 
     @include('partials.topbar')
+
     @include('partials.header', ['overlayHeader' => $overlayHeader ?? false])
 
     <main id="main">@yield('content')</main>

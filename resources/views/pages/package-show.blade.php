@@ -41,7 +41,7 @@
     </div>
 </section>
 
-<div class="container-site grid gap-10 py-10 lg:grid-cols-[1.4fr_1fr] lg:py-14">
+<div class="container-site grid gap-10 py-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16 lg:py-14">
     <div class="min-w-0 space-y-12">
         @if ($package->description)<div class="prose-site">{!! clean_html($package->description) !!}</div>@endif
 

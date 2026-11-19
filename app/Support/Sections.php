@@ -83,6 +83,7 @@ class Sections
                 self::link('secondary_url', 'Second button link', '/packages'),
                 self::rep('badges', 'Trust badges (up to 3)', 'badge', [$t('text', 'Badge text')], 3),
                 self::img('poster', 'Hero photo (shown first and on phones; the video plays over it on desktop)', 'images/hero-home.webp'),
+                ['name' => 'show_video', 'label' => 'Play the background video on desktop (untick for a photo only)', 'type' => 'checkbox', 'default' => true],
             ]],
             'partners' => ['label' => 'Partner logos', 'description' => 'A dark brown band with a heading, a short text and a row of partner logos. White or transparent logos look best on the dark background.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Travel partners'),
@@ -109,6 +110,20 @@ class Sections
             ]],
             'value_strip' => ['label' => 'Value strip (4 icon points)', 'description' => 'A clean row of up to four short selling points, each with an icon. Sits right under the hero.', 'fields' => [
                 self::rep('items', 'Points', 'point', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Short text')], 4),
+            ]],
+            'quiz_band' => ['label' => 'Quote quiz', 'description' => 'The main step-by-step quote quiz (the same one as in the home page banner) in its own section.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Free quote'),
+                $t('heading', 'Heading', 'Plan your *Netherlands* trip'),
+                $ta('text', 'Text under the heading', 'Answer a few quick questions and a travel specialist will send you a tailored quote.'),
+            ]],
+            'text_image' => ['label' => 'Text and photo', 'description' => 'A heading, an optional highlighted quote, paragraphs and a button beside one large photo. Choose which side the photo is on.', 'fields' => [
+                ['name' => 'image_side', 'label' => 'Photo side', 'type' => 'select', 'options' => ['right' => 'Photo on the right', 'left' => 'Photo on the left'], 'default' => 'right'],
+                ['name' => 'background', 'label' => 'Background', 'type' => 'select', 'options' => ['sand' => 'Light sand', 'white' => 'White'], 'default' => 'sand'],
+                self::img('image', 'Photo', 'images/Intro_image_split.webp'),
+                $t('heading', 'Heading'),
+                $t('quote', 'Highlighted line (optional)'),
+                $ta('text', 'Text', '', 'Leave a blank line between paragraphs.'),
+                $t('button_label', 'Button (opens the quote pop-up)', ''),
             ]],
             'split_list' => ['label' => 'Intro: photo and ticked list', 'description' => 'A large photo (with an optional badge and a smaller second photo) on one side, a heading and a ticked list of reasons on the other.', 'fields' => [
                 self::img('image1', 'Photo 1', 'images/Intro_image_split.webp'),
@@ -157,9 +172,11 @@ class Sections
                 self::rep('items', 'Panels', 'panel', [$t('title', 'Title'), $ta('text', 'Text'), self::img('image', 'Photo')], 12),
             ]],
             'steps' => ['label' => 'Numbered steps', 'description' => 'Three or more numbered steps, such as "How it works".', 'fields' => [
-                ['name' => 'style', 'label' => 'Style', 'type' => 'select', 'options' => ['timeline' => 'Connected timeline', 'cards' => 'Simple columns'], 'default' => 'timeline'],
+                ['name' => 'style', 'label' => 'Style', 'type' => 'select', 'options' => ['timeline' => 'Connected timeline', 'cards' => 'Simple columns', 'tiles' => 'Dark numbered tiles'], 'default' => 'timeline'],
                 $t('eyebrow', 'Small label', 'Simple'),
                 $t('heading', 'Heading', 'How It Works'),
+                $ta('intro', 'Text under the heading', ''),
+                $t('button_label', 'Button under the steps (opens the quote pop-up)', ''),
                 self::rep('items', 'Steps', 'step', [$t('title', 'Title'), $ta('text', 'Text')], 6),
             ]],
             'testimonials' => ['label' => 'Testimonials', 'description' => 'Reviews from Admin > Testimonials.', 'fields' => [
@@ -198,6 +215,7 @@ class Sections
             'blog_latest' => ['label' => 'Latest blog posts', 'description' => 'The newest posts from Admin > Blog. Hidden when there are none.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Travel journal'),
                 $t('heading', 'Heading', 'Guides and *inspiration*'),
+                $ta('intro', 'Text under the heading', ''),
                 ['name' => 'count', 'label' => 'How many posts', 'type' => 'number', 'default' => 2],
                 $t('button_label', 'Button', 'Read all articles'),
             ]],
@@ -220,6 +238,7 @@ class Sections
                 self::rep('badges', 'Badges', 'badge', [self::icon('icon', 'shield'), $t('text', 'Text')], 6),
             ]],
             'feature_cards' => ['label' => 'Feature cards', 'description' => 'A row of white cards with an icon, title and text on a dark band.', 'fields' => [
+                ['name' => 'style', 'label' => 'Style', 'type' => 'select', 'options' => ['cards' => 'White cards on a dark band', 'strip' => 'Slim strip with dividers'], 'default' => 'cards'],
                 self::rep('items', 'Cards', 'card', [self::icon('icon', 'map'), $t('title', 'Title'), $ta('text', 'Text')], 8),
             ]],
             'split_columns' => ['label' => 'Two columns: photo and text', 'description' => 'Two side-by-side columns, each with a photo, heading and text. The right one can have a checklist.', 'fields' => [

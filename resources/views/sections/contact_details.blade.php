@@ -1,4 +1,4 @@
-<section class="container-site grid gap-10 py-12 lg:grid-cols-[1fr_1.2fr]">
+<section class="container-site grid gap-10 py-12 lg:grid-cols-[1fr_1.2fr] lg:gap-24 lg:py-20 xl:gap-28">
     <div>
         <div class="prose-site">{!! clean_html($d['intro']) !!}</div>
         <ul class="mt-6 space-y-3 text-sm">

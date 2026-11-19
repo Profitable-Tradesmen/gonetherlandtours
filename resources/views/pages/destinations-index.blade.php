@@ -10,7 +10,7 @@
 <section class="py-12 sm:py-16" aria-label="All destinations">
     <div class="container-site">
         @if ($destinations->isNotEmpty())
-            <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <x-slider tag="ul" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($destinations as $i => $d)
                     <li>
                         <a href="{{ route('destinations.show', $d) }}" class="group relative isolate flex min-h-[22rem] flex-col justify-end overflow-hidden rounded-2xl p-6 text-white shadow-card">
@@ -23,7 +23,7 @@
                         </a>
                     </li>
                 @endforeach
-            </ul>
+            </x-slider>
         @else
             <p class="text-center">Destinations are coming soon.</p>
         @endif

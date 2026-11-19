@@ -7,7 +7,7 @@
     $hasTours = $menu->contains('kind', 'tours');
     $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header is fully transparent over it (white links, white logo) until you scroll, then it becomes a white bar
 @endphp
-<header class="hdr sticky top-0 z-50 border-b-4 border-accent bg-white/95 backdrop-blur {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
+<header class="hdr sticky top-0 z-50 bg-white/95 shadow-[0_6px_20px_-6px_rgb(12_13_17/0.28)] backdrop-blur {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
         x-data="{ menu: false, dd: null, solid: false }" x-init="solid = window.scrollY > 24"
         @scroll.window.passive="solid = window.scrollY > 24"
         :class="{ 'is-solid': solid || menu || dd }"
@@ -45,7 +45,7 @@
     <div id="mega-tours" x-show="dd === 'tours'" x-cloak
          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
          x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-         class="absolute inset-x-0 top-full hidden border-b-4 border-accent bg-sand shadow-card lg:block" @click.outside="dd === 'tours' && (dd = null)">
+         class="absolute inset-x-0 top-full hidden bg-sand shadow-[0_14px_24px_-10px_rgb(12_13_17/0.3)] lg:block" @click.outside="dd === 'tours' && (dd = null)">
         <div class="container-site grid gap-x-8 gap-y-6 py-8" style="grid-template-columns: repeat({{ max($tourTypes->count(), 1) }}, minmax(0, 1fr))">
             @foreach ($tourTypes as $t)
                 <div class="flex min-w-0 flex-col">
@@ -101,7 +101,7 @@
         <div id="mega-{{ $item->id }}" x-show="dd === 'm{{ $item->id }}'" x-cloak
              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-             class="absolute inset-x-0 top-full hidden border-b-4 border-accent bg-sand shadow-card lg:block" @click.outside="dd === 'm{{ $item->id }}' && (dd = null)">
+             class="absolute inset-x-0 top-full hidden bg-sand shadow-[0_14px_24px_-10px_rgb(12_13_17/0.3)] lg:block" @click.outside="dd === 'm{{ $item->id }}' && (dd = null)">
             <div class="container-site grid items-stretch gap-6 py-7 xl:grid-cols-[19rem_minmax(0,1fr)] xl:py-8">
                 <div class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-brand-900 p-7 text-white xl:min-h-[20rem]">
                     <x-picture :src="$item->image ?: 'images/hero-about.webp'" alt="" :width="960" :height="640" sizes="320px" class="absolute inset-0 -z-20 h-full w-full object-cover" />

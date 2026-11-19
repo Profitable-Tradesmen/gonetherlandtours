@@ -18,7 +18,7 @@ class PagesSeeder extends Seeder
                 'seo_title' => 'Netherlands Tours: Self Drive, Chauffeur & Small-Group Coach | GoNetherlandTours',
                 'meta_description' => 'Private self drive and chauffeur tours or small-group coach tours of the Netherlands for US travelers: windmills, tulip fields, cheese markets and hidden gems, with expertly crafted itineraries. Get a free quote.',
                 'content' => [
-                    'hero_sub' => 'Windmills, tulip fields, cheese markets and hidden gems, on private self drive and chauffeur tours or small-group coach tours, with expertly crafted itineraries. Answer a few quick questions and get a free quote.',
+                    'hero_sub' => 'Windmills, tulip fields and hidden gems, on private self drive and chauffeur tours or small-group coach tours. Answer a few quick questions for a free quote.',
                     'badges' => ['Authentic Dutch culture', 'Small-group & private tours', 'Expertly crafted itineraries'],
                     'why_heading' => 'Why Travelers Choose Us',
                     'why' => [
