@@ -23,10 +23,10 @@
             @if ($hasSide)<x-picture :src="$d['image']" :alt="$d['image_alt']" :width="900" :height="1100" class="hidden h-full min-h-[22rem] w-full rounded-2xl object-cover shadow-card lg:block" />@endif
             <ul class="grid gap-5 sm:grid-cols-2 {{ $hasSide ? 'sm:grid-rows-2' : 'lg:grid-cols-4' }}">
                 @foreach ($d['items'] as $i => $r)
-                    <li class="group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl p-6 text-center ring-1 ring-white/15 transition duration-300 hover:-translate-y-0.5 sm:p-8 {{ $bg !== '' ? 'bg-brand-900/80 backdrop-blur-sm ring-white/25 hover:bg-brand-900/90' : 'bg-white/10 hover:bg-white/15' }}" data-reveal="up" style="--d:{{ $i * 100 }}ms">
+                    <li class="group relative flex flex-col items-center justify-start overflow-hidden rounded-2xl p-6 text-center ring-1 ring-white/15 transition duration-300 hover:-translate-y-0.5 sm:p-8 {{ $bg !== '' ? 'bg-brand-900/80 backdrop-blur-sm ring-white/25 hover:bg-brand-900/90' : 'bg-white/10 hover:bg-white/15' }}" data-reveal="up" style="--d:{{ $i * 100 }}ms">
                         @if ($d['show_numbers'] ?? true)<span class="absolute right-4 top-3 font-display text-4xl font-medium text-white/40" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>@endif
                         <span class="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-ink shadow-card transition-transform duration-300 group-hover:scale-105"><x-icon :name="($r['icon'] ?? '') ?: 'check'" class="h-7 w-7" /></span>
-                        <h3 class="mt-5 font-display text-xl font-medium sm:text-2xl">{{ $r['title'] }}</h3>
+                        <h3 class="mt-5 flex items-center justify-center font-display text-xl font-medium leading-snug sm:min-h-[4.125rem] sm:text-2xl">{{ $r['title'] }}</h3>
                         <p class="mt-2 text-sm leading-relaxed text-white/90 sm:text-base">{{ $r['text'] }}</p>
                     </li>
                 @endforeach
