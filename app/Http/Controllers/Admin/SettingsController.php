@@ -79,6 +79,7 @@ class SettingsController extends Controller
             'thankyou_heading' => ['Thank-you page: heading', 'text', 'The visitor\x27s first name is added after it.'],
             'thankyou_text' => ['Thank-you page: text', 'textarea', ''],
             'thankyou_button' => ['Thank-you page: button', 'text', ''],
+            'footer_destinations_heading' => ['Footer: destinations heading', 'text', ''],
             'footer_tours_heading' => ['Footer: tours column heading', 'text', ''],
             'footer_company_heading' => ['Footer: links column heading', 'text', 'Footer links are edited in Admin > Navigation.'],
             'footer_copyright' => ['Footer: text after the copyright year and company', 'text', ''],

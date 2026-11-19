@@ -59,7 +59,7 @@ return [
         'nav_promo_title' => 'Plan with *peace of mind*', 'nav_promo_text' => 'Learn about our team, read what travelers say and find the answers that make your Netherlands trip smooth and stress-free.', 'nav_promo_eyebrow' => 'Get to know us', 'nav_card_link_label' => 'Learn more', 'mega_featured_label' => 'Featured trips', 'nav_promo_button' => 'Get a Free Quote',
         'mobile_home_label' => 'Home', 'mobile_tours_heading' => 'Tours', 'mobile_destinations_heading' => 'Destinations', 'mobile_more_heading' => 'More', 'mobile_quote_label' => 'Free Quote',
         'mobile_bar_call_label' => 'Call', 'mobile_bar_quote_label' => 'Get a Free Quote',
-        'footer_tours_heading' => 'Tours', 'footer_company_heading' => 'Company', 'footer_copyright' => 'All rights reserved.',
+        'footer_tours_heading' => 'Tours', 'footer_destinations_heading' => 'Destinations', 'footer_company_heading' => 'Company', 'footer_copyright' => 'All rights reserved.',
         'modal_title' => 'Start your adventure', 'modal_intro' => 'Fill out this form, save up to {discount} on your trip.',
         'quiz_title' => 'Start Your Adventure',
         'usp_heading' => 'Why travel with us',

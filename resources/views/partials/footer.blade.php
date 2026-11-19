@@ -3,10 +3,11 @@
     $footerLinks = \App\Models\MenuItem::tree('footer');
 @endphp
 <footer class="bg-ink text-white/85">
-    <div class="container-site grid gap-10 py-14 md:grid-cols-4">
-        <div class="md:col-span-2">
+    {{-- Four equal columns on desktop (brand and contact, tour types, destinations, company); two on tablets, one on phones. --}}
+    <div class="container-site grid gap-x-8 gap-y-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
             <a href="{{ route('home') }}" class="inline-block">@include('partials.logo', ['light' => true])</a>
-            <p class="mt-4 max-w-md text-sm leading-relaxed">{{ setting('footer_text') }}</p>
+            <p class="mt-4 text-sm leading-relaxed">{{ setting('footer_text') }}</p>
             <ul class="mt-5 space-y-2 text-sm">
                 @if ($phone)<li><a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="inline-block py-1.5 hover:text-accent">{{ $phone }}</a></li>@endif
                 @if ($email)<li><a href="mailto:{{ $email }}" class="inline-block py-1.5 hover:text-accent">{{ $email }}</a></li>@endif
@@ -22,9 +23,16 @@
             <h2 class="label-caps text-accent !font-sans">{{ text('footer_tours_heading') }}</h2>
             <ul class="mt-3 space-y-0.5 text-sm">
                 @foreach ($tourTypes as $t)<li><a href="{{ route('tour-types.show', $t) }}" class="inline-block py-1.5 hover:text-accent">{{ $t->name }}</a></li>@endforeach
+            </ul>
+        </nav>
+        @if ($destinations->isNotEmpty())
+        <nav aria-label="{{ text('footer_destinations_heading') ?: 'Destinations' }}">
+            <h2 class="label-caps text-accent !font-sans">{{ text('footer_destinations_heading') ?: 'Destinations' }}</h2>
+            <ul class="mt-3 space-y-0.5 text-sm">
                 @foreach ($destinations as $d)<li><a href="{{ route('destinations.show', $d) }}" class="inline-block py-1.5 hover:text-accent">{{ $d->name }}</a></li>@endforeach
             </ul>
         </nav>
+        @endif
         <nav aria-label="{{ text('footer_company_heading') ?: 'Company' }}">
             <h2 class="label-caps text-accent !font-sans">{{ text('footer_company_heading') }}</h2>
             <ul class="mt-3 space-y-0.5 text-sm">
