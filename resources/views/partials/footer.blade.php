@@ -3,8 +3,8 @@
     $footerLinks = \App\Models\MenuItem::tree('footer');
 @endphp
 <footer class="bg-ink text-white/85">
-    {{-- Four equal columns on desktop (brand and contact, tour types, destinations, company); two on tablets, one on phones. --}}
-    <div class="container-site grid gap-x-8 gap-y-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
+    {{-- Desktop: a brand column on the left and a wider area on the right with three link columns (tours, destinations, company) separated by thin vertical lines, each heading underlined. Phones and tablets stack them. --}}
+    <div class="container-site grid gap-x-10 gap-y-10 py-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.6fr)]">
         <div>
             <a href="{{ route('home') }}" class="inline-block">@include('partials.logo', ['light' => true])</a>
             <p class="mt-4 text-sm leading-relaxed">{{ setting('footer_text') }}</p>
@@ -19,28 +19,30 @@
                 @endforeach
             </ul>
         </div>
-        <nav aria-label="{{ text('footer_tours_heading') ?: 'Tours' }}">
-            <h2 class="label-caps text-accent !font-sans">{{ text('footer_tours_heading') }}</h2>
+        <div class="grid gap-y-8 sm:grid-cols-3">
+        <nav aria-label="{{ text('footer_tours_heading') ?: 'Tours' }}" class="sm:pr-8">
+            <h2 class="label-caps border-b border-white/15 pb-3 text-accent !font-sans">{{ text('footer_tours_heading') }}</h2>
             <ul class="mt-3 space-y-0.5 text-sm">
                 @foreach ($tourTypes as $t)<li><a href="{{ route('tour-types.show', $t) }}" class="inline-block py-1.5 hover:text-accent">{{ $t->name }}</a></li>@endforeach
             </ul>
         </nav>
         @if ($destinations->isNotEmpty())
-        <nav aria-label="{{ text('footer_destinations_heading') ?: 'Destinations' }}">
-            <h2 class="label-caps text-accent !font-sans">{{ text('footer_destinations_heading') ?: 'Destinations' }}</h2>
+        <nav aria-label="{{ text('footer_destinations_heading') ?: 'Destinations' }}" class="sm:border-l sm:border-white/15 sm:px-8">
+            <h2 class="label-caps border-b border-white/15 pb-3 text-accent !font-sans">{{ text('footer_destinations_heading') ?: 'Destinations' }}</h2>
             <ul class="mt-3 space-y-0.5 text-sm">
                 @foreach ($destinations as $d)<li><a href="{{ route('destinations.show', $d) }}" class="inline-block py-1.5 hover:text-accent">{{ $d->name }}</a></li>@endforeach
             </ul>
         </nav>
         @endif
-        <nav aria-label="{{ text('footer_company_heading') ?: 'Company' }}">
-            <h2 class="label-caps text-accent !font-sans">{{ text('footer_company_heading') }}</h2>
+        <nav aria-label="{{ text('footer_company_heading') ?: 'Company' }}" class="sm:border-l sm:border-white/15 sm:pl-8">
+            <h2 class="label-caps border-b border-white/15 pb-3 text-accent !font-sans">{{ text('footer_company_heading') }}</h2>
             <ul class="mt-3 space-y-0.5 text-sm">
                 @foreach ($footerLinks as $link)
                     <li><a href="{{ $link->href() }}" class="inline-block py-1.5 hover:text-accent" @if ($link->new_tab) target="_blank" rel="noopener" @endif>{{ $link->label }}</a></li>
                 @endforeach
             </ul>
         </nav>
+        </div>
     </div>
     <div class="border-t border-white/10 py-5 text-center text-xs text-white/60">
         &copy; {{ date('Y') }} {{ company_name() }}. {{ text('footer_copyright') }}
