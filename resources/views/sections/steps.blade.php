@@ -6,7 +6,7 @@
     $perRow = $count <= 3 ? max($count, 1) : 4;
 @endphp
 @if ($count)
-<section class="py-16 sm:py-24" aria-labelledby="st-{{ $sid }}">
+<section class="{{ $tiles ? 'bg-sand ' : '' }}py-16 sm:py-24" aria-labelledby="st-{{ $sid }}">
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :subtitle="($d['intro'] ?? '') ?: null" :id="'st-'.$sid" />
         @if ($tiles)

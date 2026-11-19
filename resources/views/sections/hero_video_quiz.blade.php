@@ -13,17 +13,17 @@
     <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/80 via-ink/40 to-ink/30"></div>
     <div class="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-ink/60 to-transparent"></div>
     <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-ink/60 via-ink/20 to-transparent lg:block"></div>
-    <div class="container-site grid items-center gap-8 py-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:py-20">
+    <div class="container-site grid items-center gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-x-12 lg:gap-y-8 lg:py-20">
         <div>
             @if ($d['eyebrow'])<p class="hero-in label-caps text-center text-accent lg:text-left">{{ $d['eyebrow'] }}</p>@endif
-            <h1 style="--d:120ms" class="hero-in mt-4 text-center text-4xl font-medium sm:text-5xl lg:text-left lg:text-6xl">{!! emphasize($d['heading'], 'text-accent') !!}</h1>
+            <h1 style="--d:120ms" class="hero-in mt-4 text-center text-4xl font-medium sm:text-5xl lg:text-left lg:text-5xl xl:text-6xl">{!! emphasize($d['heading'], 'text-accent') !!}</h1>
             @if ($d['subheading'])<p style="--d:240ms" class="hero-in mt-4 hidden max-w-xl text-center text-sm text-white/90 sm:mx-auto sm:mt-5 sm:block sm:text-lg lg:mx-0 lg:text-left">{{ $d['subheading'] }}</p>@endif
             <div style="--d:360ms" class="hero-in mt-7 hidden flex-wrap gap-3 sm:flex sm:justify-center lg:justify-start">
                 @if ($d['secondary_label'])<x-cta-button variant="outline" :label="$d['secondary_label']" :url="$d['secondary_url']" class="text-white" />@endif
             </div>
-            <ul style="--d:480ms" class="hero-in mt-8 hidden flex-nowrap gap-x-4 whitespace-nowrap text-[0.8rem] font-semibold sm:flex sm:justify-center lg:justify-start xl:gap-x-6 xl:text-sm" aria-label="Why book with us">
+            <ul style="--d:480ms" class="hero-in mt-6 hidden flex-wrap gap-x-3 gap-y-1.5 text-[0.7rem] font-semibold sm:flex sm:justify-center lg:justify-start xl:flex-nowrap xl:whitespace-nowrap xl:text-[0.64rem]"  aria-label="Why book with us">
                 @foreach ($d['badges'] as $i => $badge)
-                    <li class="flex items-center gap-1.5"><x-icon :name="['shield', 'map', 'star'][$i % 3]" class="h-4 w-4 shrink-0 text-accent" /> {{ $badge['text'] }}</li>
+                    <li class="flex items-center gap-1.5"><x-icon :name="['shield', 'map', 'star'][$i % 3]" class="h-3.5 w-3.5 shrink-0 text-accent" /> {{ $badge['text'] }}</li>
                 @endforeach
             </ul>
         </div>

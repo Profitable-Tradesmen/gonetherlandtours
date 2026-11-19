@@ -139,7 +139,7 @@ class DesignRefreshTest extends TestCase
     {
         $html = $this->get('/')->getContent();
         $this->assertMatchesRegularExpression('/class="hidden bg-brand-900 text-white text-xs sm:block/', $html);
-        $this->assertStringContainsString('lg:text-6xl', $html);
+        $this->assertStringContainsString('xl:text-6xl', $html);
         $this->assertStringNotContainsString('lg:text-7xl', $html);
     }
 

@@ -8,5 +8,6 @@
             @if ($d['button_label'])<x-button @click="$store.modal.show()">{{ $d['button_label'] }}</x-button>@endif
             @if ($d['show_phone'] && setting('phone'))<x-button variant="outline" :href="'tel:'.preg_replace('/[^+\d]/', '', setting('phone'))">{{ trim($d['phone_label'].' '.setting('phone')) }}</x-button>@endif
         </div>
+        @if (text('quote_promise'))<p class="mt-5 text-sm text-white/80">{{ text('quote_promise') }}</p>@endif
     </div>
 </section>

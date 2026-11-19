@@ -13,6 +13,7 @@
     @include('partials.section-bg', ['bg' => $bg, 'poster' => $d['poster'] ?? '', 'posterAlt' => $d['poster_alt'] ?? '', 'tint' => $d['overlay'] ?? 'medium'])
     <div class="container-site" x-data="{ i: 0, n: {{ $items->count() }}, go(k) { this.i = (k + this.n) % this.n } }" role="region" aria-roledescription="carousel" aria-label="{{ $d['heading'] ?: 'Reviews' }}">
         @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" light :id="'te-'.$sid" />@endif
+        @if (text('reviews_badge'))<p class="-mt-6 mb-8 text-center text-sm font-semibold opacity-90"><span class="text-accent" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> {{ text('reviews_badge') }}</p>@endif
         <div class="mx-auto max-w-4xl">
             <div class="relative overflow-hidden rounded-3xl p-6 shadow-card ring-1 ring-white/25 sm:p-10 {{ $bg !== '' ? 'bg-brand-900/80 backdrop-blur-sm' : 'bg-white/10' }}" data-reveal="up">
                 <span class="pointer-events-none absolute -top-4 right-6 select-none font-display text-[9rem] leading-none text-accent/25" aria-hidden="true">&rdquo;</span>
@@ -58,6 +59,7 @@
     @if ($dark)@include('partials.section-bg', ['bg' => $bg, 'poster' => $d['poster'] ?? '', 'posterAlt' => $d['poster_alt'] ?? '', 'tint' => $d['overlay'] ?? 'medium'])@endif
     <div class="container-site">
         @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :light="$dark" :id="'te-'.$sid" />@endif
+        @if (text('reviews_badge'))<p class="-mt-6 mb-8 text-center text-sm font-semibold opacity-90"><span class="text-accent" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> {{ text('reviews_badge') }}</p>@endif
         <x-slider :light="$dark" class="grid gap-6 md:grid-cols-3">
             @foreach ($items as $t)
                 <figure class="relative flex flex-col rounded-2xl {{ $dark ? ($bg !== '' ? 'bg-brand-900/80 backdrop-blur-sm' : 'bg-white/10').' ring-1 ring-white/20 transition-transform duration-300 hover:-translate-y-1' : 'bg-white shadow-card' }} p-6 pt-8" data-reveal="up" style="--d:{{ $loop->index * 120 }}ms">

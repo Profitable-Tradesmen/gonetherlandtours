@@ -53,3 +53,10 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 
 ## Quiz
 - [ ] Review wording, options and budget tiles (USD per person) with the business
+
+## Trust and reassurance (Admin > Settings > Trust and reassurance)
+These are blank by default and hidden until filled in. Only enter facts you can prove or keep:
+- [ ] Quiz card rating line (a real review rating and count)
+- [ ] Quote reply promise (for example a reply time you can honor)
+- [ ] Reviews rating line shown under the reviews heading
+- [ ] The three quiz-card reassurances default to "Your data stays private", "Free, no obligation" and "Support all the way": check you are happy to promise them

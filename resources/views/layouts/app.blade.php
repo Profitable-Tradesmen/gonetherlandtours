@@ -48,8 +48,11 @@
         @if ($fontUrl)<link rel="preload" as="font" type="font/woff2" href="{{ $fontUrl }}" crossorigin>@endif
     @endforeach
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Custom code: Admin > Header & Footer (head) --}}
+    {{ snippets('head') }}
 </head>
 <body x-data class="min-h-screen bg-white pb-16 lg:pb-0">
+    {{ snippets('body_start') }}
     @if ($gtm)<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ e($gtm) }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>@endif
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[100] focus:rounded focus:bg-accent focus:px-4 focus:py-2">Skip to main content</a>
 
@@ -74,5 +77,6 @@
         <button type="button" class="btn btn-primary flex-[2]" @click="$store.modal.show()">{{ text('mobile_bar_quote_label') }}</button>
     </div>
     @stack('scripts')
+    {{ snippets('body_end') }}
 </body>
 </html>

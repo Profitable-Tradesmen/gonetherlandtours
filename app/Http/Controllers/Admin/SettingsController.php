@@ -24,6 +24,15 @@ class SettingsController extends Controller
             'social_instagram' => ['Instagram URL', 'text', ''],
             'social_youtube' => ['YouTube URL', 'text', ''],
         ],
+        'Trust and reassurance' => [
+            'quiz_rating_label' => ['Quiz card: rating line', 'text', 'For example "4.9/5 from 120 verified Google reviews". Only enter a real figure. Blank hides it.'],
+            'quiz_trust_1' => ['Quiz card: reassurance 1', 'text', 'Blank hides it.'],
+            'quiz_trust_2' => ['Quiz card: reassurance 2', 'text', 'Blank hides it.'],
+            'quiz_trust_3' => ['Quiz card: reassurance 3', 'text', 'Blank hides it.'],
+            'quiz_trust_line' => ['Quiz card: small line under the reassurances', 'text', 'Blank hides it.'],
+            'quote_promise' => ['Quote reply promise', 'text', 'For example "We reply to every quote request within 1 business day". Only promise what you can keep. Shown under the quiz and on the closing banner. Blank hides it.'],
+            'reviews_badge' => ['Reviews rating line', 'text', 'Shown under the reviews heading, for example "Excellent, 4.9/5 on Google". Only enter a real rating. Blank hides it.'],
+        ],
         'Top bar and header' => [
             'topbar_link_label' => ['Top bar link text', 'text', 'Blank hides it.'],
             'topbar_link_url' => ['Top bar link address', 'text', 'A page path like /contact, or blank to open the quote pop-up.'],

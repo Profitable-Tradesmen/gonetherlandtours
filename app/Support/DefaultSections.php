@@ -215,9 +215,19 @@ class DefaultSections
         ];
     }
 
+    /** "What happens next" steps shown under the contact form (also appended to an existing default Contact page by a migration). */
+    public static function contactSteps(): array
+    {
+        return self::s('steps', ['style' => 'tiles', 'heading' => 'What happens next', 'intro' => 'Three simple steps from your message to your trip.', 'items' => self::rows([
+            ['Tell us your plans', 'Send your dates, group size and the kind of trip you have in mind.'],
+            ['Get your tailored quote', 'A Netherlands travel specialist builds your itinerary and sends a quote with no obligation.'],
+            ['Travel with confidence', 'We help with bookings and planning, and you get guidance before you go.'],
+        ], ['title', 'text'])]);
+    }
+
     public static function contact(string $body): array
     {
-        return [self::s('page_header', ['heading' => '']), self::s('contact_details', ['intro' => $body])];
+        return [self::s('page_header', ['heading' => '']), self::s('contact_details', ['intro' => $body]), self::contactSteps()];
     }
 
     public static function legal(string $body): array

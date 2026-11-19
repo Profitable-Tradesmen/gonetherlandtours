@@ -42,6 +42,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post("$uri/{id}/move/{dir}", [$controller, 'move'])->whereIn('dir', ['up', 'down'])->name("$uri.move");
         }
 
+        // Header & Footer: custom code snippets (administrators only)
+        Route::get('snippets', [Admin\SnippetController::class, 'index'])->name('snippets.index');
+        Route::get('snippets/create', [Admin\SnippetController::class, 'create'])->name('snippets.create');
+        Route::post('snippets', [Admin\SnippetController::class, 'store'])->name('snippets.store');
+        Route::get('snippets/{id}/edit', [Admin\SnippetController::class, 'edit'])->name('snippets.edit');
+        Route::put('snippets/{id}', [Admin\SnippetController::class, 'update'])->name('snippets.update');
+        Route::delete('snippets/{id}', [Admin\SnippetController::class, 'destroy'])->name('snippets.destroy');
+        Route::post('snippets/{id}/toggle', [Admin\SnippetController::class, 'toggle'])->name('snippets.toggle');
+
         // Quiz editor
         Route::get('quiz', [Admin\QuizController::class, 'index'])->name('quiz.index');
         Route::get('quiz/create', [Admin\QuizController::class, 'create'])->name('quiz.create');

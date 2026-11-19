@@ -174,3 +174,11 @@ if (! function_exists('static_srcset')) {
         return asset($small).' 800w, '.asset($path).' '.(getimagesize(public_path($path))[0] ?? 1600).'w';
     }
 }
+
+if (! function_exists('snippets')) {
+    /** Custom code from Admin > Header & Footer for one place ('head', 'body_start', 'body_end'), output exactly as entered. */
+    function snippets(string $position): \Illuminate\Support\HtmlString
+    {
+        return new \Illuminate\Support\HtmlString(\App\Models\CodeSnippet::render($position));
+    }
+}
