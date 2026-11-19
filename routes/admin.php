@@ -18,6 +18,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('enquiries/{enquiry}', [Admin\EnquiryController::class, 'update'])->name('enquiries.update');
         Route::delete('enquiries/{enquiry}', [Admin\EnquiryController::class, 'destroy'])->name('enquiries.destroy');
         Route::post('enquiries/{enquiry}/ghl-retry', [Admin\EnquiryController::class, 'retryGhl'])->name('enquiries.ghl-retry');
+        Route::post('enquiries/{enquiry}/sheets-retry', [Admin\EnquiryController::class, 'retrySheets'])->name('enquiries.sheets-retry');
 
         // Packages
         Route::get('packages', [Admin\PackageController::class, 'index'])->name('packages.index');
@@ -71,6 +72,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('ghl', [Admin\GhlController::class, 'update'])->name('ghl.update');
         Route::post('ghl/test', [Admin\GhlController::class, 'test'])->middleware('throttle:10,1')->name('ghl.test');
         Route::post('ghl/setup', [Admin\GhlController::class, 'setup'])->middleware('throttle:10,1')->name('ghl.setup');
+        Route::get('sheets', [Admin\SheetsController::class, 'edit'])->name('sheets');
+        Route::put('sheets', [Admin\SheetsController::class, 'update'])->name('sheets.update');
+        Route::post('sheets/test', [Admin\SheetsController::class, 'test'])->middleware('throttle:10,1')->name('sheets.test');
+        Route::post('sheets/backfill', [Admin\SheetsController::class, 'backfill'])->middleware('throttle:6,1')->name('sheets.backfill');
         Route::get('media',[Admin\MediaController::class, 'index'])->name('media.index');
         Route::post('media', [Admin\MediaController::class, 'store'])->name('media.store');
         Route::put('media/{media}', [Admin\MediaController::class, 'update'])->name('media.update');

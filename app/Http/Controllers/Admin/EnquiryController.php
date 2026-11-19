@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SyncEnquiryToGhl;
+use App\Jobs\SyncEnquiryToSheets;
 use App\Models\Enquiry;
 use Illuminate\Http\Request;
 
@@ -50,6 +51,18 @@ class EnquiryController extends Controller
         $enquiry->delete();
 
         return redirect()->route('admin.enquiries.index')->with('status', 'Enquiry deleted.');
+    }
+
+    /** Queue the Google Sheets row again (for failed, pending or skipped rows). */
+    public function retrySheets(Enquiry $enquiry)
+    {
+        if (! sheets_enabled()) {
+            return back()->withErrors(['sheets' => 'Google Sheets is switched off. Connect it in Admin > Google Sheets first.']);
+        }
+        $enquiry->update(['sheets_status' => 'pending', 'sheets_error' => null]);
+        SyncEnquiryToSheets::dispatch($enquiry->id);
+
+        return back()->with('status', 'Google Sheets row queued.');
     }
 
     /** Queue the GoHighLevel sync again (for failed or pending syncs). */
