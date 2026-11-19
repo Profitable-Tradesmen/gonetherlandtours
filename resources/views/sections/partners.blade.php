@@ -22,8 +22,8 @@
         @endphp
         {{-- The logos live in a cell of their own (the right column). The sliding row is positioned INSIDE that cell and clipped to it, so it
              cannot grow the layout or draw over the text column, whatever the screen width or zoom. --}}
-        <div class="relative h-24 min-w-0 overflow-hidden lg:col-start-2 lg:row-start-1 lg:border-l lg:border-white/25 motion-reduce:h-auto" data-reveal="right">
-            <div class="marquee absolute inset-y-0 left-0 right-0 overflow-hidden lg:left-12 motion-reduce:static" role="group" aria-label="{{ $d['eyebrow'] ?: 'Partners' }}">
+        <div class="relative h-24 min-w-0 overflow-hidden lg:col-start-2 lg:row-start-1 motion-reduce:h-auto" data-reveal="right">
+            <div class="marquee absolute inset-y-0 left-0 right-0 overflow-hidden lg:left-6 motion-reduce:static" role="group" aria-label="{{ $d['eyebrow'] ?: 'Partners' }}">
             <div class="marquee-track" style="--marquee-time: {{ $speed }}s">
                 @foreach ([0, 1] as $copy)
                     <ul class="marquee-group" @if ($copy === 1) aria-hidden="true" inert @endif>
