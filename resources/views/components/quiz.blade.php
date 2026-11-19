@@ -20,17 +20,21 @@
 
                 @if ($step['type'] === 'select')
                     <label for="quiz-sel-{{ $idx }}" class="sr-only">{{ $step['question'] }}</label>
-                    <select id="quiz-sel-{{ $idx }}" class="field mt-4" x-model="answers['{{ $step['key'] }}']">
+                    {{-- No Next button: choosing an option moves on by itself. Arrow keys on a closed list only browse the options (Enter confirms). --}}
+                    <select id="quiz-sel-{{ $idx }}" class="field mt-4" x-model="answers['{{ $step['key'] }}']"
+                            @keydown="browsing = ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes($event.key)"
+                            @keydown.enter.prevent="next('{{ $step['key'] }}')"
+                            @change="if (!browsing) next('{{ $step['key'] }}'); browsing = false">
                         <option value="">Please select</option>
                         @foreach ($step['options'] as $o)<option value="{{ $o['value'] }}">{{ $o['label'] }}</option>@endforeach
                     </select>
-                    <button type="button" class="btn btn-primary btn-block mt-4" :disabled="!answers['{{ $step['key'] }}']" @click="next('{{ $step['key'] }}')">Next</button>
                 @elseif ($step['type'] === 'date')
                     <label for="quiz-date-{{ $idx }}" class="sr-only">{{ $step['question'] }}</label>
                     <input id="quiz-date-{{ $idx }}" type="date" min="{{ now()->toDateString() }}" class="field mt-4"
-                           x-model="answers['{{ $step['key'] }}']">
-                    <p class="mt-1 text-xs text-ink/60">An approximate date is fine.</p>
-                    <button type="button" class="btn btn-primary btn-block mt-4" :disabled="!answers['{{ $step['key'] }}']" @click="next('{{ $step['key'] }}')">Next</button>
+                           x-model="answers['{{ $step['key'] }}']"
+                           @change="if ($event.target.value >= $event.target.min) next('{{ $step['key'] }}')"
+                           @keydown.enter.prevent="if ($event.target.value >= $event.target.min) next('{{ $step['key'] }}')">
+                    <p class="mt-1 text-xs text-ink/60">An approximate date is fine. Choose a day and we will continue.</p>
                 @elseif ($step['type'] === 'text')
                     <label for="quiz-txt-{{ $idx }}" class="sr-only">{{ $step['question'] }}</label>
                     <input id="quiz-txt-{{ $idx }}" type="text" maxlength="60" class="field mt-4" placeholder="For example: April 2027, or flexible"

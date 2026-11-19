@@ -173,6 +173,7 @@ Alpine.data('quiz', (keys) => ({
     keys,
     i: 0,
     answers: {},
+    browsing: false,   // arrow keys moving through a closed dropdown do not count as a choice
 
     get total() {
         return this.keys.length + 1;
@@ -189,7 +190,8 @@ Alpine.data('quiz', (keys) => ({
         this.go(1);
     },
     next(key) {
-        if (this.answers[key]) this.go(1);
+        // only the step on screen can move on (a second event for the same choice, such as change then Enter, is ignored)
+        if (this.keys[this.i] === key && this.answers[key]) this.go(1);
     },
     back() {
         if (this.i > 0) this.i--;
