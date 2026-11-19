@@ -88,7 +88,10 @@
              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
              class="absolute inset-x-0 top-full hidden border-b-4 border-accent bg-sand shadow-card lg:block" @click.outside="dd === 'm{{ $item->id }}' && (dd = null)">
-            <div class="container-site grid items-stretch gap-5 py-7 xl:grid-cols-[var(--cols)] xl:py-8" style="--cols: minmax(0, 1.1fr) minmax(0, {{ $cards->count() }}fr)">
+            {{-- Intro panel on the left (a fixed, comfortable width), the cards in a grid of up to three columns on the right. Each card is a
+                 horizontal row (square photo + title + short text), so six cards fit in two roomy rows instead of six narrow columns.
+                 Narrower desktops: the intro becomes a slim banner above the cards. --}}
+            <div class="container-site grid items-stretch gap-5 py-7 xl:grid-cols-[17rem_minmax(0,1fr)] xl:py-8">
                 <div class="relative isolate flex items-center justify-between gap-8 overflow-hidden rounded-2xl bg-brand-900 px-7 py-5 text-white xl:flex-col xl:items-start xl:justify-center xl:py-7">
                     <span class="absolute -right-12 -top-12 -z-10 h-44 w-44 rounded-full bg-accent/15" aria-hidden="true"></span>
                     <span class="absolute -bottom-14 -left-10 -z-10 h-40 w-40 rounded-full bg-brand/30" aria-hidden="true"></span>
@@ -97,22 +100,21 @@
                         <p class="mt-1 font-display text-2xl font-medium leading-snug xl:mt-3">{{ text('nav_promo_title') }}</p>
                         <p class="mt-1 text-sm text-white/80 xl:mt-3">{{ text('nav_promo_text') }}</p>
                     </div>
-                    @if (text('nav_promo_button'))<x-button class="shrink-0 !py-2.5 xl:mt-3" @click="dd = null; $store.modal.show()">{{ text('nav_promo_button') }}</x-button>@endif
+                    @if (text('nav_promo_button'))<x-button class="shrink-0 whitespace-nowrap !py-2.5 xl:mt-3" @click="dd = null; $store.modal.show()">{{ text('nav_promo_button') }}</x-button>@endif
                 </div>
-                <div class="grid items-stretch gap-5" style="grid-template-columns: repeat({{ $cards->count() }}, minmax(0, 1fr))">
+                <div class="grid content-center gap-4" style="grid-template-columns: repeat({{ min($cards->count(), 3) }}, minmax(0, 1fr))">
                     @foreach ($cards as $c)
-                        <a href="{{ $c->href() }}" class="group flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-sand-200 transition duration-300 hover:-translate-y-0.5 hover:shadow-card" @click="dd = null" @if ($c->new_tab) target="_blank" rel="noopener" @endif>
-                            <div class="relative min-h-[9rem] flex-1 overflow-hidden bg-brand-900">
-                                @if ($c->image)<x-picture :src="$c->image" :alt="$c->image_alt ?? ''" :width="960" :height="640" sizes="(min-width:1024px) 18vw, 50vw" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />@endif
-                                <span class="absolute inset-0 bg-gradient-to-t from-ink/35 to-transparent"></span>
-                            </div>
-                            <div class="p-4">
-                                <div class="flex items-center justify-between gap-2">
-                                    <h3 class="min-w-0 font-display text-lg font-medium leading-tight transition-colors group-hover:text-rust">{{ $c->label }}</h3>
+                        <a href="{{ $c->href() }}" class="group flex items-center gap-4 rounded-2xl bg-white p-3 ring-1 ring-sand-200 transition duration-300 hover:-translate-y-0.5 hover:shadow-card" @click="dd = null" @if ($c->new_tab) target="_blank" rel="noopener" @endif>
+                            <span class="relative block h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-brand-900 xl:h-24 xl:w-24">
+                                @if ($c->image)<x-picture :src="$c->image" :alt="$c->image_alt ?? ''" :width="480" :height="480" sizes="96px" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />@endif
+                            </span>
+                            <span class="min-w-0 flex-1">
+                                <span class="flex items-center justify-between gap-2">
+                                    <span class="font-display text-lg font-medium leading-tight transition-colors group-hover:text-rust">{{ $c->label }}</span>
                                     <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sand text-rust transition-colors group-hover:bg-accent group-hover:text-ink"><x-icon name="arrow" class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" /></span>
-                                </div>
-                                @if ($c->description)<p class="mt-1 line-clamp-2 min-h-[2.5rem] text-sm text-ink/70">{{ $c->description }}</p>@endif
-                            </div>
+                                </span>
+                                @if ($c->description)<span class="mt-1 block text-sm leading-snug text-ink/70">{{ $c->description }}</span>@endif
+                            </span>
                         </a>
                     @endforeach
                 </div>
