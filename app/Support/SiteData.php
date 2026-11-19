@@ -24,7 +24,7 @@ class SiteData
     /** Active tour types, each with its published packages (menus, footer and sections all use this one list). */
     public static function tourTypes(): Collection
     {
-        return self::once('tourTypes', fn () => TourType::active()->with(['packages' => fn ($q) => $q->published()->orderBy('title')])->get());
+        return self::once('tourTypes', fn () => TourType::active()->with(['packages' => fn ($q) => $q->published()->orderBy('title')->with(['images', 'destination'])])->get());
     }
 
     public static function destinations(): Collection

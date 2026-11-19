@@ -76,8 +76,14 @@ class DesignRefreshTest extends TestCase
     {
         $html = $this->get('/')->getContent();
         preg_match('#<nav class="hidden[^>]*aria-label="Main">(.*?)</nav>#s', $html, $nav);
-        foreach (['Home', 'Self Drive', 'Chauffeur Driven', 'Coach Tours', 'Destinations', 'About Us'] as $label) {
+        foreach (['Home', 'Tour Types', 'Destinations', 'Packages', 'About Us'] as $label) {
             $this->assertStringContainsString($label, $nav[1], $label);
+        }
+        // the Tour types mega menu: a photo card per tour type, featured trips with their nights, and a "view all" link
+        $mega = strstr($html, 'id="mega-tours"');
+        $this->assertNotFalse($mega);
+        foreach (['Self Drive', 'Chauffeur Driven', 'Coach Tours', 'Featured trips', 'Sample: Tulip Season Self Drive', '7 nights', 'View all'] as $text) {
+            $this->assertStringContainsString($text, $mega, $text);
         }
         $this->get('/meet-the-team')->assertOk()->assertSee('Meet the Team');
         $this->assertStringContainsString('/meet-the-team', $html, 'linked from the About Us dropdown');
@@ -99,7 +105,7 @@ class DesignRefreshTest extends TestCase
             \Illuminate\Support\Facades\DB::table('menu_items')->insert(['menu' => 'header', 'label' => $label, 'kind' => $kind, 'url' => '/x', 'sort_order' => $i + 1, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
         }
         $migration->up();
-        $this->assertSame(['Home', 'Self Drive', 'Chauffeur Driven', 'Coach Tours', 'Destinations', 'About Us'], \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->orderBy('sort_order')->pluck('label')->all());
+        $this->assertSame(['Home', 'Tour Types', 'Destinations', 'Packages', 'About Us'], \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->orderBy('sort_order')->pluck('label')->all());
     }
 
     public function test_home_migration_reorders_only_the_previously_seeded_home(): void
@@ -411,6 +417,40 @@ class DesignRefreshTest extends TestCase
         $this->assertSame(1, count(array_keys(collect($home->fresh()->allSections())->pluck('type')->all(), 'partners')), 'not added twice');
     }
 
+    public function test_migration_switches_only_the_previously_seeded_header_menu_to_the_tour_types_mega_menu(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_25_000001_tour_types_mega_menu.php');
+        $table = \Illuminate\Support\Facades\DB::table('menu_items');
+        $now = now();
+        $seedOld = function () use ($now) {
+            \Illuminate\Support\Facades\DB::table('menu_items')->where('menu', 'header')->delete();
+            foreach ([['Home', 'link'], ['Self Drive', 'link'], ['Chauffeur Driven', 'link'], ['Coach Tours', 'link'], ['Destinations', 'link'], ['About Us', 'cards']] as $i => [$label, $kind]) {
+                \Illuminate\Support\Facades\DB::table('menu_items')->insert(['menu' => 'header', 'label' => $label, 'kind' => $kind, 'url' => '/x', 'sort_order' => $i + 1, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
+            }
+        };
+        $labels = fn () => \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->orderBy('sort_order')->pluck('label')->all();
+
+        $seedOld();
+        $migration->up();
+        $this->assertSame(['Home', 'Tour Types', 'Destinations', 'Packages', 'About Us'], $labels());
+        $this->assertSame('tours', \App\Models\MenuItem::where('menu', 'header')->where('label', 'Tour Types')->value('kind'));
+
+        // an admin who renamed or added an item: untouched
+        $seedOld();
+        \App\Models\MenuItem::where('menu', 'header')->where('label', 'Self Drive')->update(['label' => 'Drive yourself']);
+        $migration->up();
+        $this->assertContains('Drive yourself', $labels());
+        $this->assertNotContains('Tour Types', $labels());
+    }
+
+    /** The part of a page between <main> and </main> (the header menus repeat names of tours and pages on every page). */
+    private function mainOf(string $html): string
+    {
+        $start = strpos($html, '<main');
+
+        return $start === false ? $html : substr($html, $start, strpos($html, '</main>') - $start);
+    }
+
     public function test_destinations_have_real_photos_and_guide_copy(): void
     {
         foreach (['amsterdam', 'tulips', 'zeeland'] as $name) {
@@ -464,7 +504,7 @@ class DesignRefreshTest extends TestCase
             $this->get('/dest-'.$d->slug)->assertNotFound();
         }
         // the packages carousel shows only the packages of this destination
-        $html = $this->get('/destinations/zeeland-and-the-delta')->getContent();
+        $html = $this->mainOf($this->get('/destinations/zeeland-and-the-delta')->getContent());   // the header menu lists every tour type's trips, so only look at the page itself
         $this->assertStringContainsString('Sample: Zeeland Coast Chauffeur Tour', $html);
         $this->assertStringNotContainsString('Sample: Tulip Season Self Drive', $html);
         $this->assertStringNotContainsString('dest-', $this->get('/sitemap.xml')->getContent());
@@ -620,7 +660,7 @@ class DesignRefreshTest extends TestCase
         $types = collect(Page::bySlug('home')->allSections())->pluck('type')->all();
         $this->assertNotContains('text_cta', $types);
         $this->assertNotContains('faq', $types);
-        $html = $this->get('/')->getContent();
+        $html = $this->mainOf($this->get('/')->getContent());
         $this->assertStringNotContainsString('Plan with', $html);
         $this->assertStringNotContainsString('Frequently Asked Questions', $html);
         $this->get('/faq')->assertOk()->assertSee('Frequently asked questions');   // the FAQ page itself stays

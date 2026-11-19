@@ -258,7 +258,7 @@ class DefaultSections
     }
 
     /**
-     * The main menu of the reference design: Home, one link per tour type, Destinations and an About Us dropdown of image
+     * The main menu: Home, Tour Types (an automatic mega menu with a photo card per tour type), Destinations, Packages and an About Us dropdown of image
      * cards. Replaces ALL header menu rows, so callers must check that the admin has not customised the menu first.
      */
     public static function resetHeaderMenu(): void
@@ -270,10 +270,9 @@ class DefaultSections
         };
         $n = 0;
         $add(['label' => 'Home', 'url' => '/', 'sort_order' => ++$n]);
-        $add(['label' => 'Self Drive', 'url' => '/tours/self-drive', 'sort_order' => ++$n]);
-        $add(['label' => 'Chauffeur Driven', 'url' => '/tours/chauffeur-driven', 'sort_order' => ++$n]);
-        $add(['label' => 'Coach Tours', 'url' => '/tours/coach-tours', 'sort_order' => ++$n]);
+        $add(['label' => 'Tour Types', 'kind' => 'tours', 'url' => null, 'sort_order' => ++$n]);   // the automatic mega menu of tour types
         $add(['label' => 'Destinations', 'url' => '/destinations', 'sort_order' => ++$n]);
+        $add(['label' => 'Packages', 'url' => '/packages', 'sort_order' => ++$n]);
         $about = $add(['label' => 'About Us', 'kind' => 'cards', 'url' => '/about', 'sort_order' => ++$n]);
         foreach ([
             ['About Us', 'Who we are and how we plan your trip', '/about', 'images/Intro_image_split.webp', 'A traditional Dutch canal house and windmill'],
