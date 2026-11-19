@@ -3,7 +3,7 @@
 Nothing here has been invented as a business fact. Each item below is a placeholder, marked `[CONFIRM: ...]` or `[PLACEHOLDER ...]` on the site. Search the site and admin for `CONFIRM` and `PLACEHOLDER` to find them all.
 
 ## Site settings (Admin > Settings)
-- [ ] Phone number (hidden everywhere until set; click-to-call depends on it)
+- [ ] Phone number (the top bar and footer show a placeholder until set; the call buttons on banners stay hidden until a real one exists)
 - [ ] Public email, address
 - [ ] Legal company name (currently "GoNetherlandTours", which flows into the consent text and legal pages)
 - [ ] Social links; favicon (the logo is the supplied GoNetherlandTours wordmark)

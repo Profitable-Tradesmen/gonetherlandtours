@@ -66,10 +66,8 @@
             <x-enquiry-form form="hero-quiz" idp="quiz" variant="quiz" quiz-answers submit="Send My Quote Request" />
         </section>
 
-        <div class="mt-4 flex items-center justify-between text-xs text-ink/70">
+        <div class="mt-4 flex items-center justify-between text-xs text-ink/70" x-show="i > 0" x-cloak>
             <button type="button" class="underline hover:text-ink" x-show="i > 0" @click="back()">&larr; Back</button>
-            <span x-show="i === 0"></span>
-            <span class="inline-flex items-center gap-1"><x-icon name="lock" class="h-4 w-4" /> Takes less than 30 seconds</span>
         </div>
     </div>
 

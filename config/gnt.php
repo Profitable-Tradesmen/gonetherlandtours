@@ -56,6 +56,7 @@ return [
         'header_button_label' => 'Free Quote',
         'mega_view_all_label' => 'View all', 'mega_help_text' => 'Not sure which suits you? We will plan it around you.',
         'mega_all_packages_label' => 'All Packages', 'mega_quote_label' => 'Get a Free Quote',
+        'mega_tagline' => 'Your journey. Our expertise. The Netherlands awaits.', 'mega_tours_heading' => 'Ways to travel', 'mega_tours_sub' => 'Choose how you want to explore', 'mega_trips_sub' => 'Our most loved itineraries', 'mega_badge_label' => 'Featured', 'mega_discover_label' => 'Discover', 'mega_destinations_tagline' => 'Regions worth slowing down for.', 'mega_destinations_all_label' => 'All destinations',
         'nav_promo_title' => 'Plan with *peace of mind*', 'nav_promo_text' => 'Learn about our team, read what travelers say and find the answers that make your Netherlands trip smooth and stress-free.', 'nav_promo_eyebrow' => 'Get to know us', 'nav_card_link_label' => 'Learn more', 'mega_featured_label' => 'Featured trips', 'nav_promo_button' => 'Get a Free Quote',
         'mobile_home_label' => 'Home', 'mobile_tours_heading' => 'Tours', 'mobile_destinations_heading' => 'Destinations', 'mobile_more_heading' => 'More', 'mobile_quote_label' => 'Free Quote',
         'mobile_bar_call_label' => 'Call', 'mobile_bar_quote_label' => 'Get a Free Quote',

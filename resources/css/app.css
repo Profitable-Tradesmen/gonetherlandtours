@@ -192,3 +192,14 @@ main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 
     .marquee-group { flex-wrap: wrap; justify-content: center; gap: 2rem 2.5rem; padding-right: 0; }
     .marquee-group[aria-hidden='true'], .marquee-repeat { display: none; }
 }
+
+/* Partner logos slider (sections/partners.blade.php): 3 logos visible (2 on tablets, 1 on phones), sliding by one logo; --i is set by Alpine "partnerSlider". */
+.pslider { --per: 1; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent); }
+@media (min-width: 640px) { .pslider { --per: 2; } }
+@media (min-width: 1024px) { .pslider { --per: 3; } }
+.pslider-track { display: flex; transform: translateX(calc(var(--i, 0) * -100% / var(--per))); transition: transform var(--dur, 1.8s) cubic-bezier(.45, 0, .2, 1); }
+.pslider-item { transition: opacity var(--dur, 1.8s) ease; flex: 0 0 calc(100% / var(--per)); display: flex; align-items: center; justify-content: center; padding: 1rem 1.25rem; min-width: 0; }
+@media (prefers-reduced-motion: reduce) {
+    .pslider-track { flex-wrap: wrap; transform: none; transition: none; }
+    .pslider-clone { display: none; }
+}

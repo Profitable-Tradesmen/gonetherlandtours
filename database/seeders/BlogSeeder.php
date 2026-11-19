@@ -27,6 +27,14 @@ class BlogSeeder extends Seeder
                 'image' => 'images/Guide_2.webp',
                 'image_alt' => 'A guide pointing out a canal view to a small group of travelers',
             ],
+            [
+                'slug' => 'tulip-season-when-and-where-to-go',
+                'label' => 'Guide 03',
+                'title' => 'Tulip season: when and where to go',
+                'excerpt' => 'Placeholder summary. Replace with a real guide to the best weeks, fields and gardens for tulips.',
+                'image' => 'images/off_the_beaten_path.webp',
+                'image_alt' => 'A quiet Dutch harbor village with colorful boats in morning mist',
+            ],
         ];
 
         foreach ($posts as $i => $p) {

@@ -22,7 +22,7 @@
 - [ ] Legal pages reviewed; consent wording approved; cookie/consent banner decision made for the target market.
 - [ ] Google Search Console: verify the domain, submit the sitemap. Google Business Profile if applicable.
 - [ ] Message match: each Ads ad group points to a page whose H1 and hero repeat the ad's promise (use package or destination pages, or add `?utm_*` links to the home page).
-- [ ] Run Lighthouse (mobile and desktop) on Home, a package and Contact: aim for 90+ in every category. Last run 19 Nov 2026 (Home and a package: all above 90, see "Re-run after the mobile carousels" below); Contact still to run.
+- [ ] Run Lighthouse (mobile and desktop) on Home, a package and Contact: aim for 90+ in every category. Last run 19 Nov 2026 (Home and a package: all above 90, see the latest "Re-run" table below); Contact still to run.
 - [ ] Test at 360, 768 and 1280 px: no horizontal scroll; keyboard-only walk-through; WCAG AA contrast (brand blue `#437DA5` is decorative; text/buttons use `#2F6285`).
 - [ ] Check 404 page, `robots.txt`, `sitemap.xml` on production.
 
@@ -69,3 +69,15 @@ Local build behind a gzip + long-cache proxy, home page and package `sample-tuli
 | Package | Desktop | 100 (LCP 0.7 s) | 100 | 100 | 69 / 100 |
 
 The SEO 69 on the package page is only "Page is blocked from indexing": the sample package is `noindex` on purpose. With *Hide from search engines* switched off for one run it scored 100 (then restored). Real packages must leave that box unticked.
+
+### Re-run after the mega menus, partner slider, quiz card and Header & Footer snippets (Lighthouse 12, 19 Nov 2026)
+Local build behind a gzip + long-cache proxy; home page and package `sample-tulip-season-self-drive`, mobile and desktop presets. Nothing was below 90, so no code fixes were needed.
+
+| Page | Size | Performance | Accessibility | Best practices | SEO |
+|---|---|---|---|---|---|
+| Home | Mobile | 93 (LCP 2.8 s, TBT 140 ms, CLS 0) | 100 | 100 | 100 |
+| Home | Desktop | 98 (LCP 1.0 s) | 100 | 100 | 100 |
+| Package | Mobile | 95 (LCP 2.7 s, CLS 0) | 100 | 100 | 100 |
+| Package | Desktop | 100 (LCP 0.7 s) | 100 | 100 | 100 |
+
+The package SEO score was measured with the sample package's *Hide from search engines* switched off for the run (restored afterwards); with it on, "Page is blocked from indexing" gives 69 by design. Home mobile performance dropped from 94 to 93 since the previous run (mega menu markup and the logo slider); watch it if more sections are added above the fold. Custom code added in Admin > Header & Footer (analytics, chat widgets) is not part of these numbers and often costs 5-15 points: re-run Lighthouse after adding any.

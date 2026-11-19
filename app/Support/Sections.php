@@ -220,8 +220,9 @@ class Sections
                 $t('button_label', 'Button', 'Read all articles'),
             ]],
             'cta_banner' => ['label' => 'Call to action banner', 'description' => 'A full-width photo with a heading, text and button.', 'fields' => [
+                $t('eyebrow', 'Small label', ''),
                 self::img('image', 'Background photo', 'images/fina_cta_bg.webp'),
-                $t('heading', 'Heading', 'Ready to Discover the Real Netherlands?'),
+                $t('heading', 'Heading', 'Ready to Discover the *Real Netherlands*?'),
                 $ta('text', 'Text'),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Start Your Adventure'),
                 ['name' => 'show_phone', 'label' => 'Show a call button (uses the phone number in Settings)', 'type' => 'checkbox', 'default' => true],

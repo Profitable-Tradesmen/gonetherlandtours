@@ -362,6 +362,41 @@ Alpine.data('carousel', () => ({
     },
 }));
 
+/* -------------------------------------------------------------
+ * Partner logos slider: shows 3 logos and slides by one logo continuously: a slow 1.8s move, a 0.3s pause, the next move; logos fade out as they leave and fade in as they arrive. The first logos are repeated at the end of the track;
+ * when the slide reaches that copy the track snaps back to the start without animation, so the loop has no visible jump.
+ * Pauses while hovered or focused and when the tab is hidden; does nothing for "reduce motion" (the CSS wraps the logos instead).
+ * ------------------------------------------------------------- */
+Alpine.data('partnerSlider', (n) => ({
+    i: 0,
+    anim: true,
+    paused: false,
+    per: 3,
+    still: false,
+    init() {
+        this.still = n < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const setPer = () => { this.per = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1; };
+        setPer();
+        window.addEventListener('resize', setPer);
+        if (this.still) return;
+        setInterval(() => {
+            if (this.paused || document.hidden) return;
+            this.anim = true;
+            this.i++;
+        }, 2100);   // 1.8s move + 0.3s pause
+    },
+    // a logo is shown while it is inside the visible window; leaving or entering it fades out or in while the row slides
+    shown(k) {
+        return this.still || (k >= this.i && k < this.i + this.per);
+    },
+    end() {
+        if (this.i >= n) {
+            this.anim = false;
+            this.i = 0;
+        }
+    },
+}));
+
 Alpine.start();
 
 /* ---------------------------------------------------------------

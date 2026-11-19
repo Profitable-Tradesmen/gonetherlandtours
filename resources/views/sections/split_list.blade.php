@@ -1,10 +1,11 @@
 <section class="hidden bg-sand py-16 sm:block sm:py-24 lg:py-32" aria-labelledby="sl-{{ $sid }}">
     <div class="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-24 xl:gap-28">
-        {{-- One large photo; the badge sits on it as a dark tile and an optional second photo overlaps its corner. --}}
+        {{-- One large photo; the badge sits on it as a dark tile and an optional second photo overlaps its corner, tilted (it straightens on hover) inside a wrapper
+             so the reveal animation does not fight the rotation. Depth comes from shadows only: no borders. --}}
         <div class="relative lg:mr-4">
-            @if ($d['image1'])<x-picture :src="$d['image1']" :alt="$d['image1_alt']" :width="900" :height="1100" class="aspect-[4/5] w-full rounded-2xl object-cover shadow-card" data-reveal="left" />@endif
-            @if ($d['image2'])<x-picture :src="$d['image2']" :alt="$d['image2_alt']" :width="900" :height="1100" class="absolute -bottom-8 -right-3 hidden aspect-[4/5] w-2/5 rounded-2xl border-4 border-sand object-cover shadow-card sm:block lg:-right-8" data-reveal="zoom" style="--d:150ms" />@endif
-            @if ($d['badge'])<div class="absolute bottom-0 left-0 rounded-tr-2xl rounded-bl-2xl bg-brand-900/95 px-5 py-4 text-sm font-semibold text-white shadow-card"><span class="mr-2 text-accent">&#9733;</span>{{ $d['badge'] }}</div>@endif
+            @if ($d['image1'])<x-picture :src="$d['image1']" :alt="$d['image1_alt']" :width="900" :height="1100" class="relative aspect-[4/5] w-full rounded-2xl object-cover shadow-card" data-reveal="left" />@endif
+            @if ($d['image2'])<div class="absolute -bottom-8 right-4 hidden w-2/5 rotate-[5deg] transition-transform duration-500 hover:rotate-0 sm:block lg:-right-8"><x-picture :src="$d['image2']" :alt="$d['image2_alt']" :width="900" :height="1100" class="aspect-[4/5] w-full rounded-2xl object-cover shadow-[0_24px_44px_-10px_rgb(12_13_17/0.6)]" data-reveal="zoom" style="--d:150ms" /></div>@endif
+            @if ($d['badge'])<div class="absolute bottom-0 left-0 z-10 rounded-tr-2xl rounded-bl-2xl bg-brand-900/95 px-5 py-4 text-sm font-semibold text-white shadow-card"><span class="mr-2 text-accent">&#9733;</span>{{ $d['badge'] }}</div>@endif
         </div>
         <div data-reveal="right" class="lg:pl-4">
             @if ($d['eyebrow'])

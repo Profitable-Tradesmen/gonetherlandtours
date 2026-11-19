@@ -106,7 +106,7 @@ class DefaultSections
             self::partners(),
             self::s('testimonials', ['variant' => 'dark', 'heading' => $c['testimonials_heading'] ?? 'What Travelers Say']),   // three review cards over a photo ("Spotlight" = one review at a time is still available)
             self::s('gallery', ['eyebrow' => $gallery['eyebrow'] ?? 'Visual journey', 'heading' => $gallery['title'] ?? 'A glimpse of the *real Netherlands*', 'items' => $galleryRows], (bool) ($c['show_gallery'] ?? true)),
-            self::s('blog_latest', []),
+            self::s('blog_latest', ['count' => 3]),
             self::s('cta_banner', [
                 'image_alt' => 'Tulip fields and a distant windmill at sunset',
                 'heading' => $c['cta_heading'] ?? 'Ready to Discover the Real Netherlands?',
@@ -122,6 +122,7 @@ class DefaultSections
             ['images/partners/hen-it.png', 'HEN IT, Ireland leading hen company', ''],
             ['images/partners/go-asian-tours.png', 'Go Asian Tours', ''],
             ['images/partners/go-italia-trips.webp', 'Go Italia Trips', ''],
+            ['images/partners/go-rail-travel.png', 'Go Rail Travel', ''],
         ], ['image', 'image_alt', 'url'])]);
     }
 
