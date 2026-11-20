@@ -21,11 +21,6 @@
             <div style="--d:360ms" class="hero-in mt-7 hidden flex-wrap gap-3 sm:flex sm:justify-center lg:justify-start">
                 @if ($d['secondary_label'])<x-cta-button variant="outline" :label="$d['secondary_label']" :url="$d['secondary_url']" class="text-white" />@endif
             </div>
-            <ul style="--d:480ms" class="hero-in mt-6 hidden flex-wrap gap-x-3 gap-y-1.5 text-[0.7rem] font-semibold sm:flex sm:justify-center lg:justify-start xl:flex-nowrap xl:whitespace-nowrap xl:text-[0.64rem]"  aria-label="Why book with us">
-                @foreach ($d['badges'] as $i => $badge)
-                    <li class="flex items-center gap-1.5"><x-icon :name="['shield', 'map', 'star'][$i % 3]" class="h-3.5 w-3.5 shrink-0 text-accent" /> {{ $badge['text'] }}</li>
-                @endforeach
-            </ul>
         </div>
         <div style="--d:300ms" class="hero-in"><x-quiz :steps="\App\Support\SiteData::quizSteps()" /></div>
     </div>
