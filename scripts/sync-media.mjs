@@ -25,6 +25,8 @@ const host = env[`${target}_HOST`], user = env[`${target}_USER`], app = (env[`${
 const port = env[`${target}_PORT`] || '22';
 const key = (env[`${target}_KEY`] || '').replace(/^~/, os.homedir());
 if (!host || !user || !app) { console.error(`Set ${target}_HOST, ${target}_USER and ${target}_PATH in .deploy.env`); process.exit(1); }
+if (/123\.45\.67\.89|u123456789|YOURSITE|\/USER\/|your_key|^USER$/.test([host, user, app, key].join(' '))) { console.error('.deploy.env still has the example values (123.45.67.89, u123456789, YOURSITE, your_key). Put in your real SSH details from hPanel > Advanced > SSH Access.'); process.exit(1); }
+if (key && !existsSync(key)) { console.error(`Key file not found: ${key}. Fix ${target}_KEY in .deploy.env or leave it empty to use your default key / password.`); process.exit(1); }
 
 const src = join(root, 'storage', 'app', 'public');
 const files = [];
@@ -42,6 +44,7 @@ const sshArgs = ['-p', port, '-o', 'StrictHostKeyChecking=accept-new', ...(key ?
     `mkdir -p '${dest}' && tar -C '${dest}' -xf - && find '${dest}' -type f -exec chmod 644 {} + && find '${dest}' -type d -exec chmod 755 {} +`];
 const tar = spawn('tar', ['-C', src, '--exclude=.gitignore', '-cf', '-', '.'], { stdio: ['ignore', 'pipe', 'inherit'] });
 const ssh = spawn('ssh', sshArgs, { stdio: ['pipe', 'inherit', 'inherit'] });
+ssh.stdin.on('error', () => {});   // the connection failed: the message from ssh below says why
 tar.stdout.pipe(ssh.stdin);
 tar.on('error', (e) => { console.error('tar failed:', e.message); process.exit(1); });
 ssh.on('error', (e) => { console.error('ssh failed:', e.message); process.exit(1); });
