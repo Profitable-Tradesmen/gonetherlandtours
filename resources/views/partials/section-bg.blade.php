@@ -15,5 +15,12 @@
     @else
         <x-picture :src="$bg" alt="" :width="1600" :height="900" class="absolute inset-0 -z-20 h-full w-full object-cover" sizes="100vw" />
     @endif
-    <div class="absolute inset-0 -z-10 {{ $tintClass }}"></div>
+    @if (in_array($ext, ['mp4', 'webm'], true))
+        {{-- video backgrounds get the same layered shading as the home hero (darker at the bottom and the left) so text stays readable over moving footage --}}
+        <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/80 via-ink/40 to-ink/30"></div>
+        <div class="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-ink/60 to-transparent"></div>
+        <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-ink/60 via-ink/20 to-transparent lg:block"></div>
+    @else
+        <div class="absolute inset-0 -z-10 {{ $tintClass }}"></div>
+    @endif
 @endif

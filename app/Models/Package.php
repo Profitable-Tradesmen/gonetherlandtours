@@ -52,7 +52,7 @@ class Package extends Model
     public function priceLabel(): string
     {
         if (! $this->price_from) {
-            return '[CONFIRM: price]';
+            return 'Price on request';
         }
         $symbol = ['EUR' => '€', 'USD' => '$', 'GBP' => '£'][$this->currency] ?? $this->currency.' ';
 

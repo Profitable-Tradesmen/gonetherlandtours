@@ -8,8 +8,11 @@
 @php
     $srcset = null;
     if ($src && ! $media) {
+        if (preg_match('/-960\.webp$/', $src) && is_file(public_path($src)) && is_file(public_path($half = preg_replace('/-960\.webp$/', '-480.webp', $src)))) {
+            $srcset = asset($half).' 480w, '.asset($src).' 960w';   // uploaded photos come in 480 and 960 px sizes
+        }
         $small = preg_replace('/\.webp$/', '-800.webp', $src);
-        if ($small !== $src && is_file(public_path($small)) && is_file(public_path($src))) {
+        if (! $srcset && $small !== $src && is_file(public_path($small)) && is_file(public_path($src))) {
             $srcset = asset($small).' 800w, '.asset($src).' '.(getimagesize(public_path($src))[0] ?? $width).'w';
         }
     }

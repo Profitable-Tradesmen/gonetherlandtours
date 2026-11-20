@@ -11,7 +11,7 @@ use Illuminate\Database\Seeder;
 
 /**
  * Starter catalog. EVERYTHING here is SAMPLE data: prices are blank on purpose
- * ([CONFIRM: price] shows on the site) and testimonials are marked placeholders.
+ * (Price on request shows on the site) and testimonials are marked placeholders.
  * See docs/reference/CONTENT_TO_CONFIRM.md.
  */
 class CatalogSeeder extends Seeder
@@ -48,40 +48,13 @@ class CatalogSeeder extends Seeder
             ])->id;
         }
 
-        $packages = [
-            ['Sample: Tulip Season Self Drive', 'sample-tulip-season-self-drive', 'self-drive', 'tulips-and-countryside', 7, true],
-            ['Sample: Amsterdam & Cities Self Drive', 'sample-amsterdam-cities-self-drive', 'self-drive', 'amsterdam-and-the-cities', 8, false],
-            ['Sample: Dutch Highlights Chauffeur Tour', 'sample-dutch-highlights-chauffeur', 'chauffeur-driven', 'amsterdam-and-the-cities', 6, true],
-            ['Sample: Zeeland Coast Chauffeur Tour', 'sample-zeeland-coast-chauffeur', 'chauffeur-driven', 'zeeland-and-the-delta', 7, false],
-            ['Sample: Netherlands in Bloom Coach Tour', 'sample-netherlands-in-bloom-coach', 'coach-tours', 'tulips-and-countryside', 8, true],
-            ['Sample: Cities & Canals Coach Tour', 'sample-cities-canals-coach', 'coach-tours', 'amsterdam-and-the-cities', 9, false],
-        ];
-        foreach ($packages as $i => [$title, $slug, $type, $dest, $nights, $featured]) {
-            Package::create([
-                'title' => $title, 'slug' => $slug, 'tour_type_id' => $typeIds[$type], 'destination_id' => $destIds[$dest],
-                'nights' => $nights, 'price_from' => null, 'currency' => 'EUR',
-                'summary' => 'SAMPLE PACKAGE. [CONFIRM: real summary]. A '.$nights.'-night '.strtolower(str_replace('-', ' ', $type)).' itinerary in the Netherlands.',
-                'description' => '<p>[CONFIRM: full package description. This is sample data to show the layout.]</p>',
-                'highlights' => ['[CONFIRM: highlight one]', '[CONFIRM: highlight two]', '[CONFIRM: highlight three]'],
-                'itinerary' => [
-                    ['title' => 'Day 1: Arrival in Amsterdam', 'body' => '[CONFIRM: day description]'],
-                    ['title' => 'Day 2: [CONFIRM: day title]', 'body' => '[CONFIRM: day description]'],
-                    ['title' => 'Day 3: [CONFIRM: day title]', 'body' => '[CONFIRM: day description]'],
-                ],
-                'inclusions' => ['[CONFIRM: inclusion]', '[CONFIRM: inclusion]'],
-                'exclusions' => ['[CONFIRM: exclusion]', '[CONFIRM: exclusion]'],
-                'faqs' => [['question' => '[CONFIRM: package question]', 'answer' => '[CONFIRM: answer]']],
-                'is_published' => true, 'is_featured' => $featured, 'is_sample' => true, 'sort_order' => $i + 1,
-                'seo_title' => $title, 'meta_description' => 'Sample package. Replace with real description.',
-                'noindex' => true, // sample packages stay out of search until replaced
-            ]);
-        }
+        \App\Support\SamplePackages::seed();   // three complete packages per tour type, with photos
 
         $faqs = [
-            ['When is the best time to visit the Netherlands?', 'Spring is popular for tulip season and summer for long, bright days. Autumn and winter are quieter. [CONFIRM: exact tulip season dates and advice]'],
-            ['Do I need a visa to visit the Netherlands from the US?', 'Entry rules change. Please check the official Dutch government and US State Department websites before you travel. [CONFIRM: wording reviewed by the team]'],
-            ['Can I drive in the Netherlands with a US license?', 'Car hire rules vary by company. We will confirm license requirements with your quote. [CONFIRM: license and IDP requirements]'],
-            ['What is included in a package?', 'Each package lists exactly what is included and excluded on its page. [CONFIRM: standard inclusions]'],
+            ['When is the best time to visit the Netherlands?', 'Spring is popular for tulip season and summer for long, bright days. Autumn and winter are quieter. Tulips usually bloom from late March to mid May, with the peak in mid April.'],
+            ['Do I need a visa to visit the Netherlands from the US?', 'Entry rules change. Please check the official Dutch government and US State Department websites before you travel.'],
+            ['Can I drive in the Netherlands with a US license?', 'Car hire rules vary by company. We will confirm license requirements with your quote. Most visitors can drive with a valid license from their home country, and an International Driving Permit is recommended for some countries.'],
+            ['What is included in a package?', 'Each package lists exactly what is included and excluded on its page.'],
             ['How do I get a quote?', 'Answer a few quick questions or send an inquiry. A travel specialist will come back to you with a tailored quote.'],
             ['Can you tailor a trip for me?', 'Yes. Every itinerary can be adjusted to your dates, group size and interests.'],
         ];

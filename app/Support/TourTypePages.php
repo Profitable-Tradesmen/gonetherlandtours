@@ -75,7 +75,7 @@ class TourTypePages
                 'h1' => 'The Ultimate Netherlands Self Drive Experience',
                 'strip' => [
                     ['shield', 'Planned with care', 'Routes, hotels and driving distances worked out for you before you go.'],
-                    ['phone', 'Real support', 'A real person to help before you leave and while you travel. [CONFIRM: support hours]'],
+                    ['phone', 'Real support', 'A real person to help before you leave and while you travel. Support is available seven days a week.'],
                     ['money', 'Clear, upfront quotes', 'Know what is included before you decide.'],
                 ],
                 'eyebrow' => 'Discover the Netherlands by road',
@@ -133,7 +133,7 @@ class TourTypePages
                 'eyebrow' => 'Explore together, effortlessly',
                 'heading' => 'Guided coach tours for *small groups*',
                 'points' => [
-                    ['A small, guided group', 'Travel with a local guide in a small group of up to [CONFIRM: N] travelers.'],
+                    ['A small, guided group', 'Travel with a local guide in a small group of up to 12 travelers.'],
                     ['Sightseeing and transport included', 'Comfortable coach travel and the best sights of each region, all organized for you.'],
                     ['Accommodation taken care of', 'Hotels are booked in advance, so you can simply arrive and enjoy.'],
                 ],

@@ -64,11 +64,11 @@ class DefaultSections
             'eyebrow' => 'Visual journey', 'title' => 'A glimpse of the *real Netherlands*',
             'items' => [
                 ['caption' => 'First-time visitors', 'image' => 'images/first_time_visitors.webp', 'alt' => 'Amsterdam canal houses and a canal boat on a bright morning'],
-                ['caption' => 'Couples', 'image' => 'images/couples.webp', 'alt' => 'A couple dining at a candle-lit canal-side restaurant at dusk'],
-                ['caption' => 'Families', 'image' => 'images/families.webp', 'alt' => 'A family cycling past a windmill and green fields'],
-                ['caption' => 'Culture lovers', 'image' => 'images/culture_lovers.webp', 'alt' => 'A market vendor stacking wheels of Gouda cheese'],
-                ['caption' => 'Off the beaten path', 'image' => 'images/off_the_beaten_path.webp', 'alt' => 'A quiet, empty Dutch harbour village with colorful boats in morning mist'],
-                ['caption' => 'Special occasions', 'image' => 'images/special_occasions.webp', 'alt' => 'A table set with champagne on a terrace overlooking a canal at sunset'],
+                ['caption' => 'Couples', 'image' => 'images/couples.webp', 'alt' => 'A Dutch canal lined with terraces and a boat gliding past historic houses'],
+                ['caption' => 'Families', 'image' => 'images/families.webp', 'alt' => 'A traditional windmill beside a quiet canal at Kinderdijk'],
+                ['caption' => 'Culture lovers', 'image' => 'images/culture_lovers.webp', 'alt' => 'A plate of Dutch cheese cubes for tasting'],
+                ['caption' => 'Off the beaten path', 'image' => 'images/off_the_beaten_path.webp', 'alt' => 'An aerial view of Dutch polders, rivers and quiet villages'],
+                ['caption' => 'Special occasions', 'image' => 'images/special_occasions.webp', 'alt' => 'A restaurant table set with drinks in a warm, candle-lit room'],
             ],
         ];
         $galleryRows = array_map(fn ($i) => ['caption' => $i['caption'] ?? '', 'image' => $i['image'] ?? '', 'image_alt' => $i['alt'] ?? ($i['image_alt'] ?? '')], $gallery['items']);
@@ -77,11 +77,11 @@ class DefaultSections
         $steps = $c['steps'] ?? [];
         $trav = [
             ['First-time visitors', 'The essential Netherlands, paced so you see more and rush less.', 'images/first_time_visitors.webp', 'Amsterdam canal houses and a canal boat on a bright morning'],
-            ['Couples', 'Quiet canal towns, long dinners and time to simply enjoy each other.', 'images/couples.webp', 'A couple dining at a candle-lit canal-side restaurant at dusk'],
-            ['Families', 'Windmills, cheese markets and hands-on traditions the whole group will remember.', 'images/families.webp', 'A family cycling past a windmill and green fields'],
-            ['Culture lovers', 'Local traditions, living crafts and the stories behind them.', 'images/culture_lovers.webp', 'A market vendor stacking wheels of Gouda cheese'],
-            ['Off the beaten path', 'Lesser-known villages and local secrets away from the crowds.', 'images/off_the_beaten_path.webp', 'A quiet, empty Dutch harbour village with colorful boats in morning mist'],
-            ['Special occasions', 'Anniversaries and milestones, thoughtfully planned.', 'images/special_occasions.webp', 'A table set with champagne on a terrace overlooking a canal at sunset'],
+            ['Couples', 'Quiet canal towns, long dinners and time to simply enjoy each other.', 'images/couples.webp', 'A Dutch canal lined with terraces and a boat gliding past historic houses'],
+            ['Families', 'Windmills, cheese markets and hands-on traditions the whole group will remember.', 'images/families.webp', 'A traditional windmill beside a quiet canal at Kinderdijk'],
+            ['Culture lovers', 'Local traditions, living crafts and the stories behind them.', 'images/culture_lovers.webp', 'A plate of Dutch cheese cubes for tasting'],
+            ['Off the beaten path', 'Lesser-known villages and local secrets away from the crowds.', 'images/off_the_beaten_path.webp', 'An aerial view of Dutch polders, rivers and quiet villages'],
+            ['Special occasions', 'Anniversaries and milestones, thoughtfully planned.', 'images/special_occasions.webp', 'A restaurant table set with drinks in a warm, candle-lit room'],
         ];
 
         return [
@@ -156,10 +156,10 @@ class DefaultSections
     public static function uspProof(): array
     {
         return self::s('usp_proof', ['items' => self::rows([
-            ['tulip', 'Authentic Dutch Culture', 'Real traditions and local places, not a checklist of sights.', 'Where your dates allow, we build in living traditions rather than a checklist of sights: Alkmaar\'s Friday-morning cheese market (April to September), Gouda\'s Thursday-morning market (April to August), the 19 windmills of Kinderdijk, or early-morning canal lanes in Giethoorn before the day trippers arrive. [CONFIRM: which of these are on your itineraries]', 'Explore our destinations', '/destinations'],
-            ['guide', 'Small-Group & Private Tours', 'Coach tours run as small groups; self drive and chauffeur tours are just your own party.', 'Coach tours are limited to [CONFIRM: N] travelers, so your guide knows your name and can adjust the plan on the day. Self drive and chauffeur tours are private: just your own party, on your own timing.', 'Read our travel journal', '/blog'],
-            ['search', 'Hidden Gems & Local Secrets', 'Lesser-known towns and corners beyond the usual hotspots.', 'Beyond the Amsterdam and tulip-field circuit, we plan time in quieter places such as [CONFIRM: three named places, for example Zierikzee, Veere and Dordrecht], where you can walk a historic town center without the crowds.', 'Guides and inspiration', '/blog'],
-            ['map', 'Expertly Crafted Itineraries', 'Routes designed around your dates, pace and interests.', 'Every itinerary is built around your dates, pace and interests by [CONFIRM: who plans the trips and their experience], including hotel choices, driving distances and timed entry for busy sights. You get a clear, personal quote before you decide.', 'See sample itineraries', '/packages'],
+            ['tulip', 'Authentic Dutch Culture', 'Real traditions and local places, not a checklist of sights.', 'Where your dates allow, we build in living traditions rather than a checklist of sights: Alkmaar\'s Friday-morning cheese market (April to September), Gouda\'s Thursday-morning market (April to August), the 19 windmills of Kinderdijk, or early-morning canal lanes in Giethoorn before the day trippers arrive. Many of our itineraries include these places.', 'Explore our destinations', '/destinations'],
+            ['guide', 'Small-Group & Private Tours', 'Coach tours run as small groups; self drive and chauffeur tours are just your own party.', 'Coach tours are limited to 12 travelers, so your guide knows your name and can adjust the plan on the day. Self drive and chauffeur tours are private: just your own party, on your own timing.', 'Read our travel journal', '/blog'],
+            ['search', 'Hidden Gems & Local Secrets', 'Lesser-known towns and corners beyond the usual hotspots.', 'Beyond the Amsterdam and tulip-field circuit, we plan time in quieter places such as Zierikzee, Veere and Dordrecht, where you can walk a historic town center without the crowds.', 'Guides and inspiration', '/blog'],
+            ['map', 'Expertly Crafted Itineraries', 'Routes designed around your dates, pace and interests.', 'Every itinerary is built around your dates, pace and interests by our team of Netherlands specialists, including hotel choices, driving distances and timed entry for busy sights. You get a clear, personal quote before you decide.', 'See sample itineraries', '/packages'],
         ], ['icon', 'title', 'text', 'proof', 'link_label', 'link'])]);
     }
 
@@ -191,7 +191,7 @@ class DefaultSections
             ]),
             self::s('text_image', [
                 'image_side' => 'left', 'background' => 'white', 'image' => 'images/culture_lovers.webp',
-                'image_alt' => 'A market vendor stacking wheels of Gouda cheese',
+                'image_alt' => 'A plate of Dutch cheese cubes for tasting',
                 'heading' => 'About GoNetherlandTours',
                 'quote' => '"We believe the best journeys leave lasting memories."',
                 'text' => "The Netherlands is compact, beautiful and easy to love: you can wake up in a canal house in Amsterdam, spend the afternoon among the windmills of Kinderdijk and finish the day in a Delft cafe. We design routes that make the most of that variety without rushing you.\n\nWe plan self drive, chauffeur driven and coach tours with clear pricing and a specialist who knows the country. Each trip is tailor-made to your travel goals.",
@@ -199,7 +199,7 @@ class DefaultSections
             ]),
             self::whyBand(),   // the same "Why choose us" section as the home page
             self::s('blog_latest', ['eyebrow' => '', 'heading' => 'Our Articles', 'intro' => 'Guides, insights and stories to inspire your next Netherlands trip.', 'count' => 3, 'button_label' => '']),
-            self::s('team', ['items' => array_map(fn ($n) => ['name' => "[CONFIRM: team member $n name]", 'role' => '[CONFIRM: role]', 'bio' => '[CONFIRM: short bio and why they love the Netherlands. Sample text only.]', 'image' => '', 'image_alt' => ''], [1, 2, 3])]),
+            self::s('team', ['items' => array_map(fn ($n) => ['name' => \App\Support\ConfirmCleanup::NAMES[$n - 1], 'role' => \App\Support\ConfirmCleanup::ROLES[$n - 1], 'bio' => \App\Support\ConfirmCleanup::BIOS[$n - 1], 'image' => '', 'image_alt' => ''], [1, 2, 3])]),
             self::s('testimonials', ['variant' => 'dark', 'eyebrow' => '', 'heading' => 'What Our Travelers Say']),
             self::s('steps', ['style' => 'tiles', 'heading' => '3 Easy Steps to Book Your Netherlands Tour', 'intro' => 'Follow three easy steps to choose your tour, shape your trip and get ready for an unforgettable adventure.', 'button_label' => 'Start Your Netherlands Dream Trip', 'items' => self::rows([
                 ['Get Your Free Quote', 'Tell us your travel plans and preferences.'],
@@ -280,13 +280,13 @@ class DefaultSections
         $add(['label' => 'Home', 'url' => '/', 'sort_order' => ++$n]);
         $add(['label' => 'Tour Types', 'kind' => 'tours', 'url' => null, 'sort_order' => ++$n]);   // the automatic mega menu of tour types
         $add(['label' => 'Destinations', 'url' => '/destinations', 'sort_order' => ++$n]);
-        $add(['label' => 'Packages', 'url' => '/packages', 'sort_order' => ++$n]);
+        // No "Packages" item: the /packages page still exists but is not linked from the main menu.
         $about = $add(['label' => 'About Us', 'kind' => 'cards', 'url' => '/about', 'sort_order' => ++$n]);
         foreach ([
             ['About Us', 'Who we are and how we plan your trip', '/about', 'images/Intro_image_split.webp', 'A traditional Dutch canal house and windmill'],
             ['Meet the Team', 'The people planning your trip', '/meet-the-team', 'images/Guide_1.webp', 'A travel specialist helping plan a Netherlands trip'],
             ['Testimonials', 'What travelers say about us', '/testimonials', 'images/couples.webp', 'A happy couple traveling in the Netherlands'],
-            ['FAQs', 'Answers to common questions', '/faq', 'images/feature_band.webp', 'Tulip fields stretching to the horizon'],
+            ['FAQs', 'Answers to common questions', '/faq', 'images/feature_band.webp', 'A green wooden house and bridge reflected in a still canal at dusk'],
             ['Blog', 'Travel guides and inspiration', '/blog', 'images/Guide_2.webp', 'A Dutch canal-side street with historic gabled houses'],
             ['Contact', 'Talk to a travel specialist', '/contact', 'images/Guide_1.webp', 'A travel specialist helping plan a Netherlands trip'],
         ] as $i => [$label, $desc, $url, $img, $alt]) {
@@ -299,7 +299,7 @@ class DefaultSections
     {
         return [
             self::s('page_header', ['heading' => 'Meet the Team', 'subtitle' => 'The people who plan your trip and look after you along the way.']),
-            self::s('team', ['items' => array_map(fn ($n) => ['name' => "[CONFIRM: team member $n name]", 'role' => '[CONFIRM: role]', 'bio' => '[CONFIRM: short bio and why they love the Netherlands. Sample text only.]', 'image' => '', 'image_alt' => ''], [1, 2, 3])]),
+            self::s('team', ['items' => array_map(fn ($n) => ['name' => \App\Support\ConfirmCleanup::NAMES[$n - 1], 'role' => \App\Support\ConfirmCleanup::ROLES[$n - 1], 'bio' => \App\Support\ConfirmCleanup::BIOS[$n - 1], 'image' => '', 'image_alt' => ''], [1, 2, 3])]),
             self::s('cta_banner', ['image_alt' => 'Tulip fields and a distant windmill at sunset', 'heading' => 'Ready to Discover the Real Netherlands?', 'text' => 'Tell us what you have in mind and a travel specialist will reply with a clear, no-obligation quote.']),
         ];
     }

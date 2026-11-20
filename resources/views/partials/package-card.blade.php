@@ -30,8 +30,8 @@
             @if ($package->tourType)<span class="rounded-full bg-sand px-2.5 py-1 text-brand-900">{{ $package->tourType->name }}</span>@endif
             @if ($package->destination)<span class="rounded-full border border-brand-700/40 px-2.5 py-1 text-brand-900">{{ $package->destination->name }}</span>@endif
         </div>
-        <h3 class="mt-2 text-lg font-medium leading-snug sm:mt-3 sm:text-2xl"><a href="{{ $url }}" class="hover:text-accent sm:hover:text-rust">{{ $package->title }}</a></h3>
-        <p class="mt-2 hidden line-clamp-2 text-sm leading-relaxed text-ink/75 sm:block">{{ $package->summary }}</p>
+        <h3 class="mt-2 text-lg font-medium leading-snug sm:mt-3 sm:line-clamp-2 sm:min-h-[4.25rem] sm:text-2xl"><a href="{{ $url }}" class="hover:text-accent sm:hover:text-rust">{{ $package->title }}</a></h3>
+        <p class="mt-2 hidden text-sm leading-relaxed text-ink/75 sm:line-clamp-3 sm:block sm:min-h-[4.3rem]">{{ $package->summary }}</p>
 
         <div class="mt-3 sm:mt-4 sm:border-t sm:border-sand-200 sm:pt-4">
             <p class="label-caps text-[0.65rem] text-white/60 sm:text-ink/60">{{ text('card_from_label') ?: 'From' }}</p>

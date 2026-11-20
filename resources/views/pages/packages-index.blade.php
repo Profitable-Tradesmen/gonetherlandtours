@@ -21,7 +21,10 @@
                     <label for="f-dest" class="field-label">Destination</label>
                     <select id="f-dest" name="destination" class="field"><option value="">All destinations</option>@foreach ($destinations as $d)<option value="{{ $d->slug }}" @selected(request('destination') === $d->slug)>{{ $d->name }}</option>@endforeach</select>
                 </div>
-                <div class="flex items-end"><x-button type="submit" variant="secondary" block>Filter</x-button></div>
+                <div class="flex items-end gap-2">
+                    <x-button type="submit" variant="secondary" block>Filter</x-button>
+                    @if (request()->filled('type') || request()->filled('destination'))<a href="{{ route('packages.index') }}" class="btn btn-outline inline-flex shrink-0 whitespace-nowrap text-brand-900">Clear filter</a>@endif
+                </div>
             </form>
             <p class="mt-3 text-sm">Looking for a specific place? <button type="button" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust" @click="show()">Search by location</button></p>
 

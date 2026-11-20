@@ -67,7 +67,7 @@
     {{-- Header modal enquiry form (reachable from every page) --}}
     <x-modal :title="text('modal_title')">
         <p x-show="$store.modal.pkg" x-cloak class="mt-2 rounded-lg bg-sand px-3 py-2 text-sm font-semibold text-brand-700" x-text="'Package: ' + ($store.modal.pkg?.name ?? '')"></p>
-        <p class="mt-1 text-sm text-ink/75">{{ str_replace('{discount}', setting('modal_discount', '[CONFIRM: discount %]'), text('modal_intro')) }}</p>
+        <p class="mt-1 text-sm text-ink/75">{{ str_replace('{discount}', setting('modal_discount', '10%'), text('modal_intro')) }}</p>
         <div class="mt-4"><x-enquiry-form form="header-modal" idp="modal" variant="modal" submit="Send My Inquiry" /></div>
     </x-modal>
 

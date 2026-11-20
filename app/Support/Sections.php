@@ -271,7 +271,7 @@ class Sections
             'why_us' => ['label' => 'Why choose us strip', 'description' => 'Your four selling points as a compact strip. The wording is set once in Admin > Settings ("Why choose us"), so it matches the strip on package, tour type and destination pages.', 'fields' => [
                 $t('heading', 'Heading (blank = use the Settings wording)', ''),
             ]],
-            'usp_proof' => ['label' => 'Selling points with proof', 'description' => 'Each selling point with a real example behind it and a link to read more. Replace the [CONFIRM] examples with facts you can prove.', 'fields' => [
+            'usp_proof' => ['label' => 'Selling points with proof', 'description' => 'Each selling point with a real example behind it and a link to read more. Replace the example wording with facts you can prove.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Our promise'),
                 $t('heading', 'Heading', 'What that looks like in practice'),
                 $t('proof_label', 'Label above each example', 'In practice'),
