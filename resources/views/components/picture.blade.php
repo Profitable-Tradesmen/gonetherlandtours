@@ -9,16 +9,16 @@
     $srcset = null;
     if ($src && ! $media) {
         if (preg_match('/-960\.webp$/', $src) && is_file(public_path($src)) && is_file(public_path($half = preg_replace('/-960\.webp$/', '-480.webp', $src)))) {
-            $srcset = asset($half).' 480w, '.asset($src).' 960w';   // uploaded photos come in 480 and 960 px sizes
+            $srcset = asset_v($half).' 480w, '.asset_v($src).' 960w';   // uploaded photos come in 480 and 960 px sizes
         }
         $small = preg_replace('/\.webp$/', '-800.webp', $src);
         if (! $srcset && $small !== $src && is_file(public_path($small)) && is_file(public_path($src))) {
-            $srcset = asset($small).' 800w, '.asset($src).' '.(getimagesize(public_path($src))[0] ?? $width).'w';
+            $srcset = asset_v($small).' 800w, '.asset_v($src).' '.(getimagesize(public_path($src))[0] ?? $width).'w';
         }
     }
 @endphp
 @if ($media)
     <img src="{{ $media->url() }}" srcset="{{ $media->srcset() }}" sizes="{{ $sizes }}" width="{{ $media->width }}" height="{{ $media->height }}" alt="{{ $alt ?: $media->alt }}" @if ($priority) fetchpriority="high" @else loading="{{ $lazy ? 'lazy' : 'eager' }}" decoding="async" @endif {{ $attributes }}>
 @elseif ($src)
-    <img src="{{ asset($src) }}" @if ($srcset) srcset="{{ $srcset }}" sizes="{{ $sizes }}" @endif width="{{ $width }}" height="{{ $height }}" alt="{{ $alt }}" @if ($priority) fetchpriority="high" @else loading="{{ $lazy ? 'lazy' : 'eager' }}" decoding="async" @endif {{ $attributes }}>
+    <img src="{{ asset_v($src) }}" @if ($srcset) srcset="{{ $srcset }}" sizes="{{ $sizes }}" @endif width="{{ $width }}" height="{{ $height }}" alt="{{ $alt }}" @if ($priority) fetchpriority="high" @else loading="{{ $lazy ? 'lazy' : 'eager' }}" decoding="async" @endif {{ $attributes }}>
 @endif

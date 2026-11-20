@@ -4,7 +4,7 @@
 @endphp
 @push('head')
     {{-- The photo is the LCP element: preload the right size for the screen. --}}
-    <link rel="preload" as="image" href="{{ asset($poster) }}" @if ($sets = static_srcset($poster)) imagesrcset="{{ $sets }}" imagesizes="100vw" @endif fetchpriority="high">
+    <link rel="preload" as="image" href="{{ asset_v($poster) }}" @if ($sets = static_srcset($poster)) imagesrcset="{{ $sets }}" imagesizes="100vw" @endif fetchpriority="high">
 @endpush
 <section class="relative isolate flex min-h-[88vh] items-center overflow-hidden bg-brand-900 text-white {{ $overlay ? 'pt-16 lg:pt-20' : '' }}">
     {{-- Photo first (works without JavaScript and on phones); the background video, if one exists, plays over it on larger screens. --}}

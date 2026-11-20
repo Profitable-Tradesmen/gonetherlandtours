@@ -171,7 +171,17 @@ if (! function_exists('static_srcset')) {
             return null;
         }
 
-        return asset($small).' 800w, '.asset($path).' '.(getimagesize(public_path($path))[0] ?? 1600).'w';
+        return asset_v($small).' 800w, '.asset_v($path).' '.(getimagesize(public_path($path))[0] ?? 1600).'w';
+    }
+}
+
+if (! function_exists('asset_v')) {
+    /** asset() plus ?v=<file modified time> for files under public/, so a browser or CDN fetches a changed image instead of a cached one that reused its name. */
+    function asset_v(string $path): string
+    {
+        $file = public_path($path);
+
+        return asset($path).(is_file($file) ? '?v='.filemtime($file) : '');
     }
 }
 

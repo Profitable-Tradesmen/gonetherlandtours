@@ -9,9 +9,9 @@
     @if (! empty($poster))<x-picture :src="$poster" :alt="$posterAlt ?? ''" :width="1600" :height="900" class="absolute inset-0 -z-30 h-full w-full object-cover" sizes="100vw" />@endif
     @if (in_array($ext, ['mp4', 'webm'], true))
         {{-- loads after the page, on tablets and desktops only (initBgVideo in app.js); phones, Data Saver and reduced motion keep the photo --}}
-        <video muted loop playsinline aria-hidden="true" preload="none" data-bg-video class="absolute inset-0 -z-20 h-full w-full object-cover"><source data-src="{{ asset($bg) }}" type="video/{{ $ext }}"></video>
+        <video muted loop playsinline aria-hidden="true" preload="none" data-bg-video class="absolute inset-0 -z-20 h-full w-full object-cover"><source data-src="{{ asset_v($bg) }}" type="video/{{ $ext }}"></video>
     @elseif ($ext === 'gif')
-        <img src="{{ asset($bg) }}" alt="" loading="lazy" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover">
+        <img src="{{ asset_v($bg) }}" alt="" loading="lazy" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover">
     @else
         <x-picture :src="$bg" alt="" :width="1600" :height="900" class="absolute inset-0 -z-20 h-full w-full object-cover" sizes="100vw" />
     @endif

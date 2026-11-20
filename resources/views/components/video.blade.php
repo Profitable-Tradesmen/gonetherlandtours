@@ -13,7 +13,7 @@
     $srcAttr = $background ? 'data-src' : 'src';
 @endphp
 @if ($has)
-    <video {{ $attributes }} @if ($background) muted loop playsinline aria-hidden="true" preload="none" data-bg-video @else controls preload="none" @endif @if ($poster) poster="{{ asset($poster) }}" @endif>
+    <video {{ $attributes }} @if ($background) muted loop playsinline aria-hidden="true" preload="none" data-bg-video @else controls preload="none" @endif @if ($poster) poster="{{ asset_v($poster) }}" @endif>
         @if (is_file($webm)){!! '<source '.$srcAttr.'="'.e(asset("videos/{$name}.webm")).'" type="video/webm">' !!}@endif
         @if (is_file($mp4)){!! '<source '.$srcAttr.'="'.e(asset("videos/{$name}.mp4")).'" type="video/mp4">' !!}@endif
     </video>
