@@ -22,7 +22,7 @@
 - [ ] Legal pages reviewed; consent wording approved; cookie/consent banner decision made for the target market.
 - [ ] Google Search Console: verify the domain, submit the sitemap. Google Business Profile if applicable.
 - [ ] Message match: each Ads ad group points to a page whose H1 and hero repeat the ad's promise (use package or destination pages, or add `?utm_*` links to the home page).
-- [ ] Run Lighthouse (mobile and desktop) on Home, a package and Contact: aim for 90+ in every category. Last run 20 Nov 2026 (Home and a package, mobile and desktop: all 92 or higher, see the latest "Re-run" table below); Contact still to run.
+- [ ] Run Lighthouse (mobile and desktop) on Home, a package and Contact: aim for 90+ in every category. Last run 20 Nov 2026 on the staging server (Home and a package, mobile and desktop: all 98 or higher, see the latest "Re-run" table below); Contact still to run.
 - [ ] Test at 360, 768 and 1280 px: no horizontal scroll; keyboard-only walk-through; WCAG AA contrast (brand blue `#437DA5` is decorative; text/buttons use `#2F6285`).
 - [ ] Check 404 page, `robots.txt`, `sitemap.xml` on production.
 
@@ -114,8 +114,25 @@ What happened in this pass:
 - **The home hero is a photo only** (no video), so LCP stays near 2.6 s on throttled mobile.
 
 Watch list:
-- Tour-type photos now also come in a 720px size (phones were downloading the 960px file, up to 339 KB each).
-- Home DOM was about 2,770 elements (mega menus, quiz, partner slider); the country-code lists in the enquiry forms (37 flag images each, in 3 forms) now render only while open, which took the home page to about 2,440 elements, 84 `<img>` tags (was 180) and 325 KB of HTML (was 392 KB). Two new bands were added (an offer band and a payments band), so re-run Lighthouse on the live server before adding more sections.
+- Tour-type photos now also come in a 720px size, and the tour-type card's `sizes` is `calc(100vw - 2rem)` on phones (it was `100vw`, which made a 412 px phone at 1.75x pick the 960 px file, up to 339 KB each). Image addresses carry `?v=<file modified time>` (`asset_v()` and `Media::url()`), so a browser or CDN never serves an old picture that reused its file name.
+- Home DOM was about 2,770 elements (mega menus, quiz, partner slider); the country-code lists in the enquiry forms (37 flag images each, in 3 forms) now render only while open, which took the home page to about 2,440 elements, 84 `<img>` tags (was 180) and 325 KB of HTML (was 392 KB). (An offer band and a payments band were tried on the home page and removed again: the page is long enough.) Re-run Lighthouse on the live server before adding more sections.
 - The Tour Types mega menu now holds a three-slide featured-trip carousel (Alpine; images are lazy-loaded inside the hidden panel and it only advances while the menu is open).
 - Package mobile performance has about 2 points of margin. Keep package photos as 480, 960 and 1600 px copies, lazy-loaded.
 - Minor notes that do not affect the scores: the logo SVG is sometimes flagged as offscreen, and the bundled JavaScript reports a tiny legacy-JavaScript saving.
+
+### Re-run on the staging server (Lighthouse 12, 20 Nov 2026)
+Staging site (Hostinger, behind the host's own gzip and caching), home page and package `tulip-route-self-drive`. Home mobile was run three times (98, 98, 99). Nothing is below 90, so nothing needed fixing.
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | Page size |
+|---|---|---|---|---|---|---|---|
+| Home | Mobile | 98-99 (TBT 40-70 ms, CLS 0) | 100 | 100 | 100 | 2.0-2.3 s | 649 KiB |
+| Home | Desktop | 99 (CLS 0.022) | 100 | 100 | 100 | 0.6 s | 836 KiB |
+| Package | Mobile | 98 (CLS 0) | 100 | 100 | 100 | 2.3 s | 353 KiB |
+| Package | Desktop | 100 | 100 | 100 | 100 | 0.6 s | 508 KiB |
+
+For comparison, on the same day a sister site (Go Belgium) scored 95 / 95 / 100 / 100 on mobile and 99 / 95 / 100 / 100 on desktop, and another (Go Germany) refused Lighthouse with a 403. Home has about 2,360 elements (Belgium about 1,650) and no failed requests.
+
+Watch list:
+- Lighthouse still lists about 177 KiB of oversized images on the home page: 100 KiB is a photo uploaded in the staging admin (`lihnvjfr0j7jnl-960.webp`, replace it with a smaller one, about 1200 px wide) and 77 KiB is the Self Drive card photo. It does not lower the score.
+- The staging site says `index, follow`; switch it to noindex until the live domain is ready.
+- Real phone number, real reviews (the cards still say "Sample review") and analytics IDs are still to be added; analytics scripts will cost points, so re-run after adding them.

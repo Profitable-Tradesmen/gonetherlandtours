@@ -76,7 +76,7 @@ class HardeningTest extends TestCase
 
     public function test_public_pages_stay_within_a_query_budget(): void
     {
-        foreach (['/' => 30, '/about' => 20, '/packages' => 22, '/packages/sample-tulip-season-self-drive' => 20] as $url => $max) {
+        foreach (['/' => 30, '/about' => 20, '/packages' => 22, '/packages/tulip-route-self-drive' => 20] as $url => $max) {
             DB::flushQueryLog();
             DB::enableQueryLog();
             $this->get($url)->assertOk();

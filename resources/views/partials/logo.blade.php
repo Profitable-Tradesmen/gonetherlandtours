@@ -6,9 +6,9 @@
     @if (setting('logo'))
         <img src="{{ asset(setting('logo')) }}" alt="{{ $brand }}" height="40" class="h-9 w-auto sm:h-10">
     @elseif ($light ?? false)
-        <img src="{{ asset('images/logo-gonetherland-dark.svg') }}" width="1417" height="262" alt="{{ $brand }}" class="h-11 w-auto sm:h-12">
+        <img src="{{ asset_v('images/logo-gonetherland-dark.svg') }}" width="1417" height="262" alt="{{ $brand }}" class="h-11 w-auto sm:h-12">
     @else
-        <img src="{{ asset('images/logo-gonetherland.svg') }}" width="1417" height="262" alt="{{ $brand }}" class="logo-color {{ $size }}">
-        <img src="{{ asset('images/logo-gonetherland-dark.svg') }}" width="1417" height="262" alt="" aria-hidden="true" class="logo-white {{ $size }}">
+        <img src="{{ asset_v('images/logo-gonetherland.svg') }}" width="1417" height="262" alt="{{ $brand }}" class="logo-color {{ $size }}">
+        <img src="{{ asset_v('images/logo-gonetherland-dark.svg') }}" width="1417" height="262" alt="" aria-hidden="true" class="logo-white {{ $size }}">
     @endif
 </span>

@@ -82,7 +82,15 @@ class CodeSnippet extends Model
     public static function render(string $position, ?string $path = null): string
     {
         // rescue(): a site that has not run the migration yet must keep working (no snippets, no error)
-        $all = rescue(fn () => Cache::rememberForever(self::CACHE_KEY, fn () => self::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get()->all()), [], false);
+        // a per-request copy (render() runs several times per page; each cache read is a database query on the database cache store)
+        static $memo = null;
+        $load = fn () => rescue(fn () => Cache::rememberForever(self::CACHE_KEY, fn () => self::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get()->all()), [], false);
+        if (app()->runningInConsole()) {
+            $all = $load();
+        } else {
+            $memo ??= new \WeakMap();
+            $all = $memo[app('request')] ??= $load();
+        }
         $path ??= self::normalizePath('/'.request()->path());
 
         return collect($all)
