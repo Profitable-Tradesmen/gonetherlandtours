@@ -65,3 +65,7 @@ Blade + small Alpine; no inline business logic in views beyond display. Colours/
 - Tests call `Http::preventStrayRequests()` (tests/TestCase.php) and blank GHL env in `phpunit.xml`: tests must never reach the live CRM.
 - reCAPTCHA keys in `.env.example` are Google's TEST keys.
 - Production queue on Hostinger shared hosting runs via cron `schedule:run` (see DEPLOYMENT.md).
+
+## Uploads and deploys
+- `storage/app/public/*` (admin and developer uploads) is git-ignored, so a push never carries it. After adding or changing uploaded images locally, run `npm run sync:media` (add `-- --dry-run` to preview, `-- --target=staging` for staging). It copies the folder to the server over SSH using the host details in `.deploy.env` (git-ignored; template in `.deploy.env.example`).
+- Database rows that point at uploads (e.g. `tour_types.image`) must travel as a migration, not a local edit, or the server keeps the old path.

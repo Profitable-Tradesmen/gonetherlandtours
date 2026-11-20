@@ -32,3 +32,6 @@ live_deploy_key
 live_deploy_key.pub
 *_deploy_key
 *_deploy_key.pub
+
+# Local deploy settings (server host/user/path)
+.deploy.env

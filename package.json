@@ -3,6 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "sync:media": "bash scripts/sync-media.sh",
         "build": "vite build",
         "dev": "vite"
     },
