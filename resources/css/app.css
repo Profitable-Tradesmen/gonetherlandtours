@@ -206,3 +206,18 @@ main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 
     .pslider-track { flex-wrap: wrap; transform: none; transition: none; }
     .pslider-clone { display: none; }
 }
+
+/* Package gallery (pages/package-show.blade.php): photos drift slowly to the left forever; paused while hovered, focused or enlarged.
+   The track holds two identical groups and slides by one group, so the loop has no jump; "gallerySlider" (app.js) opens the enlarged view. */
+.gslider { overflow: hidden; border-radius: 1rem; contain: paint; -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent); }
+.gslider-track { display: flex; width: max-content; animation: gslide var(--gslide-time, 60s) linear infinite; will-change: transform; }
+.gslider-group { display: flex; flex-shrink: 0; gap: .75rem; padding-right: .75rem; }
+.gslider-item { display: block; width: 15rem; flex-shrink: 0; overflow: hidden; border-radius: .75rem; cursor: zoom-in; }
+@media (min-width: 640px) { .gslider-item { width: 17rem; } }
+.gslider:hover .gslider-track, .gslider:focus-within .gslider-track, .gslider.is-paused .gslider-track { animation-play-state: paused; }
+@keyframes gslide { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+    .gslider { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+    .gslider-track { animation: none; }
+    .gslider-group[aria-hidden='true'] { display: none; }
+}

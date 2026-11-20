@@ -11,7 +11,7 @@
             <div class="flex items-center justify-center gap-3 px-2 lg:px-5 lg:py-2 {{ $i > 0 ? 'lg:border-l lg:border-sand-200' : '' }}" data-reveal="up" style="--d:{{ $i * 80 }}ms">
                 <span class="flex h-12 w-12 shrink-0 items-center justify-center bg-brand-900 text-accent"><x-icon :name="$it['icon'] ?: 'check'" class="h-6 w-6" /></span>
                 <div class="min-w-0">
-                    <h3 class="font-display text-lg font-medium leading-tight text-brand-900">{{ $it['title'] }}</h3>
+                    <p class="font-display text-lg font-medium leading-tight text-brand-900">{{ $it['title'] }}</p>
                     <p class="mt-1 text-sm leading-snug text-ink/75">{{ $it['text'] }}</p>
                 </div>
             </div>

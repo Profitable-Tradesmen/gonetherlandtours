@@ -9,7 +9,7 @@
 @if ($items->isNotEmpty() && $spot)
 {{-- Spotlight: one review at a time in a large card (round photo or initial, stars, big quote, name, place and trip), a picker made of the
      travelers' photos, arrows and keyboard use. The background is a photo, GIF or video chosen in the admin. All reviews are in the HTML. --}}
-<section class="relative isolate overflow-hidden bg-brand-900 py-16 text-white sm:py-24" aria-labelledby="te-{{ $sid }}">
+<section class="relative isolate overflow-hidden bg-brand-900 py-16 text-white sm:py-24" @if ($d['heading']) aria-labelledby="te-{{ $sid }}" @else aria-label="Traveler reviews" @endif>
     @include('partials.section-bg', ['bg' => $bg, 'poster' => $d['poster'] ?? '', 'posterAlt' => $d['poster_alt'] ?? '', 'tint' => $d['overlay'] ?? 'medium'])
     <div class="container-site" x-data="{ i: 0, n: {{ $items->count() }}, go(k) { this.i = (k + this.n) % this.n } }" role="region" aria-roledescription="carousel" aria-label="{{ $d['heading'] ?: 'Reviews' }}">
         @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" light :id="'te-'.$sid" />@endif
@@ -55,7 +55,7 @@
     </div>
 </section>
 @elseif ($items->isNotEmpty())
-<section class="relative isolate overflow-hidden {{ $dark ? 'bg-brand-900 text-white' : 'bg-sand' }} py-16 sm:py-24" aria-labelledby="te-{{ $sid }}">
+<section class="relative isolate overflow-hidden {{ $dark ? 'bg-brand-900 text-white' : 'bg-sand' }} py-16 sm:py-24" @if ($d['heading']) aria-labelledby="te-{{ $sid }}" @else aria-label="Traveler reviews" @endif>
     @if ($dark)@include('partials.section-bg', ['bg' => $bg, 'poster' => $d['poster'] ?? '', 'posterAlt' => $d['poster_alt'] ?? '', 'tint' => $d['overlay'] ?? 'medium'])@endif
     <div class="container-site">
         @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :light="$dark" :id="'te-'.$sid" />@endif

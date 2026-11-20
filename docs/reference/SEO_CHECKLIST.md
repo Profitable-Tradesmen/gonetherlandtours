@@ -116,7 +116,7 @@ What happened in this pass:
 Watch list:
 - Tour-type photos now also come in a 720px size, and the tour-type card's `sizes` is `calc(100vw - 2rem)` on phones (it was `100vw`, which made a 412 px phone at 1.75x pick the 960 px file, up to 339 KB each). Image addresses carry `?v=<file modified time>` (`asset_v()` and `Media::url()`), so a browser or CDN never serves an old picture that reused its file name.
 - Home DOM was about 2,770 elements (mega menus, quiz, partner slider); the country-code lists in the enquiry forms (37 flag images each, in 3 forms) now render only while open, which took the home page to about 2,440 elements, 84 `<img>` tags (was 180) and 325 KB of HTML (was 392 KB). (An offer band and a payments band were tried on the home page and removed again: the page is long enough.) Re-run Lighthouse on the live server before adding more sections.
-- The Tour Types mega menu now holds a three-slide featured-trip carousel (Alpine; images are lazy-loaded inside the hidden panel and it only advances while the menu is open).
+- The Tour Types mega menu shows one featured trip card (the first featured package); the three-slide carousel it had before was removed to save two images and some script work.
 - Package mobile performance has about 2 points of margin. Keep package photos as 480, 960 and 1600 px copies, lazy-loaded.
 - Minor notes that do not affect the scores: the logo SVG is sometimes flagged as offscreen, and the bundled JavaScript reports a tiny legacy-JavaScript saving.
 

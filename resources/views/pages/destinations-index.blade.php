@@ -1,9 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="bg-brown py-12 text-white sm:py-16"><div class="container-site">
-    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/70"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>{{ text('destinations_heading') }}</span></nav>
-    <h1 class="text-4xl font-medium sm:text-5xl">{{ text('destinations_heading') }}</h1>
+<section class="relative isolate overflow-hidden bg-brown py-16 text-white sm:py-24">
+    <x-picture src="images/off_the_beaten_path.webp" alt="" :width="1600" :height="640" priority class="absolute inset-0 -z-20 h-full w-full object-cover" sizes="100vw" />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink/80 via-ink/50 to-ink/20"></div>
+    <div class="container-site">
+    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>{{ text('destinations_heading') }}</span></nav>
+    <h1 class="text-4xl font-medium [text-shadow:0_1px_10px_rgb(12_13_17/0.5)] sm:text-5xl">{{ text('destinations_heading') }}</h1>
     @if (text('destinations_intro'))<p class="mt-3 max-w-2xl text-white/90">{{ text('destinations_intro') }}</p>@endif
 </div></section>
 
@@ -15,8 +18,8 @@
                     <li>
                         <a href="{{ route('destinations.show', $d) }}" class="group relative isolate flex min-h-[22rem] flex-col justify-end overflow-hidden rounded-2xl p-6 text-white shadow-card">
                             @if ($d->image)<x-picture :src="$d->image" :alt="$d->image_alt ?? ''" :width="960" :height="640" class="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw" />@endif
-                            <span class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/30 to-transparent"></span>
-                            <span class="label-caps text-accent">{{ $d->packages_count }} {{ \Illuminate\Support\Str::plural('tour', $d->packages_count) }}</span>
+                            <span class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/95 via-ink/60 to-ink/10"></span>
+                            <span class="label-caps self-start rounded bg-ink/70 px-2 py-0.5 text-accent">{{ $d->packages_count }} {{ \Illuminate\Support\Str::plural('tour', $d->packages_count) }}</span>
                             <h2 class="mt-1 text-3xl font-medium">{{ $d->name }}</h2>
                             @if ($d->summary)<p class="mt-2 line-clamp-3 text-sm text-white/85">{{ $d->summary }}</p>@endif
                             <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-accent">Explore {{ $d->name }} <x-icon name="arrow" class="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>

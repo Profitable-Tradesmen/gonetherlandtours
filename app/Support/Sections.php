@@ -68,6 +68,7 @@ class Sections
                 $ta('subtitle', 'Short text under the heading'),
                 ['name' => 'align', 'label' => 'Alignment', 'type' => 'select', 'options' => ['left' => 'Left', 'center' => 'Centered'], 'default' => 'left'],
                 ['name' => 'tone', 'label' => 'Color', 'type' => 'select', 'options' => ['brown' => 'Dark brown', 'blue' => 'Dark blue'], 'default' => 'brown'],
+                self::img('image', 'Background photo (optional)', ''),
             ]],
             'rich_text' => ['label' => 'Text', 'description' => 'A block of formatted text (headings, lists, links). Used for About, legal pages and any article.', 'fields' => [
                 ['name' => 'html', 'label' => 'Content', 'type' => 'rich', 'default' => ''],
@@ -279,6 +280,25 @@ class Sections
             ]],
             'contact_details' => ['label' => 'Contact details and form', 'description' => 'Your text and contact details (from Settings) beside the inquiry form.', 'fields' => [
                 ['name' => 'intro', 'label' => 'Text beside the form', 'type' => 'rich', 'default' => ''],
+                self::img('specialist_image', 'Specialist photo', 'images/team-1.webp'),
+                $t('specialist_name', 'Specialist name', 'Anouk de Vries'),
+                $t('specialist_role', 'Specialist role', 'Senior Travel Specialist'),
+                $ta('specialist_text', 'Specialist message', 'Tell me about your trip and I will help you plan it, from the first idea to the flight home.'),
+                $t('reach_heading', 'Heading above the contact cards', 'How to reach us'),
+                $t('call_text', 'Call card text', 'Speak to a travel specialist'),
+                $t('email_text', 'Email card text', 'Send us your plans and questions'),
+                $t('hours_title', 'Hours card title', 'When we are available'),
+                $t('hours_text', 'Hours card text', 'Monday to Friday, 9:00 to 17:00 Central European Time (3:00 to 11:00 US Eastern)'),
+                $t('explore_heading', 'Heading above the links', 'Prefer to explore first?'),
+                $t('prompts_heading', 'Heading above the message starters', 'Not sure what to ask? Tap one to start your message:'),
+                self::rep('prompts', 'Message starters (up to 6)', 'starter', [$t('label', 'Button text'), $t('text', 'Text added to the message')], 6, [
+                    ['label' => 'Tulip season trip', 'text' => 'I would like to see the tulip fields and gardens in spring.'],
+                    ['label' => 'Private chauffeur tour', 'text' => 'I am interested in a private chauffeur-driven tour.'],
+                    ['label' => 'Self drive route', 'text' => 'I would like to drive myself on a planned route.'],
+                    ['label' => 'Family or group trip', 'text' => 'I am planning a trip for a family or group.'],
+                    ['label' => 'Something custom', 'text' => 'I have my own ideas for a trip and would like help shaping them.'],
+                ]),
+                $t('reassure', 'Reassurance line above the form', 'Free and no obligation. Your details stay private.'),
                 $t('submit_label', 'Form button', 'Send Message'),
             ]],
         ];

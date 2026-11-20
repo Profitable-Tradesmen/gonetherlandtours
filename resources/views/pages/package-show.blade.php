@@ -84,8 +84,45 @@
         </div>
 
         @if ($package->images->count() > 1)
-            <section aria-labelledby="gal"><h2 id="gal" class="text-2xl font-medium sm:text-3xl">Gallery</h2>
-                <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">@foreach ($package->images->skip(1) as $img)<x-picture :media="$img" :alt="$img->alt" class="aspect-[4/3] w-full rounded-xl object-cover" sizes="(min-width:640px) 20vw, 50vw" />@endforeach</div>
+            @php
+                $gallery = $package->images->skip(1)->values();
+                $gn = $gallery->count();
+                $reps = max(1, (int) ceil(6 / $gn));   // each group must be wider than the box, so the loop never shows a gap
+                $big = $gallery->map(fn ($m) => ['src' => $m->url(), 'alt' => (string) $m->alt])->all();
+            @endphp
+            <section aria-labelledby="gal" x-data="gallerySlider(@js($big))">
+                <h2 id="gal" class="text-2xl font-medium sm:text-3xl">Gallery</h2>
+                <p class="sr-only">Photos slide slowly across; pause by hovering, and select a photo to enlarge it.</p>
+                <div class="gslider mt-4" :class="open ? 'is-paused' : ''" style="--gslide-time: {{ $gn * $reps * 11 }}s">
+                    <div class="gslider-track">
+                        @foreach ([false, true] as $copy)
+                            <div class="gslider-group" @if ($copy) aria-hidden="true" @endif>
+                                @foreach (range(1, $reps) as $r)
+                                    @foreach ($gallery as $k => $img)
+                                        <button type="button" class="gslider-item group" @click="show({{ $k }}, $el)" aria-label="Enlarge photo: {{ $img->alt }}" @if ($copy || $r > 1) tabindex="-1" @endif>
+                                            <x-picture :media="$img" :alt="($copy || $r > 1) ? '' : $img->alt" class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105" sizes="(min-width:640px) 17rem, 15rem" />
+                                        </button>
+                                    @endforeach
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Enlarged photo --}}
+                <div x-show="open" x-cloak x-transition.opacity.duration.200ms x-trap.noscroll="open" role="dialog" aria-modal="true" aria-label="Photo viewer"
+                     class="fixed inset-0 z-[80] flex items-center justify-center bg-ink/90 p-4 sm:p-8"
+                     @click.self="close()" @keydown.escape.window="open && close()" @keydown.arrow-left.window="open && prev()" @keydown.arrow-right.window="open && next()">
+                    <button type="button" @click="close()" class="absolute right-3 top-3 rounded-full bg-white/10 p-2.5 text-white hover:bg-white/25 sm:right-5 sm:top-5" aria-label="Close photo"><x-icon name="close" class="h-6 w-6" /></button>
+                    <figure class="flex max-h-full max-w-5xl flex-col items-center" @click.self="close()">
+                        <img :src="cur.src" :alt="cur.alt" class="max-h-[78vh] w-auto max-w-full rounded-xl object-contain shadow-2xl">
+                        <figcaption class="mt-3 text-center text-sm text-white/85" x-text="cur.alt"></figcaption>
+                    </figure>
+                    @if ($gn > 1)
+                        <button type="button" @click="prev()" class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/25 sm:left-5" aria-label="Previous photo"><x-icon name="chevron" class="h-6 w-6 rotate-90" /></button>
+                        <button type="button" @click="next()" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/25 sm:right-5" aria-label="Next photo"><x-icon name="chevron" class="h-6 w-6 -rotate-90" /></button>
+                    @endif
+                </div>
             </section>
         @endif
 

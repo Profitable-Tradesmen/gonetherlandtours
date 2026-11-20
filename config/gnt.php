@@ -70,6 +70,8 @@ return [
         'usp_3_title' => 'Hidden gems & local secrets', 'usp_3_text' => 'Lesser-known places beyond the tourist hotspots.',
         'usp_4_title' => 'Expertly crafted itineraries', 'usp_4_text' => 'Thoughtfully designed routes and carefully selected attractions.',
         'destinations_heading' => 'Destinations', 'destinations_intro' => 'Regions worth slowing down for: pick one and see the tours that visit it.',
+        'destinations_seo_title' => 'Netherlands Destinations: Amsterdam, Tulip Fields and Zeeland',
+        'destinations_seo_description' => 'Explore the Netherlands by region: Amsterdam and the historic cities, the tulip fields and windmills of the countryside, and the coast and Delta Works of Zeeland. Self drive, chauffeur driven and small-group tours.',
         'packages_intro' => 'Browse our Netherlands tour packages and request a free, tailored quote.',
         'thankyou_heading' => 'Thank you', 'thankyou_text' => 'We have received your inquiry. A Netherlands travel specialist will be in touch soon with your tailored quote.', 'thankyou_button' => 'Browse tour packages',
     ],

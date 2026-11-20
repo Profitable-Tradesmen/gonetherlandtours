@@ -199,7 +199,7 @@ class DefaultSections
             ]),
             self::whyBand(),   // the same "Why choose us" section as the home page
             self::s('blog_latest', ['eyebrow' => '', 'heading' => 'Our Articles', 'intro' => 'Guides, insights and stories to inspire your next Netherlands trip.', 'count' => 3, 'button_label' => '']),
-            self::s('team', ['items' => array_map(fn ($n) => ['name' => \App\Support\ConfirmCleanup::NAMES[$n - 1], 'role' => \App\Support\ConfirmCleanup::ROLES[$n - 1], 'bio' => \App\Support\ConfirmCleanup::BIOS[$n - 1], 'image' => '', 'image_alt' => ''], [1, 2, 3])]),
+            self::s('team', ['items' => array_map(fn ($n) => ['name' => \App\Support\ConfirmCleanup::NAMES[$n - 1], 'role' => \App\Support\ConfirmCleanup::ROLES[$n - 1], 'bio' => \App\Support\ConfirmCleanup::BIOS[$n - 1], 'image' => 'images/team-'.$n.'.webp', 'image_alt' => 'Placeholder portrait of '.\App\Support\ConfirmCleanup::NAMES[$n - 1]], [1, 2, 3])]),
             self::s('testimonials', ['variant' => 'dark', 'eyebrow' => '', 'heading' => 'What Our Travelers Say']),
             self::s('steps', ['style' => 'tiles', 'heading' => '3 Easy Steps to Book Your Netherlands Tour', 'intro' => 'Follow three easy steps to choose your tour, shape your trip and get ready for an unforgettable adventure.', 'button_label' => 'Start Your Netherlands Dream Trip', 'items' => self::rows([
                 ['Get Your Free Quote', 'Tell us your travel plans and preferences.'],
@@ -217,6 +217,32 @@ class DefaultSections
     }
 
     /** "What happens next" steps shown under the contact form (also appended to an existing default Contact page by a migration). */
+    /** Slim reassurance strip under the contact title bar. */
+    public static function contactStrip(): array
+    {
+        return self::s('feature_cards', ['style' => 'strip', 'items' => self::rows([
+            ['star', 'Free, no-obligation quote', 'No pressure and no hidden fees.'],
+            ['guide', 'Local travel specialists', 'Trips planned by people who know the Netherlands.'],
+            ['lock', 'Your details stay private', 'Used only to plan and quote your trip.'],
+        ], ['icon', 'title', 'text'])]);
+    }
+
+    /** Reviews on the contact page (they come from Admin > Testimonials). */
+    public static function contactReviews(): array
+    {
+        return self::s('testimonials', ['variant' => 'light', 'eyebrow' => 'Kind words', 'heading' => 'What travelers say']);
+    }
+    /** Contact page title bar with a photo behind it. */
+    public static function contactHeader(): array
+    {
+        return self::s('page_header', ['heading' => '', 'subtitle' => 'Tell us about your trip and a travel specialist will get back to you.', 'image' => 'images/feature_band.webp']);
+    }
+
+    /** A few of the site's FAQs under the contact form (the questions come from Admin > FAQs). */
+    public static function contactFaq(): array
+    {
+        return self::s('faq', ['eyebrow' => 'Quick answers', 'heading' => 'Before you write', 'limit' => 4, 'help_heading' => '', 'help_text' => '']);
+    }
     public static function contactSteps(): array
     {
         return self::s('steps', ['style' => 'tiles', 'heading' => 'What happens next', 'intro' => 'Three simple steps from your message to your trip.', 'items' => self::rows([
@@ -228,7 +254,7 @@ class DefaultSections
 
     public static function contact(string $body): array
     {
-        return [self::s('page_header', ['heading' => '']), self::s('contact_details', ['intro' => $body]), self::contactSteps()];
+        return [self::contactHeader(), self::contactStrip(), self::s('contact_details', ['intro' => $body]), self::contactSteps(), self::contactFaq(), self::contactReviews()];
     }
 
     public static function legal(string $body): array
@@ -248,7 +274,7 @@ class DefaultSections
     {
         return [
             self::s('page_header', ['align' => 'center', 'tone' => 'blue', 'subtitle' => 'Real words from people who have traveled the Netherlands with us.']),
-            self::s('testimonials', ['variant' => 'light', 'eyebrow' => '', 'heading' => '', 'button_label' => 'Plan my Netherlands trip']),
+            self::s('testimonials', ['variant' => 'dark', 'eyebrow' => '', 'heading' => '', 'button_label' => 'Plan my Netherlands trip']),   // the same design as the home page (review cards over a photo); no heading of its own because the page title bar above already has one
         ];
     }
 
@@ -299,7 +325,7 @@ class DefaultSections
     {
         return [
             self::s('page_header', ['heading' => 'Meet the Team', 'subtitle' => 'The people who plan your trip and look after you along the way.']),
-            self::s('team', ['items' => array_map(fn ($n) => ['name' => \App\Support\ConfirmCleanup::NAMES[$n - 1], 'role' => \App\Support\ConfirmCleanup::ROLES[$n - 1], 'bio' => \App\Support\ConfirmCleanup::BIOS[$n - 1], 'image' => '', 'image_alt' => ''], [1, 2, 3])]),
+            self::s('team', ['items' => array_map(fn ($n) => ['name' => \App\Support\ConfirmCleanup::NAMES[$n - 1], 'role' => \App\Support\ConfirmCleanup::ROLES[$n - 1], 'bio' => \App\Support\ConfirmCleanup::BIOS[$n - 1], 'image' => 'images/team-'.$n.'.webp', 'image_alt' => 'Placeholder portrait of '.\App\Support\ConfirmCleanup::NAMES[$n - 1]], [1, 2, 3])]),
             self::s('cta_banner', ['image_alt' => 'Tulip fields and a distant windmill at sunset', 'heading' => 'Ready to Discover the Real Netherlands?', 'text' => 'Tell us what you have in mind and a travel specialist will reply with a clear, no-obligation quote.']),
         ];
     }

@@ -397,6 +397,50 @@ Alpine.data('partnerSlider', (n) => ({
     },
 }));
 
+/* -------------------------------------------------------------
+ * Package gallery enlarge view (pages/package-show.blade.php): a photo opens large; arrows and the Left/Right keys move between photos,
+ * Escape or a click outside closes it and focus goes back to the photo that was clicked. The sliding itself is CSS only (.gslider).
+ * ------------------------------------------------------------- */
+Alpine.data('gallerySlider', (items) => ({
+    items,
+    open: false,
+    i: 0,
+    opener: null,
+    get cur() {
+        return this.items[this.i] || { src: '', alt: '' };
+    },
+    show(k, el) {
+        this.i = k;
+        this.opener = el || null;
+        this.open = true;
+    },
+    close() {
+        this.open = false;
+        this.$nextTick(() => this.opener && this.opener.focus && this.opener.focus());
+    },
+    next() {
+        this.i = (this.i + 1) % this.items.length;
+    },
+    prev() {
+        this.i = (this.i - 1 + this.items.length) % this.items.length;
+    },
+}));
+/* -------------------------------------------------------------
+ * Contact page message starters (sections/contact_details.blade.php): a tap adds a sentence to the "Special request" box
+ * (on a new line if something is already written), puts the cursor there and scrolls it into view.
+ * ------------------------------------------------------------- */
+Alpine.data('contactPrompts', (id) => ({
+    fill(text) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const cur = el.value.trim();
+        if (cur.includes(text)) { el.focus(); return; }
+        el.value = cur ? cur + '\n' + text : text;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.scrollIntoView({ block: 'center', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        el.focus({ preventScroll: true });
+    },
+}));
 Alpine.start();
 
 /* ---------------------------------------------------------------

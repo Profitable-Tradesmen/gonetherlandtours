@@ -16,8 +16,8 @@ class DestinationController extends Controller
         return view('pages.destinations-index', [
             'destinations' => $destinations,
             'seo' => Seo::make([
-                'title' => text('destinations_heading').' | '.setting('brand_name', 'GoNetherlandTours'),
-                'description' => text('destinations_intro'),
+                'title' => (text('destinations_seo_title') ?: text('destinations_heading')).' | '.setting('brand_name', 'GoNetherlandTours'),
+                'description' => text('destinations_seo_description') ?: text('destinations_intro'),
                 'breadcrumbs' => [['Home', url('/')], [text('destinations_heading'), route('destinations.index')]],
             ]),
         ]);
