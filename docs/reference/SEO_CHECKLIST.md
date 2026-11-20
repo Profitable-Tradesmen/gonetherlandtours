@@ -166,3 +166,8 @@ Watch list:
 - Time to first byte is 0.55-0.75 s on every page; it is the largest part of every LCP.
 - The tour type pages' LCP is the tour photo at full width; if they stay near 90, give those heroes their own landscape photo.
 - Re-run the four pages below 90 (and Contact on desktop) after deploying these fixes.
+
+### Re-scan after the speed fixes, and the tour type hero (staging, Lighthouse 12, 20 Nov 2026)
+Contact desktop is back to 100 across the board (no third-party cookie before the form is touched). `/destinations` mobile went 88 to 95-97, Tulips & Countryside 89 to 96-97, Coach Tours 91 to 94-95 and Self Drive 87 to 92-93 (the weakest left, 2-3 points above 90). `/packages` accessibility is 100 (heading order fixed). No audit failed in any of the 26 runs.
+
+Next change, not yet measured: the tour type pages now use a purpose-made landscape hero (`<name>-hero.webp`, 960x720, and `<name>-hero-800.webp` for phones) cut from the tall card photo, so a phone downloads about 90 KB (Self Drive), 49 KB (Chauffeur) and 62 KB (Coach) instead of 200, 76 and 171 KB. `tour-type-show.blade.php` picks the `-hero` copy automatically when it exists beside the `-960` file; a photo uploaded later without one falls back to the tall photo. The photo alt texts were also corrected to describe what is in the pictures.

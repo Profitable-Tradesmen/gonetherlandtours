@@ -1,8 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    // The card photo is tall (960x1430). The title bar is a wide banner, so use the landscape copy cut from it (name-hero.webp, plus a lighter
+    // name-hero-800.webp for phones) when it exists: a phone then downloads about 90 KB instead of 200-340 KB, which is most of the page's LCP.
+    $heroSrc = $tourType->image;
+    $heroIsWide = false;
+    if ($heroSrc && preg_match('/-960\.webp$/', $heroSrc) && is_file(public_path($try = preg_replace('/-960\.webp$/', '-hero.webp', $heroSrc)))) {
+        $heroSrc = $try;
+        $heroIsWide = true;
+    }
+@endphp
 <section class="relative isolate overflow-hidden bg-brown py-14 text-white sm:py-20">
-    @if ($tourType->image)<x-picture :src="$tourType->image" :alt="$tourType->image_alt ?? ''" :width="960" :height="1430" priority class="absolute inset-0 -z-20 h-full w-full object-cover" />@endif
+    @if ($heroSrc)<x-picture :src="$heroSrc" :alt="$tourType->image_alt ?? ''" :width="960" :height="$heroIsWide ? 720 : 1430" priority class="absolute inset-0 -z-20 h-full w-full object-cover" />@endif
     <div class="absolute inset-0 -z-10 bg-ink/65"></div>
     <div class="container-site">
         <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/70"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <a href="{{ route('packages.index') }}" class="hover:text-accent">Packages</a> / <span>{{ $tourType->name }}</span></nav>
