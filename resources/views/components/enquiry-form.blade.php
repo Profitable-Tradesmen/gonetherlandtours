@@ -87,16 +87,17 @@
                         :aria-activedescendant="active >= 0 ? '{{ $idp }}-cc-' + list[active].iso : null"
                         @keydown="key($event)"
                         class="absolute left-0 top-full z-30 mt-1 max-h-64 w-72 max-w-[calc(100vw-3rem)] overflow-y-auto rounded-xl border border-sand-200 bg-white py-1 shadow-card focus:outline-none">
-                        @foreach ($countries as $i => [$cName, $cDial, $cIso])
-                            <li id="{{ $idp }}-cc-{{ $cIso }}" role="option" :aria-selected="iso === '{{ $cIso }}'"
-                                @click="choose('{{ $cIso }}')" @mousemove="active = {{ $i }}"
-                                :class="active === {{ $i }} ? 'bg-sand' : ''"
+                        {{-- Rendered only while the list is open: 37 flag images per form would otherwise sit in the page (and in the DOM) four times over. --}}
+                        <template x-for="(c, i) in (open ? list : [])" :key="c.iso">
+                            <li :id="'{{ $idp }}-cc-' + c.iso" role="option" :aria-selected="iso === c.iso"
+                                @click="choose(c.iso)" @mousemove="active = i"
+                                :class="active === i ? 'bg-sand' : ''"
                                 class="flex cursor-pointer items-center gap-3 px-3 py-2 text-sm">
-                                <img src="{{ $flagBase }}/{{ strtolower($cIso) }}.svg" alt="" width="24" height="18" loading="lazy" class="h-[18px] w-6 shrink-0 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
-                                <span class="flex-1">{{ $cName }}</span>
-                                <span class="text-ink/60">+{{ $cDial }}</span>
+                                <img :src="flag(c.iso)" alt="" width="24" height="18" class="h-[18px] w-6 shrink-0 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
+                                <span class="flex-1" x-text="c.name"></span>
+                                <span class="text-ink/60" x-text="'+' + c.dial"></span>
                             </li>
-                        @endforeach
+                        </template>
                     </ul>
                 </div>
             </x-form-field>

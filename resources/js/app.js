@@ -241,7 +241,7 @@ Alpine.data('countrySelect', (initial, list, flagBase) => ({
         this.scroll();
     },
     scroll() {
-        const li = this.$refs.list.children[this.active];
+        const li = this.$refs.list.querySelectorAll('[role="option"]')[this.active];
         if (li) li.scrollIntoView({ block: 'nearest' });
     },
     choose(iso) {

@@ -114,7 +114,7 @@ What happened in this pass:
 - **The home hero is a photo only** (no video), so LCP stays near 2.6 s on throttled mobile.
 
 Watch list:
-- Home DOM is about 2,770 elements (mega menus, quiz, partner slider). Lighthouse flags it but it does not lower the score; re-run before adding more sections above the fold.
+- Home DOM was about 2,770 elements (mega menus, quiz, partner slider); the country-code lists in the enquiry forms (37 flag images each, in 3 forms) now render only while open, which took the home page to about 2,440 elements, 84 `<img>` tags (was 180) and 325 KB of HTML (was 392 KB). Two new bands were added (an offer band and a payments band), so re-run Lighthouse on the live server before adding more sections.
 - The Tour Types mega menu now holds a three-slide featured-trip carousel (Alpine; images are lazy-loaded inside the hidden panel and it only advances while the menu is open).
 - Package mobile performance has about 2 points of margin. Keep package photos as 480, 960 and 1600 px copies, lazy-loaded.
 - Minor notes that do not affect the scores: the logo SVG is sometimes flagged as offscreen, and the bundled JavaScript reports a tiny legacy-JavaScript saving.
