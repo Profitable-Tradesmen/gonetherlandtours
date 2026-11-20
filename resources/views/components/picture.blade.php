@@ -9,7 +9,9 @@
     $srcset = null;
     if ($src && ! $media) {
         if (preg_match('/-960\.webp$/', $src) && is_file(public_path($src)) && is_file(public_path($half = preg_replace('/-960\.webp$/', '-480.webp', $src)))) {
-            $srcset = asset_v($half).' 480w, '.asset_v($src).' 960w';   // uploaded photos come in 480 and 960 px sizes
+            $mid = preg_replace('/-960\.webp$/', '-720.webp', $src);
+            // uploaded photos come in 480 and 960 px sizes (some also 720, which suits most phones)
+            $srcset = asset_v($half).' 480w, '.(is_file(public_path($mid)) ? asset_v($mid).' 720w, ' : '').asset_v($src).' 960w';
         }
         $small = preg_replace('/\.webp$/', '-800.webp', $src);
         if (! $srcset && $small !== $src && is_file(public_path($small)) && is_file(public_path($src))) {
