@@ -99,12 +99,10 @@ class DefaultSections
             ]),
             self::s('tour_types', ['heading' => $c['tours_heading'] ?? 'Choose How You Want to Explore']),
             self::s('packages_tabs', ['heading' => $c['packages_heading'] ?? 'Signature Collection']),
-            self::offerBand(),
             self::whyBand(),
             self::uspProof(),
             self::s('image_strip', ['items' => array_map(fn ($t) => ['title' => $t[0], 'text' => $t[1], 'image' => $t[2], 'image_alt' => $t[3]], $trav)]),
             self::s('steps', ['heading' => $c['how_heading'] ?? 'How It Works', 'items' => array_map(fn ($x) => ['title' => $x['title'] ?? '', 'text' => $x['text'] ?? ''], $steps)]),
-            self::paymentsBand(),
             self::partners(),
             self::s('testimonials', ['variant' => 'dark', 'heading' => $c['testimonials_heading'] ?? 'What Travelers Say']),   // three review cards over a photo ("Spotlight" = one review at a time is still available)
             self::s('gallery', ['eyebrow' => $gallery['eyebrow'] ?? 'Visual journey', 'heading' => $gallery['title'] ?? 'A glimpse of the *real Netherlands*', 'items' => $galleryRows], (bool) ($c['show_gallery'] ?? true)),
@@ -117,29 +115,6 @@ class DefaultSections
         ];
     }
 
-    /** Mid-page offer band on the home page: a gentle prompt to ask for a quote and any current offers (no invented discount figures). */
-    public static function offerBand(): array
-    {
-        return self::s('promo_band', [
-            'eyebrow' => 'Plan with confidence',
-            'heading' => 'Start planning and ask about *current offers.*',
-            'text' => 'Tell us when you want to travel and what you enjoy. A travel specialist will send a clear, personalized quote and let you know about any current offers that fit your trip.',
-            'points' => self::rows([['Free, no-obligation quote'], ['A reply from a travel specialist'], ['A plan shaped around you']], ['text']),
-            'button_label' => 'Get my free quote',
-        ]);
-    }
-
-    /** Reassurance band on the home page about how booking and paying works. Check the wording against your real payment terms. */
-    public static function paymentsBand(): array
-    {
-        return self::s('promo_band', [
-            'eyebrow' => 'Booking made easy',
-            'heading' => 'Simple, secure *payments.*',
-            'text' => 'Whether you travel as a couple, with family or as a group, we agree a clear payment plan with you before you book, so everyone knows what to pay and when.',
-            'points' => self::rows([['Secure online payment'], ['A clear payment schedule'], ['Written booking confirmation']], ['text']),
-            'button_label' => 'Plan my trip',
-        ]);
-    }
     /** Partner logos band after "How it works". White or transparent logos on the dark band; replace or remove them in Admin > Pages. */
     public static function partners(): array
     {
