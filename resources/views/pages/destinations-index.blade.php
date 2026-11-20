@@ -17,7 +17,7 @@
                 @foreach ($destinations as $i => $d)
                     <li>
                         <a href="{{ route('destinations.show', $d) }}" class="group relative isolate flex min-h-[22rem] flex-col justify-end overflow-hidden rounded-2xl p-6 text-white shadow-card">
-                            @if ($d->image)<x-picture :src="$d->image" :alt="$d->image_alt ?? ''" :width="960" :height="640" class="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw" />@endif
+                            @if ($d->image)<x-picture :src="$d->image" :alt="$d->image_alt ?? ''" :width="960" :height="640" :lazy="! $loop->first" class="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw" />@endif
                             <span class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/95 via-ink/60 to-ink/10"></span>
                             <span class="label-caps self-start rounded bg-ink/70 px-2 py-0.5 text-accent">{{ $d->packages_count }} {{ \Illuminate\Support\Str::plural('tour', $d->packages_count) }}</span>
                             <h2 class="mt-1 text-3xl font-medium">{{ $d->name }}</h2>

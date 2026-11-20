@@ -139,3 +139,30 @@ Watch list:
 
 ### Re-run after the settings-lookup and caching fixes (staging, Lighthouse 12, 20 Nov 2026)
 The home page used to run 248 database queries per visit (228 were one-by-one cache-table reads for site wording); it now runs 22 (`Setting::all_cached()` and `CodeSnippet::render()` keep their data for the rest of the request). Static SVG, JPEG and icon files are cached for 6 months. Home mobile was run 8 times: 98, 97, 88, 98, 99, 98, 98, 98. The 88 was a host hiccup (the HTML took 4.3 s to arrive, giving Speed Index 6.3 s and one layout shift of 0.138); it did not repeat, so re-run three times before trusting any single low number. Package mobile 98, home desktop 100, package desktop 100; accessibility, best practices and SEO 100 everywhere. Time to first byte measured with curl: about 0.57-0.59 s on staging against 0.75-0.85 s on the Go Belgium site.
+
+### Full-site scan (staging, Lighthouse 12, 20 Nov 2026, all 29 sitemap pages, mobile and desktop)
+Every page in the sitemap was run once on mobile and once on desktop, one after another. 25 of 29 pages scored 96 or higher on mobile and 97 or higher on desktop for performance; accessibility, best practices and SEO were 98 to 100 everywhere except one page.
+
+| Page group | Mobile performance | Desktop performance |
+|---|---|---|
+| Home | 99 | 100 |
+| About, Meet the team, FAQ, Testimonials, legal pages | 97-100 | 99-100 |
+| Contact | 99 | 97 (Best Practices 78, see below) |
+| Blog and its 3 articles | 96-99 | 98-100 |
+| Destinations overview and 3 destination pages | **88**, 97, **89**, 96 | 99 |
+| Tour type pages (Self Drive, Chauffeur, Coach) | **87**, 94, 91 | 99-100 |
+| Packages overview and 9 package pages | 98-99 | 99-100 |
+
+Found and fixed after the scan (not yet re-measured on the server):
+- **Contact, desktop Best Practices 78:** the reCAPTCHA script loaded as soon as the form scrolled into view and set a third-party cookie (`_GRECAPTCHA`). It now loads only when someone touches the form (`enquiryForm` in `app.js`). Pages whose form is above the fold on desktop were affected; the Contact page was the only one.
+- **Slow mobile LCP (3.8-3.9 s) on `/destinations`, Tulips & Countryside and Self Drive:**
+  - `dest-tulips` was a tall portrait photo (467 KB, 307 KB for the 800 px copy) used as a wide banner; it is now a 3:2 landscape crop (149 KB and 84 KB).
+  - The first destination card was lazy-loaded although it is the largest thing on screen on a phone; it now loads eagerly.
+  - Tour type heroes (full-width on a phone) jumped from the 720 px to the 960 px file (340 KB for Self Drive); the three tour-type photos now also come in an 800 px copy (about 200 KB), which `components/picture.blade.php` offers.
+- **`/packages` heading order:** package card titles are `h2` on the list page (they follow the `h1`), `h3` elsewhere (`headingLevel` in `partials/package-card.blade.php`).
+- **Country picker label:** the accessible name said "United States" while the button shows "US"; it now says "Country code: US (+1)".
+
+Watch list:
+- Time to first byte is 0.55-0.75 s on every page; it is the largest part of every LCP.
+- The tour type pages' LCP is the tour photo at full width; if they stay near 90, give those heroes their own landscape photo.
+- Re-run the four pages below 90 (and Contact on desktop) after deploying these fixes.

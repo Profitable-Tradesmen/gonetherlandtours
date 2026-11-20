@@ -76,7 +76,7 @@
 
                     <button type="button" x-ref="btn" class="field cc-btn items-center gap-2 text-left" aria-haspopup="listbox"
                             :aria-expanded="open" aria-controls="{{ $idp }}-cc-list"
-                            :aria-label="'Country code: ' + current.name + ' (+' + current.dial + ')'"
+                            :aria-label="'Country code: ' + current.iso + ' (+' + current.dial + ')'"
                             @click="toggle()" @keydown.arrow-down.prevent="show()" @keydown.arrow-up.prevent="show()">
                         <img :src="flag(iso)" src="{{ $flagBase }}/{{ strtolower($selectedIso) }}.svg" alt="" width="24" height="18" class="h-[18px] w-6 shrink-0 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
                         <span class="min-w-0 flex-1 truncate" x-text="current.iso + ' (+' + current.dial + ')'">{{ $selectedRow[2] }} (+{{ $selectedRow[1] }})</span>

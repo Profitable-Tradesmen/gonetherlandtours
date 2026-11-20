@@ -97,18 +97,12 @@ Alpine.data('enquiryForm', () => ({
     success: false,
 
     init() {
-        // Render the reCAPTCHA widget (and load Google's script) only when this form is actually
-        // visible or near the viewport: hidden quiz step / closed modal forms cost nothing.
-        this.$el.addEventListener('focusin', () => this.captcha(), { once: true });
-        if ('IntersectionObserver' in window) {
-            const io = new IntersectionObserver((entries) => {
-                if (entries.some((e) => e.isIntersecting)) {
-                    this.captcha();
-                    io.disconnect();
-                }
-            }, { rootMargin: '300px' });
-            io.observe(this.$el);
-        }
+        // Render the reCAPTCHA widget (and load Google's script) only when someone touches this form.
+        // Doing it when the form merely scrolls into view put Google's third-party cookie on pages whose form is
+        // above the fold (the Contact page on desktop), which Lighthouse counts against Best Practices.
+        const touch = () => this.captcha();
+        this.$el.addEventListener('focusin', touch, { once: true });
+        this.$el.addEventListener('pointerdown', touch, { once: true });
     },
 
     captcha() {
