@@ -106,9 +106,10 @@
 .js [data-reveal='zoom'] { transform: scale(.93); }
 .js [data-reveal].is-in { opacity: 1; transform: none; }
 
-/* Page-load entrance for the hero (CSS only, works without JS). */
-.hero-in { animation: rise .9s cubic-bezier(.22, .61, .36, 1) both; animation-delay: var(--d, 0ms); }
-@keyframes rise { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: none; } }
+/* Page-load entrance for the hero (CSS only, works without JS). Kept short on purpose: the hero text and quiz are the first thing a visitor sees, and
+   Lighthouse's Speed Index only counts them once they have faded in, so a long, staggered entrance costs about a second of Speed Index. */
+.hero-in { animation: rise .35s ease-out both; animation-delay: calc(var(--d, 0ms) / 6); }
+@keyframes rise { from { opacity: 0; transform: translateY(.75rem); } to { opacity: 1; transform: none; } }
 
 /* Gentle ambient motion: a floating badge and a slow zoom on large background photos. */
 .float-slow { animation: float-slow 4.5s ease-in-out infinite; }
