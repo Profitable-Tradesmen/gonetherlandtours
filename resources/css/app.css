@@ -156,8 +156,9 @@
 .hdr.is-solid { box-shadow: 0 6px 20px -6px rgb(12 13 17 / .28); }
 /* Over a photo hero the header is transparent; it turns navy once you scroll or open a menu (.is-solid). */
 .hdr { transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease; }
-.js .hdr-overlay:not(.is-solid) { background-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
-.js .hdr-overlay:not(.is-solid) .hdr-link { color: #fff; text-shadow: 0 1px 6px rgb(12 13 17 / .55); }
+.js .hdr-overlay:not(.is-solid) { background-color: transparent; background-image: linear-gradient(to bottom, color-mix(in srgb, var(--color-ink) 24%, transparent), color-mix(in srgb, var(--color-ink) 10%, transparent) 60%, transparent); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.js .hdr-overlay:not(.is-solid) .hdr-link { color: #fff; font-weight: 600; text-shadow: 0 1px 3px rgb(0 0 0 / .4), 0 2px 10px rgb(0 0 0 / .4); }
+.js .hdr-overlay:not(.is-solid) .hdr-logo { filter: drop-shadow(0 1px 4px rgb(0 0 0 / .4)); }
 /* The logo file is full color on a transparent background. While the header is transparent over the dark photo it is shown as a white silhouette;
    once the header turns into the white bar (scrolled, menu open, or a page without a hero) the full-color logo shows. */
 /* base state (transparent header over a photo): white logo; sticky/solid state: full-color logo */
