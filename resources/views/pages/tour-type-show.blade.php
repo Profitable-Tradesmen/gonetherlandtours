@@ -6,7 +6,7 @@
     // name-hero-800.webp for phones) when it exists: a phone then downloads about 90 KB instead of 200-340 KB, which is most of the page's LCP.
     $heroSrc = $tourType->image;
     $heroIsWide = false;
-    if ($heroSrc && preg_match('/-960\.webp$/', $heroSrc) && is_file(public_path($try = preg_replace('/-960\.webp$/', '-hero.webp', $heroSrc)))) {
+    if ($heroSrc && preg_match('/-(960|card)\.webp$/', $heroSrc) && is_file(public_path($try = preg_replace('/-(960|card)\.webp$/', '-hero.webp', $heroSrc)))) {
         $heroSrc = $try;
         $heroIsWide = true;
     }

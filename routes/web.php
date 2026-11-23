@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public site (all server-rendered)
 Route::get('/', [PageController::class, 'home'])->name('home');
+Route::permanentRedirect('/home-page-new', '/');   // the trial layout is now the home page
 Route::get('/packages', [PackageController::class, 'index'])->name('packages.index');
 Route::get('/packages/search', [PackageController::class, 'search'])->middleware('throttle:60,1')->name('packages.search');
 Route::get('/packages/{package:slug}', [PackageController::class, 'show'])->name('packages.show');
