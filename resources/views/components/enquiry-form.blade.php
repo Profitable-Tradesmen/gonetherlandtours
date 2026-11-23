@@ -129,7 +129,7 @@
             <x-form-field name="season" label="Time of year" :idp="$idp">
                 <select id="{{ $idp }}-season" name="season" class="field">
                     <option value="">Select (optional)</option>
-                    @foreach (['Spring', 'Summer', 'Autumn', 'Winter'] as $s)<option>{{ $s }}</option>@endforeach
+                    @foreach (['Spring' => 'Spring', 'Summer' => 'Summer', 'Autumn' => 'Fall', 'Winter' => 'Winter'] as $v => $s)<option value="{{ $v }}">{{ $s }}</option>@endforeach
                 </select>
             </x-form-field>
             <x-form-field name="group_size" label="Group size" :idp="$idp">

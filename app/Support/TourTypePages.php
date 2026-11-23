@@ -83,7 +83,7 @@ class TourTypePages
                 'points' => [
                     ['Freedom to stop and linger', 'Pull over at a windmill, a cheese market or a quiet canal town whenever something catches your eye.'],
                     ['Hotels reserved in advance', 'Your accommodation is booked for you, so every day ends somewhere comfortable.'],
-                    ['Detailed itineraries with maps', 'Day by day routes with driving times and suggested stops, so you are never guessing.'],
+                    ['Detailed itineraries with maps', 'Day by day routes with driving times and suggested stops, plus tips for drivers used to North American roads, so you are never guessing.'],
                 ],
                 'button' => 'Start planning your self drive tour',
                 'image' => 'images/tour-self-drive.webp', 'image_alt' => 'A small car on a country road through Dutch polders and tulip fields',
@@ -109,7 +109,7 @@ class TourTypePages
                 'points' => [
                     ['Your own driver-guide', 'A local driver-guide for your party only, who adjusts the day to what you enjoy most.'],
                     ['Hotels and routes arranged', 'Accommodation, routes and timings are planned for you, with room to explore along the way.'],
-                    ['Door-to-door comfort', 'No parking, no navigation and no stress, just time to enjoy the view.'],
+                    ['Door-to-door comfort', 'No parking, no navigation, no unfamiliar roads and no stress after the long flight, just time to enjoy the view.'],
                 ],
                 'button' => 'Plan my chauffeur tour',
                 'image' => 'images/tour-chauffeur.webp', 'image_alt' => 'A chauffeur holding the door of a black van on a cobbled Dutch town square',
@@ -196,7 +196,7 @@ class TourTypePages
             self::s('promo_band', ['eyebrow' => 'Crafted for you', 'heading' => $c['promo_heading'], 'text' => $c['promo_text'], 'points' => array_map(fn ($p) => ['text' => $p], $c['promo_points']), 'button_label' => $c['promo_button']]),
             self::s('testimonials', ['variant' => 'dark', 'eyebrow' => 'Reviews', 'heading' => 'What our guests say', 'limit' => 3]),
             self::s('steps', ['style' => 'timeline', 'eyebrow' => 'Simple', 'heading' => $c['step_heading'], 'items' => self::rows([
-                ['Get your free quote', 'Tell us your travel plans and preferences.'],
+                ['Get your free quote', 'Tell us your dates, your group and where you are flying from.'],
                 ['Review your itinerary', 'Receive a personalized itinerary and pricing.'],
                 ['Travel with confidence', 'We take care of hotels, transport and experiences.'],
             ], ['title', 'text'])]),

@@ -86,7 +86,7 @@ class DefaultSections
 
         return [
             self::s('hero_video_quiz', [
-                'heading' => $h1 ?: 'Discover the Authentic Netherlands',
+                'heading' => $h1 ?: 'Discover the *Authentic Netherlands*',
                 'subheading' => $c['hero_sub'] ?? '',
                 'badges' => array_map(fn ($b) => ['text' => $b], $c['badges'] ?? []),
                 'poster_alt' => '',
@@ -171,30 +171,29 @@ class DefaultSections
             self::s('hero_video_quiz', [   // same banner as the home page (heading, badges, quiz) but a photo only, no background video
                 'eyebrow' => 'Explore tours today',
                 'heading' => 'About *GoNetherlandTours*',
-                'subheading' => 'We plan unforgettable Netherlands journeys for American travelers, with tulip fields, windmills and canal towns, expert planning and personal service.',
+                'subheading' => 'We plan unforgettable Netherlands journeys for American and Canadian travelers, with tulip fields, windmills and canal towns, expert planning and personal service.',
                 'secondary_label' => 'Explore packages',
                 'secondary_url' => '/packages',
-                'badges' => self::rows([['Local Netherlands specialists'], ['Tailor-made itineraries'], ['Self drive, chauffeur and coach']], ['text']),
-                'poster' => 'images/hero-about.webp',
+                'badges' => self::rows([['Local Netherlands specialists'], ['Custom itineraries'], ['Self drive, chauffeur and coach']], ['text']),
                 'show_video' => false,
             ]),
             self::s('feature_cards', ['style' => 'strip', 'items' => self::rows([
-                ['shield', 'Tailor-Made Trips', 'Every itinerary is built around your dates, pace and interests.'],
+                ['shield', 'Custom Trips', 'Every itinerary is built around your dates, pace and interests.'],
                 ['guide', 'Local Specialists', 'Real Netherlands travel specialists plan your trip and answer your questions.'],
-                ['money', 'Clear, Honest Quotes', 'Prices in EUR and a tailored quote with no obligation.'],
+                ['money', 'Clear, Honest Quotes', 'Prices in euros and a tailored quote with no obligation.'],
             ], ['icon', 'title', 'text'])]),
             self::s('text_image', [
                 'image_side' => 'right', 'background' => 'sand', 'image' => 'images/first_time_visitors.webp',
                 'image_alt' => 'Amsterdam canal houses and a canal boat on a bright morning',
                 'heading' => 'Welcome to the Best Netherlands Tours',
-                'text' => "GoNetherlandTours plans Netherlands holidays for American travelers who want the real thing: tulip fields in bloom, windmills along the polders, canal-side towns and world-class museums.\n\nOur travel specialists handle the planning, the drivers and the logistics, so you can enjoy every day. Whether it is your first visit or a return trip to see the places you missed, we build something that fits.",
+                'text' => "GoNetherlandTours plans Netherlands vacations for American and Canadian travelers who want the real thing: tulip fields in bloom, windmills along the polders, canal-side towns and world-class museums.\n\nOur travel specialists handle the planning, the drivers and the logistics, so you can enjoy every day. Whether it is your first visit or a return trip to see the places you missed, we build something that fits. We plan around travelers flying in from the US and Canada, so your first day after the overnight flight is a gentle one.",
             ]),
             self::s('text_image', [
                 'image_side' => 'left', 'background' => 'white', 'image' => 'images/culture_lovers.webp',
                 'image_alt' => 'A plate of Dutch cheese cubes for tasting',
                 'heading' => 'About GoNetherlandTours',
                 'quote' => '"We believe the best journeys leave lasting memories."',
-                'text' => "The Netherlands is compact, beautiful and easy to love: you can wake up in a canal house in Amsterdam, spend the afternoon among the windmills of Kinderdijk and finish the day in a Delft cafe. We design routes that make the most of that variety without rushing you.\n\nWe plan self drive, chauffeur driven and coach tours with clear pricing and a specialist who knows the country. Each trip is tailor-made to your travel goals.",
+                'text' => "The Netherlands is compact, beautiful and easy to love: you can wake up in a canal house in Amsterdam, spend the afternoon among the windmills of Kinderdijk and finish the day in a Delft cafe. We design routes that make the most of that variety without rushing you.\n\nWe plan self drive, chauffeur driven and coach tours with clear pricing and a specialist who knows the country. Each trip is tailored to your travel goals.",
                 'button_label' => 'Get Instant Quote',
             ]),
             self::whyBand(),   // the same "Why choose us" section as the home page
@@ -202,7 +201,7 @@ class DefaultSections
             self::s('team', ['items' => array_map(fn ($n) => ['name' => \App\Support\ConfirmCleanup::NAMES[$n - 1], 'role' => \App\Support\ConfirmCleanup::ROLES[$n - 1], 'bio' => \App\Support\ConfirmCleanup::BIOS[$n - 1], 'image' => 'images/team-'.$n.'.webp', 'image_alt' => 'Placeholder portrait of '.\App\Support\ConfirmCleanup::NAMES[$n - 1]], [1, 2, 3])]),
             self::s('testimonials', ['variant' => 'dark', 'eyebrow' => '', 'heading' => 'What Our Travelers Say']),
             self::s('steps', ['style' => 'tiles', 'heading' => '3 Easy Steps to Book Your Netherlands Tour', 'intro' => 'Follow three easy steps to choose your tour, shape your trip and get ready for an unforgettable adventure.', 'button_label' => 'Start Your Netherlands Dream Trip', 'items' => self::rows([
-                ['Get Your Free Quote', 'Tell us your travel plans and preferences.'],
+                ['Get Your Free Quote', 'Tell us your dates, your group and where you are flying from.'],
                 ['Review Your Itinerary', 'Receive a personalized itinerary and pricing, tailored just for you.'],
                 ['Travel With Confidence', 'We handle hotels, transport and experiences, so you simply arrive and enjoy the Netherlands.'],
             ], ['title', 'text'])]),
@@ -235,7 +234,7 @@ class DefaultSections
     /** Contact page title bar with a photo behind it. */
     public static function contactHeader(): array
     {
-        return self::s('page_header', ['heading' => '', 'subtitle' => 'Tell us about your trip and a travel specialist will get back to you.', 'image' => 'images/feature_band.webp']);
+        return self::s('page_header', ['heading' => '', 'subtitle' => 'Tell us about your trip and a travel specialist will get back to you, wherever you are in the US or Canada.', 'image' => 'images/feature_band.webp']);
     }
 
     /** A few of the site's FAQs under the contact form (the questions come from Admin > FAQs). */
@@ -246,7 +245,7 @@ class DefaultSections
     public static function contactSteps(): array
     {
         return self::s('steps', ['style' => 'tiles', 'heading' => 'What happens next', 'intro' => 'Three simple steps from your message to your trip.', 'items' => self::rows([
-            ['Tell us your plans', 'Send your dates, group size and the kind of trip you have in mind.'],
+            ['Tell us your plans', 'Send your dates, group size, home airport and the kind of trip you have in mind.'],
             ['Get your tailored quote', 'A Netherlands travel specialist builds your itinerary and sends a quote with no obligation.'],
             ['Travel with confidence', 'We help with bookings and planning, and you get guidance before you go.'],
         ], ['title', 'text'])]);
@@ -265,8 +264,8 @@ class DefaultSections
     public static function faq(): array
     {
         return [
-            self::s('page_header', ['align' => 'center', 'tone' => 'blue', 'subtitle' => 'Quick answers about planning a Netherlands trip with us. Cannot find yours? Ask and we will reply.']),
-            self::s('faq', ['eyebrow' => '', 'heading' => '', 'help_heading' => 'Still have a question?', 'help_text' => 'Tell us about your trip and a travel specialist will get back to you.']),
+            self::s('page_header', ['align' => 'center', 'tone' => 'blue', 'subtitle' => 'Quick answers for US and Canadian travelers planning a Netherlands trip with us. Cannot find yours? Ask and we will reply.']),
+            self::s('faq', ['eyebrow' => '', 'heading' => '', 'help_heading' => 'Still have a question?', 'help_text' => 'Tell us about your trip and a travel specialist will get back to you, wherever you are in the US or Canada.']),
         ];
     }
 
@@ -293,7 +292,7 @@ class DefaultSections
 
     /**
      * The main menu: Home, Tour Types (an automatic mega menu with a photo card per tour type), Destinations, Packages and an About Us dropdown of image
-     * cards. Replaces ALL header menu rows, so callers must check that the admin has not customised the menu first.
+     * cards. Replaces ALL header menu rows, so callers must check that the admin has not customized the menu first.
      */
     public static function resetHeaderMenu(): void
     {

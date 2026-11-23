@@ -50,14 +50,7 @@ class CatalogSeeder extends Seeder
 
         \App\Support\SamplePackages::seed();   // three complete packages per tour type, with photos
 
-        $faqs = [
-            ['When is the best time to visit the Netherlands?', 'Spring is popular for tulip season and summer for long, bright days. Autumn and winter are quieter. Tulips usually bloom from late March to mid May, with the peak in mid April.'],
-            ['Do I need a visa to visit the Netherlands from the US?', 'Entry rules change. Please check the official Dutch government and US State Department websites before you travel.'],
-            ['Can I drive in the Netherlands with a US license?', 'Car hire rules vary by company. We will confirm license requirements with your quote. Most visitors can drive with a valid license from their home country, and an International Driving Permit is recommended for some countries.'],
-            ['What is included in a package?', 'Each package lists exactly what is included and excluded on its page.'],
-            ['How do I get a quote?', 'Answer a few quick questions or send an inquiry. A travel specialist will come back to you with a tailored quote.'],
-            ['Can you tailor a trip for me?', 'Yes. Every itinerary can be adjusted to your dates, group size and interests.'],
-        ];
+        $faqs = array_map(fn ($f) => [$f[0], $f[1]], \App\Support\FaqCopy::all());
         foreach ($faqs as $i => [$q, $a]) {
             Faq::create(['question' => $q, 'answer' => $a, 'sort_order' => $i + 1]);
         }

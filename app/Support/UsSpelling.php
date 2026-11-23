@@ -16,6 +16,31 @@ class UsSpelling
         'organised' => 'organized', 'organise' => 'organize', 'organisation' => 'organization',
         'cosy' => 'cozy', 'centred' => 'centered', 'centres' => 'centers', 'centre' => 'center',
         'licence' => 'license', 'catalogue' => 'catalog',
+        'customised' => 'customized', 'customise' => 'customize', 'customising' => 'customizing', 'customisation' => 'customization', 'customisable' => 'customizable',
+        'personalised' => 'personalized', 'personalise' => 'personalize', 'personalising' => 'personalizing', 'personalisation' => 'personalization',
+        'specialised' => 'specialized', 'specialise' => 'specialize', 'specialising' => 'specializing',
+        'recognised' => 'recognized', 'recognise' => 'recognize', 'realised' => 'realized', 'realise' => 'realize',
+        'prioritise' => 'prioritize', 'summarise' => 'summarize', 'emphasise' => 'emphasize', 'apologise' => 'apologize',
+        'organisations' => 'organizations', 'organisers' => 'organizers', 'organiser' => 'organizer',
+        'jewellery' => 'jewelry', 'cheque' => 'check', 'honour' => 'honor',
+        'neighbourhoods' => 'neighborhoods', 'neighbourhood' => 'neighborhood', 'neighbours' => 'neighbors', 'neighbour' => 'neighbor',
+        'whilst' => 'while', 'amongst' => 'among', 'cancelled' => 'canceled', 'cancelling' => 'canceling',
+        'holidays' => 'vacations', 'holiday' => 'vacation',
+    ];
+
+    /** UK phrasing with a different US/Canadian equivalent (regex => replacement; a leading capital is kept). Also used by the "US and Canada" copy pass. */
+    public const PHRASES = [
+        '/\btailor-made (?=to\b)/i' => 'tailored ',
+        '/\btailor-made (?=for\b)/i' => 'tailored ',
+        '/\btailor-made\b/i' => 'custom',
+        '/\bcar hire\b/i' => 'car rental',
+        '/(?<![\w-])autumn(?![\w-])/i' => 'fall',
+        '/\bAmerican (travelers)\b/i' => 'American and Canadian $1',
+        '/\bUS (travelers)\b/i' => 'US and Canadian $1',
+        '/\bPrices in EUR\b/' => 'Prices in euros',
+        '/\bHave you flights booked\?/i' => 'Have you booked your flights?',
+        '/\bHave you a budget in mind for your trip\?/i' => 'Do you have a budget in mind for your trip?',
+        '/\bHow many nights do you want to stay for\?/i' => 'How many nights would you like to stay?',
     ];
 
     public static function convert(string $text): string
@@ -64,6 +89,14 @@ class UsSpelling
                 }
 
                 return ctype_upper($w[0]) ? ucfirst($us) : $us;
+            }, $text);
+        }
+
+        foreach (self::PHRASES as $re => $to) {
+            $text = preg_replace_callback($re, function ($m) use ($re, $to) {
+                $out = preg_replace_callback('/\$(\d)/', fn ($x) => $m[(int) $x[1]] ?? '', $to);
+
+                return ctype_upper($m[0][0]) ? ucfirst($out) : $out;
             }, $text);
         }
 

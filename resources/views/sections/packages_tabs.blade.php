@@ -3,7 +3,7 @@
     $types = \App\Support\SiteData::tourTypes();
 @endphp
 @if ($featured->isNotEmpty() && ($d['layout'] ?? 'by_type') === 'by_type')
-<section class="bg-sand py-16 sm:py-24" aria-labelledby="pk-{{ $sid }}">
+<section class="{{ ($d['background'] ?? 'sand') === 'white' ? 'bg-white' : 'bg-sand' }} py-16 sm:py-24" aria-labelledby="pk-{{ $sid }}">
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :subtitle="$d['intro'] ?: null" :id="'pk-'.$sid" />
         {{-- Phones: ONE swipeable carousel of all featured packages (horizontal cards, next one peeking, dash indicators). --}}
@@ -54,7 +54,7 @@
     </div>
 </section>
 @elseif ($featured->isNotEmpty())
-<section class="bg-sand py-16 sm:py-24" aria-labelledby="pk-{{ $sid }}" x-data="{ tab: 'all' }">
+<section class="{{ ($d['background'] ?? 'sand') === 'white' ? 'bg-white' : 'bg-sand' }} py-16 sm:py-24" aria-labelledby="pk-{{ $sid }}" x-data="{ tab: 'all' }">
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'pk-'.$sid" />
         <div class="mb-8 flex flex-wrap justify-center gap-2" role="tablist">

@@ -69,7 +69,7 @@ class PageController extends Controller
 
         return view('pages.show', [
             'page' => $page,
-            'overlayHeader' => in_array($firstType, ['hero_video_quiz', 'hero_seasons'], true),
+            'overlayHeader' => in_array($firstType, ['hero_video_quiz', 'hero_seasons', 'hero_centered'], true),
             'draft' => $draft,
             'sections' => $page->visibleSections(),
             'seo' => Seo::make([

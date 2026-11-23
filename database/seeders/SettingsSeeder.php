@@ -12,7 +12,7 @@ class SettingsSeeder extends Seeder
         $defaults = [
             'brand_name' => 'GoNetherlandTours',
             'company_name' => 'GoNetherlandTours',        // legal name used in consent text + legal pages
-            'tagline' => 'Self drive, chauffeur and coach tours of the Netherlands',
+            'tagline' => 'Self drive, chauffeur and coach tours of the Netherlands for US and Canadian travelers',
             'phone' => '',                                 // [CONFIRM: phone]
             'email' => '',                                 // [CONFIRM: email]
             'address' => '',                               // [CONFIRM: address]
@@ -24,9 +24,9 @@ class SettingsSeeder extends Seeder
             'recaptcha_site_key' => '',                    // blank = fall back to .env
             'recaptcha_secret_key' => '',
             'modal_discount' => '10%',
-            'footer_text' => 'Tailor-made tours of the Netherlands for American travelers.',
+            'footer_text' => 'Custom tours of the Netherlands for American and Canadian travelers.',
             'default_seo_title' => 'GoNetherlandTours | Self Drive, Chauffeur & Coach Tours of the Netherlands',
-            'default_meta_description' => 'Plan your Netherlands trip with local experts. Self drive, chauffeur driven and coach tours, tailor-made for you. Get a free quote in minutes.',
+            'default_meta_description' => 'Plan your Netherlands trip with local experts. Self drive, chauffeur driven and coach tours for US and Canadian travelers, tailored for you. Get a free quote in minutes.',
             'default_social_image' => '',
             'logo' => '',
             'favicon' => '',

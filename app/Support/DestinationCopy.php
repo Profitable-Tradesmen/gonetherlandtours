@@ -31,7 +31,7 @@ class DestinationCopy
                     .'<li><strong>Utrecht:</strong> a city of two levels, with canal-side wharf cellars and the tallest church tower in the country.</li>'
                     .'</ul>'
                     .'<h2>When to go</h2>'
-                    .'<p>Spring brings tulips and long, bright days, summer is lively and warm, and autumn is quieter with golden light on the water. Popular sights such as the Anne Frank House and the major museums sell out, so we reserve timed entry for you well ahead.</p>'
+                    .'<p>Spring brings tulips and long, bright days, summer is lively and warm, and fall is quieter with golden light on the water. Popular sights such as the Anne Frank House and the major museums sell out, so we reserve timed entry for you well ahead.</p>'
                     .'<h2>How you can travel</h2>'
                     .'<p>Choose a <a href="/tours/self-drive">self drive</a> trip with hotels booked for you, a private <a href="/tours/chauffeur-driven">chauffeur driven</a> tour with a local driver-guide, or a <a href="/tours/coach-tours">small-group coach tour</a> led by a guide. Cities are easy to explore on foot, so parking and driving distances are planned with care. Typical stops include Amsterdam, Haarlem, Utrecht, Delft and Rotterdam.</p>'
                     .'<p>Tell us your dates and interests and we will build the route around you, with a clear, no-obligation quote.</p>',
@@ -52,7 +52,7 @@ class DestinationCopy
                     .'<li><strong>Quiet villages:</strong> early-morning lanes and village harbors before the day trippers arrive, such as Giethoorn.</li>'
                     .'</ul>'
                     .'<h2>When to go</h2>'
-                    .'<p>Tulip timing changes with the weather each year, so we plan around the typical bloom and adjust as the season unfolds. Outside tulip season, summer and early autumn bring green fields, open-air markets and long evenings.</p>'
+                    .'<p>Tulip timing changes with the weather each year, so we plan around the typical bloom and adjust as the season unfolds. Spring is the busiest season for visitors from the US and Canada, so it pays to book early. Outside tulip season, summer and early fall bring green fields, open-air markets and long evenings.</p>'
                     .'<h2>How you can travel</h2>'
                     .'<p>A <a href="/tours/self-drive">self drive</a> route lets you stop whenever a field or a village catches your eye. A <a href="/tours/chauffeur-driven">chauffeur driven</a> tour takes the driving and the parking off your hands, and a <a href="/tours/coach-tours">small-group coach tour</a> adds a local guide and good company. Typical stops include the tulip fields, the windmills of Kinderdijk and the canals of Giethoorn.</p>'
                     .'<p>Share when you would like to travel and we will suggest the best match, with a clear, no-obligation quote.</p>',
@@ -73,7 +73,7 @@ class DestinationCopy
                     .'<li><strong>Local flavors:</strong> Zeeland mussels and oysters in season, and coastal cafes with a view.</li>'
                     .'</ul>'
                     .'<h2>When to go</h2>'
-                    .'<p>Late spring to early autumn is the most comfortable time for the coast, with long days for exploring. The shoulder months are quieter and the light over the water can be beautiful.</p>'
+                    .'<p>Late spring to early fall is the most comfortable time for the coast, with long days for exploring. The shoulder months are quieter and the light over the water can be beautiful.</p>'
                     .'<h2>How you can travel</h2>'
                     .'<p>The coast is made for a relaxed <a href="/tours/self-drive">self drive</a>, with short distances between towns and plenty of places to stop. A <a href="/tours/chauffeur-driven">chauffeur driven</a> tour adds local stories at each stop, and a <a href="/tours/coach-tours">small-group coach tour</a> can combine Zeeland with other regions. Typical stops include Middelburg, Veere and Zierikzee.</p>'
                     .'<p>Tell us how long you have and what you enjoy most, and we will plan the route, with a clear, no-obligation quote.</p>',
