@@ -6,7 +6,7 @@
     {{-- The photo is the LCP element: preload the right size for the screen. --}}
     <link rel="preload" as="image" href="{{ asset_v($poster) }}" @if ($sets = static_srcset($poster)) imagesrcset="{{ $sets }}" imagesizes="100vw" @endif fetchpriority="high">
 @endpush
-<section class="relative isolate flex min-h-[88vh] items-center overflow-hidden bg-brand-900 text-white {{ $overlay ? 'pt-16 lg:pt-20' : '' }}">
+<section class="hero-pad relative isolate flex min-h-[88vh] items-center overflow-hidden bg-brand-900 text-white {{ $overlay ? 'pt-16 lg:pt-20' : '' }}">
     {{-- Photo first (works without JavaScript and on phones); the background video, if one exists, plays over it on larger screens. --}}
     <x-picture :src="$poster" alt="" :width="1600" :height="900" priority sizes="100vw" class="absolute inset-0 -z-30 h-full w-full object-cover" />
     @if ($d['show_video'] ?? true)<x-video name="homepage_banner" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" />@endif
@@ -17,7 +17,7 @@
     <div class="pointer-events-none absolute inset-0 -z-10 bg-ink/35 lg:bg-transparent"></div>
     <div class="pointer-events-none absolute inset-0 -z-10 hidden bg-gradient-to-r from-ink/70 via-ink/35 to-transparent lg:block"></div>
     <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-ink/45 to-transparent"></div>
-    <div class="container-site grid items-center gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-x-12 lg:gap-y-8 lg:py-20">
+    <div class="container-site grid items-center gap-8 py-10 md:py-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-x-12 lg:gap-y-8">
         <div class="[text-shadow:0_2px_3px_rgb(0_0_0/0.35),0_6px_28px_rgb(0_0_0/0.55)]">
             @if ($d['eyebrow'])<p class="hero-in label-caps text-center text-accent lg:text-left">{{ $d['eyebrow'] }}</p>@endif
             <h1 style="--d:120ms" class="hero-in mt-4 text-center text-4xl font-semibold sm:text-5xl lg:text-left lg:text-5xl xl:text-6xl">{!! emphasize($d['heading'], 'text-accent') !!}</h1>

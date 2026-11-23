@@ -37,7 +37,7 @@
 
         <div class="flex items-center gap-2">
             @if (text('header_button_label'))<x-button class="hidden sm:inline-flex lg:hidden !py-2.5" @click="$store.modal.show()">{{ text('header_button_label') }}</x-button>@endif
-            <button type="button" class="hdr-link rounded p-2 text-ink hover:bg-sand lg:hidden" @click="menu = !menu" :aria-expanded="menu" aria-controls="mobile-menu" aria-label="Menu">
+            <button type="button" class="hdr-link inline-flex h-11 w-11 items-center justify-center rounded text-ink hover:bg-sand lg:hidden" @click="menu = !menu" :aria-expanded="menu" aria-controls="mobile-menu" aria-label="Menu">
                 <x-icon name="menu" x-show="!menu" /><x-icon name="close" x-show="menu" x-cloak />
             </button>
         </div>

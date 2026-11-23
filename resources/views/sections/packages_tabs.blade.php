@@ -58,9 +58,9 @@
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'pk-'.$sid" />
         <div class="mb-8 flex flex-wrap justify-center gap-2" role="tablist">
-            <button type="button" role="tab" :aria-selected="tab === 'all'" class="btn !px-4 !py-2 !text-[0.72rem] sm:!px-6 sm:!text-[0.8rem]" :class="tab === 'all' ? 'btn-secondary' : 'btn-outline text-brand-700'" @click="tab = 'all'"><x-icon name="map" class="h-4 w-4" />{{ $d['all_label'] }}</button>
+            <button type="button" role="tab" :aria-selected="tab === 'all'" class="btn !px-4 !py-2 !text-xs sm:!px-6 sm:!text-[0.8rem]" :class="tab === 'all' ? 'btn-secondary' : 'btn-outline text-brand-700'" @click="tab = 'all'"><x-icon name="map" class="h-4 w-4" />{{ $d['all_label'] }}</button>
             @foreach ($types as $t)
-                <button type="button" role="tab" :aria-selected="tab === '{{ $t->slug }}'" class="btn !px-4 !py-2 !text-[0.72rem] sm:!px-6 sm:!text-[0.8rem]" :class="tab === '{{ $t->slug }}' ? 'btn-secondary' : 'btn-outline text-brand-700'" @click="tab = '{{ $t->slug }}'"><x-icon :name="$t->icon ?: 'check'" class="h-4 w-4" />{{ $t->name }}</button>
+                <button type="button" role="tab" :aria-selected="tab === '{{ $t->slug }}'" class="btn !px-4 !py-2 !text-xs sm:!px-6 sm:!text-[0.8rem]" :class="tab === '{{ $t->slug }}' ? 'btn-secondary' : 'btn-outline text-brand-700'" @click="tab = '{{ $t->slug }}'"><x-icon :name="$t->icon ?: 'check'" class="h-4 w-4" />{{ $t->name }}</button>
             @endforeach
         </div>
 

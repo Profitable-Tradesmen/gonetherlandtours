@@ -31,7 +31,7 @@
     --font-sans: 'Montserrat Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
     /* Layout */
-    --container-site: 76rem;
+    --container-site: 1390px;
     --radius-card: 1rem;
     --shadow-card: 0 10px 30px -12px rgb(12 13 17 / 0.25);
 }
@@ -55,6 +55,7 @@
 @layer components {
     .container-site { width: 100%; max-width: var(--container-site); margin-inline: auto; padding-inline: 1rem; }
     @media (min-width: 640px) { .container-site { padding-inline: 1.5rem; } }
+@media (min-width: 768px) { .container-site { padding-inline: 60px; } }
 
     /* Wide-caps label style, inspired by the geometric sans reference */
     .label-caps { font-family: var(--font-sans); text-transform: uppercase; letter-spacing: 0.18em; font-weight: 600; font-size: 0.75rem; }
@@ -221,4 +222,11 @@ main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 
     .gslider { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
     .gslider-track { animation: none; }
     .gslider-group[aria-hidden='true'] { display: none; }
+}
+
+/* Section spacing, all pages (768px and up): 90px top and bottom. Container width 1390px and 60px side padding come from .container-site above.
+   Unlayered on purpose so it beats utility classes (py-16...). Banners opt in with .hero-pad (they also centre their content in a min-height box); the
+   package page hero keeps its own spacing because it must clear the floating header. */
+@media (min-width: 768px) {
+    main > section:not(:first-child), main > section.hero-pad { padding-block: 90px; }
 }

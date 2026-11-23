@@ -28,7 +28,7 @@
                                     @if ($stars)<p>@include('partials.review-stars', ['rating' => $t->rating ?? 5, 'class' => 'h-5 w-5'])</p>@endif
                                     <blockquote class="mt-3 font-display text-xl leading-snug sm:text-2xl lg:text-[1.75rem]">{{ $t->quote }}</blockquote>
                                     <figcaption class="mt-5">
-                                        @if ($t->is_placeholder)<span class="label-caps mb-1 block text-[0.65rem] text-white/60">Sample review</span>@endif
+                                        @if ($t->is_placeholder)<span class="label-caps mb-1 block text-xs text-white/60">Sample review</span>@endif
                                         <span class="block text-lg font-bold text-accent">{{ $t->name }}</span>
                                         <span class="mt-2 flex flex-wrap justify-center gap-2 text-xs font-semibold md:justify-start">
                                             @if ($t->location)<span class="rounded-full bg-white/15 px-3 py-1 text-white">{{ $t->location }}</span>@endif
@@ -69,7 +69,7 @@
                     <figcaption class="mt-5 flex items-center gap-3 border-t {{ $dark ? 'border-white/20' : 'border-sand-200' }} pt-4">
                         @include('partials.review-avatar', ['t' => $t, 'size' => 'h-12 w-12 text-lg'])
                         <span class="min-w-0 text-sm">
-                            @if ($t->is_placeholder)<span class="label-caps mb-0.5 block text-[0.65rem] {{ $dark ? 'text-white/60' : 'text-ink/60' }}">Sample review</span>@endif
+                            @if ($t->is_placeholder)<span class="label-caps mb-0.5 block text-xs {{ $dark ? 'text-white/60' : 'text-ink/60' }}">Sample review</span>@endif
                             <span class="block font-bold {{ $dark ? 'text-accent' : 'text-brand-700' }}">{{ $t->name }}</span>
                             <span class="block {{ $dark ? 'text-white/75' : 'text-ink/70' }}">{{ collect([$t->location, $t->trip ?? null])->filter()->implode(' · ') }}</span>
                         </span>
