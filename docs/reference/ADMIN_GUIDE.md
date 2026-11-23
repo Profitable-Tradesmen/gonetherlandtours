@@ -32,6 +32,8 @@ Every page is built from **sections**. Open **Admin > Pages**, choose a page, an
 
 Section styles worth knowing: **Numbered steps** can be a connected timeline or simple columns; **Testimonials** can be dark cards, light cards or a one-at-a-time *spotlight* with a picker; **Hero** sections show a photo (upload yours in the section; the video plays over it on desktop if one has been uploaded to the server).
 
+The **Selling points with proof** section shows each selling point with a real example ("In practice") and a link. Replace the `[CONFIRM: ...]` examples with facts you can prove. The **Why choose us strip** section shows your four selling points; their wording is set once in **Settings > Why choose us**, and the same strip appears automatically on package, tour type and destination pages. Each **tour type** has a *Travel style note* (for example "Private: just your own party") shown on its pages and on its packages.
+
 ## Navigation (administrators only)
 **Admin > Navigation** controls the header menu and the footer links. Add a *Normal link* (a page path like `/about`, a full `https://` address or `#section`), the automatic *Tours menu* (built from Tour types), or a *Dropdown of cards*: create the dropdown, then add cards by choosing it as the parent (each card has a title, short description, link and image). The arrows reorder items within their menu. The wording around the menus (top bar, buttons, mobile menu, footer headings) is in **Settings**.
 
@@ -49,3 +51,15 @@ Connect the CRM: paste the **Location ID** and **Private Integration token**, ti
 
 ## Admin users
 Add or remove people who can log in. You cannot delete yourself or the last admin. Leave the password blank when editing to keep it. Use long unique passwords.
+
+## Tour type pages (Self Drive, Chauffeur Driven, Coach Tours)
+
+The hero (heading, summary, "how you travel" note) of `/tours/<name>` is edited in **Admin > Tour types**. Everything under the hero is built from sections, edited in **Admin > Pages > "<Tour type> page"** exactly like the home page: value strip, intro with photo and ticked list, the packages of that tour type (a carousel), why-us strip, offer band, reviews, three steps and a closing call to action. You can reorder, hide, add or remove sections there. If you delete a tour type's page, the older fixed layout is used until it is recreated (deploy runs `migrate`, or use the seeder). Text marked `[CONFIRM: ...]` needs your real facts (support hours, coach group size).
+
+## Destination pages
+
+The hero (heading, summary, photo) of `/destinations/<name>` is edited in **Admin > Destinations**. Everything under the hero is built from sections in **Admin > Pages > "<Destination> page"**, the same blocks as the tour type pages: value strip, intro with photos and ticked list, the tours that visit the destination, why-us strip, "when to go / how you can travel", offer band, reviews, three steps and a closing call to action. The guide text in Admin > Destinations (highlights, when to go) is used only if the destination's page is deleted. Text marked `[CONFIRM: ...]` needs your real itinerary facts.
+
+## Google Sheets (every lead in a spreadsheet)
+
+**Admin > Google Sheets** (administrators only) adds one row to a Google Sheet for every enquiry from every form (quiz, quote requests, questions, contact), including the UTM parameters and ad click ids (GCLID, GBRAID, WBRAID) of the latest and the first visit. It works through a small Google Apps Script that you paste into your own sheet (the page shows the script and the step-by-step instructions). The website stores only the web app address and a secret key (encrypted); no Google login or API key is kept. Enquiries are always saved in the admin first, so a Google outage never loses a lead or shows the visitor an error. Failed rows are retried automatically; "Send enquiries that are not in the sheet" catches up older ones; each enquiry page shows its sheet status and has a "Send to the sheet again" button. The script file is `resources/sheets/apps-script.gs`; rows are matched to columns by header name, so you can re-order columns or add your own on the right.

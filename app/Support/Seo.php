@@ -42,7 +42,7 @@ class Seo
             '@type' => 'TravelAgency',
             'name' => setting('brand_name', 'GoNetherlandTours'),
             'url' => url('/'),
-            'logo' => asset(setting('logo') ?: 'images/GoNetherlandTours-trim.webp'),
+            'logo' => asset(setting('logo') ?: 'images/logo-gonetherland.png'),
             'telephone' => setting('phone'),
             'email' => setting('email'),
             'address' => setting('address') ? ['@type' => 'PostalAddress', 'streetAddress' => setting('address')] : null,

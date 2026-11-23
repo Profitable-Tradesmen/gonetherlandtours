@@ -23,6 +23,7 @@ class TourTypeController extends ResourceController
                 ['name' => 'slug', 'label' => 'URL slug (leave blank to generate)', 'type' => 'text', 'rules' => 'nullable|string|max:120'],
                 ['name' => 'h1', 'label' => 'Page heading (H1)', 'type' => 'text', 'rules' => 'nullable|string|max:190'],
                 ['name' => 'icon', 'label' => 'Icon name (car, guide, coach)', 'type' => 'text', 'rules' => 'nullable|string|max:40'],
+                ['name' => 'style_note', 'label' => 'Travel style note (shown on package and tour type pages, e.g. "Private: just your own party")', 'type' => 'text', 'rules' => 'nullable|string|max:160'],
                 ['name' => 'summary', 'label' => 'Short summary', 'type' => 'textarea', 'rules' => 'nullable|string|max:500'],
                 ['name' => 'body', 'label' => 'Page content', 'type' => 'rich', 'rules' => 'nullable|string'],
                 ['name' => 'image', 'label' => 'Image (JPG, PNG or WebP)', 'type' => 'image'],

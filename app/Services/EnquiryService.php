@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\SyncEnquiryToGhl;
+use App\Jobs\SyncEnquiryToSheets;
 use App\Mail\NewEnquiryMail;
 use App\Models\Enquiry;
 use App\Models\Package;
@@ -65,6 +66,7 @@ class EnquiryService
             'tracking_first' => $this->firstTouch($request),
             'tracking_last' => $this->lastTouch($request, $data),
             'ghl_status' => ghl_enabled() ? 'pending' : 'off',
+            'sheets_status' => sheets_enabled() ? 'pending' : 'off',
         ]);
 
         $this->dispatchWork($enquiry);
@@ -126,6 +128,14 @@ class EnquiryService
                 SyncEnquiryToGhl::dispatch($enquiry->id);
             } catch (\Throwable $e) {
                 Log::error('GHL dispatch failed: '.$e->getMessage());
+            }
+        }
+
+        if (sheets_enabled()) {
+            try {
+                SyncEnquiryToSheets::dispatch($enquiry->id);
+            } catch (\Throwable $e) {
+                Log::error('Google Sheets dispatch failed: '.$e->getMessage());   // never block the enquiry
             }
         }
     }

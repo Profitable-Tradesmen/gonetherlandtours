@@ -97,18 +97,12 @@ Alpine.data('enquiryForm', () => ({
     success: false,
 
     init() {
-        // Render the reCAPTCHA widget (and load Google's script) only when this form is actually
-        // visible or near the viewport: hidden quiz step / closed modal forms cost nothing.
-        this.$el.addEventListener('focusin', () => this.captcha(), { once: true });
-        if ('IntersectionObserver' in window) {
-            const io = new IntersectionObserver((entries) => {
-                if (entries.some((e) => e.isIntersecting)) {
-                    this.captcha();
-                    io.disconnect();
-                }
-            }, { rootMargin: '300px' });
-            io.observe(this.$el);
-        }
+        // Render the reCAPTCHA widget (and load Google's script) only when someone touches this form.
+        // Doing it when the form merely scrolls into view put Google's third-party cookie on pages whose form is
+        // above the fold (the Contact page on desktop), which Lighthouse counts against Best Practices.
+        const touch = () => this.captcha();
+        this.$el.addEventListener('focusin', touch, { once: true });
+        this.$el.addEventListener('pointerdown', touch, { once: true });
     },
 
     captcha() {
@@ -125,7 +119,7 @@ Alpine.data('enquiryForm', () => ({
         this.message = '';
 
         if (!form.querySelector('[name=consent]').checked) {
-            this.errors = { consent: ['Please tick the box to agree before sending your enquiry.'] };
+            this.errors = { consent: ['Please tick the box to agree before sending your inquiry.'] };
             this.message = 'Please check the highlighted fields.';
             return;
         }
@@ -173,6 +167,7 @@ Alpine.data('quiz', (keys) => ({
     keys,
     i: 0,
     answers: {},
+    browsing: false,   // arrow keys moving through a closed dropdown do not count as a choice
 
     get total() {
         return this.keys.length + 1;
@@ -189,7 +184,8 @@ Alpine.data('quiz', (keys) => ({
         this.go(1);
     },
     next(key) {
-        if (this.answers[key]) this.go(1);
+        // only the step on screen can move on (a second event for the same choice, such as change then Enter, is ignored)
+        if (this.keys[this.i] === key && this.answers[key]) this.go(1);
     },
     back() {
         if (this.i > 0) this.i--;
@@ -239,7 +235,7 @@ Alpine.data('countrySelect', (initial, list, flagBase) => ({
         this.scroll();
     },
     scroll() {
-        const li = this.$refs.list.children[this.active];
+        const li = this.$refs.list.querySelectorAll('[role="option"]')[this.active];
         if (li) li.scrollIntoView({ block: 'nearest' });
     },
     choose(iso) {
@@ -270,7 +266,7 @@ Alpine.data('countrySelect', (initial, list, flagBase) => ({
 /* Header modal */
 Alpine.store('modal', {
     open: false,
-    pkg: null, // {id, name} when opened from a package card, so the enquiry is tied to that package
+    pkg: null, // {id, name} when opened from a package card, so the inquiry is tied to that package
     show(pkg = null) {
         this.pkg = pkg;
         this.open = true;
@@ -321,6 +317,8 @@ Alpine.data('slider', () => ({
 Alpine.data('carousel', () => ({
     atStart: true,
     atEnd: false,
+    count: 0,   // number of cards (for the dash indicators)
+    idx: 0,     // index of the card at the left edge
     init() {
         // Measure after the first paint (not during Alpine start-up) so it does not force an early layout.
         requestAnimationFrame(() => requestAnimationFrame(() => this.sync()));
@@ -331,6 +329,20 @@ Alpine.data('carousel', () => ({
         if (!t) return;
         this.atStart = t.scrollLeft <= 4;
         this.atEnd = t.scrollLeft + t.clientWidth >= t.scrollWidth - 4;
+        const slides = [...t.querySelectorAll('[data-slide]')].filter((c) => c.offsetParent !== null);
+        this.count = slides.length;
+        if (slides.length) {
+            // the card whose left edge is closest to the left edge of the track; the last dash when scrolled to the end
+            let best = 0;
+            slides.forEach((c, i) => { if (Math.abs(c.offsetLeft - t.offsetLeft - t.scrollLeft) < Math.abs(slides[best].offsetLeft - t.offsetLeft - t.scrollLeft)) best = i; });
+            this.idx = this.atEnd && !this.atStart ? slides.length - 1 : best;
+        }
+    },
+    go(i) {
+        const t = this.$refs.track;
+        const slides = [...t.querySelectorAll('[data-slide]')].filter((c) => c.offsetParent !== null);
+        if (!slides[i]) return;
+        t.scrollTo({ left: slides[i].offsetLeft - t.offsetLeft, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     },
     reset() {
         if (this.$refs.track) this.$refs.track.scrollLeft = 0;
@@ -344,6 +356,85 @@ Alpine.data('carousel', () => ({
     },
 }));
 
+/* -------------------------------------------------------------
+ * Partner logos slider: shows 3 logos and slides by one logo continuously: a slow 1.8s move, a 0.3s pause, the next move; logos fade out as they leave and fade in as they arrive. The first logos are repeated at the end of the track;
+ * when the slide reaches that copy the track snaps back to the start without animation, so the loop has no visible jump.
+ * Pauses while hovered or focused and when the tab is hidden; does nothing for "reduce motion" (the CSS wraps the logos instead).
+ * ------------------------------------------------------------- */
+Alpine.data('partnerSlider', (n) => ({
+    i: 0,
+    anim: true,
+    paused: false,
+    per: 3,
+    still: false,
+    init() {
+        this.still = n < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const setPer = () => { this.per = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1; };
+        setPer();
+        window.addEventListener('resize', setPer);
+        if (this.still) return;
+        setInterval(() => {
+            if (this.paused || document.hidden) return;
+            this.anim = true;
+            this.i++;
+        }, 2100);   // 1.8s move + 0.3s pause
+    },
+    // a logo is shown while it is inside the visible window; leaving or entering it fades out or in while the row slides
+    shown(k) {
+        return this.still || (k >= this.i && k < this.i + this.per);
+    },
+    end() {
+        if (this.i >= n) {
+            this.anim = false;
+            this.i = 0;
+        }
+    },
+}));
+
+/* -------------------------------------------------------------
+ * Package gallery enlarge view (pages/package-show.blade.php): a photo opens large; arrows and the Left/Right keys move between photos,
+ * Escape or a click outside closes it and focus goes back to the photo that was clicked. The sliding itself is CSS only (.gslider).
+ * ------------------------------------------------------------- */
+Alpine.data('gallerySlider', (items) => ({
+    items,
+    open: false,
+    i: 0,
+    opener: null,
+    get cur() {
+        return this.items[this.i] || { src: '', alt: '' };
+    },
+    show(k, el) {
+        this.i = k;
+        this.opener = el || null;
+        this.open = true;
+    },
+    close() {
+        this.open = false;
+        this.$nextTick(() => this.opener && this.opener.focus && this.opener.focus());
+    },
+    next() {
+        this.i = (this.i + 1) % this.items.length;
+    },
+    prev() {
+        this.i = (this.i - 1 + this.items.length) % this.items.length;
+    },
+}));
+/* -------------------------------------------------------------
+ * Contact page message starters (sections/contact_details.blade.php): a tap adds a sentence to the "Special request" box
+ * (on a new line if something is already written), puts the cursor there and scrolls it into view.
+ * ------------------------------------------------------------- */
+Alpine.data('contactPrompts', (id) => ({
+    fill(text) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const cur = el.value.trim();
+        if (cur.includes(text)) { el.focus(); return; }
+        el.value = cur ? cur + '\n' + text : text;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.scrollIntoView({ block: 'center', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        el.focus({ preventScroll: true });
+    },
+}));
 Alpine.start();
 
 /* ---------------------------------------------------------------

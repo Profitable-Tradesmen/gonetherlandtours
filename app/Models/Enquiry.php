@@ -19,6 +19,7 @@ class Enquiry extends Model
             'consent_given' => 'boolean',
             'consented_at' => 'datetime',
             'ghl_synced_at' => 'datetime',
+            'sheets_synced_at' => 'datetime',
         ];
     }
 

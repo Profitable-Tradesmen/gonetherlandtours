@@ -25,6 +25,7 @@
     @case('map') <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2ZM9 4v14M15 6v14"/> @break
     @case('heart') <path d="M12 20s-8-5-8-11a4.500 4.500 0 0 1 8-2.700A4.500 4.500 0 0 1 20 9c0 6-8 11-8 11Z"/> @break
     @case('menu') <path d="M4 7h16M4 12h16M4 17h16"/> @break
+    @case('clock') <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/> @break
     @case('close') <path d="M6 6l12 12M18 6 6 18"/> @break
     @case('chevron') <path d="m6 9 6 6 6-6"/> @break
     @case('arrow') <path d="M5 12h14m-6-6 6 6-6 6"/> @break

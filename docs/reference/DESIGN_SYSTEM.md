@@ -31,6 +31,9 @@ The mood board also holds a second, four-colour Copenhagen set that is **not** a
 - **Mega menus (Tours, About Us dropdown):** soft sand backdrop, white rounded cards with a subtle ring that lift 2px on hover, photo overlays, count/icon chips and small arrow buttons that turn gold on hover. The About dropdown shows the intro panel beside the cards from 1280px up and as a slim banner above a full-width card row below that. Keep new effects this quiet: no heavy shadows, gradients or motion.
 - **Carousel:** native scroll-snap row with arrow buttons on desktop.
 
+## Section backgrounds
+Neighbouring sections must never share a background, or they read as one block. The rhythm used on the site is white, sand (`bg-sand`), navy (`bg-brand-900`), brown (`bg-brown`) and photo bands. `BackgroundRhythmTest` fails if two neighbouring blocks on a key page have the same background, so when you add or reorder sections check the order (for example the "What that looks like in practice" section is sand because "Tour types" after it is white; the "Why travel with us" strip is navy because it sits between white and sand sections).
+
 Use tokens as Tailwind classes: `bg-brand-700`, `text-rust`, `bg-accent`, `font-display`, `shadow-card`.
 
 Fonts are self-hosted via Fontsource (`@fontsource-variable/*`), loaded with `font-display: swap`. To change fonts: `npm i @fontsource-variable/<font>`, swap the `@import` lines and the two `--font-*` tokens.
@@ -63,3 +66,16 @@ Visible focus ring (gold), skip link, labelled controls, `aria-invalid` and `rol
 3. Replace images in `public/images/` (same filenames) and update IMAGE_CREDITS.md.
 4. Update `config/gnt.php`, the seeders (copy, FAQs, quiz) and `docs`.
 5. `npm run build`, run tests, run Lighthouse.
+
+## Reference layout (dreamtripsscotland.com style)
+
+Same fonts (Playfair Display, Montserrat) and palette as before; only the layout changed.
+
+- **Header:** fully transparent over a photo hero (white links, a white logo, switching to the full-color logo on the white bar) and a white bar once scrolled or on pages without a hero. The top bar above it holds phone, email and an outlined "Start Your Adventure" button. The old transparent-over-hero header is gone.
+- **Menu (Admin > Navigation):** Home, Self Drive, Chauffeur Driven, Coach Tours, Destinations, About Us (a dropdown of image cards that includes Meet the Team and Blog). The automatic "Tours" mega menu still exists as a menu item kind if you want it back.
+- **Home order:** hero, value strip, intro (photo + ticked list), journey cards (edge-to-edge photos), packages (one row per tour type), dark "why us" tiles, proof section, then the rest.
+- **Section headings:** small label with three short bars (blue, rust, blue) beneath it.
+- **Package cards:** white cards with a large price, up to three ticked highlights, Get a Quote and Details buttons.
+- New section type **Value strip** (Admin > Pages > Home); "Featured packages" now has a Layout choice (one row per tour type, or one carousel with tabs).
+- New page **Meet the Team** at `/meet-the-team` (a normal custom page, editable in Admin > Pages).
+- Migrations `2026_11_23_000001/2` apply this to existing sites only when the home page and menu are still the seeded ones; anything an admin rearranged is left alone.

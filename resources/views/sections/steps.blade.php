@@ -1,14 +1,26 @@
 @php
     $count = count($d['items']);
     $timeline = $d['style'] === 'timeline';
+    $tiles = $d['style'] === 'tiles';
     $cols = $count <= 3 ? 'md:grid-cols-3' : 'md:grid-cols-4';
     $perRow = $count <= 3 ? max($count, 1) : 4;
 @endphp
 @if ($count)
-<section class="py-16 sm:py-24" aria-labelledby="st-{{ $sid }}">
+<section class="{{ $tiles ? 'bg-sand ' : '' }}py-16 sm:py-24" aria-labelledby="st-{{ $sid }}">
     <div class="container-site">
-        <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'st-'.$sid" />
-        @if ($timeline)
+        <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :subtitle="($d['intro'] ?? '') ?: null" :id="'st-'.$sid" />
+        @if ($tiles)
+            {{-- Dark numbered tiles: a white corner tab with the number, then title and text; a swipe row on phones. --}}
+            <x-slider tag="ol" class="grid gap-6 md:grid-cols-3 lg:gap-8">
+                @foreach ($d['items'] as $i => $s)
+                    <li class="relative overflow-hidden rounded-xl bg-brand-900 px-6 pb-10 pt-14 text-center text-white shadow-card" data-reveal="up" style="--d:{{ $i * 150 }}ms">
+                        <span class="absolute left-0 top-0 flex h-16 w-16 items-start justify-start rounded-br-full bg-white pl-5 pt-3 font-display text-3xl font-medium text-brand-900" aria-hidden="true">{{ $i + 1 }}</span>
+                        <h3 class="mt-6 text-2xl font-medium">{{ $s['title'] }}</h3>
+                        <p class="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-white/85">{{ $s['text'] }}</p>
+                    </li>
+                @endforeach
+            </x-slider>
+        @elseif ($timeline)
             {{-- Connected timeline: a dashed line links the numbered circles on desktop, a vertical line on phones. --}}
             <ol class="relative grid gap-9 {{ $cols }}">
                 @if ($count > 1 && $count <= 4)
@@ -36,6 +48,7 @@
                 @endforeach
             </x-slider>
         @endif
+        @if ($d['button_label'] ?? '')<p class="mt-10 text-center"><x-button @click="$store.modal.show()">{{ $d['button_label'] }}</x-button></p>@endif
     </div>
 </section>
 @endif

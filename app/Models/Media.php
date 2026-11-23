@@ -20,7 +20,10 @@ class Media extends Model
         $w = $width && in_array($width, $widths) ? $width : (max($widths) ?: null);
 
         // asset() follows the host the visitor is on, so images work on .test, 127.0.0.1:8000 and live alike (APP_URL need not match).
-        return asset('storage/'.$this->path.'-'.$w.'.webp');
+        $file = storage_path('app/public/'.$this->path.'-'.$w.'.webp');
+
+        // ?v= changes when the file does, so a browser or CDN never keeps serving an older image saved under the same name.
+        return asset('storage/'.$this->path.'-'.$w.'.webp').(is_file($file) ? '?v='.filemtime($file) : '');
     }
 
     public function srcset(): string

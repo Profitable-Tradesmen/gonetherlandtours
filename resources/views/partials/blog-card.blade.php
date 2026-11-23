@@ -6,6 +6,7 @@
     </a>
     <div class="flex flex-1 flex-col p-6">
         @if ($post->label)<p class="label-caps text-rust">{{ $post->label }}</p>@endif
+        <p class="mt-1 text-xs text-ink/60">@if ($post->published_at)<time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->format('M j, Y') }}</time> &middot; @endif{{ $post->reading_minutes }} min read</p>
         <h3 class="mt-2 text-xl font-medium"><a href="{{ $url }}" class="hover:text-rust">{{ $post->title }}</a></h3>
         @if ($post->excerpt)<p class="mt-2 flex-1 text-sm text-ink/75">{{ $post->excerpt }}</p>@endif
         <p class="mt-1 text-sm font-bold"><a href="{{ $url }}" class="inline-flex min-h-[2.75rem] items-center text-brand-700 underline underline-offset-4 hover:text-rust" >Read more<span class="sr-only"> about {{ $post->title }}</span></a></p>

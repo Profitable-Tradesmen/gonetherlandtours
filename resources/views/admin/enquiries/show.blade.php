@@ -35,6 +35,10 @@
             <dl class="mt-2">{!! $row('Sync status', $e->ghl_status) !!}{!! $row('Contact ID', $e->ghl_contact_id) !!}{!! $row('Last synced', $e->ghl_synced_at?->format('d M Y H:i')) !!}{!! $row('Last error', $e->ghl_error) !!}</dl>
             <form method="POST" action="{{ route('admin.enquiries.ghl-retry', $e) }}" class="mt-3">@csrf<button class="btn btn-primary btn-block !py-2">Retry sync</button></form>
         </section>
+        <section class="rounded-xl bg-white p-5 shadow-sm"><h2 class="font-display text-xl">Google Sheets</h2>
+            <dl class="mt-2">{!! $row('Sync status', $e->sheets_status) !!}{!! $row('Last synced', $e->sheets_synced_at?->format('d M Y H:i')) !!}{!! $row('Last error', $e->sheets_error) !!}</dl>
+            <form method="POST" action="{{ route('admin.enquiries.sheets-retry', $e) }}" class="mt-3">@csrf<button class="btn btn-primary btn-block !py-2">Send to the sheet again</button></form>
+        </section>
         <form method="POST" action="{{ route('admin.enquiries.destroy', $e) }}" onsubmit="return confirm('Delete this enquiry permanently?')">@csrf @method('DELETE')<button class="text-sm text-rust underline">Delete enquiry</button></form>
     </div>
 </div>

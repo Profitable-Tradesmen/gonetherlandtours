@@ -27,44 +27,161 @@ class DesignRefreshTest extends TestCase
         return collect($page->fresh()->allSections())->firstWhere('type', $type);
     }
 
-    public function test_hero_is_a_responsive_photo_with_a_preload_and_the_header_floats_over_it(): void
+    public function test_hero_is_a_responsive_photo_with_a_preload_and_floats_a_transparent_header_over_it(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('images/hero-home.webp', $html);
         $this->assertStringContainsString('hero-home-800.webp 800w', $html, 'phones get the small copy');
         $this->assertMatchesRegularExpression('/<link rel="preload" as="image"[^>]+imagesrcset=/', $html);
-        $this->assertStringNotContainsString('hdr-overlay', $html, 'the header no longer floats over the hero');
-        $this->assertStringNotContainsString('hdr-plate', $html, 'the transparent logo sits straight on the light header, no plate');
-        $this->assertStringContainsString('bg-white/95 backdrop-blur', $html);
+        $this->assertStringContainsString('hdr-overlay', $html, 'transparent over the hero until scrolled');
+        $this->assertStringContainsString('hdr-logo', $html, 'the logo is white while the header is transparent and full color on the white bar');
+        $this->assertStringContainsString('bg-white/95 shadow-', $html, 'white bar with a drop shadow once scrolled');
+        $this->assertStringNotContainsString('hdr-plate', $html);
         $this->assertStringNotContainsString('hero-video-poster', $html, 'the abstract placeholder illustration is gone');
     }
 
     public function test_header_is_solid_on_pages_without_a_hero_and_floats_on_pages_that_start_with_one(): void
     {
-        foreach (['/', '/about', '/packages/sample-tulip-season-self-drive', '/contact', '/faq', '/packages', '/blog'] as $url) {
+        foreach (['/', '/about', '/packages/sample-tulip-season-self-drive'] as $url) {
+            $this->assertStringContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
+        }
+        foreach (['/contact', '/faq', '/packages', '/blog'] as $url) {
             $this->assertStringNotContainsString('hdr-overlay', $this->get($url)->getContent(), $url);
         }
+    }
+
+    public function test_top_bar_shows_placeholder_phone_and_email_until_settings_are_filled(): void
+    {
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('+1 000-000-0000', $html);
+        $this->assertStringContainsString('info@gonetherlandtours.com', $html);
+    }
+
+    public function test_reference_layout_home_order_value_strip_journey_cards_and_packages_by_tour_type(): void
+    {
+        $home = Page::bySlug('home');
+        $types = collect($home->visibleSections())->pluck('type')->all();
+        $this->assertSame(['hero_video_quiz', 'value_strip', 'split_list', 'tour_types', 'packages_tabs', 'why_band', 'usp_proof'], array_slice($types, 0, 7));
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('Clear, upfront quotes', $html);
+        $this->assertStringContainsString('Why we are the', $html);
+        // the packages section is three plain columns of cards (no per-column heading block)
+        $this->assertStringContainsString('Sample: Tulip Season Self Drive', $html);
+        // the three small bars under each section label
+        $this->assertStringContainsString('h-[3px] w-7', $html);
+    }
+
+    public function test_header_menu_follows_the_reference_and_meet_the_team_page_exists(): void
+    {
+        $html = $this->get('/')->getContent();
+        preg_match('#<nav class="hidden[^>]*aria-label="Main">(.*?)</nav>#s', $html, $nav);
+        foreach (['Home', 'Tour Types', 'Destinations', 'Packages', 'About Us'] as $label) {
+            $this->assertStringContainsString($label, $nav[1], $label);
+        }
+        // the Tour types mega menu: a photo card per tour type, featured trips with their nights, and a "view all" link
+        $mega = strstr($html, 'id="mega-tours"');
+        $this->assertNotFalse($mega);
+        foreach (['Self Drive', 'Chauffeur Driven', 'Coach Tours', 'Featured trips', 'Sample: Tulip Season Self Drive', '7 nights', 'View all'] as $text) {
+            $this->assertStringContainsString($text, $mega, $text);
+        }
+        $this->get('/meet-the-team')->assertOk()->assertSee('Meet the Team');
+        $this->assertStringContainsString('/meet-the-team', $html, 'linked from the About Us dropdown');
+    }
+
+    public function test_menu_migration_switches_only_the_seeded_menu(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_23_000002_reference_menu_and_team_page.php');
+
+        // an admin-customised menu is left alone
+        \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->where('label', 'Home')->update(['label' => 'Start here']);
+        $migration->up();
+        $this->assertTrue(\App\Models\MenuItem::where('menu', 'header')->where('label', 'Start here')->exists());
+
+        // the old seeded menu is replaced by the reference one
+        \Illuminate\Support\Facades\DB::table('menu_items')->where('menu', 'header')->delete();
+        $now = now();
+        foreach ([['Tours', 'tours'], ['Destinations', 'link'], ['Packages', 'link'], ['About Us', 'cards'], ['Contact', 'link']] as $i => [$label, $kind]) {
+            \Illuminate\Support\Facades\DB::table('menu_items')->insert(['menu' => 'header', 'label' => $label, 'kind' => $kind, 'url' => '/x', 'sort_order' => $i + 1, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
+        }
+        $migration->up();
+        $this->assertSame(['Home', 'Tour Types', 'Destinations', 'Packages', 'About Us'], \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->orderBy('sort_order')->pluck('label')->all());
+    }
+
+    public function test_home_migration_reorders_only_the_previously_seeded_home(): void
+    {
+        $home = Page::bySlug('home');
+        $current = $home->allSections();
+        $by = collect($current)->keyBy('type');
+        $by['video_feature'] = ['id' => 'vid', 'type' => 'video_feature', 'visible' => true, 'data' => []];   // the previous release's home page had a video band
+        $by['text_cta'] = ['id' => 'cta1', 'type' => 'text_cta', 'visible' => true, 'data' => []];   // ... and a text band and an FAQ list
+        $by['faq'] = ['id' => 'faq1', 'type' => 'faq', 'visible' => true, 'data' => []];
+        $old = [$by['hero_video_quiz'], ['id' => 'tick', 'type' => 'ticker', 'visible' => true, 'data' => ['items' => []]], $by['split_list'], $by['packages_tabs'],
+            ['id' => 'band', 'type' => 'feature_band', 'visible' => true, 'data' => []], $by['usp_proof'], $by['tour_types'], $by['video_feature'], $by['image_strip'], $by['steps'],
+            $by['testimonials'], $by['gallery'], $by['text_cta'], $by['faq'], $by['blog_latest'], $by['cta_banner']];
+        $migration = require base_path('database/migrations/2026_11_23_000001_reference_home_layout.php');
+
+        $home->update(['sections' => $old]);
+        $migration->up();
+        $types = collect($home->fresh()->allSections())->pluck('type')->all();
+        $this->assertSame(['hero_video_quiz', 'value_strip', 'split_list', 'tour_types', 'packages_tabs', 'why_band', 'usp_proof'], array_slice($types, 0, 7));
+        $this->assertSame(['ticker', 'feature_band'], array_slice($types, -2), 'old sections are kept, hidden');
+        $this->assertSame([false, false], collect($home->fresh()->allSections())->take(-2)->pluck('visible')->all());
+
+        // an admin who re-arranged the page: untouched
+        $custom = array_reverse($old);
+        $home->update(['sections' => $custom]);
+        $migration->up();
+        $this->assertSame(array_column($custom, 'type'), collect($home->fresh()->allSections())->pluck('type')->all());
     }
 
     public function test_top_bar_is_hidden_on_phones_and_h1_is_smaller(): void
     {
         $html = $this->get('/')->getContent();
-        $this->assertMatchesRegularExpression('/class="hidden bg-ink text-white text-xs sm:block/', $html);
-        $this->assertStringContainsString('lg:text-6xl', $html);
+        $this->assertMatchesRegularExpression('/class="hidden bg-brand-900 text-white text-xs sm:block/', $html);
+        $this->assertStringContainsString('xl:text-6xl', $html);
         $this->assertStringNotContainsString('lg:text-7xl', $html);
     }
 
-    public function test_featured_packages_render_as_a_carousel_with_icon_tabs_and_stacked_cards(): void
+    public function test_signature_collection_is_a_carousel_row_per_tour_type_with_dashes_and_the_section_order_is_right(): void
     {
+        $types = collect(Page::bySlug('home')->visibleSections())->pluck('type')->all();
+        $this->assertSame(['split_list', 'tour_types', 'packages_tabs'], array_slice($types, 2, 3), 'Why book with us, Tour types, Signature Collection');
+
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('Signature Collection', $html);
+        $this->assertStringContainsString('Self Drive Packages', $html);
+        $this->assertStringContainsString('Chauffeur Driven Packages', $html);
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'View more packages'));
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'x-data="carousel"'));
+        $this->assertStringContainsString('carousel-track', $html);
+        $this->assertStringContainsString('aria-label="Next packages"', $html);
+        $this->assertStringContainsString('Show package', $html, 'dash indicators');
+        $this->assertStringContainsString('w-[88%]', $html, 'phones: one wide horizontal card per slide, the next one peeking');
+    }
+
+    public function test_package_card_is_a_horizontal_navy_card_on_phones_and_a_white_card_from_640px(): void
+    {
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('flex-row overflow-hidden rounded-2xl bg-brand-900 text-white shadow-card sm:flex-col sm:bg-white sm:text-ink', $html);
+        $this->assertStringContainsString('More info', $html, 'phones: underlined More info link');
+        $this->assertStringContainsString('sm:hidden', $html);
+    }
+
+    public function test_featured_packages_tabs_layout_is_a_carousel_with_icon_tabs_and_stacked_cards(): void
+    {
+        $this->login();
+        $home = Page::bySlug('home');
+        $sec = $this->section($home, 'packages_tabs');
+        $this->put(route('admin.pages.sections.update', [$home, $sec['id']]), ['data' => ['layout' => 'tabs', 'heading' => 'Packages', 'all_label' => 'All', 'button_label' => 'See all']])->assertSessionHasNoErrors();
         $html = $this->get('/')->getContent();
         $this->assertStringContainsString('x-data="carousel"', $html);
         $this->assertStringContainsString('carousel-track', $html);
         $this->assertStringContainsString('aria-label="Next packages"', $html);
         $this->assertStringContainsString('role="tablist"', $html);
-        // cards: image on top at every size (no side-by-side "flex-row"), chips for nights/type, two actions in a grid
-        $this->assertStringNotContainsString('flex h-full flex-row', $html);
+        // cards: chips for nights/type, two actions in a grid from 640px
         $this->assertStringContainsString('rounded-full bg-accent px-2.5 py-1 text-ink', $html);
-        $this->assertStringContainsString('grid grid-cols-2 gap-3 pt-5', $html);
+        $this->assertStringContainsString('sm:grid sm:grid-cols-2', $html);
     }
 
     public function test_package_page_has_photo_hero_pills_highlight_cards_and_day_cards(): void
@@ -116,12 +233,57 @@ class DesignRefreshTest extends TestCase
         $this->assertStringNotContainsString('ring-4 ring-white', $this->get('/')->getContent());
     }
 
+    public function test_home_reviews_are_three_cards_over_a_photo(): void
+    {
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('ring-white/20', $html, 'frosted review cards');
+        $this->assertStringNotContainsString('aria-label="Next review"', $html, 'no one-at-a-time picker on the home page');
+        $this->assertSame(3, substr_count($html, 'Rated 5 out of 5'), 'three cards with stars');
+        $this->assertStringContainsString('images/couples', $html, 'photo behind the cards');
+    }
+
+    public function test_migration_turns_the_seeded_spotlight_home_reviews_into_cards_only_on_home(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_25_000002_home_reviews_as_cards.php');
+        $home = Page::bySlug('home');
+        $secs = $home->allSections();
+        foreach ($secs as &$s) {
+            if ($s['type'] === 'testimonials') {
+                $s['data']['variant'] = 'spotlight';
+            }
+        }
+        unset($s);
+        $home->update(['sections' => $secs]);
+        $migration->up();
+        $this->assertSame('dark', $this->section($home, 'testimonials')['data']['variant']);
+
+        // a "light" choice is never changed
+        $secs = $home->fresh()->allSections();
+        foreach ($secs as &$s) {
+            if ($s['type'] === 'testimonials') {
+                $s['data']['variant'] = 'light';
+            }
+        }
+        unset($s);
+        $home->update(['sections' => $secs]);
+        $migration->up();
+        $this->assertSame('light', $this->section($home, 'testimonials')['data']['variant']);
+    }
+
     public function test_testimonials_spotlight_has_a_picker_and_all_reviews_in_the_html(): void
     {
+        $this->login();
+        $home = Page::bySlug('home');
+        $sec = $this->section($home, 'testimonials');
+        $this->put(route('admin.pages.sections.update', [$home, $sec['id']]), ['data' => ['variant' => 'spotlight', 'heading' => 'What Travelers Say', 'bg' => 'images/couples.webp']])->assertSessionHasNoErrors();
         $html = $this->get('/')->getContent();
         $this->assertStringContainsString('aria-label="Next review"', $html);
         $this->assertStringContainsString('aria-label="Previous review"', $html);
         $this->assertGreaterThanOrEqual(3, substr_count($html, 'aria-label="Show review'));
+        // reviews share one grid cell (no height jump) and fade via the .review-fig rule; without JS only the first shows
+        $this->assertGreaterThanOrEqual(3, substr_count($html, 'class="review-fig col-start-1 row-start-1'));
+        $this->assertSame(1, substr_count($html, 'review-fig col-start-1 row-start-1 is-active'), 'only the first review is active before JavaScript runs');
+        $this->assertStringContainsString('.review-fig.is-active', file_get_contents(base_path('resources/css/app.css')));
         $this->assertStringContainsString('Sample review', $html);
     }
 
@@ -183,5 +345,418 @@ class DesignRefreshTest extends TestCase
         $about->update(['kind' => 'link']);
         $migration->up();
         $this->assertNull($blog->fresh()->parent_id);
+    }
+
+    public function test_why_band_has_intro_button_numbered_icon_tiles_and_updated_content(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('Why we are the', $html);
+        $this->assertStringContainsString('Four things we promise on every trip', $html);
+        foreach (['Real Dutch culture', 'Private or small group', 'Hidden gems, local secrets', 'Itineraries built around you'] as $title) {
+            $this->assertStringContainsString($title, $html, $title);
+        }
+        $this->assertStringContainsString('Coach tours are small guided groups', $html, 'accurate small-group claim');
+        $this->assertStringContainsString('>01<', $html);
+    }
+
+    public function test_migration_refreshes_only_the_untouched_why_band_reasons(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000004_refresh_why_band_content.php');
+        $home = Page::bySlug('home');
+        $sections = $home->allSections();
+        foreach ($sections as &$s) {
+            if ($s['type'] === 'why_band') {
+                $s['data']['items'] = [
+                    ['title' => 'Authentic Dutch culture', 'text' => 'Windmills, tulip fields, cheese markets and local traditions.'],
+                    ['title' => 'Hidden gems & local secrets', 'text' => 'My own wording about hidden places.'],
+                ];
+            }
+        }
+        unset($s);
+        $home->update(['sections' => $sections]);
+
+        $migration->up();
+        $items = collect($home->fresh()->allSections())->firstWhere('type', 'why_band')['data']['items'];
+        $this->assertSame(['tulip', 'Real Dutch culture'], [$items[0]['icon'], $items[0]['title']]);
+        $this->assertSame('My own wording about hidden places.', $items[1]['text'], 'edited text is never replaced');
+    }
+
+    public function test_package_card_and_row_wording_is_editable_in_settings(): void
+    {
+        $this->login();
+        $this->assertStringContainsString('Package cards and carousels', $this->get(route('admin.settings'))->assertOk()->getContent());
+
+        \App\Models\Setting::put('card_quote_label', 'Request a quote');
+        \App\Models\Setting::put('card_details_label', 'Full itinerary');
+        \App\Models\Setting::put('row_packages_suffix', 'Journeys');
+        \App\Models\Setting::put('card_sample_badge', 'Demo');
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('Request a quote', $html);
+        $this->assertStringContainsString('Full itinerary', $html);
+        $this->assertStringContainsString('Self Drive Journeys', $html);
+        $this->assertStringContainsString('>Demo<', $html);
+        $this->assertStringNotContainsString('Self Drive Packages', $html);
+
+        // a blank or missing button label never leaves an empty button: the built-in wording is used
+        \App\Models\Setting::put('card_quote_label', '');
+        \App\Models\Setting::put('card_details_label', '');
+        $blank = $this->get('/')->getContent();
+        $this->assertStringContainsString('>Get a Quote</button>', $blank);
+        $this->assertStringContainsString('>Details<span class="sr-only">', $blank);
+
+        \App\Models\Setting::put('row_packages_suffix', '');
+        $this->assertStringContainsString('</span>Self Drive</h3>', $this->get('/')->getContent(), 'blank suffix shows just the tour type name');
+    }
+
+    public function test_why_band_numbers_can_be_switched_off(): void
+    {
+        $this->login();
+        $home = Page::bySlug('home');
+        $band = $this->section($home, 'why_band');
+        $mark = 'font-display text-4xl font-medium text-white/40';
+        $this->assertStringContainsString($mark, $this->get('/')->getContent());
+        $this->put(route('admin.pages.sections.update', [$home, $band['id']]), ['data' => ['heading' => 'Why us', 'items' => [['icon' => 'check', 'title' => 'A', 'text' => 'b']]]])->assertSessionHasNoErrors();
+        $this->assertStringNotContainsString($mark, $this->get('/')->getContent());
+    }
+
+    public function test_partner_logos_band_sits_right_after_how_it_works_and_is_editable(): void
+    {
+        $types = collect(Page::bySlug('home')->visibleSections())->pluck('type')->all();
+        $this->assertSame(array_search('steps', $types, true) + 1, array_search('partners', $types, true), 'right after How it works');
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('Our Best Trusted', $html);
+        foreach (['hen-it.png', 'go-asian-tours.png', 'go-italia-trips.webp'] as $file) {
+            $this->assertFileExists(public_path('images/partners/'.$file));
+            $this->assertStringContainsString('images/partners/'.$file, $html);
+        }
+        $this->assertStringContainsString('alt="Go Asian Tours"', $html);
+
+        // editable: one logo with a link, an empty row is dropped
+        $this->login();
+        $home = Page::bySlug('home');
+        $sec = $this->section($home, 'partners');
+        $this->put(route('admin.pages.sections.update', [$home, $sec['id']]), ['data' => ['heading' => 'Friends', 'items' => [
+            ['image' => 'images/partners/go-asian-tours.png', 'image_alt' => 'Go Asian Tours', 'url' => 'https://example.com'], ['image' => '', 'url' => ''],
+        ]]])->assertSessionHasNoErrors();
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('href="https://example.com"', $html);
+        $this->assertStringNotContainsString('go-italia-trips.webp', $html);
+    }
+
+    public function test_migration_adds_the_partners_band_after_how_it_works_once(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000006_add_partners_band_to_home.php');
+        $home = Page::bySlug('home');
+        $without = collect($home->allSections())->reject(fn ($s) => $s['type'] === 'partners')->values()->all();
+        $home->update(['sections' => $without]);
+
+        $migration->up();
+        $types = collect($home->fresh()->allSections())->pluck('type')->all();
+        $this->assertSame(array_search('steps', $types, true) + 1, array_search('partners', $types, true));
+        $migration->up();
+        $this->assertSame(1, count(array_keys(collect($home->fresh()->allSections())->pluck('type')->all(), 'partners')), 'not added twice');
+    }
+
+    public function test_migration_switches_only_the_previously_seeded_header_menu_to_the_tour_types_mega_menu(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_25_000001_tour_types_mega_menu.php');
+        $table = \Illuminate\Support\Facades\DB::table('menu_items');
+        $now = now();
+        $seedOld = function () use ($now) {
+            \Illuminate\Support\Facades\DB::table('menu_items')->where('menu', 'header')->delete();
+            foreach ([['Home', 'link'], ['Self Drive', 'link'], ['Chauffeur Driven', 'link'], ['Coach Tours', 'link'], ['Destinations', 'link'], ['About Us', 'cards']] as $i => [$label, $kind]) {
+                \Illuminate\Support\Facades\DB::table('menu_items')->insert(['menu' => 'header', 'label' => $label, 'kind' => $kind, 'url' => '/x', 'sort_order' => $i + 1, 'is_active' => true, 'new_tab' => false, 'created_at' => $now, 'updated_at' => $now]);
+            }
+        };
+        $labels = fn () => \App\Models\MenuItem::where('menu', 'header')->whereNull('parent_id')->orderBy('sort_order')->pluck('label')->all();
+
+        $seedOld();
+        $migration->up();
+        $this->assertSame(['Home', 'Tour Types', 'Destinations', 'Packages', 'About Us'], $labels());
+        $this->assertSame('tours', \App\Models\MenuItem::where('menu', 'header')->where('label', 'Tour Types')->value('kind'));
+
+        // an admin who renamed or added an item: untouched
+        $seedOld();
+        \App\Models\MenuItem::where('menu', 'header')->where('label', 'Self Drive')->update(['label' => 'Drive yourself']);
+        $migration->up();
+        $this->assertContains('Drive yourself', $labels());
+        $this->assertNotContains('Tour Types', $labels());
+    }
+
+    /** The part of a page between <main> and </main> (the header menus repeat names of tours and pages on every page). */
+    private function mainOf(string $html): string
+    {
+        $start = strpos($html, '<main');
+
+        return $start === false ? $html : substr($html, $start, strpos($html, '</main>') - $start);
+    }
+
+    public function test_destinations_have_real_photos_and_guide_copy(): void
+    {
+        foreach (['amsterdam', 'tulips', 'zeeland'] as $name) {
+            $file = public_path('images/dest-'.$name.'.webp');
+            $this->assertFileExists($file);
+            $this->assertGreaterThan(60000, filesize($file), $name.': a real photo, not the small text placeholder');
+            $this->assertFileExists(public_path('images/dest-'.$name.'-800.webp'));
+        }
+        foreach (\App\Models\Destination::all() as $d) {
+            $this->assertStringNotContainsString('[CONFIRM: destination guide copy', (string) $d->body, $d->name);
+            $this->assertStringContainsString('<h2>Highlights</h2>', (string) $d->body, $d->name);
+            $html = $this->get(route('destinations.show', $d))->assertOk()->getContent();
+            $this->assertStringContainsString('When to', $html);
+            $this->assertStringContainsString('How you can', $html);
+            $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html));
+        }
+        $index = $this->get('/destinations')->assertOk()->getContent();
+        $this->assertStringNotContainsString('Six places', $index);
+        $this->assertStringContainsString('Zeeland and the Delta', $this->get('/destinations/zeeland-and-the-delta')->getContent());
+    }
+
+    public function test_destination_migration_replaces_only_untouched_seeded_values(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000011_destination_guide_copy.php');
+        $d = \App\Models\Destination::where('slug', 'tulips-and-countryside')->firstOrFail();
+        $d->update(['body' => '<p>[CONFIRM: destination guide copy for Tulips & Countryside. Sample text only.]</p>', 'h1' => 'Tulips & Countryside Tours', 'image_alt' => 'A windmill beside a Dutch canal', 'seo_title' => 'My own SEO title']);
+
+        $migration->up();
+        $d->refresh();
+        $this->assertStringContainsString('Windmills, flower fields and slow villages', $d->body);
+        $this->assertSame('Tulips and the Dutch Countryside', $d->h1);
+        $this->assertSame('A traditional windmill beside rows of tulips at golden hour', $d->image_alt);
+        $this->assertSame('My own SEO title', $d->seo_title, 'edited values are never replaced');
+
+        $d->update(['body' => '<p>My own guide text.</p>']);
+        $migration->up();
+        $this->assertSame('<p>My own guide text.</p>', $d->fresh()->body);
+    }
+
+    public function test_each_destination_page_is_built_from_sections_like_the_tour_type_pages(): void
+    {
+        foreach (\App\Models\Destination::all() as $d) {
+            $html = $this->get(route('destinations.show', $d))->assertOk()->getContent();
+            foreach (['Free, no-obligation quote', 'Why travel with us', 'What our guests say', '3 easy steps to book your trip', 'Crafted for you', 'How you can'] as $text) {
+                $this->assertStringContainsString($text, $html, $d->name.': '.$text);
+            }
+            $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html), $d->name.': one h1');
+            $page = Page::where('slug', 'dest-'.$d->slug)->firstOrFail();
+            $this->assertTrue($page->is_system);
+            $this->assertSame('/destinations/'.$d->slug, $page->path());
+            $this->get('/dest-'.$d->slug)->assertNotFound();
+        }
+        // the packages carousel shows only the packages of this destination
+        $html = $this->mainOf($this->get('/destinations/zeeland-and-the-delta')->getContent());   // the header menu lists every tour type's trips, so only look at the page itself
+        $this->assertStringContainsString('Sample: Zeeland Coast Chauffeur Tour', $html);
+        $this->assertStringNotContainsString('Sample: Tulip Season Self Drive', $html);
+        $this->assertStringNotContainsString('dest-', $this->get('/sitemap.xml')->getContent());
+
+        // editable in admin; ensureAll never overwrites and recreates a deleted page; without it the older layout still works
+        $this->login();
+        $page = Page::where('slug', 'dest-zeeland-and-the-delta')->firstOrFail();
+        $this->assertSame(0, \App\Support\DestinationPages::ensureAll());
+        $page->delete();
+        $this->get('/destinations/zeeland-and-the-delta')->assertOk()->assertSee('Where the land meets the sea');
+        $this->assertSame(1, \App\Support\DestinationPages::ensureAll());
+    }
+
+    public function test_each_tour_type_page_is_built_from_sections_with_its_own_copy(): void
+    {
+        $expect = [
+            'self-drive' => ['The Ultimate Netherlands Self Drive Experience', 'Self drive vacations with', 'Start planning your self drive tour', 'Self drive packages', 'Sample: Tulip Season Self Drive'],
+            'chauffeur-driven' => ['Private Chauffeur Driven Netherlands Tours', 'Chauffeur driven tours with', 'Plan my chauffeur tour', 'Chauffeur driven packages', 'Sample: Dutch Highlights Chauffeur Tour'],
+            'coach-tours' => ['Small Group Netherlands Coach Tours', 'Guided coach tours for', 'Plan my coach tour', 'Coach tour packages', 'Sample: Netherlands in Bloom Coach Tour'],
+        ];
+        foreach ($expect as $slug => $texts) {
+            $html = $this->get('/tours/'.$slug)->assertOk()->getContent();
+            foreach ($texts as $text) {
+                $this->assertStringContainsString($text, $html, $slug.': '.$text);
+            }
+            foreach (['3 easy steps to book your Netherlands', 'What our guests say', 'Why travel with us', 'Crafted for you'] as $common) {
+                $this->assertStringContainsString($common, $html, $slug.': '.$common);
+            }
+            $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html), $slug.': one h1');
+
+            $page = Page::where('slug', 'tour-'.$slug)->firstOrFail();
+            $this->assertTrue($page->is_system);
+            $this->assertSame('/tours/'.$slug, $page->path(), 'its public address is the tour type page');
+            $this->get('/tour-'.$slug)->assertNotFound();   // the companion record is not a public page of its own
+        }
+        $this->assertStringNotContainsString('tour-self-drive', $this->get('/sitemap.xml')->getContent());
+    }
+
+    public function test_tour_type_page_sections_are_editable_in_admin_and_ensure_all_never_overwrites(): void
+    {
+        $this->login();
+        $this->get(route('admin.pages.index'))->assertOk()->assertSee('Self Drive page');
+        $page = Page::where('slug', 'tour-self-drive')->firstOrFail();
+        $sec = collect($page->allSections())->firstWhere('type', 'promo_band');
+        $this->put(route('admin.pages.sections.update', [$page, $sec['id']]), ['data' => ['heading' => 'My own *heading*', 'text' => 'Mine', 'button_label' => 'Go']])->assertSessionHasNoErrors();
+        $this->assertStringContainsString('My own', $this->get('/tours/self-drive')->getContent());
+
+        // running the creator again changes nothing, and a deleted tour type page is not re-created over an existing one
+        $this->assertSame(0, \App\Support\TourTypePages::ensureAll());
+        $this->assertStringContainsString('My own', $this->get('/tours/self-drive')->getContent());
+
+        // without a companion page the older fixed layout still works
+        $page->delete();
+        $this->get('/tours/self-drive')->assertOk()->assertSee('Sample: Tulip Season Self Drive');
+        $this->assertSame(1, \App\Support\TourTypePages::ensureAll(), 'it comes back for the tour type that lost its page');
+    }
+
+    public function test_reviews_show_stars_photo_or_initial_trip_and_a_chosen_background(): void
+    {
+        $this->login();
+        \App\Models\Testimonial::query()->delete();
+        \App\Models\Testimonial::create(['name' => 'Jo Walker', 'location' => 'Denver, Colorado', 'trip' => '8-night coach tour', 'quote' => 'A wonderful trip.', 'rating' => 4, 'is_placeholder' => false, 'sort_order' => 1]);
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('Rated 4 out of 5', $html);
+        $this->assertStringContainsString('8-night coach tour', $html);
+        $this->assertStringContainsString('Denver, Colorado', $html);
+        $this->assertMatchesRegularExpression('#rounded-full bg-accent font-display text-ink[^>]*>\s*J\s*</span>#', $html, 'no photo: the initial on a gold circle');
+        $this->assertStringContainsString('images/couples', $html, 'default photo background behind the reviews');
+
+        // admin: the new fields are on the form
+        $form = $this->get(route('admin.testimonials.create'))->assertOk()->getContent();
+        foreach (['Star rating', 'Trip taken', 'Traveler photo'] as $label) {
+            $this->assertStringContainsString($label, $form, $label);
+        }
+
+        // stars can be switched off and the background removed (plain navy)
+        $home = Page::bySlug('home');
+        $sec = $this->section($home, 'testimonials');
+        $this->put(route('admin.pages.sections.update', [$home, $sec['id']]), ['data' => ['variant' => 'spotlight', 'heading' => 'Reviews', 'show_stars' => '0', 'bg' => 'images/couples.webp', 'bg_remove' => '1', 'overlay' => 'light']])->assertSessionHasNoErrors();
+        $html = $this->get('/')->getContent();
+        $this->assertStringNotContainsString('Rated 4 out of 5', $html);
+        $this->assertSame('', $this->section($home, 'testimonials')['data']['bg']);
+    }
+
+    public function test_why_band_background_can_be_a_photo_a_gif_a_video_or_plain_navy(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+        $this->login();
+        $home = Page::bySlug('home');
+        $band = $this->section($home, 'why_band');
+        $url = route('admin.pages.sections.update', [$home, $band['id']]);
+        $base = ['heading' => 'Why us', 'overlay' => 'strong', 'items' => [['icon' => 'check', 'title' => 'A', 'text' => 'b']]];
+
+        // default: the photo is the background (full bleed, tinted), tiles in one row, no side photo
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('feature_band', $html);
+        $this->assertStringContainsString('lg:grid-cols-4', $html);
+
+        // animated GIF
+        $this->put($url, ['data' => $base + ['bg' => '', 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('loop.gif', 200, 'image/gif')]])->assertSessionHasNoErrors();
+        $bg = $this->section($home, 'why_band')['data']['bg'];
+        $this->assertMatchesRegularExpression('#^storage/section-media/[A-Za-z0-9]+\.gif$#', $bg);
+        $this->assertStringContainsString('<img src="'.asset($bg).'" alt=""', $this->get('/')->getContent());
+        $this->assertStringContainsString('bg-brand-900/65', $this->get('/')->getContent(), 'strong tint');
+
+        // video: plays through the existing lazy background video loader (data-bg-video), never autoloaded
+        $this->put($url, ['data' => $base + ['bg' => '', 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('loop.mp4', 2000, 'video/mp4')]])->assertSessionHasNoErrors();
+        $bg = $this->section($home, 'why_band')['data']['bg'];
+        $this->assertMatchesRegularExpression('#^storage/section-media/[A-Za-z0-9]+\.mp4$#', $bg);
+        $html = $this->get('/')->getContent();
+        $this->assertStringContainsString('data-bg-video', $html);
+        $this->assertStringContainsString('<source data-src="'.asset($bg).'" type="video/mp4">', $html);
+
+        // wrong file types and oversized files are ignored (the previous background is kept)
+        $kept = $bg;
+        $this->put($url, ['data' => $base + ['bg' => $kept, 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('evil.php', 10, 'application/x-php')]]);
+        $this->put($url, ['data' => $base + ['bg' => $kept, 'bg_file' => \Illuminate\Http\UploadedFile::fake()->create('huge.mp4', 30000, 'video/mp4')]]);
+        $this->assertSame($kept, $this->section($home, 'why_band')['data']['bg']);
+
+        // an address outside images/, storage/ or videos/ is rejected
+        $this->put($url, ['data' => $base + ['bg' => 'https://evil.test/x.mp4']]);
+        $this->assertSame('', $this->section($home, 'why_band')['data']['bg']);
+
+        // removed: plain navy, no background layer
+        $this->put($url, ['data' => $base + ['bg' => $kept, 'bg_remove' => '1']]);
+        $this->assertSame('', $this->section($home, 'why_band')['data']['bg']);
+        $this->assertStringNotContainsString(asset($kept), $this->get('/')->getContent());
+    }
+
+    public function test_migration_turns_the_default_side_photo_of_the_why_band_into_its_background(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000008_why_band_background_media.php');
+        $home = Page::bySlug('home');
+        $secs = $home->allSections();
+        foreach ($secs as &$s) {
+            if ($s['type'] === 'why_band') {
+                unset($s['data']['bg']);
+                $s['data']['image'] = 'images/feature_band.webp';   // the previous layout: photo beside the tiles
+            }
+        }
+        unset($s);
+        $home->update(['sections' => $secs]);
+
+        $migration->up();
+        $data = collect($home->fresh()->allSections())->firstWhere('type', 'why_band')['data'];
+        $this->assertSame('images/feature_band.webp', $data['bg']);
+        $this->assertSame('', $data['image']);
+    }
+
+    public function test_home_has_no_plan_with_peace_of_mind_or_faq_section_and_the_migration_removes_or_hides_them(): void
+    {
+        $types = collect(Page::bySlug('home')->allSections())->pluck('type')->all();
+        $this->assertNotContains('text_cta', $types);
+        $this->assertNotContains('faq', $types);
+        $html = $this->mainOf($this->get('/')->getContent());
+        $this->assertStringNotContainsString('Plan with', $html);
+        $this->assertStringNotContainsString('Frequently Asked Questions', $html);
+        $this->get('/faq')->assertOk()->assertSee('Frequently asked questions');   // the FAQ page itself stays
+
+        $migration = require base_path('database/migrations/2026_11_24_000007_remove_home_plan_and_faq_sections.php');
+        $home = Page::bySlug('home');
+        $secs = $home->allSections();
+        $secs[] = ['id' => 'c1', 'type' => 'text_cta', 'visible' => true, 'data' => ['heading' => 'Plan with *peace of mind*']];
+        $secs[] = ['id' => 'f1', 'type' => 'faq', 'visible' => true, 'data' => ['heading' => 'Frequently Asked Questions']];
+        $secs[] = ['id' => 'f2', 'type' => 'faq', 'visible' => true, 'data' => ['heading' => 'My own FAQ heading']];
+        $home->update(['sections' => $secs]);
+
+        $migration->up();
+        $after = collect($home->fresh()->allSections());
+        $this->assertNull($after->firstWhere('id', 'c1'));
+        $this->assertNull($after->firstWhere('id', 'f1'));
+        $this->assertFalse($after->firstWhere('id', 'f2')['visible'], 'an edited FAQ band is hidden, not deleted');
+    }
+
+    public function test_home_has_no_video_band_and_the_migration_removes_or_hides_an_existing_one(): void
+    {
+        $types = collect(Page::bySlug('home')->allSections())->pluck('type')->all();
+        $this->assertNotContains('video_feature', $types);
+        $this->assertStringNotContainsString('See the Netherlands', $this->get('/')->getContent());
+
+        $migration = require base_path('database/migrations/2026_11_24_000005_remove_home_video_section.php');
+        $home = Page::bySlug('home');
+        $secs = $home->allSections();
+        $secs[] = ['id' => 'v1', 'type' => 'video_feature', 'visible' => true, 'data' => ['heading' => 'See the Netherlands *before you go*']];
+        $secs[] = ['id' => 'v2', 'type' => 'video_feature', 'visible' => true, 'data' => ['heading' => 'My own video heading']];
+        $home->update(['sections' => $secs]);
+
+        $migration->up();
+        $after = collect($home->fresh()->allSections());
+        $this->assertNull($after->firstWhere('id', 'v1'), 'untouched default band is removed');
+        $this->assertFalse($after->firstWhere('id', 'v2')['visible'], 'an edited band is hidden, not deleted');
+    }
+
+    public function test_migration_moves_tour_types_above_the_signature_collection(): void
+    {
+        $migration = require base_path('database/migrations/2026_11_24_000002_move_tour_types_above_signature_collection.php');
+        $home = Page::bySlug('home');
+        $secs = collect($home->allSections());
+        $tt = $secs->firstWhere('type', 'tour_types');
+        $swapped = $secs->reject(fn ($s) => $s['type'] === 'tour_types')->values()->all();
+        $at = array_search('packages_tabs', array_column($swapped, 'type'), true);
+        array_splice($swapped, $at + 1, 0, [$tt]);   // old order: packages first, tour types after
+        $home->update(['sections' => $swapped]);
+
+        $migration->up();
+        $types = collect($home->fresh()->allSections())->pluck('type')->all();
+        $this->assertSame(array_search('packages_tabs', $types, true) - 1, array_search('tour_types', $types, true));
+
+        $before = $types;
+        $migration->up();
+        $this->assertSame($before, collect($home->fresh()->allSections())->pluck('type')->all(), 'running it again changes nothing');
     }
 }

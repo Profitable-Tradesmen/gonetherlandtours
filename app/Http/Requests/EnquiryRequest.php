@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-/** Validation shared by EVERY enquiry form (quiz, modal, package, contact). */
+/** Validation shared by EVERY inquiry form (quiz, modal, package, contact). */
 class EnquiryRequest extends FormRequest
 {
     public function authorize(): bool
@@ -65,7 +65,7 @@ class EnquiryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'consent.accepted' => 'Please tick the box to agree before sending your enquiry.',
+            'consent.accepted' => 'Please tick the box to agree before sending your inquiry.',
             'g-recaptcha-response.required' => 'Please tick "I\'m not a robot".',
             'phone.regex' => 'Please enter a valid phone number.',
             'company_website.max' => 'Invalid submission.',

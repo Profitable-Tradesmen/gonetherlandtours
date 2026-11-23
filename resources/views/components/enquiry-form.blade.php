@@ -9,7 +9,7 @@
     'variant' => 'default',       // default (contact/package) | quiz (short: contact details only) | modal (pop-up: full trip details)
 ])
 {{--
-    THE enquiry form. Every form on the site renders this component and posts to the same route
+    THE inquiry form. Every form on the site renders this component and posts to the same route
     (EnquiryController@store), so reCAPTCHA, consent, honeypot and validation are identical everywhere.
     Rules are documented in docs/reference/FORMS_AND_TRACKING.md and CLAUDE.md.
 --}}
@@ -48,7 +48,7 @@
 
     <div x-show="success" x-cloak class="rounded-xl bg-brand/10 p-6 text-center" role="status">
         <p class="font-display text-2xl text-brand-900">Thank you!</p>
-        <p class="mt-2 text-brand-900">Your enquiry has been sent. Taking you to the next step...</p>
+        <p class="mt-2 text-brand-900">Your inquiry has been sent. Taking you to the next step...</p>
     </div>
 
     <div x-show="!success" class="grid gap-3 sm:grid-cols-2">
@@ -76,7 +76,7 @@
 
                     <button type="button" x-ref="btn" class="field cc-btn items-center gap-2 text-left" aria-haspopup="listbox"
                             :aria-expanded="open" aria-controls="{{ $idp }}-cc-list"
-                            :aria-label="'Country code: ' + current.name + ' (+' + current.dial + ')'"
+                            :aria-label="'Country code: ' + current.iso + ' (+' + current.dial + ')'"
                             @click="toggle()" @keydown.arrow-down.prevent="show()" @keydown.arrow-up.prevent="show()">
                         <img :src="flag(iso)" src="{{ $flagBase }}/{{ strtolower($selectedIso) }}.svg" alt="" width="24" height="18" class="h-[18px] w-6 shrink-0 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
                         <span class="min-w-0 flex-1 truncate" x-text="current.iso + ' (+' + current.dial + ')'">{{ $selectedRow[2] }} (+{{ $selectedRow[1] }})</span>
@@ -87,16 +87,17 @@
                         :aria-activedescendant="active >= 0 ? '{{ $idp }}-cc-' + list[active].iso : null"
                         @keydown="key($event)"
                         class="absolute left-0 top-full z-30 mt-1 max-h-64 w-72 max-w-[calc(100vw-3rem)] overflow-y-auto rounded-xl border border-sand-200 bg-white py-1 shadow-card focus:outline-none">
-                        @foreach ($countries as $i => [$cName, $cDial, $cIso])
-                            <li id="{{ $idp }}-cc-{{ $cIso }}" role="option" :aria-selected="iso === '{{ $cIso }}'"
-                                @click="choose('{{ $cIso }}')" @mousemove="active = {{ $i }}"
-                                :class="active === {{ $i }} ? 'bg-sand' : ''"
+                        {{-- Rendered only while the list is open: 37 flag images per form would otherwise sit in the page (and in the DOM) four times over. --}}
+                        <template x-for="(c, i) in (open ? list : [])" :key="c.iso">
+                            <li :id="'{{ $idp }}-cc-' + c.iso" role="option" :aria-selected="iso === c.iso"
+                                @click="choose(c.iso)" @mousemove="active = i"
+                                :class="active === i ? 'bg-sand' : ''"
                                 class="flex cursor-pointer items-center gap-3 px-3 py-2 text-sm">
-                                <img src="{{ $flagBase }}/{{ strtolower($cIso) }}.svg" alt="" width="24" height="18" loading="lazy" class="h-[18px] w-6 shrink-0 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
-                                <span class="flex-1">{{ $cName }}</span>
-                                <span class="text-ink/60">+{{ $cDial }}</span>
+                                <img :src="flag(c.iso)" alt="" width="24" height="18" class="h-[18px] w-6 shrink-0 rounded-sm object-cover shadow-[0_0_0_1px_rgb(0_0_0/.15)]">
+                                <span class="flex-1" x-text="c.name"></span>
+                                <span class="text-ink/60" x-text="'+' + c.dial"></span>
                             </li>
-                        @endforeach
+                        </template>
                     </ul>
                 </div>
             </x-form-field>
@@ -111,11 +112,11 @@
                     <option>Not sure yet</option>
                 </select>
             </x-form-field>
-            <x-form-field name="group_size" label="Number of travellers" :idp="$idp">
+            <x-form-field name="group_size" label="Number of travelers" :idp="$idp">
                 <select id="{{ $idp }}-group_size" name="group_size" class="field"><option value="">Select</option>@foreach ($opts('group_size') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
             </x-form-field>
             <x-form-field name="travel_date" label="Preferred travel dates" type="date" :min="now()->toDateString()" :idp="$idp" hint="An approximate date is fine." />
-            <x-form-field name="travel_style" label="What is your favourite way to see a new country?" :idp="$idp" span>
+            <x-form-field name="travel_style" label="What is your favorite way to see a new country?" :idp="$idp" span>
                 <select id="{{ $idp }}-travel_style" name="travel_style" class="field"><option value="">Select</option>@foreach ($opts('travel_style') as $o)<option value="{{ $o->value }}">{{ $o->label }}</option>@endforeach</select>
             </x-form-field>
             <x-form-field name="nights" label="Number of nights" :idp="$idp">
@@ -128,7 +129,7 @@
             <x-form-field name="season" label="Time of year" :idp="$idp">
                 <select id="{{ $idp }}-season" name="season" class="field">
                     <option value="">Select (optional)</option>
-                    @foreach (['Spring', 'Summer', 'Autumn', 'Winter'] as $s)<option>{{ $s }}</option>@endforeach
+                    @foreach (['Spring' => 'Spring', 'Summer' => 'Summer', 'Autumn' => 'Fall', 'Winter' => 'Winter'] as $v => $s)<option value="{{ $v }}">{{ $s }}</option>@endforeach
                 </select>
             </x-form-field>
             <x-form-field name="group_size" label="Group size" :idp="$idp">

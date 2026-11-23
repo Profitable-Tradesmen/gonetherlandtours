@@ -76,7 +76,7 @@ class HardeningTest extends TestCase
 
     public function test_public_pages_stay_within_a_query_budget(): void
     {
-        foreach (['/' => 30, '/about' => 20, '/packages' => 22, '/packages/sample-tulip-season-self-drive' => 20] as $url => $max) {
+        foreach (['/' => 30, '/about' => 20, '/packages' => 22, '/packages/tulip-route-self-drive' => 20] as $url => $max) {
             DB::flushQueryLog();
             DB::enableQueryLog();
             $this->get($url)->assertOk();
@@ -88,10 +88,10 @@ class HardeningTest extends TestCase
     {
         $this->login();
         $page = Page::bySlug('home');
-        $band = collect($page->allSections())->firstWhere('type', 'feature_band');
+        $band = collect($page->allSections())->firstWhere('type', 'why_band');
 
         $this->put(route('admin.pages.sections.update', [$page, $band['id']]), ['data' => ['heading' => 'H', 'image' => 'images/feature_band.webp', 'image_alt' => '']])
-            ->assertSessionHas('warning', fn ($w) => str_contains($w, 'alt text') && str_contains($w, 'Background photo'));
+            ->assertSessionHas('warning', fn ($w) => str_contains($w, 'alt text') && str_contains($w, 'Photo'));
 
         $this->put(route('admin.pages.sections.update', [$page, $band['id']]), ['data' => ['heading' => 'H', 'image' => 'images/feature_band.webp', 'image_alt' => 'Windmills at sunrise']])
             ->assertSessionMissing('warning');

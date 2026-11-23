@@ -33,6 +33,14 @@ class Page extends Model
     /** Path of this page on the site, e.g. "/about" or "/my-custom-page". */
     public function path(): string
     {
+        if ($this->is_system && str_starts_with($this->slug, 'tour-')) {
+            return '/tours/'.substr($this->slug, 5);   // companion page of a tour type: its public address is the tour type's
+        }
+
+        if ($this->is_system && str_starts_with($this->slug, 'dest-')) {
+            return '/destinations/'.substr($this->slug, 5);   // companion page of a destination
+        }
+
         return self::FIXED_URLS[$this->slug] ?? '/'.$this->slug;
     }
 

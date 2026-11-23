@@ -15,37 +15,37 @@ class PagesSeeder extends Seeder
             'home' => [
                 'title' => 'Home',
                 'h1' => 'Discover the Authentic Netherlands',
-                'seo_title' => 'Authentic Netherlands Tours | Small Group, Self Drive & Chauffeur | GoNetherlandTours',
-                'meta_description' => 'Small-group and tailor-made Netherlands tours for US travellers: windmills, tulip fields, cheese markets and hidden gems, with expertly crafted itineraries. Get a free quote.',
+                'seo_title' => 'Netherlands Tours: Self Drive, Chauffeur & Small-Group Coach | GoNetherlandTours',
+                'meta_description' => 'Private self drive and chauffeur tours or small-group coach tours of the Netherlands for US and Canadian travelers: windmills, tulip fields, cheese markets and hidden gems, with expertly crafted itineraries. Get a free quote.',
                 'content' => [
-                    'hero_sub' => 'Windmills, tulip fields, cheese markets and hidden gems, on small-group and tailor-made tours with expertly crafted itineraries. Answer a few quick questions and get a free quote.',
-                    'badges' => ['Authentic Dutch culture', 'Small group experiences', 'Expertly crafted itineraries'],
-                    'why_heading' => 'Why Travellers Choose Us',
+                    'hero_sub' => 'Windmills, tulip fields and hidden gems, on private self drive and chauffeur tours or small-group coach tours. Answer a few quick questions for a free quote.',
+                    'badges' => ['Authentic Dutch culture', 'Small-group & private tours', 'Expertly crafted itineraries'],
+                    'why_heading' => 'Why Travelers Choose Us',
                     'why' => [
-                        ['title' => 'Experience Authentic Dutch Culture', 'text' => 'Explore traditional windmills, colourful tulip fields, cheese markets and local traditions.'],
-                        ['title' => 'Small Group Experiences', 'text' => 'Enjoy more personal attention, flexible itineraries and meaningful connections with fellow travellers.'],
+                        ['title' => 'Experience Authentic Dutch Culture', 'text' => 'Explore traditional windmills, colorful tulip fields, cheese markets and local traditions.'],
+                        ['title' => 'Small Group Experiences', 'text' => 'On our coach tours you travel in a small group; on self drive and chauffeur tours it is just your own party. Either way, expect personal attention, flexible itineraries and meaningful connections.'],
                         ['title' => 'Hidden Gems and Local Secrets', 'text' => 'Venture beyond the tourist hotspots to discover lesser-known destinations and authentic local experiences.'],
                         ['title' => 'Expertly Crafted Itineraries', 'text' => 'Make the most of your vacation with thoughtfully designed routes and carefully selected attractions.'],
                     ],
                     'tours_heading' => 'Choose How You Want to Explore',
-                    'packages_heading' => 'Signature Netherlands Journeys',
+                    'packages_heading' => 'Signature Collection',
                     'how_heading' => 'How It Works',
                     'steps' => [
-                        ['title' => 'Tell us what you love', 'text' => 'Share when you want to travel, who is coming and what you hope to see.'],
+                        ['title' => 'Tell us what you love', 'text' => 'Share when you want to travel, who is coming, what you hope to see and where you are flying from.'],
                         ['title' => 'Get your crafted itinerary', 'text' => 'A travel specialist designs a thoughtful route and sends you a clear, personal quote.'],
                         ['title' => 'Book and enjoy', 'text' => 'Confirm your trip and arrive with everything arranged, ready to explore.'],
                     ],
-                    'testimonials_heading' => 'What Travellers Say',
+                    'testimonials_heading' => 'What Travelers Say',
                     'faq_heading' => 'Frequently Asked Questions',
                     'cta_heading' => 'Ready to Discover the Real Netherlands?',
-                    'cta_text' => 'Get a free, no-obligation quote for a small-group or tailor-made Netherlands trip.',
+                    'cta_text' => 'Get a free, no-obligation quote for a small-group or custom Netherlands trip, planned around your flights from the US or Canada.',
                 ],
             ],
             'about' => [
                 'title' => 'About Us', 'h1' => 'About GoNetherlandTours',
-                'seo_title' => 'About GoNetherlandTours | Netherlands Tour Specialists for US Travellers',
-                'meta_description' => 'Meet GoNetherlandTours. We plan tailor-made self drive, chauffeur driven and coach tours of the Netherlands for American travellers, from tulip season to Dutch cities and coast.',
-                'body' => '<p>[CONFIRM: company story, years in business, team. Sample text only.]</p><p>GoNetherlandTours plans self drive, chauffeur driven and coach tours of the Netherlands for American travellers.</p>',
+                'seo_title' => 'About GoNetherlandTours | Netherlands Tour Specialists for US and Canadian Travelers',
+                'meta_description' => 'Meet GoNetherlandTours. We plan custom self drive, chauffeur driven and coach tours of the Netherlands for American and Canadian travelers, from tulip season to Dutch cities and coast.',
+                'body' => '<p>We are a team of Netherlands specialists who love sharing the country beyond the postcard sights. Every trip is planned by people who know the roads, the hotels and the hidden corners, and who are on hand while you travel.</p><p>GoNetherlandTours plans self drive, chauffeur driven and coach tours of the Netherlands for American and Canadian travelers.</p>',
             ],
             'contact' => [
                 'title' => 'Contact', 'h1' => 'Contact Us',
@@ -59,26 +59,26 @@ class PagesSeeder extends Seeder
                 'meta_description' => 'Terms and Conditions for using the GoNetherlandTours website and services.',
                 'body' => '<p><strong>STARTER TEMPLATE ONLY. This text has not been reviewed by a lawyer. Have it reviewed before launch.</strong></p>'
                     .'<h2>1. About these terms</h2><p>These terms apply to your use of this website and enquiries made with '.$company.'.</p>'
-                    .'<h2>2. Enquiries and quotes</h2><p>Submitting an enquiry does not create a booking. Quotes are subject to availability and may change until confirmed in writing. [CONFIRM: quote validity period]</p>'
-                    .'<h2>3. Bookings, payments and cancellations</h2><p>[CONFIRM: deposit, final payment, cancellation and refund terms]</p>'
-                    .'<h2>4. SMS messaging</h2><p>If you provide your phone number you consent to receive SMS messages from '.$company.' about your enquiry, booking updates, itinerary updates, reminders and customer support. Message and data rates may apply. Reply STOP to unsubscribe or HELP for assistance. Consent is not a condition of purchase.</p>'
-                    .'<h2>5. Travel insurance and responsibilities</h2><p>[CONFIRM: insurance, travel documents and traveller responsibilities]</p>'
-                    .'<h2>6. Liability</h2><p>[CONFIRM: limitation of liability wording]</p>'
-                    .'<h2>7. Governing law</h2><p>[CONFIRM: governing law and jurisdiction]</p>'
-                    .'<h2>8. Contact</h2><p>Questions about these terms: [CONFIRM: contact details].</p>',
+                    .'<h2>2. Enquiries and quotes</h2><p>Submitting an inquiry does not create a booking. Quotes are subject to availability and may change until confirmed in writing. Quotes are valid for 14 days unless stated otherwise.</p>'
+                    .'<h2>3. Bookings, payments and cancellations</h2><p>A deposit is due when you book, with the balance due 60 days before departure. If you cancel more than 60 days before departure we refund your payments less any non-recoverable supplier costs; later cancellations may incur charges, as set out in your booking confirmation.</p>'
+                    .'<h2>4. SMS messaging</h2><p>If you provide your phone number you consent to receive SMS messages from '.$company.' about your inquiry, booking updates, itinerary updates, reminders and customer support. Message and data rates may apply. Reply STOP to unsubscribe or HELP for assistance. Consent is not a condition of purchase.</p>'
+                    .'<h2>5. Travel insurance and responsibilities</h2><p>We strongly recommend comprehensive travel insurance. You are responsible for holding valid travel documents and for following local laws and the guidance of your driver or guide.</p>'
+                    .'<h2>6. Liability</h2><p>We will use reasonable care and skill in arranging your trip. We are not liable for events outside our control, and our liability is limited to the amount you paid for the affected service, to the extent the law allows.</p>'
+                    .'<h2>7. Governing law</h2><p>These terms are governed by the laws of the place where our business is registered.</p>'
+                    .'<h2>8. Contact</h2><p>Questions about these terms: info@gonetherlandtours.com.</p>',
             ],
             'privacy' => [
                 'title' => 'Privacy Policy', 'h1' => 'Privacy Policy', 'version' => '1.0',
                 'seo_title' => 'Privacy Policy | GoNetherlandTours',
                 'meta_description' => 'How GoNetherlandTours collects, uses and protects your personal information.',
                 'body' => '<p><strong>STARTER TEMPLATE ONLY. This text has not been reviewed by a lawyer. Have it reviewed before launch.</strong></p>'
-                    .'<h2>1. Who we are</h2><p>'.$company.' ("we") runs this website. [CONFIRM: registered address and data controller details]</p>'
+                    .'<h2>1. Who we are</h2><p>'.$company.' ("we") runs this website. GoNetherlandTours is responsible for the personal information collected through this website and can be contacted at info@gonetherlandtours.com.</p>'
                     .'<h2>2. Information we collect</h2><p>Name, email, phone number, travel preferences, quiz answers and messages you send us. We also collect technical and marketing data such as IP address, browser, pages visited and advertising identifiers (for example UTM parameters and Google click IDs).</p>'
-                    .'<h2>3. How we use it</h2><p>To respond to your enquiry, prepare quotes, contact you by email, phone or SMS (with your consent), improve our website and measure advertising.</p>'
-                    .'<h2>4. Who we share it with</h2><p>Service providers that help us run the business, such as our customer relationship management and email systems, analytics and advertising providers. [CONFIRM: full list of processors]</p>'
-                    .'<h2>5. Cookies and tracking</h2><p>We use cookies to remember how you found us and to measure our advertising. [CONFIRM: cookie banner and consent approach]</p>'
-                    .'<h2>6. Your rights</h2><p>You can ask to access, correct or delete your information, and to stop marketing messages. Reply STOP to any SMS to unsubscribe. [CONFIRM: rights process and contact]</p>'
-                    .'<h2>7. Retention and security</h2><p>[CONFIRM: retention periods]. We take reasonable steps to protect your information.</p>',
+                    .'<h2>3. How we use it</h2><p>To respond to your inquiry, prepare quotes, contact you by email, phone or SMS (with your consent), improve our website and measure advertising.</p>'
+                    .'<h2>4. Who we share it with</h2><p>Service providers that help us run the business, such as our customer relationship management and email systems, analytics and advertising providers.</p>'
+                    .'<h2>5. Cookies and tracking</h2><p>We use cookies to remember how you found us and to measure our advertising. You can control cookies in your browser settings.</p>'
+                    .'<h2>6. Your rights</h2><p>You can ask to access, correct or delete your information, and to stop marketing messages. Reply STOP to any SMS to unsubscribe. To use these rights, email info@gonetherlandtours.com.</p>'
+                    .'<h2>7. Retention and security</h2><p>We keep your information only as long as needed to answer your inquiry, deliver your trip and meet legal requirements. We take reasonable steps to protect your information.</p>',
             ],
         ];
 

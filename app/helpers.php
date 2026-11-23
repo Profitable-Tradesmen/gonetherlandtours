@@ -116,6 +116,39 @@ if (! function_exists('ghl_enabled')) {
     }
 }
 
+if (! function_exists('sheets_secret')) {
+    /** The shared secret key of the Google Sheets script (stored encrypted in Admin > Google Sheets), or null. */
+    function sheets_secret(): ?string
+    {
+        $saved = setting('sheets_secret');
+        if ($saved) {
+            try {
+                return \Illuminate\Support\Facades\Crypt::decryptString($saved);
+            } catch (\Throwable) {
+                // Unreadable (APP_KEY changed): treat as not set.
+            }
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('sheets_url')) {
+    /** Address of the Google Apps Script web app that receives the rows, or null. */
+    function sheets_url(): ?string
+    {
+        return setting('sheets_url') ?: null;
+    }
+}
+
+if (! function_exists('sheets_enabled')) {
+    /** Google Sheets sync is ON only when the web app address + the secret key exist AND it has not been paused in Admin > Google Sheets. */
+    function sheets_enabled(): bool
+    {
+        return setting('sheets_enabled', '1') !== '0' && filled(sheets_url()) && filled(sheets_secret());
+    }
+}
+
 if (! function_exists('text')) {
     /** Site-wide wording (button labels, menu headings...) edited in Admin > Settings. Falls back to config('gnt.texts'); a saved blank stays blank. */
     function text(string $key): string
@@ -138,6 +171,24 @@ if (! function_exists('static_srcset')) {
             return null;
         }
 
-        return asset($small).' 800w, '.asset($path).' '.(getimagesize(public_path($path))[0] ?? 1600).'w';
+        return asset_v($small).' 800w, '.asset_v($path).' '.(getimagesize(public_path($path))[0] ?? 1600).'w';
+    }
+}
+
+if (! function_exists('asset_v')) {
+    /** asset() plus ?v=<file modified time> for files under public/, so a browser or CDN fetches a changed image instead of a cached one that reused its name. */
+    function asset_v(string $path): string
+    {
+        $file = public_path($path);
+
+        return asset($path).(is_file($file) ? '?v='.filemtime($file) : '');
+    }
+}
+
+if (! function_exists('snippets')) {
+    /** Custom code from Admin > Header & Footer for one place ('head', 'body_start', 'body_end'), output exactly as entered. */
+    function snippets(string $position): \Illuminate\Support\HtmlString
+    {
+        return new \Illuminate\Support\HtmlString(\App\Models\CodeSnippet::render($position));
     }
 }

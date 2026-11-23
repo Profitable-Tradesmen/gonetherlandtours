@@ -3,7 +3,7 @@
 Nothing here has been invented as a business fact. Each item below is a placeholder, marked `[CONFIRM: ...]` or `[PLACEHOLDER ...]` on the site. Search the site and admin for `CONFIRM` and `PLACEHOLDER` to find them all.
 
 ## Site settings (Admin > Settings)
-- [ ] Phone number (hidden everywhere until set; click-to-call depends on it)
+- [ ] Phone number (the top bar and footer show a placeholder until set; the call buttons on banners stay hidden until a real one exists)
 - [ ] Public email, address
 - [ ] Legal company name (currently "GoNetherlandTours", which flows into the consent text and legal pages)
 - [ ] Social links; favicon (the logo is the supplied GoNetherlandTours wordmark)
@@ -16,6 +16,11 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 - [ ] Trust badges: "Local Netherlands experts", "Tailor-made itineraries", "Traveller reviews [CONFIRM]". The GoIrishTours example used "Best Price Guarantee"; **do not add it or any similar claim unless true and provable**
 - [ ] Why us: "[CONFIRM: team background]", "[CONFIRM: support hours]"
 - [ ] No statistics, awards, star ratings, review counts, years in business or licence/bonding numbers have been added. Add only verified ones.
+
+## Selling points: proof (Admin > Pages > Home > "Selling points with proof")
+- [ ] The four "In practice" boxes now have drafted copy with a few `[CONFIRM: ...]` markers left for facts only you know: (1) which of the named traditions (Alkmaar and Gouda cheese markets, Kinderdijk windmills, Giethoorn) are really on your itineraries, and re-check the market days and seasons; (2) your coach-tour maximum group size (replace `N`); (3) the three lesser-known places you actually use (Zierikzee, Veere and Dordrecht are suggestions); (4) who plans the trips and their experience. Remove any claim you cannot back up, or delete the section.
+- [ ] Check the wording of the group-size claim: only coach tours are described as small-group; self drive and chauffeur tours as private. Change it if that is not how you operate.
+- [ ] "Travel style" note per tour type (Admin > Tour types): confirm the three sample notes.
 
 ## Tour type pages (Admin > Tour types)
 - [ ] Self Drive, Chauffeur Driven and Coach Tours each have a page at `/tours/slug`: replace the "[CONFIRM: ... page copy]" text, SEO title and meta description
@@ -48,3 +53,10 @@ Nothing here has been invented as a business fact. Each item below is a placehol
 
 ## Quiz
 - [ ] Review wording, options and budget tiles (USD per person) with the business
+
+## Trust and reassurance (Admin > Settings > Trust and reassurance)
+These are blank by default and hidden until filled in. Only enter facts you can prove or keep:
+- [ ] Quiz card rating line (a real review rating and count)
+- [ ] Quote reply promise (for example a reply time you can honor)
+- [ ] Reviews rating line shown under the reviews heading
+- [ ] The three quiz-card reassurances default to "Your data stays private", "Free, no obligation" and "Support all the way": check you are happy to promise them

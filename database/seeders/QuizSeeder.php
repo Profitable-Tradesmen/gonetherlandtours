@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 /**
  * Hero quiz question steps (the final contact step is the shared enquiry form, variant "quiz").
- * Editable in Admin > Quiz. The pop-up form also reads its dropdown options (travel style, travellers,
+ * Editable in Admin > Quiz. The pop-up form also reads its dropdown options (travel style, travelers,
  * nights, budget) from these steps, so the two forms stay consistent.
  */
 class QuizSeeder extends Seeder
@@ -23,22 +23,22 @@ class QuizSeeder extends Seeder
         $steps = [
             ['season', 'What time of year do you want to travel?', 'tiles', [
                 ['Spring', 'Spring', 'spring'], ['Summer', 'Summer', 'summer'],
-                ['Autumn', 'Autumn', 'autumn'], ['Winter', 'Winter', 'winter'],
+                ['Fall', 'Autumn', 'autumn'], ['Winter', 'Winter', 'winter'],
             ]],
-            ['travel_style', 'What is your favourite way to see a new country?', 'tiles', [
-                ['By coach with other travellers', 'Coach tour', 'coach'],
+            ['travel_style', 'What is your favorite way to see a new country?', 'tiles', [
+                ['By coach with other travelers', 'Coach tour', 'coach'],
                 ['Driving yourself', 'Self drive', 'car'],
                 ['With a tour guide driving', 'Chauffeur driven', 'guide'],
                 ["Don't know", "Don't know", 'question'],
             ]],
-            ['group_size', 'Number of travellers', 'select', array_merge($range(1, 9), [['10+', '10+', null]])],
-            // type "date": calendar picker, saved as the enquiry's preferred travel date
+            ['group_size', 'Number of travelers', 'select', array_merge($range(1, 9), [['10+', '10+', null]])],
+            // type "date": calendar picker, saved as the inquiry's preferred travel date
             ['travel_date', 'Preferred travel dates', 'date', []],
-            ['nights', 'How many nights do you want to stay for?', 'select', array_merge($range(1, 13), [['14+', '14+', null]])],
-            ['flights_booked', 'Have you flights booked?', 'tiles', [
+            ['nights', 'How many nights would you like to stay?', 'select', array_merge($range(1, 13), [['14+', '14+', null]])],
+            ['flights_booked', 'Have you booked your flights?', 'tiles', [
                 ['Yes', 'Yes', 'yes'], ['No', 'No', 'no'],
             ]],
-            ['budget', 'Have you a budget in mind for your trip?', 'tiles', [
+            ['budget', 'Do you have a budget in mind for your trip?', 'tiles', [
                 ['$1K pp', '$1K pp', 'money'], ['$2K pp', '$2K pp', 'money'], ['$3K pp', '$3K pp', 'money'],
             ]],
             ['likelihood', 'How likely are you to come to the Netherlands?', 'tiles', [

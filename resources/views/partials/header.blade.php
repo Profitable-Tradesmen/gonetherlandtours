@@ -2,20 +2,20 @@
      auto mega menu of tour types, an item with children shows a dropdown of image cards, other items are plain links.
      $tourTypes (with published packages) and $destinations come from the layout. Labels come from Admin > Settings. --}}
 @php
-    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm xl:px-4 font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-sand';
+    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-[0.9rem] font-medium xl:px-4 text-ink transition-colors hover:bg-sand';
     $menu = \App\Models\MenuItem::tree('header');
     $hasTours = $menu->contains('kind', 'tours');
-    $overlay = false;   // light header bar on every page so the transparent navy-and-orange logo is always readable
+    $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header is fully transparent over it (white links, white logo) until you scroll, then it becomes a white bar
 @endphp
-<header class="hdr sticky top-0 z-50 border-b-4 border-accent bg-white/95 backdrop-blur {{ $overlay ? 'hdr-overlay -mb-[4.25rem] lg:-mb-[5.25rem]' : '' }}"
+<header class="hdr sticky top-0 z-50 bg-white/95 shadow-[0_6px_20px_-6px_rgb(12_13_17/0.28)] backdrop-blur {{ $overlay ? 'hdr-overlay -mb-16 lg:-mb-20' : '' }}"
         x-data="{ menu: false, dd: null, solid: false }" x-init="solid = window.scrollY > 24"
         @scroll.window.passive="solid = window.scrollY > 24"
         :class="{ 'is-solid': solid || menu || dd }"
         @keydown.escape.window="menu = false; dd = null" @mouseleave="dd = null">
     <div class="container-site flex h-16 items-center justify-between gap-4 lg:h-20">
-        <a href="{{ route('home') }}" @mouseenter="dd = null"><span class="inline-block">@include('partials.logo')</span></a>
+        <a href="{{ route('home') }}" aria-label="{{ setting('brand_name', 'GoNetherlandTours') }}" @mouseenter="dd = null"><span class="hdr-logo inline-block">@include('partials.logo')</span></a>
 
-        <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
+        <nav class="hidden items-center gap-1 lg:ml-auto lg:flex" aria-label="Main">
             @foreach ($menu as $item)
                 @if ($item->kind === 'tours')
                     <button type="button" class="{{ $navBtn }}" :class="dd === 'tours' && 'bg-sand'" @click="dd = dd === 'tours' ? null : 'tours'" @mouseenter="dd = 'tours'" :aria-expanded="dd === 'tours'" aria-controls="mega-tours">
@@ -25,6 +25,10 @@
                     <button type="button" class="{{ $navBtn }}" :class="dd === 'm{{ $item->id }}' && 'bg-sand'" @click="dd = dd === 'm{{ $item->id }}' ? null : 'm{{ $item->id }}'" @mouseenter="dd = 'm{{ $item->id }}'" :aria-expanded="dd === 'm{{ $item->id }}'" aria-controls="mega-{{ $item->id }}">
                         {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'm{{ $item->id }}' && 'rotate-180'" />
                     </button>
+                @elseif ($item->kind === 'link' && $destinations->isNotEmpty() && rtrim($item->href(), '/') === rtrim(route('destinations.index'), '/'))
+                    <button type="button" class="{{ $navBtn }}" :class="dd === 'dest' && 'bg-sand'" @click="dd = dd === 'dest' ? null : 'dest'" @mouseenter="dd = 'dest'" :aria-expanded="dd === 'dest'" aria-controls="mega-destinations">
+                        {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'dest' && 'rotate-180'" />
+                    </button>
                 @else
                     <a href="{{ $item->href() }}" class="{{ $navBtn }}" @if ($item->new_tab) target="_blank" rel="noopener" @endif @mouseenter="dd = null">{{ $item->label }}</a>
                 @endif
@@ -32,91 +36,116 @@
         </nav>
 
         <div class="flex items-center gap-2">
-            @if (text('header_button_label'))<x-button class="hidden sm:inline-flex !py-2.5" @click="$store.modal.show()">{{ text('header_button_label') }}</x-button>@endif
-            <button type="button" class="hdr-link rounded p-2 lg:hidden" @click="menu = !menu" :aria-expanded="menu" aria-controls="mobile-menu" aria-label="Menu">
+            @if (text('header_button_label'))<x-button class="hidden sm:inline-flex lg:hidden !py-2.5" @click="$store.modal.show()">{{ text('header_button_label') }}</x-button>@endif
+            <button type="button" class="hdr-link inline-flex h-11 w-11 items-center justify-center rounded text-ink hover:bg-sand lg:hidden" @click="menu = !menu" :aria-expanded="menu" aria-controls="mobile-menu" aria-label="Menu">
                 <x-icon name="menu" x-show="!menu" /><x-icon name="close" x-show="menu" x-cloak />
             </button>
         </div>
     </div>
 
-    {{-- Mega menu: Tours (automatic, from Admin > Tour types and Packages). Soft sand backdrop, white cards that lift slightly on hover. --}}
+    {{-- Mega menus: full-width dark panels in the style of gorailtravel.com (navy panel, section headings with a round icon, rows with a thumbnail, a featured card,
+         photo cards and a bottom bar with a short tagline and buttons). All content is automatic or comes from Admin > Navigation, Tour types, Destinations and Settings. --}}
+    @php
+        $megaPanel = 'absolute inset-x-0 top-full hidden bg-brand-900 text-white shadow-[0_18px_28px_-12px_rgb(12_13_17/0.5)] lg:block';
+        $megaIn = 'transition ease-out duration-200';
+        // small thumbnails in the menu use the 480px copy of an uploaded photo (the menu is hidden until opened, so it must not pull the big file)
+        $small = fn (?string $p) => ($p && preg_match('/-960\.webp$/', $p) && is_file(public_path(preg_replace('/-960\.webp$/', '-480.webp', $p)))) ? preg_replace('/-960\.webp$/', '-480.webp', $p) : $p;
+        $megaBar = [
+            'tagline' => text('mega_tagline') ?: text('mega_help_text'),
+            'packages' => text('mega_all_packages_label'),
+            'quote' => text('mega_quote_label'),
+        ];
+    @endphp
+
+    {{-- Tour types: ways to travel (left), featured trips (middle) and one featured trip card (right, a single card, not a slider). --}}
     @if ($hasTours)
-    <div id="mega-tours" x-show="dd === 'tours'" x-cloak
-         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-         class="absolute inset-x-0 top-full hidden border-b-4 border-accent bg-sand shadow-card lg:block" @click.outside="dd === 'tours' && (dd = null)">
-        <div class="container-site grid gap-6 py-8" style="grid-template-columns: repeat({{ max($tourTypes->count(), 1) }}, minmax(0, 1fr))">
-            @foreach ($tourTypes as $t)
-                <article class="group flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-sand-200 transition duration-300 hover:-translate-y-0.5 hover:shadow-card">
-                    <a href="{{ route('tour-types.show', $t) }}" class="relative block overflow-hidden" @click="dd = null">
-                        <x-picture :src="$t->image ?: 'images/tour-self-drive.webp'" :alt="$t->image_alt ?? ''" :width="960" :height="640" sizes="(min-width:1024px) 30vw, 100vw" class="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                        <span class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent"></span>
-                        <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-ink"><x-icon :name="$t->icon ?: 'check'" class="h-3.5 w-3.5 text-rust" />{{ $t->packages->count() }} {{ \Illuminate\Support\Str::plural('tour', $t->packages->count()) }}</span>
-                        <h3 class="absolute inset-x-4 bottom-3 text-2xl font-medium text-white">{{ $t->name }}</h3>
-                    </a>
-                    <div class="flex flex-1 flex-col p-4">
-                        <p class="line-clamp-2 text-sm text-ink/70">{{ $t->summary }}</p>
-                        <ul class="mt-3 text-sm">
-                            @foreach ($t->packages->take(4) as $p)
-                                <li class="border-t border-sand-200"><a href="{{ route('packages.show', $p) }}" class="group/row flex items-center justify-between gap-3 py-2.5 transition-colors hover:text-rust" @click="dd = null"><span class="min-w-0 truncate">{{ $p->title }}</span><span class="flex shrink-0 items-center gap-2 text-xs text-ink/60">{{ $p->nights }} {{ \Illuminate\Support\Str::plural('night', $p->nights) }}<x-icon name="arrow" class="h-3.5 w-3.5 -translate-x-1 text-rust opacity-0 transition group-hover/row:translate-x-0 group-hover/row:opacity-100" /></span></a></li>
-                            @endforeach
-                        </ul>
-                        <a href="{{ route('tour-types.show', $t) }}" class="label-caps group/all mt-auto inline-flex items-center gap-2 pt-3 text-xs text-rust" @click="dd = null">{{ text('mega_view_all_label') }} {{ $t->name }} <x-icon name="arrow" class="h-4 w-4 transition-transform group-hover/all:translate-x-1" /></a>
-                    </div>
-                </article>
-            @endforeach
-        </div>
-        <div class="border-t border-sand-200 bg-white">
-            <div class="container-site flex items-center justify-between gap-4 py-4">
-                <p class="flex items-center gap-2 text-sm font-medium"><span class="flex h-8 w-8 items-center justify-center rounded-full bg-sand text-rust"><x-icon name="heart" class="h-4 w-4" /></span>{{ text('mega_help_text') }}</p>
-                <div class="flex gap-3">
-                    @if (text('mega_all_packages_label'))<a href="{{ route('packages.index') }}" class="btn btn-outline !py-2.5 text-brand-900" @click="dd = null">{{ text('mega_all_packages_label') }}</a>@endif
-                    @if (text('mega_quote_label'))<x-button class="!py-2.5" @click="dd = null; $store.modal.show()">{{ text('mega_quote_label') }}</x-button>@endif
+        @php
+            $trips = $tourTypes->flatMap(fn ($t) => $t->packages->each(fn ($p) => $p->setRelation('tourType', $t)))->unique('id');   // tour type is already loaded: no extra query per package
+            $featuredList = $trips->where('is_featured', true)->groupBy('tour_type_id')->map->first()->values()->take(3);   // one featured trip per tour type if ($featuredList->isEmpty()) { $featuredList = $trips->take(3); }
+            $featured = $featuredList->first();
+            $tripList = $trips->take(5);
+        @endphp
+        <div id="mega-tours" x-show="dd === 'tours'" x-cloak x-transition:enter="{{ $megaIn }}" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             class="{{ $megaPanel }}" @click.outside="dd === 'tours' && (dd = null)">
+            <div class="container-site grid gap-x-10 gap-y-6 pt-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_minmax(0,0.9fr)]">
+                {{-- ways to travel --}}
+                <div class="min-w-0">
+                    <div class="flex items-center gap-3"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="map" class="h-5 w-5" /></span>
+                        <div><p class="font-display text-xl font-medium leading-tight">{{ text('mega_tours_heading') }}</p><p class="text-sm text-white/70">{{ text('mega_tours_sub') }}</p></div></div>
+                    <ul class="mt-4">
+                        @foreach ($tourTypes as $t)
+                            <li class="border-t border-white/15 first:border-0">
+                                <a href="{{ route('tour-types.show', $t) }}" class="group flex items-center gap-4 py-3" @click="dd = null">
+                                    <span class="block h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-white/10"><x-picture :src="$small($t->image ?: 'images/tour-self-drive.webp')" :alt="$t->image_alt ?? ''" :width="160" :height="112" sizes="80px" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" /></span>
+                                    <span class="min-w-0 flex-1"><span class="block font-display text-lg font-medium leading-tight transition-colors group-hover:text-accent">{{ $t->name }}</span><span class="block truncate text-sm text-white/70">{{ $t->style_note ?: $t->summary }}</span></span>
+                                    <x-icon name="arrow" class="h-4 w-4 shrink-0 text-accent transition-transform group-hover:translate-x-1" />
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <a href="{{ route('packages.index') }}" class="label-caps mt-3 inline-flex items-center gap-2 text-xs text-accent hover:text-white" @click="dd = null">{{ text('mega_view_all_label') }} packages <x-icon name="arrow" class="h-3.5 w-3.5" /></a>
                 </div>
+                {{-- featured trips --}}
+                <div class="min-w-0">
+                    <div class="flex items-center gap-3"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="star" class="h-5 w-5" /></span>
+                        <div><p class="font-display text-xl font-medium leading-tight">{{ text('mega_featured_label') ?: 'Featured trips' }}</p><p class="text-sm text-white/70">{{ text('mega_trips_sub') }}</p></div></div>
+                    <ul class="mt-4">
+                        @forelse ($tripList as $p)
+                            @php $cover = $p->relationLoaded('images') ? $p->images->first() : null; @endphp
+                            <li class="border-t border-white/15 first:border-0">
+                                <a href="{{ route('packages.show', $p) }}" class="group flex items-center gap-3 py-2.5" @click="dd = null">
+                                    <span class="block h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-white/10">@if ($cover)<x-picture :media="$cover" :alt="$cover->alt" sizes="44px" class="h-full w-full object-cover" />@else<x-picture :src="$small($p->tourType?->image ?: 'images/tour-self-drive.webp')" alt="" :width="120" :height="120" sizes="44px" class="h-full w-full object-cover" />@endif</span>
+                                    <span class="min-w-0 flex-1"><span class="block truncate font-semibold leading-tight transition-colors group-hover:text-accent">{{ $p->title }}</span><span class="block truncate text-xs text-white/70">{{ $p->nights }} {{ \Illuminate\Support\Str::plural('night', $p->nights) }}@if ($p->destination) · {{ $p->destination->name }}@endif</span></span>
+                                    <x-icon name="arrow" class="h-4 w-4 shrink-0 text-accent opacity-0 transition group-hover:opacity-100" />
+                                </a>
+                            </li>
+                        @empty
+                            <li class="py-3 text-sm text-white/70">{{ text('mega_help_text') }}</li>
+                        @endforelse
+                    </ul>
+                </div>
+                
+                {{-- One featured trip card (no carousel: nothing to animate, one image fewer to load). --}}
+                @if ($featured)
+                    @php $fc = $featured->relationLoaded('images') ? $featured->images->first() : null; @endphp
+                    <div class="min-w-0 self-start">
+                        <a href="{{ route('packages.show', $featured) }}" class="group block min-w-0 overflow-hidden rounded-xl bg-white/10 ring-1 ring-white/15" @click="dd = null">
+                            <span class="relative block overflow-hidden">
+                                @if ($fc)<x-picture :media="$fc" :alt="$fc->alt" sizes="320px" class="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105" />@else<x-picture :src="$small($featured->tourType?->image ?: 'images/tour-self-drive.webp')" alt="" :width="640" :height="400" sizes="320px" class="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105" />@endif
+                                @if (text('mega_badge_label'))<span class="label-caps absolute right-0 top-3 bg-accent px-3 py-1.5 text-[0.65rem] text-ink">{{ text('mega_badge_label') }}</span>@endif
+                            </span>
+                            <span class="block p-4">
+                                <span class="label-caps block text-[0.65rem] text-accent">{{ $featured->nights }} {{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::plural('night', $featured->nights)) }}@if ($featured->destination) · {{ $featured->destination->name }}@endif</span>
+                                <span class="mt-1 block min-h-[3.4rem] font-display text-xl font-medium leading-snug">{{ $featured->title }}</span>
+                                <span class="mt-3 block border-t border-white/20 pt-3 text-sm text-white/80">@if ($featured->price_from){{ text('card_from_label') ?: 'From' }} <span class="font-display text-xl font-medium text-accent">{{ $featured->priceLabel() }}</span>@if (text('card_per_person')) <span class="text-xs">{{ text('card_per_person') }}</span>@endif @else{{ $megaBar['quote'] ?: 'Get a quote' }}@endif</span>
+                            </span>
+                        </a>
+                    </div>
+                @endif
             </div>
+            @include('partials.mega-bar', ['bar' => $megaBar])
         </div>
-    </div>
     @endif
 
-    {{-- Dropdown menus made of image cards (items with children in Admin > Navigation).
-         Wide screens (xl): intro panel on the left, cards on the right, cards stretch to the intro panel's height.
-         Narrower desktops: the intro becomes a slim banner above a full-width row of cards, so nothing is cramped. --}}
+    {{-- Destinations: a row of photo cards (shown when the "Destinations" link goes to /destinations). --}}
+    @if ($destinations->isNotEmpty())
+        <div id="mega-destinations" x-show="dd === 'dest'" x-cloak x-transition:enter="{{ $megaIn }}" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             class="{{ $megaPanel }}" @click.outside="dd === 'dest' && (dd = null)">
+            @include('partials.mega-cards', ['cards' => $destinations->take(6)->map(fn ($d) => ['href' => route('destinations.show', $d), 'image' => $d->image, 'alt' => $d->image_alt ?? '', 'title' => $d->name, 'text' => $d->summary, 'new_tab' => false]), 'link' => text('mega_discover_label')])
+            @include('partials.mega-bar', ['bar' => ['tagline' => text('mega_destinations_tagline') ?: $megaBar['tagline'], 'packages' => '', 'quote' => $megaBar['quote'], 'all' => ['label' => text('mega_destinations_all_label'), 'href' => route('destinations.index')]]])
+        </div>
+    @endif
+
+    {{-- Dropdowns made of image cards (items with children in Admin > Navigation, e.g. About Us). --}}
     @foreach ($menu->where('kind', 'cards') as $item)
         @continue($item->children->isEmpty())
-        @php $cards = $item->children->take(6); @endphp
-        <div id="mega-{{ $item->id }}" x-show="dd === 'm{{ $item->id }}'" x-cloak
-             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+        <div id="mega-{{ $item->id }}" x-show="dd === 'm{{ $item->id }}'" x-cloak x-transition:enter="{{ $megaIn }}" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-             class="absolute inset-x-0 top-full hidden border-b-4 border-accent bg-sand shadow-card lg:block" @click.outside="dd === 'm{{ $item->id }}' && (dd = null)">
-            <div class="container-site grid items-stretch gap-5 py-7 xl:grid-cols-[var(--cols)] xl:py-8" style="--cols: minmax(0, 1.1fr) minmax(0, {{ $cards->count() }}fr)">
-                <div class="relative isolate flex items-center justify-between gap-8 overflow-hidden rounded-2xl bg-brand-900 px-7 py-5 text-white xl:flex-col xl:items-start xl:justify-center xl:py-7">
-                    <span class="absolute -right-12 -top-12 -z-10 h-44 w-44 rounded-full bg-accent/15" aria-hidden="true"></span>
-                    <span class="absolute -bottom-14 -left-10 -z-10 h-40 w-40 rounded-full bg-brand/30" aria-hidden="true"></span>
-                    <div>
-                        <p class="text-sm font-semibold text-accent">{{ $brand }}</p>
-                        <p class="mt-1 font-display text-2xl font-medium leading-snug xl:mt-3">{{ text('nav_promo_title') }}</p>
-                        <p class="mt-1 text-sm text-white/80 xl:mt-3">{{ text('nav_promo_text') }}</p>
-                    </div>
-                    @if (text('nav_promo_button'))<x-button class="shrink-0 !py-2.5 xl:mt-3" @click="dd = null; $store.modal.show()">{{ text('nav_promo_button') }}</x-button>@endif
-                </div>
-                <div class="grid items-stretch gap-5" style="grid-template-columns: repeat({{ $cards->count() }}, minmax(0, 1fr))">
-                    @foreach ($cards as $c)
-                        <a href="{{ $c->href() }}" class="group flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-sand-200 transition duration-300 hover:-translate-y-0.5 hover:shadow-card" @click="dd = null" @if ($c->new_tab) target="_blank" rel="noopener" @endif>
-                            <div class="relative min-h-[9rem] flex-1 overflow-hidden bg-brand-900">
-                                @if ($c->image)<x-picture :src="$c->image" :alt="$c->image_alt ?? ''" :width="960" :height="640" sizes="(min-width:1024px) 18vw, 50vw" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />@endif
-                                <span class="absolute inset-0 bg-gradient-to-t from-ink/35 to-transparent"></span>
-                            </div>
-                            <div class="p-4">
-                                <div class="flex items-center justify-between gap-2">
-                                    <h3 class="min-w-0 font-display text-lg font-medium leading-tight transition-colors group-hover:text-rust">{{ $c->label }}</h3>
-                                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sand text-rust transition-colors group-hover:bg-accent group-hover:text-ink"><x-icon name="arrow" class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" /></span>
-                                </div>
-                                @if ($c->description)<p class="mt-1 line-clamp-2 min-h-[2.5rem] text-sm text-ink/70">{{ $c->description }}</p>@endif
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
+             class="{{ $megaPanel }}" @click.outside="dd === 'm{{ $item->id }}' && (dd = null)">
+            @include('partials.mega-cards', ['cards' => $item->children->take(6)->map(fn ($c) => ['href' => $c->href(), 'image' => $c->image, 'alt' => $c->image_alt ?? '', 'title' => $c->label, 'text' => $c->description, 'new_tab' => (bool) $c->new_tab]), 'link' => text('nav_card_link_label') ?: text('mega_discover_label')])
+            @include('partials.mega-bar', ['bar' => ['tagline' => strip_tags(str_replace('*', '', text('nav_promo_title'))) ?: $megaBar['tagline'], 'packages' => '', 'quote' => text('nav_promo_button') ?: $megaBar['quote']]])
         </div>
     @endforeach
 

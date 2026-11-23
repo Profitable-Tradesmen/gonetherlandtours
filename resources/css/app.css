@@ -31,7 +31,7 @@
     --font-sans: 'Montserrat Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
     /* Layout */
-    --container-site: 76rem;
+    --container-site: 1390px;
     --radius-card: 1rem;
     --shadow-card: 0 10px 30px -12px rgb(12 13 17 / 0.25);
 }
@@ -55,6 +55,7 @@
 @layer components {
     .container-site { width: 100%; max-width: var(--container-site); margin-inline: auto; padding-inline: 1rem; }
     @media (min-width: 640px) { .container-site { padding-inline: 1.5rem; } }
+@media (min-width: 768px) { .container-site { padding-inline: 60px; } }
 
     /* Wide-caps label style, inspired by the geometric sans reference */
     .label-caps { font-family: var(--font-sans); text-transform: uppercase; letter-spacing: 0.18em; font-weight: 600; font-size: 0.75rem; }
@@ -106,9 +107,10 @@
 .js [data-reveal='zoom'] { transform: scale(.93); }
 .js [data-reveal].is-in { opacity: 1; transform: none; }
 
-/* Page-load entrance for the hero (CSS only, works without JS). */
-.hero-in { animation: rise .9s cubic-bezier(.22, .61, .36, 1) both; animation-delay: var(--d, 0ms); }
-@keyframes rise { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: none; } }
+/* Page-load entrance for the hero (CSS only, works without JS). Kept short on purpose: the hero text and quiz are the first thing a visitor sees, and
+   Lighthouse's Speed Index only counts them once they have faded in, so a long, staggered entrance costs about a second of Speed Index. */
+.hero-in { animation: rise .35s ease-out both; animation-delay: calc(var(--d, 0ms) / 6); }
+@keyframes rise { from { opacity: 0; transform: translateY(.75rem); } to { opacity: 1; transform: none; } }
 
 /* Gentle ambient motion: a floating badge and a slow zoom on large background photos. */
 .float-slow { animation: float-slow 4.5s ease-in-out infinite; }
@@ -151,25 +153,80 @@
     .slider > * { flex: 0 0 84%; min-width: 0; scroll-snap-align: start; }
 }
 
-/* Transparent header over a photo hero. partials/header adds .hdr-overlay on pages that start with a hero and toggles
-   .is-solid (scrolled, or a menu is open). Without JavaScript the header simply stays solid white.
-   Deliberately NOT inside @layer: unlayered rules beat Tailwind utilities such as text-ink / hover:bg-sand. */
+/* Header: solid navy bar on every page; gains a soft shadow once the page is scrolled. */
+.hdr.is-solid { box-shadow: 0 6px 20px -6px rgb(12 13 17 / .28); }
+/* Over a photo hero the header is transparent; it turns navy once you scroll or open a menu (.is-solid). */
 .hdr { transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease; }
-.hdr.is-solid { box-shadow: 0 8px 24px -16px rgb(12 13 17 / .45); }
-.hdr-plate { transition: background-color .25s ease, padding .25s ease, border-radius .25s ease; }
-.js .hdr-overlay:not(.is-solid) { background-color: transparent; border-bottom-color: transparent; box-shadow: none; }
-.js .hdr-overlay:not(.is-solid) .hdr-link { color: #fff; }
+.js .hdr-overlay:not(.is-solid) { background-color: transparent; background-image: linear-gradient(to bottom, color-mix(in srgb, var(--color-ink) 24%, transparent), color-mix(in srgb, var(--color-ink) 10%, transparent) 60%, transparent); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.js .hdr-overlay:not(.is-solid) .hdr-link { color: #fff; font-weight: 600; text-shadow: 0 1px 3px rgb(0 0 0 / .4), 0 2px 10px rgb(0 0 0 / .4); }
+.js .hdr-overlay:not(.is-solid) .hdr-logo { filter: drop-shadow(0 1px 4px rgb(0 0 0 / .4)); }
+/* The logo file is full color on a transparent background. While the header is transparent over the dark photo it is shown as a white silhouette;
+   once the header turns into the white bar (scrolled, menu open, or a page without a hero) the full-color logo shows. */
+/* base state (transparent header over a photo): white logo; sticky/solid state: full-color logo */
+.hdr-logo .logo-white { display: none; }
+.js .hdr-overlay:not(.is-solid) .hdr-logo .logo-color { display: none; }
+.js .hdr-overlay:not(.is-solid) .hdr-logo .logo-white { display: inline-block; }
 .js .hdr-overlay:not(.is-solid) .hdr-link:hover { background-color: rgb(255 255 255 / .16); }
-.js .hdr-overlay:not(.is-solid) .hdr-plate { background-color: #fff; border-radius: .75rem; padding: .2rem .6rem; }
 
 /* Carousel track: hide the scrollbar (swipe, trackpad and the arrow buttons scroll it). */
 .carousel-track { scrollbar-width: none; scroll-padding-inline: 1rem; }
 .carousel-track::-webkit-scrollbar { display: none; }
-/* On desktop the logo plate must fit inside the 80px header bar while the header is transparent. */
-@media (min-width: 1024px) {
-    .js .hdr-overlay:not(.is-solid) .hdr-plate img { height: 3.1rem; }
-}
+/* The logo sits on a white plate in the navy header; keep it inside the 80px bar. */
+
 
 /* Sections well below the first screen are laid out only when they get near the viewport (smaller start-up cost). The
    "auto" size remembers each section's real height once seen, so the page does not jump. */
 main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 720px; }
+
+/* Reviews "spotlight": all reviews share one grid cell (no height jump). The old one fades out (0.3s), then the new one
+   fades in with a small upward drift (0.5s). Hidden reviews are also visibility:hidden so they are not read or tabbed to. */
+.review-fig { opacity: 0; visibility: hidden; transform: translateY(.5rem); transition: opacity .3s ease, transform .3s ease, visibility 0s linear .3s; }
+.review-fig.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity .5s ease .3s, transform .5s ease .3s, visibility 0s linear 0s; }
+@media (prefers-reduced-motion: reduce) { .review-fig, .review-fig.is-active { transition-delay: 0s !important; transform: none; } }
+
+/* Partner logos marquee (see sections/partners.blade.php): the track holds two identical groups and slides left by one group, forever. */
+/* The logos may only ever show inside their own box (right column): hard clip, whatever the screen width or browser. */
+.marquee { position: relative; isolation: isolate; min-width: 0; max-width: 100%; contain: paint; clip-path: inset(0); -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
+.marquee-track { display: flex; height: 100%; align-items: center; width: max-content; animation: marquee var(--marquee-time, 30s) linear infinite; }
+.marquee-group { display: flex; flex-shrink: 0; align-items: center; gap: 4rem; padding-right: 4rem; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+    .marquee { -webkit-mask-image: none; mask-image: none; }
+    .marquee-track { animation: none; width: auto; justify-content: center; }
+    .marquee-group { flex-wrap: wrap; justify-content: center; gap: 2rem 2.5rem; padding-right: 0; }
+    .marquee-group[aria-hidden='true'], .marquee-repeat { display: none; }
+}
+
+/* Partner logos slider (sections/partners.blade.php): 3 logos visible (2 on tablets, 1 on phones), sliding by one logo; --i is set by Alpine "partnerSlider". */
+.pslider { --per: 1; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent); }
+@media (min-width: 640px) { .pslider { --per: 2; } }
+@media (min-width: 1024px) { .pslider { --per: 3; } }
+.pslider-track { display: flex; transform: translateX(calc(var(--i, 0) * -100% / var(--per))); transition: transform var(--dur, 1.8s) cubic-bezier(.45, 0, .2, 1); }
+.pslider-item { transition: opacity var(--dur, 1.8s) ease; flex: 0 0 calc(100% / var(--per)); display: flex; align-items: center; justify-content: center; padding: 1rem 1.25rem; min-width: 0; }
+@media (prefers-reduced-motion: reduce) {
+    .pslider-track { flex-wrap: wrap; transform: none; transition: none; }
+    .pslider-clone { display: none; }
+}
+
+/* Package gallery (pages/package-show.blade.php): photos drift slowly to the left forever; paused while hovered, focused or enlarged.
+   The track holds two identical groups and slides by one group, so the loop has no jump; "gallerySlider" (app.js) opens the enlarged view. */
+.gslider { overflow: hidden; border-radius: 1rem; contain: paint; -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent); }
+.gslider-track { display: flex; width: max-content; animation: gslide var(--gslide-time, 60s) linear infinite; will-change: transform; }
+.gslider-group { display: flex; flex-shrink: 0; gap: .75rem; padding-right: .75rem; }
+.gslider-item { display: block; width: 15rem; flex-shrink: 0; overflow: hidden; border-radius: .75rem; cursor: zoom-in; }
+@media (min-width: 640px) { .gslider-item { width: 17rem; } }
+.gslider:hover .gslider-track, .gslider:focus-within .gslider-track, .gslider.is-paused .gslider-track { animation-play-state: paused; }
+@keyframes gslide { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+    .gslider { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+    .gslider-track { animation: none; }
+    .gslider-group[aria-hidden='true'] { display: none; }
+}
+
+/* Section spacing, all pages (768px and up): 90px top and bottom. Container width 1390px and 60px side padding come from .container-site above.
+   Unlayered on purpose so it beats utility classes (py-16...). Banners opt in with .hero-pad (they also centre their content in a min-height box); the
+   package page hero keeps its own spacing because it must clear the floating header. */
+@media (min-width: 768px) {
+    main > section:not(:first-child), main > section.hero-pad { padding-block: 90px; }
+}

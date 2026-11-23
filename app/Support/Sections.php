@@ -4,13 +4,15 @@ namespace App\Support;
 
 use App\Services\ImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
- * The page builder's section catalogue. Each section type = a Blade view (resources/views/sections/{type}.blade.php)
+ * The page builder's section catalog. Each section type = a Blade view (resources/views/sections/{type}.blade.php)
  * + a field schema that drives the admin form, validation/sanitising and defaults.
  *
- * Field types: text, textarea, rich, link, image, select, checkbox, number, repeater.
+ * Field types: text, textarea, rich, link, image, media, select, checkbox, number, repeater.
+ *  - media (top-level only): one background that can be a photo, an animated GIF or a short video (mp4/webm). Saves the path in "name".
  *  - text/textarea headings accept *word* for an italic accent word.
  *  - image fields save the path in "name" and the alt text in "name_alt".
  *  - repeater: "fields" = sub-fields (no nested repeaters), "max" = item limit, "label" = what one item is called.
@@ -61,18 +63,20 @@ class Sections
         $ta = fn (...$a) => self::ta(...$a);
 
         return $all = [
-            'page_header' => ['label' => 'Page title bar', 'description' => 'A coloured bar with the page heading and breadcrumb. Use it at the top of ordinary pages.', 'fields' => [
+            'page_header' => ['label' => 'Page title bar', 'description' => 'A colored bar with the page heading and breadcrumb. Use it at the top of ordinary pages.', 'fields' => [
                 $t('heading', 'Heading (H1)', '', 'Leave blank to use the page\'s main heading.'),
                 $ta('subtitle', 'Short text under the heading'),
-                ['name' => 'align', 'label' => 'Alignment', 'type' => 'select', 'options' => ['left' => 'Left', 'center' => 'Centred'], 'default' => 'left'],
-                ['name' => 'tone', 'label' => 'Colour', 'type' => 'select', 'options' => ['brown' => 'Dark brown', 'blue' => 'Dark blue'], 'default' => 'brown'],
+                ['name' => 'align', 'label' => 'Alignment', 'type' => 'select', 'options' => ['left' => 'Left', 'center' => 'Centered'], 'default' => 'left'],
+                ['name' => 'tone', 'label' => 'Color', 'type' => 'select', 'options' => ['brown' => 'Dark brown', 'blue' => 'Dark blue'], 'default' => 'brown'],
+                self::img('image', 'Background photo (optional)', ''),
+                ['name' => 'show_quiz', 'label' => 'Show the quote quiz on this banner', 'type' => 'checkbox', 'default' => true],
             ]],
             'rich_text' => ['label' => 'Text', 'description' => 'A block of formatted text (headings, lists, links). Used for About, legal pages and any article.', 'fields' => [
                 ['name' => 'html', 'label' => 'Content', 'type' => 'rich', 'default' => ''],
                 ['name' => 'show_version', 'label' => 'Show the page version at the bottom (for Terms / Privacy)', 'type' => 'checkbox', 'default' => false],
                 $t('button_label', 'Button under the text (opens the quote pop-up)', '', 'Leave blank for no button.'),
             ]],
-            'hero_video_quiz' => ['label' => 'Hero: video and quiz', 'description' => 'Full-screen hero with background video poster, heading, buttons, trust badges and the enquiry quiz.', 'fields' => [
+            'hero_video_quiz' => ['label' => 'Hero: video and quiz', 'description' => 'Full-screen hero with background video poster, heading, buttons, trust badges and the inquiry quiz.', 'fields' => [
                 $t('eyebrow', 'Small label', 'The Netherlands Collection'),
                 $t('heading', 'Heading (H1)', 'Discover the Authentic Netherlands'),
                 $ta('subheading', 'Sub-heading'),
@@ -81,11 +85,49 @@ class Sections
                 self::link('secondary_url', 'Second button link', '/packages'),
                 self::rep('badges', 'Trust badges (up to 3)', 'badge', [$t('text', 'Badge text')], 3),
                 self::img('poster', 'Hero photo (shown first and on phones; the video plays over it on desktop)', 'images/hero-home.webp'),
+                ['name' => 'show_video', 'label' => 'Play the background video on desktop (untick for a photo only)', 'type' => 'checkbox', 'default' => true],
+            ]],
+            'partners' => ['label' => 'Partner logos', 'description' => 'A dark brown band with a heading, a short text and a row of partner logos. White or transparent logos look best on the dark background.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Travel partners'),
+                $t('heading', 'Heading', 'Our Best Trusted *Partners*'),
+                $ta('text', 'Text', 'Our journeys are supported by trusted partners who share our commitment to exceptional service, seamless travel and unforgettable experiences.'),
+                self::rep('items', 'Logos', 'logo', [self::img('image', 'Logo'), self::link('url', 'Link (optional)', '', 'A full https:// address or a page path. Leave blank for no link.')], 8),
+            ]],
+            'promo_band' => ['label' => 'Offer / reassurance band', 'description' => 'A light band with a big heading, a short paragraph, up to three ticked points and a button. Good for an offer or a promise.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Plan with confidence'),
+                $t('heading', 'Heading', 'Start planning and get your *free quote.*'),
+                $ta('text', 'Text', 'Tell us what you have in mind and a travel specialist will reply with a clear, personalized quote. No pressure and no obligation.'),
+                self::rep('points', 'Ticked points (up to 3)', 'point', [$t('text', 'Text')], 3),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Get my free quote'),
+            ]],
+            'tour_packages' => ['label' => 'Packages of this page (tour type or destination)', 'description' => 'A carousel with the published packages of the tour type or destination this page belongs to (used on the Self Drive, Chauffeur Driven, Coach Tours and destination pages). On any other page it shows the featured packages.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Signature journeys'),
+                $t('heading', 'Heading', 'Our packages'),
+                $ta('intro', 'Intro text', ''),
+                $t('button_label', 'Button under the packages', 'See all packages'),
+                $t('empty_text', 'Text when there are no packages yet', 'No packages are published yet.'),
             ]],
             'ticker' => ['label' => 'Highlights ticker', 'description' => 'A thin scrolling strip of short selling points.', 'fields' => [
                 self::rep('items', 'Highlights', 'highlight', [$t('text', 'Text')], 16),
             ]],
-            'split_list' => ['label' => 'Intro: photos and numbered list', 'description' => 'Two photos on one side, a heading and a numbered list of reasons on the other.', 'fields' => [
+            'value_strip' => ['label' => 'Value strip (4 icon points)', 'description' => 'A clean row of up to four short selling points, each with an icon. Sits right under the hero.', 'fields' => [
+                self::rep('items', 'Points', 'point', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Short text')], 4),
+            ]],
+            'quiz_band' => ['label' => 'Quote quiz', 'description' => 'The main step-by-step quote quiz (the same one as in the home page banner) in its own section.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Free quote'),
+                $t('heading', 'Heading', 'Plan your *Netherlands* trip'),
+                $ta('text', 'Text under the heading', 'Answer a few quick questions and a travel specialist will send you a tailored quote.'),
+            ]],
+            'text_image' => ['label' => 'Text and photo', 'description' => 'A heading, an optional highlighted quote, paragraphs and a button beside one large photo. Choose which side the photo is on.', 'fields' => [
+                ['name' => 'image_side', 'label' => 'Photo side', 'type' => 'select', 'options' => ['right' => 'Photo on the right', 'left' => 'Photo on the left'], 'default' => 'right'],
+                ['name' => 'background', 'label' => 'Background', 'type' => 'select', 'options' => ['sand' => 'Light sand', 'white' => 'White'], 'default' => 'sand'],
+                self::img('image', 'Photo', 'images/Intro_image_split.webp'),
+                $t('heading', 'Heading'),
+                $t('quote', 'Highlighted line (optional)'),
+                $ta('text', 'Text', '', 'Leave a blank line between paragraphs.'),
+                $t('button_label', 'Button (opens the quote pop-up)', ''),
+            ]],
+            'split_list' => ['label' => 'Intro: photo and ticked list', 'description' => 'A large photo (with an optional badge and a smaller second photo) on one side, a heading and a ticked list of reasons on the other.', 'fields' => [
                 self::img('image1', 'Photo 1', 'images/Intro_image_split.webp'),
                 self::img('image2', 'Photo 2', 'images/Intro_image_split1.webp'),
                 $t('badge', 'Floating badge on the photos', 'Free, no-obligation quote'),
@@ -96,8 +138,12 @@ class Sections
             ]],
             'packages_tabs' => ['label' => 'Featured packages', 'description' => 'Your featured packages with tabs by tour type. Choose which packages are featured in Admin > Packages.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Signature journeys'),
-                $t('heading', 'Heading', 'Signature Netherlands Journeys'),
+                $t('heading', 'Heading', 'Signature Collection'),
+                ['name' => 'layout', 'label' => 'Layout', 'type' => 'select', 'options' => ['by_type' => 'One row per tour type', 'tabs' => 'One carousel with tabs'], 'default' => 'by_type'],
+                $ta('intro', 'Intro text under the heading', 'Every journey is fully customizable. These are our most loved itineraries, perfected over years of delighting travelers.'),
+                $t('more_label', 'Per-row button (one row per tour type)', 'View more packages'),
                 $t('all_label', 'First tab label', 'All'),
+                ['name' => 'background', 'label' => 'Background', 'type' => 'select', 'options' => ['sand' => 'Light sand', 'white' => 'White'], 'default' => 'sand'],
                 $t('button_label', 'Button under the packages', 'See all packages'),
             ]],
             'feature_band' => ['label' => 'Full-width photo band', 'description' => 'A wide photo with a heading, checklist and buttons on top.', 'fields' => [
@@ -122,24 +168,30 @@ class Sections
                 self::img('poster', 'Poster image', 'images/hero-about.webp'),
                 $t('video_name', 'Video file name', 'homepage_banner', 'The video file is public/videos/NAME.mp4 on the server.'),
             ]],
-            'image_strip' => ['label' => 'Photo panels (journeys by traveller)', 'description' => 'Swipeable photo cards on phones, an expanding strip of panels on desktop.', 'fields' => [
-                $t('eyebrow', 'Small label', 'Journeys by traveller'),
+            'image_strip' => ['label' => 'Photo panels (journeys by traveler)', 'description' => 'Photo cards with a number, title, text and a link: a swipe row on phones, a grid on larger screens.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Journeys by traveler'),
                 $t('heading', 'Heading', 'Find the journey that *fits you*'),
                 $t('button_label', 'Panel button (opens the quote pop-up)', 'Plan this trip'),
                 self::rep('items', 'Panels', 'panel', [$t('title', 'Title'), $ta('text', 'Text'), self::img('image', 'Photo')], 12),
             ]],
             'steps' => ['label' => 'Numbered steps', 'description' => 'Three or more numbered steps, such as "How it works".', 'fields' => [
-                ['name' => 'style', 'label' => 'Style', 'type' => 'select', 'options' => ['timeline' => 'Connected timeline', 'cards' => 'Simple columns'], 'default' => 'timeline'],
+                ['name' => 'style', 'label' => 'Style', 'type' => 'select', 'options' => ['timeline' => 'Connected timeline', 'cards' => 'Simple columns', 'tiles' => 'Dark numbered tiles'], 'default' => 'timeline'],
                 $t('eyebrow', 'Small label', 'Simple'),
                 $t('heading', 'Heading', 'How It Works'),
+                $ta('intro', 'Text under the heading', ''),
+                $t('button_label', 'Button under the steps (opens the quote pop-up)', ''),
                 self::rep('items', 'Steps', 'step', [$t('title', 'Title'), $ta('text', 'Text')], 6),
             ]],
             'testimonials' => ['label' => 'Testimonials', 'description' => 'Reviews from Admin > Testimonials.', 'fields' => [
                 ['name' => 'variant', 'label' => 'Style', 'type' => 'select', 'options' => ['dark' => 'Dark blue background', 'light' => 'Light background', 'spotlight' => 'Spotlight: one review at a time, with a picker'], 'default' => 'dark'],
                 $t('eyebrow', 'Small label', 'Reviews'),
-                $t('heading', 'Heading', 'What Travellers Say'),
+                $t('heading', 'Heading', 'What Travelers Say'),
                 ['name' => 'limit', 'label' => 'How many to show (0 = all)', 'type' => 'number', 'default' => 0],
                 $t('button_label', 'Button under the reviews (opens the quote pop-up)', ''),
+                ['name' => 'show_stars', 'label' => 'Show the star ratings', 'type' => 'checkbox', 'default' => true],
+                ['name' => 'bg', 'label' => 'Background (dark and spotlight styles): photo, animated GIF or video', 'type' => 'media', 'default' => 'images/couples.webp', 'help' => 'Upload a JPG, PNG, WebP or GIF (up to 8 MB) or a short MP4 / WebM video (up to 25 MB). Remove it for a plain navy background. A video plays on tablets and desktops only; phones show the photo below.'],
+                self::img('poster', 'Photo for phones and while a video loads (only used with a video)'),
+                ['name' => 'overlay', 'label' => 'Dark tint over the background', 'type' => 'select', 'options' => ['light' => 'Light', 'medium' => 'Medium', 'strong' => 'Strong'], 'default' => 'medium'],
             ]],
             'gallery' => ['label' => 'Photo gallery', 'description' => 'A mosaic of photos that enlarge when clicked. Use 6, 12 or 18 photos for a gap-free grid.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Visual journey'),
@@ -148,7 +200,7 @@ class Sections
                 $t('closing_heading', 'Text under the gallery', 'Seen enough to start planning?'),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
             ]],
-            'text_cta' => ['label' => 'Centred text with buttons', 'description' => 'A heading, short text and up to three buttons on a light background.', 'fields' => [
+            'text_cta' => ['label' => 'Centered text with buttons', 'description' => 'A heading, short text and up to three buttons on a light background.', 'fields' => [
                 $t('heading', 'Heading', '', 'Wrap a word in *asterisks* to italicise it.'),
                 $ta('text', 'Text'),
                 self::rep('buttons', 'Buttons', 'button', [$t('label', 'Label'), self::link('url', 'Link')], 3),
@@ -166,18 +218,20 @@ class Sections
             'blog_latest' => ['label' => 'Latest blog posts', 'description' => 'The newest posts from Admin > Blog. Hidden when there are none.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Travel journal'),
                 $t('heading', 'Heading', 'Guides and *inspiration*'),
+                $ta('intro', 'Text under the heading', ''),
                 ['name' => 'count', 'label' => 'How many posts', 'type' => 'number', 'default' => 2],
                 $t('button_label', 'Button', 'Read all articles'),
             ]],
             'cta_banner' => ['label' => 'Call to action banner', 'description' => 'A full-width photo with a heading, text and button.', 'fields' => [
+                $t('eyebrow', 'Small label', ''),
                 self::img('image', 'Background photo', 'images/fina_cta_bg.webp'),
-                $t('heading', 'Heading', 'Ready to Discover the Real Netherlands?'),
+                $t('heading', 'Heading', 'Ready to Discover the *Real Netherlands*?'),
                 $ta('text', 'Text'),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Start Your Adventure'),
                 ['name' => 'show_phone', 'label' => 'Show a call button (uses the phone number in Settings)', 'type' => 'checkbox', 'default' => true],
                 $t('phone_label', 'Call button text (the number is added)', 'Call'),
             ]],
-            'hero_seasons' => ['label' => 'Hero: centred with season picker', 'description' => 'Centred hero with intro text, a "when to visit" picker and badges.', 'fields' => [
+            'hero_seasons' => ['label' => 'Hero: centered with season picker', 'description' => 'Centered hero with intro text, a "when to visit" picker and badges.', 'fields' => [
                 self::img('image', 'Background photo', 'images/hero-about.webp'),
                 $t('eyebrow', 'Small label'),
                 $t('heading', 'Heading (H1)'),
@@ -187,7 +241,36 @@ class Sections
                 self::rep('seasons', 'Picker options', 'option', [self::icon('icon', 'spring'), $t('name', 'Name'), $t('note', 'Short note')], 6),
                 self::rep('badges', 'Badges', 'badge', [self::icon('icon', 'shield'), $t('text', 'Text')], 6),
             ]],
+            'hero_centered' => ['label' => 'Hero: centered with destination chips', 'description' => 'Full-width photo hero with a small caps label, a large caps heading, an intro line, two buttons and a row of destination chips.', 'fields' => [
+                self::img('image', 'Background photo', 'images/hero-home.webp'),
+                $t('eyebrow', 'Small label', 'Premier Netherlands Tours'),
+                $t('heading', 'Heading (H1)', 'Unforgettable *Netherlands* Escapes'),
+                $ta('text', 'Intro line'),
+                $t('primary_label', 'Main button (opens the quote pop-up)', 'Get a free quote'),
+                $t('secondary_label', 'Second button label', 'Explore the Netherlands'),
+                self::link('secondary_url', 'Second button link', '/destinations'),
+                $t('chips_label', 'Label before the chips', 'Where to?'),
+                self::rep('chips', 'Destination chips', 'chip', [$t('label', 'Label'), self::link('url', 'Link', '/destinations', 'A page path such as /destinations or a full https:// address.')], 12),
+            ]],
+            'stats_band' => ['label' => 'Numbers band', 'description' => 'A navy band with a small label, a heading and up to four big numbers with a caption. Only use numbers you can stand behind.', 'fields' => [
+                $t('eyebrow', 'Small label', 'The difference'),
+                $t('heading', 'Heading', 'Why travel *with us?*'),
+                $ta('text', 'Text under the heading'),
+                self::rep('items', 'Numbers', 'number', [$t('value', 'Number (e.g. 3 or 100%)'), $t('label', 'Caption')], 4),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
+            ]],
+            'destination_cards' => ['label' => 'Destination cards', 'description' => 'A grid of cards for each active destination (managed in Admin > Destinations), each with a photo, short text and two buttons.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Destinations'),
+                $t('heading', 'Heading', 'Explore our top *Netherlands destinations*'),
+                $ta('text', 'Text under the heading'),
+                $t('explore_label', 'Card button', 'Explore'),
+                $t('quote_label', 'Card quote button (opens the quote pop-up)', 'Get a quote'),
+                $t('all_label', 'Button under the cards', 'View more destinations'),
+                ['name' => 'background', 'label' => 'Background', 'type' => 'select', 'options' => ['sand' => 'Light sand', 'white' => 'White'], 'default' => 'sand'],
+                self::link('all_url', 'Link of the button under the cards', '/destinations'),
+            ]],
             'feature_cards' => ['label' => 'Feature cards', 'description' => 'A row of white cards with an icon, title and text on a dark band.', 'fields' => [
+                ['name' => 'style', 'label' => 'Style', 'type' => 'select', 'options' => ['cards' => 'White cards on a dark band', 'strip' => 'Slim strip with dividers'], 'default' => 'cards'],
                 self::rep('items', 'Cards', 'card', [self::icon('icon', 'map'), $t('title', 'Title'), $ta('text', 'Text')], 8),
             ]],
             'split_columns' => ['label' => 'Two columns: photo and text', 'description' => 'Two side-by-side columns, each with a photo, heading and text. The right one can have a checklist.', 'fields' => [
@@ -199,18 +282,53 @@ class Sections
                 $ta('right_text', 'Right text'),
                 self::rep('right_bullets', 'Right checklist', 'point', [$t('text', 'Text')], 10),
             ]],
-            'why_band' => ['label' => 'Dark list with photo', 'description' => 'A dark band with a heading, a ticked list of reasons and a photo.', 'fields' => [
+            'why_band' => ['label' => 'Dark "why us" tiles with photo', 'description' => 'A dark band with a heading, a short intro, a button, reason tiles (each with an icon) and a photo.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Why choose us'),
                 $t('heading', 'Heading'),
-                self::rep('items', 'Reasons', 'reason', [$t('title', 'Title'), $ta('text', 'Text')], 10),
-                self::img('image', 'Photo', 'images/feature_band.webp'),
+                $ta('intro', 'Intro text', 'Four things we promise on every trip, whether you drive yourself, travel with a chauffeur or join a small guided group.'),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
+                ['name' => 'bg', 'label' => 'Background: photo, animated GIF or video', 'type' => 'media', 'default' => 'images/feature_band.webp', 'help' => 'Upload a JPG, PNG, WebP or GIF (up to 8 MB) or a short MP4 / WebM video (up to 25 MB, kept short and silent works best). Remove it for a plain navy background. A video plays on tablets and desktops only; phones show the photo below.'],
+                self::img('poster', 'Photo for phones and while a video loads (only used with a video)'),
+                ['name' => 'overlay', 'label' => 'Dark tint over the background (for readable text)', 'type' => 'select', 'options' => ['light' => 'Light', 'medium' => 'Medium', 'strong' => 'Strong'], 'default' => 'medium'],
+                ['name' => 'show_numbers', 'label' => 'Show the faint 01, 02, 03 numbers on the tiles', 'type' => 'checkbox', 'default' => true],
+                self::rep('items', 'Reasons', 'reason', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Text')], 8),
+                self::img('image', 'Photo beside the tiles (optional)'),
             ]],
             'team' => ['label' => 'Meet the team', 'description' => 'Cards for team members. Remove the section if you do not want to show a team.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Our people'),
                 $t('heading', 'Heading', 'Meet the *team*'),
                 self::rep('items', 'Team members', 'member', [$t('name', 'Name'), $t('role', 'Role'), $ta('bio', 'Short bio'), self::img('image', 'Photo (optional)')], 12),
             ]],
-            'contact_details' => ['label' => 'Contact details and form', 'description' => 'Your text and contact details (from Settings) beside the enquiry form.', 'fields' => [
+            'why_us' => ['label' => 'Why choose us strip', 'description' => 'Your four selling points as a compact strip. The wording is set once in Admin > Settings ("Why choose us"), so it matches the strip on package, tour type and destination pages.', 'fields' => [
+                $t('heading', 'Heading (blank = use the Settings wording)', ''),
+            ]],
+            'usp_proof' => ['label' => 'Selling points with proof', 'description' => 'Each selling point with a real example behind it and a link to read more. Replace the example wording with facts you can prove.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Our promise'),
+                $t('heading', 'Heading', 'What that looks like in practice'),
+                $t('proof_label', 'Label above each example', 'In practice'),
+                self::rep('items', 'Selling points', 'point', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Claim'), $ta('proof', 'Proof: a real, checkable example'), $t('link_label', 'Link text'), self::link('link', 'Link')], 6),
+            ]],
+            'contact_details' => ['label' => 'Contact details and form', 'description' => 'Your text and contact details (from Settings) beside the inquiry form.', 'fields' => [
                 ['name' => 'intro', 'label' => 'Text beside the form', 'type' => 'rich', 'default' => ''],
+                self::img('specialist_image', 'Specialist photo', 'images/team-1.webp'),
+                $t('specialist_name', 'Specialist name', 'Anouk de Vries'),
+                $t('specialist_role', 'Specialist role', 'Senior Travel Specialist'),
+                $ta('specialist_text', 'Specialist message', 'Tell me about your trip and I will help you plan it, from the first idea to the flight home.'),
+                $t('reach_heading', 'Heading above the contact cards', 'How to reach us'),
+                $t('call_text', 'Call card text', 'Speak to a travel specialist'),
+                $t('email_text', 'Email card text', 'Send us your plans and questions'),
+                $t('hours_title', 'Hours card title', 'When we are available'),
+                $t('hours_text', 'Hours card text', 'Monday to Friday, 9:00 to 17:00 Central European Time (3:00 to 11:00 US Eastern)'),
+                $t('explore_heading', 'Heading above the links', 'Prefer to explore first?'),
+                $t('prompts_heading', 'Heading above the message starters', 'Not sure what to ask? Tap one to start your message:'),
+                self::rep('prompts', 'Message starters (up to 6)', 'starter', [$t('label', 'Button text'), $t('text', 'Text added to the message')], 6, [
+                    ['label' => 'Tulip season trip', 'text' => 'I would like to see the tulip fields and gardens in spring.'],
+                    ['label' => 'Private chauffeur tour', 'text' => 'I am interested in a private chauffeur-driven tour.'],
+                    ['label' => 'Self drive route', 'text' => 'I would like to drive myself on a planned route.'],
+                    ['label' => 'Family or group trip', 'text' => 'I am planning a trip for a family or group.'],
+                    ['label' => 'Something custom', 'text' => 'I have my own ideas for a trip and would like help shaping them.'],
+                ]),
+                $t('reassure', 'Reassurance line above the form', 'Free and no obligation. Your details stay private.'),
                 $t('submit_label', 'Form button', 'Send Message'),
             ]],
         ];
@@ -337,6 +455,25 @@ class Sections
                 $v = trim(strip_tags((string) $v));
 
                 return [$n => preg_match('#^(/[A-Za-z0-9_./?=&%\#-]*|https?://[^\s"<>]+|\#[A-Za-z0-9_-]+|tel:[+0-9 ()-]+|mailto:[^\s"<>]+)?$#', $v) ? $v : ''];
+            case 'media':
+                $media = (string) ($v ?? '');
+                $media = preg_match('#^(images|storage|videos)/[A-Za-z0-9_./-]+$#', $media) ? $media : '';
+                if (! empty($in[$n.'_remove'])) {
+                    $media = '';
+                }
+                if ($file = $request->file($path.'.'.$n.'_file')) {
+                    $ext = strtolower($file->getClientOriginalExtension());
+                    $mime = (string) $file->getMimeType();
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true) && $file->getSize() <= 8 * 1024 * 1024) {
+                        $media = 'storage/'.app(ImageService::class)->store($file, '')->path.'-1600.webp';
+                    } elseif ($ext === 'gif' && $mime === 'image/gif' && $file->getSize() <= 8 * 1024 * 1024) {
+                        $media = 'storage/'.Storage::disk('public')->putFileAs('section-media', $file, Str::random(24).'.gif');
+                    } elseif (in_array($ext, ['mp4', 'webm'], true) && in_array($mime, ['video/mp4', 'video/webm'], true) && $file->getSize() <= 25 * 1024 * 1024) {
+                        $media = 'storage/'.Storage::disk('public')->putFileAs('section-media', $file, Str::random(24).'.'.$ext);
+                    }
+                }
+
+                return [$n => $media];
             case 'image':
                 $alt = Str::limit(trim(strip_tags((string) ($in[$n.'_alt'] ?? ''))), 190, '');
                 $image = (string) ($v ?? '');

@@ -23,6 +23,7 @@ Homestead.yaml
 Thumbs.db
 
 /storage/app/public/*
+!/storage/app/public/media
 !/storage/app/public/.gitignore
 /public/media
 .claude/
@@ -32,3 +33,6 @@ live_deploy_key
 live_deploy_key.pub
 *_deploy_key
 *_deploy_key.pub
+
+# Local deploy settings (server host/user/path)
+.deploy.env

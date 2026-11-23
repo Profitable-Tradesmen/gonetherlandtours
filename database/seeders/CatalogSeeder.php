@@ -10,8 +10,8 @@ use App\Models\Testimonial;
 use Illuminate\Database\Seeder;
 
 /**
- * Starter catalogue. EVERYTHING here is SAMPLE data: prices are blank on purpose
- * ([CONFIRM: price] shows on the site) and testimonials are marked placeholders.
+ * Starter catalog. EVERYTHING here is SAMPLE data: prices are blank on purpose
+ * (Price on request shows on the site) and testimonials are marked placeholders.
  * See docs/reference/CONTENT_TO_CONFIRM.md.
  */
 class CatalogSeeder extends Seeder
@@ -29,62 +29,28 @@ class CatalogSeeder extends Seeder
         ];
         $typeIds = [];
         foreach ($types as $i => [$name, $slug, $icon, $summary, $image, $alt]) {
-            $typeIds[$slug] = TourType::create(compact('name', 'slug', 'icon', 'summary', 'image') + ['h1' => $name.' Netherlands Tours', 'body' => '<p>[CONFIRM: '.e($name).' page copy. Sample text only.]</p><p>'.e($summary).'</p>', 'image_alt' => $alt, 'sort_order' => $i + 1])->id;
+            $typeIds[$slug] = TourType::create(compact('name', 'slug', 'icon', 'summary', 'image') + ['h1' => $name.' Netherlands Tours', 'style_note' => ['self-drive' => 'Private: just you and your own party, at your own pace', 'chauffeur-driven' => 'Private: your own party with a local driver-guide', 'coach-tours' => 'Small group with a guide'][$slug] ?? null, 'body' => '<p>[CONFIRM: '.e($name).' page copy. Sample text only.]</p><p>'.e($summary).'</p>', 'image_alt' => $alt, 'sort_order' => $i + 1])->id;
         }
 
         $dests = [
-            ['Amsterdam & the Cities', 'amsterdam-and-the-cities', 'Canals, world-class museums and historic Dutch cities such as Utrecht, Haarlem and Delft.', 'images/dest-amsterdam.webp', 'Amsterdam canal houses reflected in the water'],
-            ['Tulips & Countryside', 'tulips-and-countryside', 'Flower fields, windmills and quiet villages in the Dutch countryside.', 'images/dest-tulips.webp', 'A windmill beside a Dutch canal'],
-            ['Zeeland & the Delta', 'zeeland-and-the-delta', 'Coastline, sea defences and charming small towns in the south-west.', 'images/dest-zeeland.webp', 'Dutch coastline with dunes'],
+            ['Amsterdam & the Cities', 'amsterdam-and-the-cities', 'Canals, world-class museums and historic Dutch cities such as Utrecht, Haarlem and Delft.', 'images/dest-amsterdam.webp', 'Amsterdam canal houses and a canal boat on a bright morning'],
+            ['Tulips & Countryside', 'tulips-and-countryside', 'Flower fields, windmills and quiet villages in the Dutch countryside.', 'images/dest-tulips.webp', 'A traditional windmill beside rows of tulips at golden hour'],
+            ['Zeeland & the Delta', 'zeeland-and-the-delta', 'Coastline, sea defenses and charming small towns in the south-west.', 'images/dest-zeeland.webp', 'A quiet Dutch harbor village with historic sailing boats in morning mist'],
         ];
         $destIds = [];
         foreach ($dests as $i => [$name, $slug, $summary, $image, $alt]) {
             $destIds[$slug] = Destination::create([
-                'name' => $name, 'slug' => $slug, 'h1' => $name.' Tours', 'summary' => $summary,
-                'body' => '<p>[CONFIRM: destination guide copy for '.e($name).'. Sample text only.]</p><p>'.e($summary).'</p>',
+                'name' => $name, 'slug' => $slug, 'h1' => \App\Support\DestinationCopy::all()[$slug]['h1'] ?? $name.' Tours', 'summary' => $summary,
+                'body' => \App\Support\DestinationCopy::all()[$slug]['body'] ?? '<p>[CONFIRM: destination guide copy for '.e($name).'. Sample text only.]</p><p>'.e($summary).'</p>',
                 'image' => $image, 'image_alt' => $alt, 'sort_order' => $i + 1,
-                'seo_title' => $name.' Tours | '.'GoNetherlandTours',
-                'meta_description' => 'Explore '.$name.' with GoNetherlandTours. '.$summary,
+                'seo_title' => \App\Support\DestinationCopy::all()[$slug]['seo_title'] ?? $name.' Tours | GoNetherlandTours',
+                'meta_description' => \App\Support\DestinationCopy::all()[$slug]['meta_description'] ?? 'Explore '.$name.' with GoNetherlandTours. '.$summary,
             ])->id;
         }
 
-        $packages = [
-            ['Sample: Tulip Season Self Drive', 'sample-tulip-season-self-drive', 'self-drive', 'tulips-and-countryside', 7, true],
-            ['Sample: Amsterdam & Cities Self Drive', 'sample-amsterdam-cities-self-drive', 'self-drive', 'amsterdam-and-the-cities', 8, false],
-            ['Sample: Dutch Highlights Chauffeur Tour', 'sample-dutch-highlights-chauffeur', 'chauffeur-driven', 'amsterdam-and-the-cities', 6, true],
-            ['Sample: Zeeland Coast Chauffeur Tour', 'sample-zeeland-coast-chauffeur', 'chauffeur-driven', 'zeeland-and-the-delta', 7, false],
-            ['Sample: Netherlands in Bloom Coach Tour', 'sample-netherlands-in-bloom-coach', 'coach-tours', 'tulips-and-countryside', 8, true],
-            ['Sample: Cities & Canals Coach Tour', 'sample-cities-canals-coach', 'coach-tours', 'amsterdam-and-the-cities', 9, false],
-        ];
-        foreach ($packages as $i => [$title, $slug, $type, $dest, $nights, $featured]) {
-            Package::create([
-                'title' => $title, 'slug' => $slug, 'tour_type_id' => $typeIds[$type], 'destination_id' => $destIds[$dest],
-                'nights' => $nights, 'price_from' => null, 'currency' => 'EUR',
-                'summary' => 'SAMPLE PACKAGE. [CONFIRM: real summary]. A '.$nights.'-night '.strtolower(str_replace('-', ' ', $type)).' itinerary in the Netherlands.',
-                'description' => '<p>[CONFIRM: full package description. This is sample data to show the layout.]</p>',
-                'highlights' => ['[CONFIRM: highlight one]', '[CONFIRM: highlight two]', '[CONFIRM: highlight three]'],
-                'itinerary' => [
-                    ['title' => 'Day 1: Arrival in Amsterdam', 'body' => '[CONFIRM: day description]'],
-                    ['title' => 'Day 2: [CONFIRM: day title]', 'body' => '[CONFIRM: day description]'],
-                    ['title' => 'Day 3: [CONFIRM: day title]', 'body' => '[CONFIRM: day description]'],
-                ],
-                'inclusions' => ['[CONFIRM: inclusion]', '[CONFIRM: inclusion]'],
-                'exclusions' => ['[CONFIRM: exclusion]', '[CONFIRM: exclusion]'],
-                'faqs' => [['question' => '[CONFIRM: package question]', 'answer' => '[CONFIRM: answer]']],
-                'is_published' => true, 'is_featured' => $featured, 'is_sample' => true, 'sort_order' => $i + 1,
-                'seo_title' => $title, 'meta_description' => 'Sample package. Replace with real description.',
-                'noindex' => true, // sample packages stay out of search until replaced
-            ]);
-        }
+        \App\Support\SamplePackages::seed();   // three complete packages per tour type, with photos
 
-        $faqs = [
-            ['When is the best time to visit the Netherlands?', 'Spring is popular for tulip season and summer for long, bright days. Autumn and winter are quieter. [CONFIRM: exact tulip season dates and advice]'],
-            ['Do I need a visa to visit the Netherlands from the US?', 'Entry rules change. Please check the official Dutch government and US State Department websites before you travel. [CONFIRM: wording reviewed by the team]'],
-            ['Can I drive in the Netherlands with a US licence?', 'Car hire rules vary by company. We will confirm licence requirements with your quote. [CONFIRM: licence and IDP requirements]'],
-            ['What is included in a package?', 'Each package lists exactly what is included and excluded on its page. [CONFIRM: standard inclusions]'],
-            ['How do I get a quote?', 'Answer a few quick questions or send an enquiry. A travel specialist will come back to you with a tailored quote.'],
-            ['Can you tailor a trip for me?', 'Yes. Every itinerary can be adjusted to your dates, group size and interests.'],
-        ];
+        $faqs = array_map(fn ($f) => [$f[0], $f[1]], \App\Support\FaqCopy::all());
         foreach ($faqs as $i => [$q, $a]) {
             Faq::create(['question' => $q, 'answer' => $a, 'sort_order' => $i + 1]);
         }
@@ -93,7 +59,7 @@ class CatalogSeeder extends Seeder
         $reviews = [
             ['Sarah M.', 'Portland, Oregon', 'We wanted to see the real Netherlands, not just the postcard version. Our small group got to visit a cheese market, wander through quiet villages and ride bikes past the windmills. It felt personal from the first email to the last day.'],
             ['David & Karen L.', 'Charlotte, North Carolina', 'The itinerary was beautifully planned. Every stop made sense, nothing felt rushed, and we found little towns we would never have found on our own. We have already recommended it to our friends.'],
-            ['Michelle T.', 'Austin, Texas', 'Travelling in a small group made all the difference. Our guide adjusted the plan to what we enjoyed most, and we came home with real friendships and a camera full of tulips. Planning the trip was easy too.'],
+            ['Michelle T.', 'Austin, Texas', 'Traveling in a small group made all the difference. Our guide adjusted the plan to what we enjoyed most, and we came home with real friendships and a camera full of tulips. Planning the trip was easy too.'],
         ];
         foreach ($reviews as $i => [$name, $location, $quote]) {
             Testimonial::create(['name' => $name, 'location' => $location, 'quote' => $quote, 'is_placeholder' => true, 'sort_order' => $i + 1]);

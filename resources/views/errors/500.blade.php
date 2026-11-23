@@ -20,7 +20,7 @@
 <main>
     <p class="code">Error {{ $exception instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface ? $exception->getStatusCode() : 500 }}</p>
     <h1>Something went wrong on our side</h1>
-    <p>We have been notified and are looking into it. Please try again in a few minutes. Your enquiry is never lost: if you were sending a form, try once more or contact us directly.</p>
+    <p>We have been notified and are looking into it. Please try again in a few minutes. Your inquiry is never lost: if you were sending a form, try once more or contact us directly.</p>
     <a href="/">Back to home</a>
 </main>
 </body>

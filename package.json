@@ -3,6 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "sync:media": "node scripts/sync-media.mjs",
         "build": "vite build",
         "dev": "vite"
     },

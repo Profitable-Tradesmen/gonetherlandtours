@@ -21,6 +21,12 @@ class BlogPost extends Model
             ->orderByDesc('published_at')->orderByDesc('id');
     }
 
+    /** Whole minutes to read the article, at about 200 words a minute (at least 1). */
+    public function getReadingMinutesAttribute(): int
+    {
+        return max(1, (int) ceil(str_word_count(strip_tags((string) $this->body)) / 200));
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';

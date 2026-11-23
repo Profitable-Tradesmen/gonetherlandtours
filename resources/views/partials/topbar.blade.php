@@ -1,5 +1,6 @@
-@php $email = setting('email'); $phone = setting('phone'); $linkUrl = trim((string) text('topbar_link_url')); @endphp
-<div class="hidden bg-ink text-white text-xs sm:block sm:text-sm">
+{{-- Placeholder phone and email are shown until Admin > Settings has the real ones. --}}
+@php $email = setting('email') ?: 'info@gonetherlandtours.com'; $phone = setting('phone') ?: '+1 000-000-0000'; $linkUrl = trim((string) text('topbar_link_url')); @endphp
+<div class="hidden bg-brand-900 text-white text-xs sm:block sm:text-sm">
     <div class="container-site flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2">
         <div class="flex flex-wrap items-center gap-x-5 gap-y-1">
             @if ($email)<a href="mailto:{{ $email }}" class="inline-flex items-center gap-1.5 hover:text-accent"><x-icon name="mail" class="h-4 w-4" /><span class="hidden sm:inline">{{ $email }}</span><span class="sm:hidden">Email us</span></a>@endif
@@ -13,7 +14,7 @@
                     <button type="button" @click="$store.modal.show()" class="hover:text-accent underline-offset-4 hover:underline">{{ text('topbar_link_label') }}</button>
                 @endif
             @endif
-            @if (text('topbar_button_label'))<button type="button" @click="$store.modal.show()" class="hidden rounded-full bg-accent px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-wider text-ink hover:bg-accent-600 sm:inline-block">{{ text('topbar_button_label') }}</button>@endif
+            @if (text('topbar_button_label'))<button type="button" @click="$store.modal.show()" class="hidden border-2 border-white px-5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-ink sm:inline-block">{{ text('topbar_button_label') }}</button>@endif
         </div>
     </div>
 </div>

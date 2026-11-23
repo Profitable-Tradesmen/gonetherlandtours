@@ -46,7 +46,7 @@ class ListedPagesTest extends TestCase
 
     public function test_testimonials_page_renders(): void
     {
-        $this->get('/testimonials')->assertOk()->assertSee('What our travellers say')->assertSee('Sample review');
+        $this->get('/testimonials')->assertOk()->assertSee('What our travelers say')->assertSee('Sample review');
     }
 
     public function test_about_page_has_meet_the_team(): void
