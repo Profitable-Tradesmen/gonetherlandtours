@@ -69,6 +69,7 @@ class Sections
                 ['name' => 'align', 'label' => 'Alignment', 'type' => 'select', 'options' => ['left' => 'Left', 'center' => 'Centered'], 'default' => 'left'],
                 ['name' => 'tone', 'label' => 'Color', 'type' => 'select', 'options' => ['brown' => 'Dark brown', 'blue' => 'Dark blue'], 'default' => 'brown'],
                 self::img('image', 'Background photo (optional)', ''),
+                ['name' => 'show_quiz', 'label' => 'Show the quote quiz on this banner', 'type' => 'checkbox', 'default' => true],
             ]],
             'rich_text' => ['label' => 'Text', 'description' => 'A block of formatted text (headings, lists, links). Used for About, legal pages and any article.', 'fields' => [
                 ['name' => 'html', 'label' => 'Content', 'type' => 'rich', 'default' => ''],

@@ -1,13 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="bg-brown py-12 text-white sm:py-16">
-    <div class="container-site">
-        <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/70"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>Packages</span></nav>
-        <h1 class="text-4xl font-medium sm:text-5xl">{{ $h1 }}</h1>
-        <p class="mt-3 max-w-2xl text-white/85">{{ text('packages_intro') }}</p>
-    </div>
-</section>
+<x-page-banner :heading="e($h1)" :text="text('packages_intro')">
+    <x-slot:crumbs><nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>Packages</span></nav></x-slot:crumbs>
+</x-page-banner>
 
 <section class="py-10 sm:py-14">
     <div class="container-site">

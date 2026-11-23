@@ -1,15 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="relative isolate overflow-hidden bg-brown py-16 text-white sm:py-24">
-    <x-picture src="images/dest-amsterdam.webp" alt="" :width="1600" :height="640" priority class="absolute inset-0 -z-20 h-full w-full object-cover" sizes="100vw" />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink/80 via-ink/50 to-ink/20"></div>
-    <div class="container-site">
-        <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>Blog</span></nav>
-        <h1 class="text-4xl font-medium [text-shadow:0_1px_10px_rgb(12_13_17/0.5)] sm:text-5xl">Travel journal</h1>
-        <p class="mt-3 max-w-2xl text-white/90">Guides, hidden gems and inspiration for your Netherlands trip.</p>
-    </div>
-</section>
+<x-page-banner image="images/dest-amsterdam.webp" heading="Travel journal" text="Guides, hidden gems and inspiration for your Netherlands trip.">
+    <x-slot:crumbs><nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>Blog</span></nav></x-slot:crumbs>
+</x-page-banner>
 
 <section class="py-10 sm:py-14">
     <div class="container-site">

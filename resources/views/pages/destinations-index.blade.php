@@ -1,14 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="relative isolate overflow-hidden bg-brown py-16 text-white sm:py-24">
-    <x-picture src="images/off_the_beaten_path.webp" alt="" :width="1600" :height="640" priority class="absolute inset-0 -z-20 h-full w-full object-cover" sizes="100vw" />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink/80 via-ink/50 to-ink/20"></div>
-    <div class="container-site">
-    <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>{{ text('destinations_heading') }}</span></nav>
-    <h1 class="text-4xl font-medium [text-shadow:0_1px_10px_rgb(12_13_17/0.5)] sm:text-5xl">{{ text('destinations_heading') }}</h1>
-    @if (text('destinations_intro'))<p class="mt-3 max-w-2xl text-white/90">{{ text('destinations_intro') }}</p>@endif
-</div></section>
+<x-page-banner image="images/off_the_beaten_path.webp" :heading="e(text('destinations_heading'))" :text="text('destinations_intro') ?: null">
+    <x-slot:crumbs><nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>{{ text('destinations_heading') }}</span></nav></x-slot:crumbs>
+</x-page-banner>
 
 <section class="py-12 sm:py-16" aria-label="All destinations">
     <div class="container-site">

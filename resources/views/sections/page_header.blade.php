@@ -1,8 +1,14 @@
 @php
+    $quiz = $d['show_quiz'] ?? true;
     $center = $d['align'] === 'center';
     $heading = $d['heading'] ?: ($page->h1 ?: $page->title);
     $photo = $d['image'] ?? '';
 @endphp
+@if ($quiz)
+    <x-page-banner :image="$photo" :heading="emphasize($heading, 'text-accent')" :text="$d['subtitle'] ?: null">
+        <x-slot:crumbs><nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <span>{{ $page->title }}</span></nav></x-slot:crumbs>
+    </x-page-banner>
+@else
 <section class="{{ $photo ? 'relative isolate overflow-hidden py-16 sm:py-24' : 'py-12 sm:py-16' }} {{ $d['tone'] === 'blue' ? 'bg-brand-900' : 'bg-brown' }} text-white {{ $center ? 'text-center' : '' }}">
     @if ($photo)
         <x-picture :src="$photo" alt="" :width="1600" :height="640" priority class="absolute inset-0 -z-20 h-full w-full object-cover" sizes="100vw" />
@@ -13,3 +19,4 @@
     <h1 class="text-4xl font-medium sm:text-5xl {{ $photo ? '[text-shadow:0_1px_10px_rgb(12_13_17/0.5)]' : '' }}">{!! emphasize($heading, 'text-accent') !!}</h1>
     @if ($d['subtitle'])<p class="mt-3 max-w-2xl text-white/90 {{ $center ? 'mx-auto' : '' }}">{{ $d['subtitle'] }}</p>@endif
 </div></section>
+@endif

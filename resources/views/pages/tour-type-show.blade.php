@@ -11,17 +11,11 @@
         $heroIsWide = true;
     }
 @endphp
-<section class="relative isolate overflow-hidden bg-brown py-14 text-white sm:py-20">
-    @if ($heroSrc)<x-picture :src="$heroSrc" :alt="$tourType->image_alt ?? ''" :width="960" :height="$heroIsWide ? 720 : 1430" priority class="absolute inset-0 -z-20 h-full w-full object-cover" />@endif
-    <div class="absolute inset-0 -z-10 bg-ink/65"></div>
-    <div class="container-site">
-        <nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/70"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <a href="{{ route('packages.index') }}" class="hover:text-accent">Packages</a> / <span>{{ $tourType->name }}</span></nav>
-        <h1 class="text-4xl font-medium sm:text-5xl">{{ $tourType->h1 ?: $tourType->name.' Netherlands Tours' }}</h1>
-        <p class="mt-3 max-w-2xl text-white/90">{{ $tourType->summary }}</p>
-        @if ($tourType->style_note)<p class="mt-3 flex min-h-[2.5rem] items-start gap-2 text-sm font-semibold text-white sm:min-h-0 sm:items-center"><x-icon name="guide" class="mt-0.5 h-5 w-5 shrink-0 text-accent sm:mt-0" />{{ $tourType->style_note }}</p>@endif
-        <x-button class="mt-6" @click="$store.modal.show()">Get a Free Quote</x-button>
-    </div>
-</section>
+<x-page-banner :image="$heroSrc" :alt="$tourType->image_alt ?? ''" :heading="e($tourType->h1 ?: $tourType->name.' Netherlands Tours')" :text="$tourType->summary">
+    <x-slot:crumbs><nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <a href="{{ route('packages.index') }}" class="hover:text-accent">Packages</a> / <span>{{ $tourType->name }}</span></nav></x-slot:crumbs>
+    @if ($tourType->style_note)<p class="mt-3 flex items-center gap-2 text-sm font-semibold text-white"><x-icon name="guide" class="h-5 w-5 shrink-0 text-accent" />{{ $tourType->style_note }}</p>@endif
+    <p class="mt-6"><x-button @click="$store.modal.show()">Get a Free Quote</x-button></p>
+</x-page-banner>
 @if (filled($tourType->body))
 <section class="container-site py-12">
     <div class="prose-site max-w-3xl">{!! clean_html($tourType->body) !!}</div>
