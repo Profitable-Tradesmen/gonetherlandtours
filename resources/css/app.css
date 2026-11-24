@@ -60,10 +60,10 @@
     /* Wide-caps label style, inspired by the geometric sans reference */
     .label-caps { font-family: var(--font-sans); text-transform: uppercase; letter-spacing: 0.18em; font-weight: 600; font-size: 0.75rem; }
 
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: 9999px; padding: .8rem 1.5rem; font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; transition: background-color .2s, color .2s, transform .2s; min-height: 2.75rem; text-align: center; cursor: pointer; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: .625rem; padding: .8rem 1.6rem; font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; transition: background-color .2s, color .2s, transform .2s; min-height: 2.75rem; text-align: center; cursor: pointer; }
     .btn:active { transform: translateY(1px); }
-    .btn-primary { background: var(--color-accent); color: var(--color-ink); }
-    .btn-primary:hover { background: var(--color-accent-600); }
+    .btn-primary { background: var(--color-accent); color: var(--color-ink); box-shadow: 0 1px 2px rgb(12 13 17 / .12), inset 0 -2px 0 rgb(12 13 17 / .1); }
+    .btn-primary:hover { background: var(--color-accent-600); transform: translateY(-1px); }
     .btn-secondary { background: var(--color-brand-700); color: #fff; }
     .btn-secondary:hover { background: var(--color-brand-900); }
     .btn-outline { border: 2px solid currentColor; }

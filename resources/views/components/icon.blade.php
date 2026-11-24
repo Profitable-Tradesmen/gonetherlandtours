@@ -1,6 +1,6 @@
 @props(['name', 'class' => 'h-6 w-6'])
 {{-- Inline stroke icons. Add a new @case to add an icon; the quiz editor stores the icon name. --}}
-<svg {{ $attributes->merge(['class' => $class]) }} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+<svg {{ $attributes->merge(['class' => $class]) }} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
 @switch($name)
     @case('city') <path d="M3 21V9l5-3v15M8 21V4l7 3v14M15 21V11l6 2v8M3 21h18"/> @break
     @case('tulip') <path d="M12 21v-8M8 5c0 4 1.5 7 4 8 2.5-1 4-4 4-8l-2.2 2L12 4 10.2 7 8 5ZM12 17c-2 0-3.500-.8-4.500-2M12 17c2 0 3.500-.8 4.500-2"/> @break
