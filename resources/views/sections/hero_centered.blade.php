@@ -15,7 +15,7 @@
     <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-44 bg-gradient-to-b from-ink/60 via-ink/25 to-transparent"></div>
     <div class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-1/3 bg-gradient-to-t from-ink/55 to-transparent"></div>
     <div class="container-site [text-shadow:0_2px_4px_rgb(0_0_0/0.4),0_6px_32px_rgb(0_0_0/0.65)]"><div class="mx-auto max-w-5xl">
-        @if ($d['eyebrow'])<p class="hero-in"><span class="label-caps inline-block rounded-full bg-ink/85 px-4 py-1.5 text-[0.8rem] font-bold [text-shadow:none]" style="color:#FF7A0A">{{ $d['eyebrow'] }}</span></p>@endif
+        @if ($d['eyebrow'])<p class="hero-in"><span class="label-caps inline-block rounded-full bg-ink/85 px-4 py-1.5 text-[0.8rem] font-bold [text-shadow:none]" style="color:#F2B743">{{ $d['eyebrow'] }}</span></p>@endif
         <h1 style="--d:120ms" class="hero-in mt-4 text-4xl font-semibold uppercase tracking-wide sm:text-6xl lg:text-7xl">{!! emphasize($d['heading'], 'text-accent') !!}</h1>
         @if ($d['text'])<p style="--d:240ms" class="hero-in mx-auto mt-5 max-w-2xl text-base font-medium text-white sm:text-lg">{{ $d['text'] }}</p>@endif
         <div style="--d:360ms" class="hero-in mt-8 flex flex-wrap justify-center gap-3">
