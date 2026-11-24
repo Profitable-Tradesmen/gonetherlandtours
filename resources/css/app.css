@@ -229,4 +229,5 @@ main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 
    package page hero keeps its own spacing because it must clear the floating header. */
 @media (min-width: 768px) {
     main > section:not(:first-child), main > section.hero-pad { padding-block: 90px; }
+    main > section.tight-pad { padding-block: 1.5rem; }   /* slim strips of selling points (value_strip, feature_cards strip) */
 }

@@ -159,11 +159,6 @@ class DestinationPages
             ]),
             self::s('tour_packages', ['eyebrow' => $c['pk_eyebrow'], 'heading' => $c['pk_heading'], 'intro' => 'Handcrafted itineraries you can adjust to your dates and interests.', 'empty_text' => 'No tours in '.$name.' are published yet. Ask us for a tailored quote.']),
             self::s('why_us', []),
-            self::s('split_columns', [
-                'left_image' => $c['when_image'], 'left_image_alt' => $c['when_alt'], 'left_heading' => $c['when_heading'], 'left_text' => $c['when_text'],
-                'right_image' => $c['how_image'], 'right_image_alt' => $c['how_alt'], 'right_heading' => 'How you can *travel*', 'right_text' => $c['how_text'],
-                'right_bullets' => array_map(fn ($t) => ['text' => $t], ['Self drive: hotels booked for you, your own pace', 'Chauffeur driven: a private local driver-guide', 'Coach tour: a small group with a guide']),
-            ]),
             self::s('promo_band', ['eyebrow' => 'Crafted for you', 'heading' => 'Ready to plan your *'.$name.' trip?*', 'text' => 'Every great Netherlands trip starts with a conversation. Tell us what you have in mind and we will build the route around you.', 'points' => array_map(fn ($t) => ['text' => $t], ['Netherlands travel specialists', 'Fully customizable itineraries', 'Support before and during your trip']), 'button_label' => 'Request a custom tour']),
             self::s('testimonials', ['variant' => 'dark', 'eyebrow' => 'Reviews', 'heading' => 'What our guests say', 'limit' => 3]),
             self::s('steps', ['style' => 'timeline', 'eyebrow' => 'Simple', 'heading' => '3 easy steps to book your trip', 'items' => self::rows([

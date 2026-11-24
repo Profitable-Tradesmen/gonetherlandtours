@@ -22,13 +22,14 @@
             <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-xs font-semibold text-brand-900 shadow-sm backdrop-blur-md ring-1 ring-white/60"><x-icon name="map" class="h-3.5 w-3.5 text-rust" />{{ $dest }}</span>
         @endif
     </a>
-    <div class="flex min-w-0 flex-1 flex-col p-5 sm:p-6">
+    <div class="relative isolate flex min-w-0 flex-1 flex-col overflow-hidden p-5 sm:p-6">
+        @include('partials.place-icon-bg', ['slug' => $package->destination?->slug])
         <p class="label-caps flex items-center gap-2 text-xs font-bold text-ink/70">
             <span>{{ $nights }}</span>
             @if ($type)<i class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></i><span class="flex items-center gap-1.5 text-rust"><x-icon :name="$type->icon ?: 'check'" class="h-4 w-4" />{{ $type->name }}</span>@endif
         </p>
         <h{{ $headingLevel ?? 3 }} class="mt-2.5 line-clamp-2 min-h-[3.9rem] text-[1.45rem] font-medium leading-snug"><a href="{{ $url }}" class="hover:text-rust">{{ $package->title }}</a></h{{ $headingLevel ?? 3 }}>
-        <p class="mt-2 line-clamp-2 min-h-[2.9rem] text-sm leading-relaxed text-ink/70">{{ $package->summary }}</p>
+        <p class="mt-2 line-clamp-2 min-h-[3rem] text-[0.95rem] leading-relaxed text-ink/80">{{ $package->summary }}</p>
         <a href="{{ $url }}" class="group/link mt-3 inline-flex min-h-[2.75rem] items-center gap-1.5 self-start text-sm font-bold text-brand-700 hover:text-rust">
             <span class="border-b border-current pb-0.5">{{ text('card_details_label') ?: 'Details' }}<span class="sr-only"> about {{ $package->title }}</span></span>
             <x-icon name="arrow" class="h-4 w-4 transition-transform group-hover/link:translate-x-1" />

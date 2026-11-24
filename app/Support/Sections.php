@@ -259,6 +259,14 @@ class Sections
                 self::rep('items', 'Numbers', 'number', [$t('value', 'Number (e.g. 3 or 100%)'), $t('label', 'Caption')], 4),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
             ]],
+            'route_map' => ['label' => 'Route map', 'description' => 'A dark card with a map of the Netherlands: the three regions and their main stops, joined by a dotted route. Every stop links to its destination page. Text on the left.', 'fields' => [
+                $t('eyebrow', 'Small label', 'Plan your route'),
+                $t('heading', 'Heading', 'See where your trip *could take you*'),
+                $ta('text', 'Text under the heading'),
+                $t('tag', 'Tag on the map (blank hides it)', 'Tulip season: April'),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Plan my route'),
+                ['name' => 'background', 'label' => 'Background', 'type' => 'select', 'options' => ['sand' => 'Light sand', 'white' => 'White'], 'default' => 'white'],
+            ]],
             'destination_cards' => ['label' => 'Destination cards', 'description' => 'A grid of cards for each active destination (managed in Admin > Destinations), each with a photo, short text and two buttons.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Destinations'),
                 $t('heading', 'Heading', 'Explore our top *Netherlands destinations*'),

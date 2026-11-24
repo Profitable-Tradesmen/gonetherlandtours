@@ -2,7 +2,7 @@
 @php $n = count($d['items']); $cols = $n === 3 ? 'sm:grid-cols-3 lg:grid-cols-3 lg:gap-8' : 'sm:grid-cols-2 lg:grid-cols-4'; @endphp
 @if (($d['style'] ?? 'cards') === 'strip')
 {{-- Slim navy strip: icon beside a title and one line, thin dividers between the items; a swipe row on phones. --}}
-<section class="bg-brand-900 py-8 text-white sm:py-10" aria-label="What sets us apart">
+<section class="tight-pad bg-brand-900 text-white" aria-label="What sets us apart">
     <div class="container-site">
         <x-slider :light="true" class="grid gap-6 sm:gap-0 sm:grid-cols-{{ min($n, 4) }}">
             @foreach ($d['items'] as $i => $c)

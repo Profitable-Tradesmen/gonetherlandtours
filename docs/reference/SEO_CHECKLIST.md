@@ -207,3 +207,18 @@ Notes:
 - Home mobile went from 91 (previous run) to 97: the reviews section is hidden (sample reviews) and the package cards on the home page are simpler, so less markup and script work. Page size rose from 479 to 870 KiB because the real stock photos replaced the lighter generated ones; they are lazy-loaded below the hero, so LCP is unchanged.
 - Package mobile has about 2 points of margin (92). Its LCP is the cover photo; keep covers as 480/960/1600 copies.
 - Live numbers will differ (TTFB, the host's own gzip and cache rules). Run Lighthouse from Chrome DevTools on the live URL after deploying.
+
+### Re-run after the landmark icons in the home package cards (Lighthouse 12, 24 Nov 2026)
+Same method as above (local build behind the gzip + long-cache proxy; the live domain still returns 403 to Lighthouse). **Nothing is below 90, so no fixes were needed.**
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | Page size |
+|---|---|---|---|---|---|---|---|
+| Home | Mobile | 95-96 (two warm runs; TBT 130-140 ms, CLS 0) | 100 | 100 | 100 | 2.5 s | 871 KiB |
+| Home | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 994 KiB |
+| Package | Mobile | 90 (TBT 140 ms, CLS 0) | 100 | 100 | 100 | 2.9 s | 524 KiB |
+| Package | Desktop | 100 | 100 | 100 | 100 | 0.8 s | 658 KiB |
+
+Notes:
+- The inline SVG landmark icons (about 1 KB each, six cards) did not change the score. Home mobile stays at 95-96.
+- A first run right after `php artisan view:clear` scored home mobile 86: the first request recompiled every Blade view (TTFB 6.7 s). That is a test artifact, not a page problem. Warm the page with one request before auditing.
+- Package mobile is at the edge (90-92 between runs, LCP 2.9 s is the cover photo). If it dips below 90 on the live host, first try smaller 480/960 cover copies or a lower quality for the cover.
