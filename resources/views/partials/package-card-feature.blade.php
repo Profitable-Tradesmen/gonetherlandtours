@@ -1,0 +1,44 @@
+@php
+    $cover = $package->images->first();
+    $fallback = $package->tourType?->image ?: 'images/tour-self-drive.webp';
+    $hasPrice = (bool) $package->price_from;
+    $url = route('packages.show', $package);
+    $nights = $package->nights.' '.\Illuminate\Support\Str::plural('night', $package->nights);
+    $type = $package->tourType;
+    $dest = $package->destination?->name;
+@endphp
+{{-- Home page package card (used by sections/packages_tabs). Same look on every screen size, deliberately sparse:
+     photo with a frosted destination tag, a small meta line (nights, tour type), title, a two-line summary, a "details" link,
+     and a footer with the price on the left and one main button on the right. The full card with highlights is partials/package-card
+     (Packages page, destination pages). --}}
+<article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white text-ink shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_-18px_rgb(12_13_17/0.4)]">
+    <a href="{{ $url }}" class="relative block overflow-hidden" tabindex="-1" aria-hidden="true">
+        @if ($cover)
+            <x-picture :media="$cover" :alt="$cover->alt" class="aspect-[3/2] h-auto w-full object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 88vw" />
+        @else
+            <x-picture :src="$fallback" :alt="$type?->image_alt ?? ''" :width="960" :height="640" class="aspect-[3/2] h-auto w-full object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 88vw" />
+        @endif
+        @if ($dest)
+            <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-xs font-semibold text-brand-900 shadow-sm backdrop-blur-md ring-1 ring-white/60"><x-icon name="map" class="h-3.5 w-3.5 text-rust" />{{ $dest }}</span>
+        @endif
+    </a>
+    <div class="flex min-w-0 flex-1 flex-col p-5 sm:p-6">
+        <p class="label-caps flex items-center gap-2 text-xs font-bold text-ink/70">
+            <span>{{ $nights }}</span>
+            @if ($type)<i class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></i><span class="flex items-center gap-1.5 text-rust"><x-icon :name="$type->icon ?: 'check'" class="h-4 w-4" />{{ $type->name }}</span>@endif
+        </p>
+        <h{{ $headingLevel ?? 3 }} class="mt-2.5 line-clamp-2 min-h-[3.9rem] text-[1.45rem] font-medium leading-snug"><a href="{{ $url }}" class="hover:text-rust">{{ $package->title }}</a></h{{ $headingLevel ?? 3 }}>
+        <p class="mt-2 line-clamp-2 min-h-[2.9rem] text-sm leading-relaxed text-ink/70">{{ $package->summary }}</p>
+        <a href="{{ $url }}" class="group/link mt-3 inline-flex min-h-[2.75rem] items-center gap-1.5 self-start text-sm font-bold text-brand-700 hover:text-rust">
+            <span class="border-b border-current pb-0.5">{{ text('card_details_label') ?: 'Details' }}<span class="sr-only"> about {{ $package->title }}</span></span>
+            <x-icon name="arrow" class="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
+        </a>
+        <div class="mt-auto flex items-end justify-between gap-3 border-t border-sand-200 pt-4">
+            <div>
+                <p class="label-caps text-[0.7rem] text-ink/60">{{ text('card_from_label') ?: 'From' }}</p>
+                <p class="font-display text-3xl font-medium leading-none text-brand-900">{{ $package->priceLabel() }}@if ($hasPrice && text('card_per_person'))<span class="ml-1 font-sans text-xs font-semibold text-ink/60">{{ text('card_per_person') }}</span>@endif</p>
+            </div>
+            <button type="button" class="btn btn-primary shrink-0 !px-5" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">{{ text('card_quote_label') ?: 'Get a Quote' }}</button>
+        </div>
+    </div>
+</article>

@@ -8,7 +8,7 @@
             @foreach ($galItems as $i => $g)
                 <button type="button" class="gallery-tile group relative isolate overflow-hidden rounded-2xl text-left shadow-card {{ in_array($i % 6, [0, 5]) ? 'col-span-2' : '' }}" data-reveal="zoom" style="--d:{{ ($i % 6) * 90 }}ms" @click="open = {{ $i }}" aria-label="Enlarge: {{ $g['caption'] }}">
                     <x-picture :src="$g['image']" :alt="$g['image_alt']" :width="2000" :height="1116" class="absolute inset-0 -z-10 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                    <span class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-transparent opacity-95 transition-opacity group-hover:opacity-100"></span>
+                    <span class="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/15 to-transparent opacity-95 transition-opacity group-hover:opacity-100"></span>
                     <span class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-4">
                         <span><span class="label-caps mb-1 inline-block rounded bg-ink/75 px-2 py-0.5 text-accent">{{ sprintf('%02d', $i + 1) }}</span><br><span class="font-display text-lg leading-tight text-white sm:text-xl">{{ $g['caption'] }}</span></span>
                         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/90 text-ink opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100" aria-hidden="true"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></span>

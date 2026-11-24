@@ -8,7 +8,7 @@
      and the ways to reach a specialist, so both sides have weight. Stacks on phones. --}}
 <section class="relative isolate overflow-hidden py-16 text-white sm:py-24 lg:py-28" aria-labelledby="cb-{{ $sid }}">
     @if ($d['image'])<x-picture :src="$d['image']" :alt="$d['image_alt']" :width="2000" :height="1116" class="kenburns absolute inset-0 -z-20 h-full w-full object-cover" />@endif
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-900/95 via-brand-900/85 to-brand-900/70"></div>
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-brand-900/90 via-brand-900/70 to-brand-900/45"></div>
     <div class="container-site grid items-center gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
         <div class="text-center lg:text-left" data-reveal="left">
             @if (! empty($d['eyebrow']))

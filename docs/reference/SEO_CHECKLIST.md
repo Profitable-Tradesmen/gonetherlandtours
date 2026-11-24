@@ -22,7 +22,7 @@
 - [ ] Legal pages reviewed; consent wording approved; cookie/consent banner decision made for the target market.
 - [ ] Google Search Console: verify the domain, submit the sitemap. Google Business Profile if applicable.
 - [ ] Message match: each Ads ad group points to a page whose H1 and hero repeat the ad's promise (use package or destination pages, or add `?utm_*` links to the home page).
-- [ ] Run Lighthouse (mobile and desktop) on Home, a package and Contact: aim for 90+ in every category. Latest run 23 Nov 2026 on the local build (live domain blocks Lighthouse with a 403, see the last "Re-run" section): Home and a package, mobile and desktop, all 91 or higher; staging run of 20 Nov 2026 was 98 or higher; Contact still to run.
+- [ ] Run Lighthouse (mobile and desktop) on Home, a package and Contact: aim for 90+ in every category. Latest run 24 Nov 2026 on the local build (live domain blocks Lighthouse with a 403, see the last "Re-run" section): Home and a package, mobile and desktop, all 92 or higher; staging run of 20 Nov 2026 was 98 or higher; Contact still to run.
 - [ ] Test at 360, 768 and 1280 px: no horizontal scroll; keyboard-only walk-through; WCAG AA contrast (brand blue `#437DA5` is decorative; text/buttons use `#2F6285`).
 - [ ] Check 404 page, `robots.txt`, `sitemap.xml` on production.
 
@@ -192,3 +192,18 @@ Watch list:
 - The card photos were generated at 1024x637, so the tall 640 px crops are upscaled slightly; a larger export would look sharper without costing more bytes at this size.
 - Lighthouse still lists about 100 KiB of "image delivery" savings (mostly extra compression on package covers and the home hero at -800); fine for now.
 - Home mobile on the live host will differ (TTFB, the host's own gzip and cache rules); re-run from DevTools after deploying.
+
+### Re-run after the new home page, real photos and simpler package cards (Lighthouse 12, 24 Nov 2026)
+**Not measured on the live domain**: `https://gonetherlandtours.com/` still returns 403 to Lighthouse (Hostinger's bot protection). Local build behind a gzip + long-cache proxy (stand-in for Hostinger's Apache settings), home page (`/`, the new design) and package `tulip-route-self-drive`, mobile and desktop presets. **Nothing is below 90, so no fixes were needed.**
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | Page size |
+|---|---|---|---|---|---|---|---|
+| Home | Mobile | 97 (TBT 40 ms, CLS 0) | 100 | 100 | 100 | 2.5 s | 870 KiB |
+| Home | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 994 KiB |
+| Package | Mobile | 92 (TBT 90 ms, CLS 0) | 100 | 100 | 100 | 2.9 s | 524 KiB |
+| Package | Desktop | 100 | 100 | 100 | 100 | 0.8 s | 658 KiB |
+
+Notes:
+- Home mobile went from 91 (previous run) to 97: the reviews section is hidden (sample reviews) and the package cards on the home page are simpler, so less markup and script work. Page size rose from 479 to 870 KiB because the real stock photos replaced the lighter generated ones; they are lazy-loaded below the hero, so LCP is unchanged.
+- Package mobile has about 2 points of margin (92). Its LCP is the cover photo; keep covers as 480/960/1600 copies.
+- Live numbers will differ (TTFB, the host's own gzip and cache rules). Run Lighthouse from Chrome DevTools on the live URL after deploying.

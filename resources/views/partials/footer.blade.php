@@ -1,6 +1,6 @@
 @php
     // Placeholder contact details are shown until Admin > Settings has the real ones (same as the top bar).
-    $phone = setting('phone') ?: '+1 000-000-0000'; $email = setting('email') ?: 'info@gonetherlandtours.com'; $address = setting('address') ?: 'Street address, City, Netherlands';
+    $phone = setting('phone') ?: '+1 000-000-0000'; $email = setting('email') ?: 'info@gonetherlandtours.com'; $address = setting('address');   // blank hides the line
     $footerLinks = \App\Models\MenuItem::tree('footer');
 @endphp
 <footer class="bg-ink text-white/85">
@@ -12,7 +12,7 @@
             <ul class="mt-5 space-y-2.5 text-sm">
                 <li class="flex items-center gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="phone" class="h-4 w-4" /></span><a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="inline-block py-1 hover:text-accent">{{ $phone }}</a></li>
                 <li class="flex items-center gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="mail" class="h-4 w-4" /></span><a href="mailto:{{ $email }}" class="inline-block py-1 hover:text-accent">{{ $email }}</a></li>
-                <li class="flex items-start gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="map" class="h-4 w-4" /></span><span class="py-1.5">{{ $address }}</span></li>
+                @if ($address)<li class="flex items-start gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="map" class="h-4 w-4" /></span><span class="py-1.5">{{ $address }}</span></li>@endif
             </ul>
             <ul class="mt-4 flex gap-4 text-sm">
                 @foreach (['facebook' => 'Facebook', 'instagram' => 'Instagram', 'youtube' => 'YouTube'] as $k => $label)

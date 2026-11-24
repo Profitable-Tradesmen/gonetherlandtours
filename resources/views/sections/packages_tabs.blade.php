@@ -10,7 +10,7 @@
         <div class="md:hidden" x-data="carousel" role="region" aria-roledescription="carousel" aria-label="{{ $d['heading'] }}">
             <div x-ref="track" @scroll.passive="sync()" class="carousel-track relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4">
                 @foreach ($featured->take(12) as $p)
-                    <div data-slide class="flex w-[88%] shrink-0 snap-start"><div class="w-full">@include('partials.package-card', ['package' => $p])</div></div>
+                    <div data-slide class="flex w-[88%] shrink-0 snap-start"><div class="w-full">@include('partials.package-card-feature', ['package' => $p])</div></div>
                 @endforeach
             </div>
             <div class="mt-1 flex justify-center gap-2" x-show="count > 1" x-cloak>
@@ -35,7 +35,7 @@
                 <div class="relative">
                     <div x-ref="track" @scroll.passive="sync()" class="carousel-track relative -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-4 pb-4 sm:mx-0 sm:px-0">
                         @foreach ($rowPackages as $p)
-                            <div data-slide class="flex w-[88%] shrink-0 snap-start sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.85rem)]"><div class="w-full">@include('partials.package-card', ['package' => $p])</div></div>
+                            <div data-slide class="flex w-[88%] shrink-0 snap-start sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.85rem)]"><div class="w-full">@include('partials.package-card-feature', ['package' => $p])</div></div>
                         @endforeach
                     </div>
                     <button type="button" class="carousel-arrow absolute -left-3 top-1/3 hidden h-11 w-11 items-center justify-center rounded-full bg-accent text-ink shadow-card hover:bg-accent-600 disabled:cursor-default disabled:opacity-0 lg:flex" @click="step(-1)" :disabled="atStart" aria-label="{{ text('carousel_prev_label') }}"><x-icon name="arrow" class="h-5 w-5 rotate-180" /></button>
@@ -69,7 +69,7 @@
             <div x-ref="track" @scroll.passive="sync()" class="carousel-track relative -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-4 pb-4 sm:mx-0 sm:px-0">
                 @foreach ($featured as $p)
                     <div data-slide x-show="tab === 'all' || tab === '{{ $p->tourType?->slug }}'" class="flex w-[84%] shrink-0 snap-start sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.85rem)]">
-                        <div class="w-full">@include('partials.package-card', ['package' => $p])</div>
+                        <div class="w-full">@include('partials.package-card-feature', ['package' => $p])</div>
                     </div>
                 @endforeach
             </div>

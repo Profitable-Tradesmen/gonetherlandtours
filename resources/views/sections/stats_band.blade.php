@@ -4,9 +4,9 @@
         @if (count($d['items']))
         <dl class="grid grid-cols-2 gap-8 lg:grid-cols-{{ min(count($d['items']), 4) }}">
             @foreach ($d['items'] as $i => $it)
-                <div class="text-center" data-reveal="up" style="--d:{{ $i * 100 }}ms">
-                    <dt class="order-2 mt-2 text-sm font-semibold uppercase tracking-widest text-white/85">{{ $it['label'] }}</dt>
-                    <dd class="font-display text-5xl font-medium text-accent sm:text-6xl">{{ $it['value'] }}</dd>
+                <div class="flex flex-col text-center" data-reveal="up" style="--d:{{ $i * 100 }}ms">
+                    <dt class="order-2 mt-3 text-sm font-semibold uppercase tracking-widest text-white/85">{{ $it['label'] }}</dt>
+                    <dd class="order-1 font-display text-5xl font-medium text-accent sm:text-6xl">{{ $it['value'] }}</dd>
                 </div>
             @endforeach
         </dl>
