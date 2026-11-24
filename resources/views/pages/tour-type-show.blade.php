@@ -30,7 +30,7 @@
 <section class="bg-sand py-14"><div class="container-site">
     <x-section-heading :title="$tourType->name.' packages'" />
     @if ($packages->isNotEmpty())
-        <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">@foreach ($packages as $p)@include('partials.package-card', ['package' => $p])@endforeach</x-slider>
+        <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">@foreach ($packages as $p)@include('partials.package-card-feature', ['package' => $p])@endforeach</x-slider>
     @else
         <p class="mt-6 text-center">No {{ strtolower($tourType->name) }} packages are published yet. <button type="button" class="font-bold text-brand-700 underline underline-offset-4" @click="$store.modal.show()">Ask us for a tailored quote</button>.</p>
     @endif

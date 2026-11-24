@@ -6,11 +6,12 @@
     $nights = $package->nights.' '.\Illuminate\Support\Str::plural('night', $package->nights);
     $type = $package->tourType;
     $dest = $package->destination?->name;
+    $badge = $package->is_sample ? (text('card_sample_badge') ?: null) : null;
 @endphp
 {{-- Home page package card (used by sections/packages_tabs). Same look on every screen size, deliberately sparse:
      photo with a navy tour-type tab and the number of nights along the bottom, the destination, title, a two-line summary,
-     a "details" link, and a footer with the price on the left and one main button on the right. The full card with highlights is
-     partials/package-card (Packages page, destination pages). --}}
+     a "details" link, and a footer with the price on the left and one main button on the right. Used on the home page, the Packages page,
+     destination and tour type pages and the related trips on a package page. --}}
 <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white text-ink shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_-18px_rgb(12_13_17/0.4)]">
     <a href="{{ $url }}" class="relative block overflow-hidden" tabindex="-1" aria-hidden="true">
         @if ($cover)
@@ -21,6 +22,7 @@
         @if ($type)
             <span class="absolute left-0 top-4 bg-brand-900 px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white shadow-sm">{{ $type->name }}</span>
         @endif
+        @if ($badge)<span class="label-caps absolute right-0 top-4 whitespace-nowrap bg-accent px-3 py-1.5 text-xs leading-tight text-ink">{{ $badge }}</span>@endif
         <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent px-4 pb-3 pt-10 text-sm font-semibold text-white">{{ $nights }}</span>
     </a>
     <div class="relative isolate flex min-w-0 flex-1 flex-col overflow-hidden p-5 sm:p-6">

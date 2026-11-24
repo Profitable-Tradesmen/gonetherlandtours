@@ -164,7 +164,7 @@
     <div class="container-site">
         <x-section-heading eyebrow="More {{ $package->tourType->name }}" title="Related tour packages" id="related-h" />
         <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach ($related as $rp)@include('partials.package-card', ['package' => $rp])@endforeach
+            @foreach ($related as $rp)@include('partials.package-card-feature', ['package' => $rp])@endforeach
         </x-slider>
         <p class="mt-8 text-center"><a href="{{ route('packages.index') }}" class="btn btn-secondary">View all packages</a></p>
     </div>

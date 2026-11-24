@@ -17,7 +17,7 @@
 @if ($packages->isNotEmpty())
 <section class="bg-sand py-14"><div class="container-site">
     <x-section-heading :title="'Packages in '.$destination->name" />
-    <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">@foreach ($packages as $p)@include('partials.package-card', ['package' => $p])@endforeach</x-slider>
+    <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">@foreach ($packages as $p)@include('partials.package-card-feature', ['package' => $p])@endforeach</x-slider>
 </div></section>
 @endif
 @include('partials.why-us')
