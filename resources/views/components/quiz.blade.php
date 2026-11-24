@@ -6,21 +6,21 @@
 --}}
 <div id="quote" class="overflow-hidden rounded-2xl bg-white text-ink shadow-card">
     {{-- Navy header: title and the optional rating line. Body: the quiz. Navy footer: reassurances (all editable in Admin > Settings > Trust and reassurance). --}}
-    <div class="bg-brand-900 px-5 py-5 text-center text-white sm:px-7 sm:py-6">
-        <h2 class="font-display text-2xl font-medium leading-tight sm:text-3xl">{{ text('quiz_title') }}</h2>
+    <div class="bg-brand-900 px-5 py-3 text-center text-white sm:px-7 sm:py-3.5">
+        <h2 class="font-display text-xl font-medium leading-tight sm:text-2xl">{{ text('quiz_title') }}</h2>
         @if (text('quiz_rating_label'))<p class="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold"><span class="text-accent" aria-hidden="true">&#9733;</span>{{ text('quiz_rating_label') }}</p>@endif
     </div>
-    <div class="p-5 pt-1 sm:p-7 sm:pt-2">
+    <div class="px-5 pb-4 pt-0 sm:px-7 sm:pb-5">
 
     <div x-data="quiz(@js(collect($steps)->pluck('key')->all()))" x-cloak>
         {{-- progress --}}
-        <div class="mt-4" role="progressbar" aria-label="Quiz progress" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100">
+        <div class="mt-3" role="progressbar" aria-label="Quiz progress" :aria-valuenow="percent" aria-valuemin="0" aria-valuemax="100">
             <div class="h-1.5 overflow-hidden rounded-full bg-sand-200"><div class="h-full rounded-full bg-brand-700 transition-all" :style="'width:' + Math.max(percent, 6) + '%'"></div></div>
             <p class="mt-1 text-xs text-ink/60"><span x-text="i + 1"></span> of <span x-text="total"></span></p>
         </div>
 
         @foreach ($steps as $idx => $step)
-            <section x-show="i === {{ $idx }}" @if ($idx > 0) x-cloak @endif class="mt-4" aria-labelledby="quiz-q-{{ $idx }}">
+            <section x-show="i === {{ $idx }}" @if ($idx > 0) x-cloak @endif class="mt-2" aria-labelledby="quiz-q-{{ $idx }}">
                 <h3 id="quiz-q-{{ $idx }}" class="font-display text-xl leading-snug sm:text-2xl">{{ $step['question'] }}</h3>
 
                 @if ($step['type'] === 'select')
@@ -46,12 +46,12 @@
                            x-model.trim="answers['{{ $step['key'] }}']" @keydown.enter.prevent="next('{{ $step['key'] }}')">
                     <button type="button" class="btn btn-primary btn-block mt-4" :disabled="!answers['{{ $step['key'] }}']" @click="next('{{ $step['key'] }}')">Next</button>
                 @else
-                    <div class="mt-4 grid grid-cols-2 gap-3">
+                    <div class="mt-3 grid grid-cols-2 gap-2.5">
                         @foreach ($step['options'] as $o)
                             <button type="button" @click="pick('{{ $step['key'] }}', @js($o['value']))"
                                     :class="answers['{{ $step['key'] }}'] === @js($o['value']) ? 'border-brand-700 bg-brand/10' : 'border-sand-200'"
-                                    class="flex min-h-[5.5rem] flex-col items-center justify-center gap-2 rounded-xl border-2 bg-white p-3 text-center text-sm font-semibold transition hover:border-brand-700 hover:bg-sand">
-                                @if ($o['icon'])<x-icon :name="$o['icon']" class="h-7 w-7 text-brand-700" />@endif
+                                    class="flex min-h-[4.25rem] flex-col items-center justify-center gap-1 rounded-xl border-2 bg-white px-3 py-2 text-center text-sm font-semibold transition hover:border-brand-700 hover:bg-sand">
+                                @if ($o['icon'])<x-icon :name="$o['icon']" class="h-6 w-6 text-brand-700" />@endif
                                 <span>{{ $o['label'] }}</span>
                             </button>
                         @endforeach
@@ -80,7 +80,7 @@
     </div>
     @php $trust = array_values(array_filter([[text('quiz_trust_1'), 'lock'], [text('quiz_trust_2'), 'check'], [text('quiz_trust_3'), 'phone']], fn ($t) => $t[0] !== '')); @endphp
     @if ($trust || text('quiz_trust_line') || text('quote_promise'))
-        <div class="bg-brand-900 px-5 py-4 text-center text-white sm:px-7">
+        <div class="bg-brand-900 px-5 py-3 text-center text-white sm:px-7">
             @if ($trust)<ul class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs font-semibold">@foreach ($trust as [$label, $icon])<li class="inline-flex items-center gap-1.5"><x-icon :name="$icon" class="h-4 w-4 text-accent" />{{ $label }}</li>@endforeach</ul>@endif
             @if (text('quiz_trust_line'))<p class="mt-2 text-[0.7rem] font-medium text-white/75">{{ text('quiz_trust_line') }}</p>@endif
             @if (text('quote_promise'))<p class="mt-1 text-[0.7rem] font-medium text-white/75">{{ text('quote_promise') }}</p>@endif

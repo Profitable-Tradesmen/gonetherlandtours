@@ -4,7 +4,7 @@
     tulips-and-countryside = a windmill, amsterdam-and-the-cities = a gabled canal house, zeeland-and-the-delta = a lighthouse; anything else = a windmill.
     Put it as the first child of a `relative isolate overflow-hidden` box.
 --}}
-<svg viewBox="0 0 200 200" class="pointer-events-none absolute -bottom-5 -right-5 -z-10 h-[11rem] w-[11rem] text-brand-700 opacity-[0.09]" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+<svg viewBox="0 0 200 200" class="pointer-events-none absolute -right-3 top-2 -z-10 h-[10rem] w-[10rem] text-brand-700 opacity-[0.08]" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
     @if ($slug === 'amsterdam-and-the-cities')
         {{-- Gabled canal house with a hoist beam, between two neighbors --}}
         <path d="M14 200V112h12V100h12V88h12v112M150 200V88h12v12h12v12h12v88"/>

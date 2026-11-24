@@ -25,20 +25,12 @@
         @if (count($d['chips']))
         <div style="--d:480ms" class="hero-in mt-10">
             @if ($d['chips_label'])<p class="label-caps font-bold text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.8)]">{{ $d['chips_label'] }}</p>@endif
-            {{-- Destination chips as a looping marquee: the track holds two identical groups and slides left by one group (pauses on hover or focus). --}}
-            <div class="mx-auto mt-4 [text-shadow:none]" style="width:100%;max-width:52rem">
-            <div class="marquee" style="animation:none;--marquee-time:40s" role="region" aria-label="Destinations">
-                <div class="marquee-track">
-                    @foreach (range(1, 2) as $copy)
-                        <ul class="marquee-group" style="gap:.75rem;padding-right:.75rem" @if ($copy === 2) aria-hidden="true" @endif>
-                            @foreach (array_merge($d['chips'], $d['chips']) as $c)
-                                <li><a @if ($copy === 2) tabindex="-1" @endif href="{{ str_starts_with((string) $c['url'], '/') ? url($c['url']) : ($c['url'] ?: url('/destinations')) }}" class="inline-flex min-h-[2.5rem] items-center whitespace-nowrap rounded-full border border-white/70 bg-ink/35 px-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:border-accent hover:bg-accent hover:text-ink">{{ $c['label'] }}</a></li>
-                            @endforeach
-                        </ul>
-                    @endforeach
-                </div>
-            </div>
-            </div>
+            {{-- Destination chips: a simple centered row that wraps on small screens. --}}
+            <ul class="mx-auto mt-4 flex max-w-3xl flex-wrap justify-center gap-2.5 [text-shadow:none]" aria-label="Destinations">
+                @foreach ($d["chips"] as $c)
+                    <li><a href="{{ str_starts_with((string) $c["url"], "/") ? url($c["url"]) : ($c["url"] ?: url("/destinations")) }}" class="inline-flex min-h-[2.5rem] items-center whitespace-nowrap rounded-full border border-white/70 bg-ink/35 px-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:border-accent hover:bg-accent hover:text-ink">{{ $c["label"] }}</a></li>
+                @endforeach
+            </ul>
         </div>
         @endif
     </div></div>

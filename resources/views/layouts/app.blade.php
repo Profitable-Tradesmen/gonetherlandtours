@@ -76,6 +76,17 @@
         @if ($phone)<a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="btn btn-secondary flex-1"><x-icon name="phone" class="h-4 w-4" /> {{ text('mobile_bar_call_label') }}</a>@endif
         <button type="button" class="btn btn-primary flex-[2]" @click="$store.modal.show()">{{ text('mobile_bar_quote_label') }}</button>
     </div>
+    {{-- Desktop sticky contact bar: slides up from the bottom once the visitor has scrolled past the first screen. Phones use the action bar above. --}}
+    <div x-data="{ on: false }" x-init="on = window.scrollY > 600" @scroll.window.passive="on = window.scrollY > 600" x-show="on" x-cloak
+         x-transition:enter="transition duration-300" x-transition:enter-start="translate-y-full" x-transition:enter-end="translate-y-0"
+         class="fixed inset-x-0 bottom-0 z-40 hidden border-t border-sand-200 bg-white/95 shadow-[0_-8px_24px_-12px_rgb(0_0_0/.35)] backdrop-blur lg:block" role="region" aria-label="Contact">
+        <div class="container-site flex items-center justify-between gap-6 py-3">
+            <p class="text-sm text-ink/80">Consult with our Travel Specialists at
+                @php $barPhone = $phone ?: '+1 000-000-0000'; @endphp<a href="tel:{{ preg_replace('/[^+\d]/', '', $barPhone) }}" class="ml-2 font-display text-xl font-medium text-brand-900 hover:text-rust">{{ $barPhone }}</a>
+            </p>
+            <button type="button" class="btn btn-primary !px-6 !py-2.5" @click="$store.modal.show()">Request a quote</button>
+        </div>
+    </div>
     @stack('scripts')
     {{ snippets('body_end') }}
 </body>

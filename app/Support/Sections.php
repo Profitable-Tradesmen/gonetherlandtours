@@ -85,6 +85,8 @@ class Sections
                 self::link('secondary_url', 'Second button link', '/packages'),
                 self::rep('badges', 'Trust badges (up to 3)', 'badge', [$t('text', 'Badge text')], 3),
                 self::img('poster', 'Hero photo (shown first and on phones; the video plays over it on desktop)', 'images/hero-home.webp'),
+                $t('chips_label', 'Label above the chips (bottom of the hero)', 'Where to?'),
+                self::rep('chips', 'Destination chips (sliding row at the bottom of the hero)', 'chip', [$t('label', 'Label'), self::link('url', 'Link', '/destinations', 'A page path such as /destinations or a full https:// address.')], 12),
                 ['name' => 'show_video', 'label' => 'Play the background video on desktop (untick for a photo only)', 'type' => 'checkbox', 'default' => true],
             ]],
             'partners' => ['label' => 'Partner logos', 'description' => 'A dark brown band with a heading, a short text and a row of partner logos. White or transparent logos look best on the dark background.', 'fields' => [
@@ -112,6 +114,11 @@ class Sections
             ]],
             'value_strip' => ['label' => 'Value strip (4 icon points)', 'description' => 'A clean row of up to four short selling points, each with an icon. Sits right under the hero.', 'fields' => [
                 self::rep('items', 'Points', 'point', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Short text')], 4),
+            ]],
+            'skyline_divider' => ['label' => 'Skyline divider', 'description' => 'A decorative Dutch skyline (canal houses and windmills) that separates a white section from a sand one. No settings.', 'fields' => []],
+            'contact_bar' => ['label' => 'Contact bar', 'description' => 'A slim white bar under the hero: a line of text with the phone number from Admin > Settings, and a quote button.', 'fields' => [
+                $t('text', 'Text before the phone number', 'Talk to a Netherlands travel specialist'),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Request a quote'),
             ]],
             'quiz_band' => ['label' => 'Quote quiz', 'description' => 'The main step-by-step quote quiz (the same one as in the home page banner) in its own section.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Free quote'),
@@ -258,6 +265,7 @@ class Sections
                 $ta('text', 'Text under the heading'),
                 self::rep('items', 'Numbers', 'number', [$t('value', 'Number (e.g. 3 or 100%)'), $t('label', 'Caption')], 4),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
+                self::img('image', 'Background photo (optional, shown under a navy overlay)'),
             ]],
             'route_map' => ['label' => 'Route map', 'description' => 'A dark card with a map of the Netherlands: the three regions and their main stops, joined by a dotted route. Every stop links to its destination page. Text on the left.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Plan your route'),
