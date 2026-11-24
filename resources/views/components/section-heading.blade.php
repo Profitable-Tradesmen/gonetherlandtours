@@ -2,8 +2,8 @@
 <div {{ $attributes->merge(['class' => ($center ? 'text-center mx-auto ' : '').'max-w-3xl mb-10']) }}>
     @if ($eyebrow)
         <p class="label-caps {{ $light ? 'text-accent' : 'text-ink' }}">{{ $eyebrow }}</p>
-        {{-- three short bars under the small label (brand blue, rust, brand blue) --}}
-        <span class="mb-4 mt-2 flex gap-1.5 {{ $center ? 'justify-center' : '' }}" aria-hidden="true"><i class="h-[3px] w-7 {{ $light ? 'bg-white/70' : 'bg-brand-700' }}"></i><i class="h-[3px] w-7 {{ $light ? 'bg-accent' : 'bg-rust' }}"></i><i class="h-[3px] w-7 {{ $light ? 'bg-white/70' : 'bg-brand-700' }}"></i></span>
+        {{-- a short dark rule with a small diamond (gold on dark bands) under the small label --}}
+        <span class="mb-4 mt-3 flex items-center gap-2 {{ $center ? 'justify-center' : '' }}" aria-hidden="true"><i class="h-0.5 w-9 {{ $light ? 'bg-accent' : 'bg-brand-900' }}"></i><i class="h-1.5 w-1.5 rotate-45 {{ $light ? 'bg-accent' : 'bg-rust' }}"></i><i class="h-0.5 w-9 {{ $light ? 'bg-accent' : 'bg-brand-900' }}"></i></span>
     @endif
     <{{ $tag }} class="text-3xl sm:text-4xl lg:text-5xl font-medium {{ $light ? 'text-white' : 'text-ink' }}">{!! emphasize($title, $light ? 'text-accent' : 'text-rust') !!}</{{ $tag }}>
     @if ($subtitle)

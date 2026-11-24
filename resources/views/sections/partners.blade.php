@@ -13,7 +13,7 @@
         <div class="max-w-xl lg:pr-12" data-reveal="left">
             @if ($d['eyebrow'])
                 <p class="label-caps text-white">{{ $d['eyebrow'] }}</p>
-                <span class="mb-4 mt-2 flex gap-1.5" aria-hidden="true"><i class="h-[3px] w-7 bg-white/70"></i><i class="h-[3px] w-7 bg-accent"></i><i class="h-[3px] w-7 bg-white/70"></i></span>
+                <span class="mb-4 mt-3 flex items-center gap-2" aria-hidden="true"><i class="h-0.5 w-9 bg-accent"></i><i class="h-1.5 w-1.5 rotate-45 bg-accent"></i><i class="h-0.5 w-9 bg-accent"></i></span>
             @endif
             <h2 id="pt-{{ $sid }}" class="text-3xl font-medium sm:text-4xl lg:text-5xl">{!! emphasize($d['heading'], 'text-accent') !!}</h2>
             @if ($d['text'])<p class="mt-5 text-base leading-relaxed text-white/90 sm:text-lg">{{ $d['text'] }}</p>@endif
