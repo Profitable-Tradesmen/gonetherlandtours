@@ -16,10 +16,10 @@
         @if ($packages->isEmpty())
             <p class="text-center text-ink/75">{{ $d['empty_text'] }} <button type="button" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust" @click="$store.modal.show()">{{ text('card_quote_label') ?: 'Get a quote' }}</button></p>
         @else
-            {{-- A plain grid of cards, the same on every package list: one column on phones, two from sm, three from lg. --}}
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {{-- A plain grid of cards, the same on every package list: a swipe row on phones, then two columns from sm and three from lg. --}}
+            <div class="carousel-track -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
                 @foreach ($packages as $p)
-                    @include('partials.package-card-feature', ['package' => $p])
+                    <div class="flex w-[84%] shrink-0 snap-start sm:w-auto"><div class="w-full">@include('partials.package-card-feature', ['package' => $p])</div></div>
                 @endforeach
             </div>
         @endif

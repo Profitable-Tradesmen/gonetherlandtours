@@ -119,14 +119,13 @@
 @keyframes kenburns { to { transform: scale(1.08); } }
 
 /*
- * Gallery pop-out: on devices with a real pointer, the hovered/focused photo grows, lifts above its neighbours and
- * gets a deep shadow while the others dim slightly. Touch devices keep the tap-to-enlarge lightbox.
+ * Gallery hover: on devices with a real pointer the hovered/focused tile gets a thin gold frame and a soft shadow, and the
+ * photo zooms inside it (nothing grows over the neighbours). Touch devices keep the tap-to-enlarge lightbox.
  */
-.gallery-tile { transition: transform .45s cubic-bezier(.2, .8, .2, 1), box-shadow .45s ease, filter .45s ease; }
+.gallery-tile { transition: box-shadow .35s ease, outline-color .35s ease; outline: 2px solid transparent; outline-offset: -2px; }
 @media (hover: hover) {
-    .gallery-grid:hover .gallery-tile:not(:hover):not(:focus-visible) { filter: brightness(.72) saturate(.85); transform: scale(.97); }
-    .gallery-tile:hover, .gallery-tile:focus-visible { transform: scale(1.08) translateY(-8px) rotate(-.6deg); z-index: 20; box-shadow: 0 35px 60px -18px rgb(12 13 17 / .6); }
-    .gallery-tile:nth-child(even):hover, .gallery-tile:nth-child(even):focus-visible { transform: scale(1.08) translateY(-8px) rotate(.6deg); }
+    /* The hover effect stays inside the tile (the photo zooms slowly and a thin gold frame appears), so it never covers the neighbouring photos. */
+    .gallery-tile:hover, .gallery-tile:focus-visible { outline-color: var(--color-accent); box-shadow: 0 14px 30px -14px rgb(12 13 17 / .45); }
 }
 
 /*

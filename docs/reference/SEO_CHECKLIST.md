@@ -242,3 +242,22 @@ Notes:
 - Home mobile now has little margin (90-93 between runs). If it dips below 90 on the live host, make `hero-home-800.webp` smaller still, or add a 480 px copy for small phones.
 - The first request after `php artisan view:clear` is slow because every Blade view is recompiled; warm the page with one request before auditing.
 - Keep the hero photo slightly narrower than the screen if the hero layout changes again; a photo exactly as large as the screen is ignored as the LCP image.
+
+### Re-run after the sister-site home structure, 12 packages and two more package grids (Lighthouse 12, 25 Nov 2026)
+Same method as above (local build behind the gzip + long-cache proxy; the live domain still returns 403 to Lighthouse). First run: all performance scores were 92 or more, but **home accessibility was 97 (mobile and desktop)**, so that was fixed.
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | Page size |
+|---|---|---|---|---|---|---|---|
+| Home | Mobile | 90-91 (TBT 200 ms, CLS 0) | 100 | 100 | 100 | 3.0 s | 604 KiB |
+| Home | Desktop | 99 | 100 | 100 | 100 | 1.0 s | 1107 KiB |
+| Package | Mobile | 91 (TBT 110 ms, CLS 0) | 100 | 100 | 100 | 3.1 s | 525 KiB |
+| Package | Desktop | 100 | 100 | 100 | 100 | 0.8 s | 660 KiB |
+
+What was wrong and what was changed:
+- **Cause:** the two new package grids (`sections/tour_packages.blade.php`) stacked six cards in one long column on phones. Lighthouse's colour-contrast check could not work out the background behind the card text (it reported the navy "Travel partners" section as overlapping) and scored accessibility 97.
+- **Fix:** on phones the grids are now a swipe row (same scroll-snap markup as the Handpicked journeys grid); from `sm` up they are the same grid as before. Accessibility is 100 again. A first attempt with the Alpine `x-slider` also scored 100 but pushed home mobile to 88-89 (more script work), so the plain scroll-snap row is used instead.
+- **Fix:** the "Great value" grid shows 3 packages (was 6) to keep the page lighter.
+
+Notes:
+- **Home mobile has almost no margin (90-91).** Total blocking time rose from about 80 ms to 200 ms with the added sections (about 2,800 DOM elements). If it dips below 90 on the live host, first reduce the repeated cards: make "More itineraries" show 3 packages, or drop the faint landmark drawing (`partials/place-icon-bg`) from the cards.
+- The home page now has 12 published packages (3 added), a gallery and two extra package grids; all are lazy-loaded below the hero, so LCP is unchanged at about 3.0 s.
