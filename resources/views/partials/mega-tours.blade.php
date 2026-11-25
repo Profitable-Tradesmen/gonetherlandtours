@@ -21,7 +21,7 @@
     <div class="min-w-0 self-start">
         <div class="border-t-[3px] border-accent bg-brand-900 p-7 text-white shadow-card sm:p-8">
             <p class="label-caps text-xs font-bold text-accent">Personal planning</p>
-            <p class="mt-5 font-display text-2xl font-medium leading-snug">Not sure which way to travel?</p>
+            <p class="mt-5 font-display text-2xl font-medium leading-snug">Which way will suit you best?</p>
             <p class="mt-4 text-sm leading-relaxed text-white/85">A specialist will suggest the best fit, free and with no obligation.</p>
             <button type="button" class="btn btn-primary mt-6" @click="dd = null; $store.modal.show()">Plan my trip <x-icon name="arrow" class="h-4 w-4" /></button>
         </div>
