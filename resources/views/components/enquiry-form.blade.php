@@ -21,7 +21,7 @@
     $opts = fn (string $key) => \App\Support\SiteData::quizOptions($key);
 @endphp
 <form method="POST" action="{{ route('enquiry.store') }}" x-data="enquiryForm" @submit.prevent="submit($event)"
-      data-form-name="{{ $form }}" novalidate class="relative" aria-label="{{ config('gnt.form_names.'.$form, 'Inquiry') }} inquiry form">
+      data-form-name="{{ $form }}" data-phone-rules='@json(config("gnt.phone_lengths"))' novalidate class="relative" aria-label="{{ config('gnt.form_names.'.$form, 'Inquiry') }} inquiry form">
     @csrf
     <input type="hidden" name="form_name" value="{{ $form }}">
     <input type="hidden" name="_form_id" value="{{ $idp }}">
@@ -101,7 +101,13 @@
                     </ul>
                 </div>
             </x-form-field>
-            <x-form-field name="phone" label="Phone" type="tel" :idp="$idp" required autocomplete="tel-national" />
+            <x-form-field name="phone" label="Phone" :idp="$idp" required>
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-brand-900" x-text="'+' + dial" aria-hidden="true">+1</span>
+                    <input id="{{ $idp }}-phone" name="phone" type="tel" inputmode="tel" class="field" required autocomplete="tel-national" value="{{ $oldHere ? old('phone') : '' }}"
+                           :style="{ paddingLeft: (1.9 + dial.length * 0.62) + 'rem' }" :aria-invalid="err('phone') ? 'true' : 'false'" aria-describedby="{{ $idp }}-phone-error">
+                </div>
+            </x-form-field>
         </div>
 
         @if ($variant === 'modal')

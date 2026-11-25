@@ -43,6 +43,14 @@ return [
         ['United Arab Emirates', '971', 'AE'], ['Israel', '972', 'IL'], ['Philippines', '63', 'PH'],
     ],
 
+    // National phone number length (digits, without the country code or a leading 0) per country: [min, max]. Used by the form (browser) and the server.
+    'phone_lengths' => [
+        'US' => [10, 10], 'CA' => [10, 10], 'GB' => [9, 10], 'IE' => [7, 9], 'AU' => [9, 9], 'NZ' => [8, 10], 'NL' => [9, 9], 'BE' => [8, 9],
+        'DE' => [10, 11], 'FR' => [9, 9], 'ES' => [9, 9], 'IT' => [9, 11], 'CH' => [9, 9], 'AT' => [9, 12], 'SE' => [7, 9], 'NO' => [8, 8],
+        'DK' => [8, 8], 'FI' => [9, 10], 'PT' => [9, 9], 'PL' => [9, 9], 'MX' => [10, 10], 'BR' => [10, 11], 'AR' => [10, 11], 'CL' => [9, 9],
+        'ZA' => [9, 9], 'IN' => [10, 10], 'SG' => [8, 8], 'HK' => [8, 8], 'JP' => [10, 10], 'KR' => [9, 10], 'AE' => [9, 9], 'IL' => [8, 9], 'PH' => [10, 10],
+    ],
+
     'second_quote_options' => [
         'Yes, please' => 'Yes, please',
         'No, thank you' => 'No, thank you',

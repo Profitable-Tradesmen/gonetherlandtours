@@ -1,10 +1,16 @@
 @php
     // On a tour type page ($tourType) or a destination page ($destination) the controller passes it, and that tour type's / destination's packages are shown; anywhere else the featured ones.
+    // Optional: skip the first N (offset), show at most N (limit), order by lowest price, and a "Get a free quote" button next to the "see all" button (used on the home page).
+    $offset = max(0, (int) ($d['offset'] ?? 0));
+    $limit = max(1, (int) ($d['limit'] ?? 12));
     $packages = \App\Models\Package::published()
         ->when(isset($tourType), fn ($q) => $q->where('tour_type_id', $tourType->id), fn ($q) => $q->when(isset($destination), fn ($q) => $q->where('destination_id', $destination->id), fn ($q) => $q->where('is_featured', true)))
-        ->with(['tourType', 'destination', 'images'])->orderBy('sort_order')->take(12)->get();
+        ->with(['tourType', 'destination', 'images'])
+        ->when(($d['sort'] ?? 'default') === 'price', fn ($q) => $q->orderBy('price_from'))
+        ->orderBy('sort_order')->skip($offset)->take($limit)->get();
+    $bg = ($d['background'] ?? 'white') === 'sand' ? 'bg-sand' : 'bg-white';
 @endphp
-<section class="bg-white py-16 sm:py-24" aria-labelledby="tp-{{ $sid }}">
+<section class="{{ $bg }} py-16 sm:py-24" aria-labelledby="tp-{{ $sid }}">
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :subtitle="$d['intro'] ?: null" :id="'tp-'.$sid" />
         @if ($packages->isEmpty())
@@ -17,6 +23,11 @@
                 @endforeach
             </div>
         @endif
-        @if ($d['button_label'])<p class="mt-8 text-center"><x-button variant="secondary" :href="route('packages.index')">{{ $d['button_label'] }}</x-button></p>@endif
+        @if ($d['button_label'] || ! empty($d['quote_label']))
+            <p class="mt-10 flex flex-wrap items-center justify-center gap-3">
+                @if (! empty($d['quote_label']))<x-button @click="$store.modal.show()">{{ $d['quote_label'] }} <x-icon name="arrow" class="h-4 w-4" /></x-button>@endif
+                @if ($d['button_label'])<x-button variant="secondary" :href="route('packages.index')">{{ $d['button_label'] }}</x-button>@endif
+            </p>
+        @endif
     </div>
 </section>

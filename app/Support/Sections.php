@@ -107,6 +107,11 @@ class Sections
                 $t('heading', 'Heading', 'Our packages'),
                 $ta('intro', 'Intro text', ''),
                 $t('button_label', 'Button under the packages', 'See all packages'),
+                $t('quote_label', 'Quote button next to it (optional)', ''),
+                ['name' => 'background', 'label' => 'Background', 'type' => 'select', 'options' => ['white' => 'White', 'sand' => 'Sand'], 'default' => 'white'],
+                ['name' => 'sort', 'label' => 'Order', 'type' => 'select', 'options' => ['default' => 'As in Admin > Packages', 'price' => 'Lowest price first'], 'default' => 'default'],
+                ['name' => 'offset', 'label' => 'Skip the first (number of packages)', 'type' => 'number', 'default' => 0],
+                ['name' => 'limit', 'label' => 'Show at most (number of packages)', 'type' => 'number', 'default' => 12],
                 $t('empty_text', 'Text when there are no packages yet', 'No packages are published yet.'),
             ]],
             'ticker' => ['label' => 'Highlights ticker', 'description' => 'A thin scrolling strip of short selling points.', 'fields' => [

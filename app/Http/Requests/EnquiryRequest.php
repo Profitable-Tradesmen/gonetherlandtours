@@ -80,7 +80,8 @@ class EnquiryRequest extends FormRequest
                 return;
             }
             if (! app(EnquiryService::class)->e164($this->input('country_code'), $this->input('phone'))) {
-                $v->errors()->add('phone', 'Please enter a valid phone number.');
+                [$mn, $mx] = config('gnt.phone_lengths.'.$this->input('country_code'), [6, 12]);
+                $v->errors()->add('phone', 'Please enter a valid phone number ('.($mn === $mx ? $mn : $mn.'-'.$mx).' digits, without the country code).');
 
                 return;
             }

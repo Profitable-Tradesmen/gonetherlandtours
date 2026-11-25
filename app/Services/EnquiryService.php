@@ -23,13 +23,14 @@ class EnquiryService
         if (! $dial || $digits === '') {
             return null;
         }
-        if (str_starts_with($digits, $dial) && strlen($digits) > strlen($dial) + 6) {
-            $digits = substr($digits, strlen($dial));       // user typed the country code too
+        [$min, $max] = config('gnt.phone_lengths.'.$iso, [6, 12]);
+        $fits = fn (string $d) => strlen($d) >= $min && strlen($d) <= $max;
+        $national = ltrim($digits, '0');
+        if (! $fits($national) && str_starts_with($digits, $dial)) {
+            $national = ltrim(substr($digits, strlen($dial)), '0');       // user typed the country code too
         }
-        $digits = ltrim($digits, '0');
-        $total = strlen($dial.$digits);
 
-        return ($digits !== '' && $total >= 8 && $total <= 15) ? '+'.$dial.$digits : null;
+        return $fits($national) ? '+'.$dial.$national : null;
     }
 
     public function create(array $data, Request $request): Enquiry

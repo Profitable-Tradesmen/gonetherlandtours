@@ -96,7 +96,12 @@ Alpine.data('enquiryForm', () => ({
     sending: false,
     success: false,
 
+    dial: '',
+
     init() {
+        const sel = this.$el.querySelector('.cc-native option:checked');
+        this.dial = ((sel && sel.textContent.match(/\+(\d+)/)) || [])[1] || '1';
+        this.$el.addEventListener('dialchange', (e) => { this.dial = e.detail.dial; });
         // Render the reCAPTCHA widget (and load Google's script) only when someone touches this form.
         // Doing it when the form merely scrolls into view put Google's third-party cookie on pages whose form is
         // above the fold (the Contact page on desktop), which Lighthouse counts against Best Practices.
@@ -113,11 +118,36 @@ Alpine.data('enquiryForm', () => ({
         return this.errors[field] ? this.errors[field][0] : '';
     },
 
+    phoneCheck(form) {
+        let rules = {};
+        try { rules = JSON.parse(form.dataset.phoneRules || '{}'); } catch (e) { /* use the default */ }
+        const iso = (form.querySelector('[name=country_code]') || {}).value;
+        const dial = (form.querySelector('.cc-native option:checked') || {}).textContent;
+        const [min, max] = rules[iso] || [6, 12];
+        const raw = ((form.querySelector('[name=phone]') || {}).value || '').replace(/\D/g, '');
+        let n = raw.replace(/^0+/, '');
+        const d = ((dial || '').match(/\+(\d+)/) || [])[1] || '';
+        if ((n.length < min || n.length > max) && d && raw.startsWith(d)) n = raw.slice(d.length).replace(/^0+/, '');
+        if (n.length >= min && n.length <= max) return '';
+        const need = min === max ? min + ' digits' : min + '-' + max + ' digits';
+        if (!n.length) return 'Please enter your phone number.';
+        return (n.length < min ? 'This number is too short. ' : 'This number is too long. ') + 'Enter ' + need + ' without the country code.';
+    },
+
     async submit(event) {
         const form = event.target;
         this.errors = {};
         this.message = '';
 
+        // Phone: the number of digits has to fit the chosen country (too short or too long does not go through).
+        const phoneMsg = this.phoneCheck(form);
+        if (phoneMsg) {
+            this.errors = { phone: [phoneMsg] };
+            this.message = 'Please check the highlighted fields.';
+            const p = form.querySelector('[name=phone]');
+            if (p) p.focus();
+            return;
+        }
         if (!form.querySelector('[name=consent]').checked) {
             this.errors = { consent: ['Please tick the box to agree before sending your inquiry.'] };
             this.message = 'Please check the highlighted fields.';
@@ -240,6 +270,8 @@ Alpine.data('countrySelect', (initial, list, flagBase) => ({
     },
     choose(iso) {
         this.iso = iso;
+        const form = this.$el.closest('form');
+        if (form) form.dispatchEvent(new CustomEvent('dialchange', { detail: { dial: (this.list.find((c) => c.iso === iso) || {}).dial || '' } }));
         this.close();
     },
     key(e) {
