@@ -12,7 +12,7 @@
     <div class="pointer-events-none absolute inset-0 -z-10 bg-ink/35 lg:bg-transparent"></div>
     <div class="pointer-events-none absolute inset-0 -z-10 hidden bg-gradient-to-r from-ink/70 via-ink/35 to-transparent lg:block"></div>
     <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-ink/45 to-transparent"></div>
-    <div class="container-site grid w-full items-center gap-8 py-10 md:py-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-x-12 lg:gap-y-8">
+    <div class="container-site grid w-full items-center gap-8 py-10 md:py-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8">
         <div class="min-w-0 [text-shadow:0_2px_3px_rgb(0_0_0/0.35),0_6px_28px_rgb(0_0_0/0.55)]">
             @if ($crumbs){{ $crumbs }}@endif
             @if ($eyebrow)<p class="hero-in label-caps text-accent">{{ $eyebrow }}</p>@endif

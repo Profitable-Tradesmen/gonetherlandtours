@@ -6,11 +6,12 @@
 --}}
 <div id="quote" class="overflow-hidden rounded-2xl bg-white text-ink shadow-card">
     {{-- Navy header: title and the optional rating line. Body: the quiz. Navy footer: reassurances (all editable in Admin > Settings > Trust and reassurance). --}}
-    <div class="bg-brand-900 px-5 py-3 text-center text-white sm:px-7 sm:py-3.5">
-        <h2 class="font-display text-xl font-medium leading-tight sm:text-2xl">{{ text('quiz_title') }}</h2>
+    <div class="bg-brand-900 px-5 py-4 text-center text-white sm:px-8 sm:py-5">
+        <p class="label-caps text-[0.7rem] text-accent">{{ text('quiz_eyebrow') ?: 'Free quote · No obligation' }}</p>
+        <h2 class="mt-1 font-display text-xl font-medium leading-tight sm:text-2xl">{{ text('quiz_title') }}</h2>
         @if (text('quiz_rating_label'))<p class="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold"><span class="text-accent" aria-hidden="true">&#9733;</span>{{ text('quiz_rating_label') }}</p>@endif
     </div>
-    <div class="px-5 pb-4 pt-0 sm:px-7 sm:pb-5">
+    <div class="px-5 pb-5 pt-1 sm:px-8 sm:pb-7 sm:pt-2">
 
     <div x-data="quiz(@js(collect($steps)->pluck('key')->all()))" x-cloak>
         {{-- progress --}}
@@ -46,12 +47,12 @@
                            x-model.trim="answers['{{ $step['key'] }}']" @keydown.enter.prevent="next('{{ $step['key'] }}')">
                     <button type="button" class="btn btn-primary btn-block mt-4" :disabled="!answers['{{ $step['key'] }}']" @click="next('{{ $step['key'] }}')">Next</button>
                 @else
-                    <div class="mt-3 grid grid-cols-2 gap-2.5">
+                    <div class="mt-5 grid grid-cols-2 gap-3 {{ count($step['options']) === 4 ? 'sm:grid-cols-4' : '' }}">
                         @foreach ($step['options'] as $o)
                             <button type="button" @click="pick('{{ $step['key'] }}', @js($o['value']))"
                                     :class="answers['{{ $step['key'] }}'] === @js($o['value']) ? 'border-brand-700 bg-brand/10' : 'border-sand-200'"
-                                    class="flex min-h-[4.25rem] flex-col items-center justify-center gap-1 rounded-xl border-2 bg-white px-3 py-2 text-center text-sm font-semibold transition hover:border-brand-700 hover:bg-sand">
-                                @if ($o['icon'])<x-icon :name="$o['icon']" class="h-6 w-6 text-brand-700" />@endif
+                                    class="flex min-h-[6.5rem] flex-col items-center justify-center gap-3 rounded-xl border-2 bg-white px-2 py-4 sm:min-h-[8.5rem] text-center text-sm font-semibold transition hover:border-brand-700 hover:bg-sand">
+                                @if ($o['icon'])<x-icon :name="$o['icon']" class="h-8 w-8 text-brand-700 sm:h-9 sm:w-9" />@endif
                                 <span>{{ $o['label'] }}</span>
                             </button>
                         @endforeach
