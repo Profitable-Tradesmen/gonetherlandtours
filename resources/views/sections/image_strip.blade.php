@@ -1,7 +1,7 @@
 @if (count($d['items']))
 <section class="bg-sand py-16 sm:py-24" aria-labelledby="is-{{ $sid }}">
     <div class="container-site">
-        <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'is-'.$sid" />
+        <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :subtitle="$d['intro'] ?? null" :id="'is-'.$sid" />
         {{-- Traveler-type cards in the same design as the package cards: photo with a navy tab, a pin label, title, short text and a footer with a quote note and the button.
              Phones: swipe row. From sm: a grid (two columns, three from lg), every card the same height. --}}
         <x-slider class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -14,9 +14,8 @@
                     <div class="flex min-w-0 flex-1 flex-col p-5 sm:p-6">
                         <p class="line-clamp-3 flex-1 text-[0.95rem] leading-relaxed text-ink/80">{{ $p['text'] }}</p>
                         @if ($d['button_label'])
-                            <div class="mt-5 flex items-end justify-between gap-3 border-t border-sand-200 pt-4">
-                                <p class="label-caps text-[0.7rem] text-ink/60">Free, no obligation</p>
-                                <button type="button" class="btn btn-primary shrink-0 !px-5" @click="$store.modal.show()">{{ $d['button_label'] }}</button>
+                            <div class="mt-5 border-t border-sand-200 pt-3">
+                                <button type="button" class="group/link inline-flex min-h-[2.75rem] items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-rust" @click="$store.modal.show()"><span class="border-b border-current pb-0.5">{{ $d['button_label'] }}<span class="sr-only"> {{ $p['title'] }}</span></span><x-icon name="arrow" class="h-4 w-4 transition-transform group-hover/link:translate-x-1" /></button>
                             </div>
                         @endif
                     </div>

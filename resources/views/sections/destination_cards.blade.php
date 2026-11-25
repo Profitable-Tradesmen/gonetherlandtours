@@ -1,7 +1,7 @@
 @php
     $dests = \App\Models\Destination::active()->orderBy('sort_order')->get();
     // one query for the number of tours per destination
-    $stats = \App\Models\Package::published()->selectRaw('destination_id, count(*) as n')->groupBy('destination_id')->get()->keyBy('destination_id');
+    $stats = \App\Models\Package::published()->selectRaw('destination_id, count(*) as n, min(nights) as nmin, max(nights) as nmax')->groupBy('destination_id')->get()->keyBy('destination_id');
 @endphp
 @if ($dests->isNotEmpty())
 <section class="{{ ($d['background'] ?? 'sand') === 'white' ? 'bg-white' : 'bg-sand' }} py-16 sm:py-24" aria-labelledby="dc-{{ $sid }}">
@@ -19,7 +19,7 @@
                         @if ($st)<span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent px-4 pb-3 pt-10 text-sm font-semibold text-white">{{ $st->n }} {{ \Illuminate\Support\Str::plural('tour', $st->n) }}</span>@endif
                     </a>
                     <div class="flex min-w-0 flex-1 flex-col p-5 sm:p-6">
-                        <p class="label-caps flex items-center gap-1.5 text-xs font-bold text-rust"><x-icon name="map" class="h-4 w-4" />The Netherlands</p>
+                        <p class="label-caps flex items-center gap-1.5 text-xs font-bold text-rust"><x-icon name="map" class="h-4 w-4" />@if ($st && $st->nmin){{ $st->nmin == $st->nmax ? $st->nmin : $st->nmin.'–'.$st->nmax }} nights @else Trips across the country @endif</p>
                         <h3 class="mt-2.5 line-clamp-2 text-[1.45rem] font-medium leading-snug"><a href="{{ $url }}" class="hover:text-rust">{{ $dest->name }}</a></h3>
                         <p class="mt-2 line-clamp-2 min-h-[3rem] flex-1 text-[0.95rem] leading-relaxed text-ink/80">{{ $dest->summary }}</p>
                         <div class="mt-5 flex items-center justify-between gap-3 border-t border-sand-200 pt-3">

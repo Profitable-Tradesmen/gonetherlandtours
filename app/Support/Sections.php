@@ -123,6 +123,8 @@ class Sections
                 $t('heading', 'Heading on the photo (optional)', '', 'Wrap a word in *asterisks* to highlight it.'),
                 $t('text', 'One line under the heading (optional)', ''),
                 $t('button_label', 'Button (opens the quote pop-up, optional)', ''),
+                $t('caption', 'Place name shown on the photo (optional)', ''),
+                self::rep('points', 'Icon points under the text (optional)', 'point', [self::icon('icon', 'check'), $t('text', 'Text')], 3),
             ]],
             'contact_bar' => ['label' => 'Contact bar', 'description' => 'A slim white bar under the hero: a line of text with the phone number from Admin > Settings, and a quote button.', 'fields' => [
                 $t('text', 'Text before the phone number', 'Talk to a Netherlands travel specialist'),
@@ -173,6 +175,7 @@ class Sections
             'tour_types' => ['label' => 'Tour types', 'description' => 'Cards for each active tour type (managed in Admin > Tour types).', 'fields' => [
                 $t('eyebrow', 'Small label', 'Tour types'),
                 $t('heading', 'Heading', 'Choose How You Want to Explore'),
+                $t('intro', 'Text under the heading (optional)', ''),
                 $t('quote_label', 'Quote link label', 'Get a quote'),
                 $t('ask_label', 'Question link label', 'Ask us a question'),
             ]],
@@ -186,6 +189,7 @@ class Sections
             'image_strip' => ['label' => 'Photo panels (journeys by traveler)', 'description' => 'Photo cards with a number, title, text and a link: a swipe row on phones, a grid on larger screens.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Journeys by traveler'),
                 $t('heading', 'Heading', 'Find the journey that *fits you*'),
+                $t('intro', 'Text under the heading (optional)', ''),
                 $t('button_label', 'Panel button (opens the quote pop-up)', 'Plan this trip'),
                 self::rep('items', 'Panels', 'panel', [$t('title', 'Title'), $ta('text', 'Text'), self::img('image', 'Photo')], 12),
             ]],
@@ -221,6 +225,7 @@ class Sections
                 $ta('text', 'Text'),
                 ['name' => 'background', 'label' => 'Background', 'type' => 'select', 'options' => ['sand' => 'Sand', 'white' => 'White'], 'default' => 'sand'],
                 self::img('image', 'Background photo (optional, shown softly behind the text)'),
+                ['name' => 'overlay', 'label' => 'Photo overlay', 'type' => 'select', 'options' => ['light' => 'Light wash (dark text)', 'navy' => 'Navy (white text)'], 'default' => 'light'],
                 ['name' => 'first_button_gold', 'label' => 'Make the first button gold', 'type' => 'checkbox', 'default' => false],
                 self::rep('buttons', 'Buttons', 'button', [$t('label', 'Label'), self::link('url', 'Link')], 3),
             ]],
