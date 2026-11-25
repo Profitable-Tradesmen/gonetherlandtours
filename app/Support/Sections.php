@@ -89,7 +89,7 @@ class Sections
                 self::rep('chips', 'Destination chips (sliding row at the bottom of the hero)', 'chip', [$t('label', 'Label'), self::link('url', 'Link', '/destinations', 'A page path such as /destinations or a full https:// address.')], 12),
                 ['name' => 'show_video', 'label' => 'Play the background video on desktop (untick for a photo only)', 'type' => 'checkbox', 'default' => true],
             ]],
-            'partners' => ['label' => 'Partner logos', 'description' => 'A dark brown band with a heading, a short text and a row of partner logos. White or transparent logos look best on the dark background.', 'fields' => [
+            'partners' => ['label' => 'Partner logos', 'description' => 'A navy band with a heading, a short text and a row of partner logos. White or transparent logos look best on the dark background.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Travel partners'),
                 $t('heading', 'Heading', 'Our Best Trusted *Partners*'),
                 $ta('text', 'Text', 'Our journeys are supported by trusted partners who share our commitment to exceptional service, seamless travel and unforgettable experiences.'),
@@ -145,7 +145,7 @@ class Sections
             ]],
             'packages_tabs' => ['label' => 'Featured packages', 'description' => 'Your featured packages with tabs by tour type. Choose which packages are featured in Admin > Packages.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Signature journeys'),
-                $t('heading', 'Heading', 'Signature Collection'),
+                $t('heading', 'Heading', 'Signature collection'),
                 ['name' => 'layout', 'label' => 'Layout', 'type' => 'select', 'options' => ['by_type' => 'One row per tour type', 'tabs' => 'One carousel with tabs'], 'default' => 'by_type'],
                 $ta('intro', 'Intro text under the heading', 'Every journey is fully customizable. These are our most loved itineraries, perfected over years of delighting travelers.'),
                 $t('more_label', 'Per-row button (one row per tour type)', 'View more packages'),
@@ -165,8 +165,8 @@ class Sections
             'tour_types' => ['label' => 'Tour types', 'description' => 'Cards for each active tour type (managed in Admin > Tour types).', 'fields' => [
                 $t('eyebrow', 'Small label', 'Tour types'),
                 $t('heading', 'Heading', 'Choose How You Want to Explore'),
-                $t('quote_label', 'Quote link label', 'Get a Quote'),
-                $t('ask_label', 'Question link label', 'Ask Us a Question'),
+                $t('quote_label', 'Quote link label', 'Get a quote'),
+                $t('ask_label', 'Question link label', 'Ask us a question'),
             ]],
             'video_feature' => ['label' => 'Video feature', 'description' => 'A dark band with text and a click-to-play video.', 'fields' => [
                 $t('eyebrow', 'Small label', 'Watch'),
@@ -184,7 +184,7 @@ class Sections
             'steps' => ['label' => 'Numbered steps', 'description' => 'Three or more numbered steps, such as "How it works".', 'fields' => [
                 ['name' => 'style', 'label' => 'Style', 'type' => 'select', 'options' => ['timeline' => 'Connected timeline', 'cards' => 'Simple columns', 'tiles' => 'Dark numbered tiles'], 'default' => 'timeline'],
                 $t('eyebrow', 'Small label', 'Simple'),
-                $t('heading', 'Heading', 'How It Works'),
+                $t('heading', 'Heading', 'How it works'),
                 $ta('intro', 'Text under the heading', ''),
                 $t('button_label', 'Button under the steps (opens the quote pop-up)', ''),
                 self::rep('items', 'Steps', 'step', [$t('title', 'Title'), $ta('text', 'Text')], 6),
@@ -192,7 +192,7 @@ class Sections
             'testimonials' => ['label' => 'Testimonials', 'description' => 'Reviews from Admin > Testimonials.', 'fields' => [
                 ['name' => 'variant', 'label' => 'Style', 'type' => 'select', 'options' => ['dark' => 'Dark blue background', 'light' => 'Light background', 'spotlight' => 'Spotlight: one review at a time, with a picker'], 'default' => 'dark'],
                 $t('eyebrow', 'Small label', 'Reviews'),
-                $t('heading', 'Heading', 'What Travelers Say'),
+                $t('heading', 'Heading', 'What travelers say'),
                 ['name' => 'limit', 'label' => 'How many to show (0 = all)', 'type' => 'number', 'default' => 0],
                 $t('button_label', 'Button under the reviews (opens the quote pop-up)', ''),
                 ['name' => 'show_stars', 'label' => 'Show the star ratings', 'type' => 'checkbox', 'default' => true],
@@ -214,11 +214,11 @@ class Sections
             ]],
             'faq' => ['label' => 'FAQ list', 'description' => 'Questions from Admin > FAQs. Adds Google FAQ markup automatically.', 'fields' => [
                 $t('eyebrow', 'Small label', 'FAQ'),
-                $t('heading', 'Heading', 'Frequently Asked Questions'),
+                $t('heading', 'Heading', 'Frequently asked questions'),
                 ['name' => 'limit', 'label' => 'How many to show (0 = all)', 'type' => 'number', 'default' => 0],
                 $t('help_heading', 'Help box heading', '', 'Leave blank for no help box under the questions.'),
                 $t('help_text', 'Help box text'),
-                $t('help_button_label', 'Help box: quote button (opens the pop-up)', 'Get a Free Quote'),
+                $t('help_button_label', 'Help box: quote button (opens the pop-up)', 'Get a free quote'),
                 $t('help_link_label', 'Help box: second button label', 'Contact us'),
                 self::link('help_link_url', 'Help box: second button link', '/contact'),
             ]],
@@ -232,9 +232,9 @@ class Sections
             'cta_banner' => ['label' => 'Call to action banner', 'description' => 'A full-width photo with a heading, text and button.', 'fields' => [
                 $t('eyebrow', 'Small label', ''),
                 self::img('image', 'Background photo', 'images/fina_cta_bg.webp'),
-                $t('heading', 'Heading', 'Ready to Discover the *Real Netherlands*?'),
+                $t('heading', 'Heading', 'Ready to discover the *real Netherlands*?'),
                 $ta('text', 'Text'),
-                $t('button_label', 'Button (opens the quote pop-up)', 'Start Your Adventure'),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Start your adventure'),
                 ['name' => 'show_phone', 'label' => 'Show a call button (uses the phone number in Settings)', 'type' => 'checkbox', 'default' => true],
                 $t('phone_label', 'Call button text (the number is added)', 'Call'),
             ]],
@@ -243,7 +243,7 @@ class Sections
                 $t('eyebrow', 'Small label'),
                 $t('heading', 'Heading (H1)'),
                 $ta('text', 'Intro text'),
-                $t('button_label', 'Button (opens the quote pop-up)', 'Get Your Free Quote'),
+                $t('button_label', 'Button (opens the quote pop-up)', 'Get your free quote'),
                 $t('season_prompt', 'Question above the picker', 'When would you like to visit?'),
                 self::rep('seasons', 'Picker options', 'option', [self::icon('icon', 'spring'), $t('name', 'Name'), $t('note', 'Short note')], 6),
                 self::rep('badges', 'Badges', 'badge', [self::icon('icon', 'shield'), $t('text', 'Text')], 6),
@@ -345,7 +345,7 @@ class Sections
                     ['label' => 'Something custom', 'text' => 'I have my own ideas for a trip and would like help shaping them.'],
                 ]),
                 $t('reassure', 'Reassurance line above the form', 'Free and no obligation. Your details stay private.'),
-                $t('submit_label', 'Form button', 'Send Message'),
+                $t('submit_label', 'Form button', 'Send message'),
             ]],
         ];
     }

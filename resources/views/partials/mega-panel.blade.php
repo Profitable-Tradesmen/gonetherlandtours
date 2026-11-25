@@ -1,4 +1,4 @@
-{{-- Mega menu body (Tour Types, Destinations, About Us): a light panel with a gold top line and three columns, laid out like the sister Go Austria site:
+{{-- Mega menu body (Tour types, Destinations, About us): a light panel with a gold top line and three columns, laid out like the sister Go Austria site:
      1. a list of links (title and one line of text, thin dividers) with an optional "view all" link,
      2. one featured card (a trip or the latest journal post),
      3. a navy "Get in touch" card with a quote button and the phone number.

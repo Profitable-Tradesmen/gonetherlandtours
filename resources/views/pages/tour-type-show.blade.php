@@ -14,7 +14,7 @@
 <x-page-banner :image="$heroSrc" :alt="$tourType->image_alt ?? ''" :heading="e($tourType->h1 ?: $tourType->name.' Netherlands Tours')" :text="$tourType->summary">
     <x-slot:crumbs><nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <a href="{{ route('packages.index') }}" class="hover:text-accent">Packages</a> / <span>{{ $tourType->name }}</span></nav></x-slot:crumbs>
     @if ($tourType->style_note)<p class="mt-3 flex items-center gap-2 text-sm font-semibold text-white"><x-icon name="guide" class="h-5 w-5 shrink-0 text-accent" />{{ $tourType->style_note }}</p>@endif
-    <p class="mt-6"><x-button @click="$store.modal.show()">Get a Free Quote</x-button></p>
+    <p class="mt-6"><x-button @click="$store.modal.show()">Get a free quote</x-button></p>
 </x-page-banner>
 @if (filled($tourType->body))
 <section class="container-site py-12">

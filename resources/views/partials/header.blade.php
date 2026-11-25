@@ -82,7 +82,7 @@
         </div>
     @endif
 
-    {{-- Dropdowns for items with children in Admin > Navigation (e.g. About Us): the links, the latest journal post, and the contact card. --}}
+    {{-- Dropdowns for items with children in Admin > Navigation (e.g. About us): the links, the latest journal post, and the contact card. --}}
     @foreach ($menu->where('kind', 'cards') as $item)
         @continue($item->children->isEmpty())
         <div id="mega-{{ $item->id }}" x-show="dd === 'm{{ $item->id }}'" x-cloak x-transition:enter="{{ $megaIn }}" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"

@@ -9,7 +9,7 @@
 @endphp
 {{-- Package card. One markup, two looks (real data only):
      phones (< 640px): a horizontal dark navy card, photo on the left, label, title, price, "More info" link and a quote button on the right;
-     640px and up: a white card, photo on top, price block, up to three ticked highlights, Get a Quote + Details. --}}
+     640px and up: a white card, photo on top, price block, up to three ticked highlights, Get a quote + Details. --}}
 <article class="group flex h-full flex-row overflow-hidden rounded-2xl transition duration-300 sm:hover:-translate-y-1 sm:hover:shadow-[0_22px_40px_-16px_rgb(12_13_17/0.35)] bg-brand-900 text-white shadow-card sm:flex-col sm:bg-white sm:text-ink sm:border sm:border-ink/15">
     <a href="{{ $url }}" class="relative block min-h-[15rem] w-[38%] shrink-0 overflow-hidden sm:min-h-0 sm:w-full" tabindex="-1" aria-hidden="true">
         @if ($cover)
@@ -58,7 +58,7 @@
 
         <div class="mt-auto flex flex-col items-start gap-3 pt-4 sm:grid sm:grid-cols-2 sm:pt-5">
             <a href="{{ $url }}" class="label-caps min-h-[2.75rem] inline-flex items-center text-xs underline underline-offset-4 hover:text-accent sm:hidden">{{ text('card_more_info_label') ?: 'More info' }}<span class="sr-only"> about {{ $package->title }}</span></a>
-            <button type="button" class="btn btn-primary w-full !px-3" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">{{ text('card_quote_label') ?: 'Get a Quote' }}</button>
+            <button type="button" class="btn btn-primary w-full !px-3" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">{{ text('card_quote_label') ?: 'Get a quote' }}</button>
             <a href="{{ $url }}" class="btn btn-outline hidden w-full !px-3 text-brand-900 sm:inline-flex">{{ text('card_details_label') ?: 'Details' }}<span class="sr-only"> about {{ $package->title }}</span></a>
         </div>
     </div>

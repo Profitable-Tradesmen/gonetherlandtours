@@ -4,7 +4,7 @@
     'package' => null,            // App\Models\Package when the form belongs to a package
     'extra' => false,             // show time of year, group size, nights
     'quizAnswers' => false,       // inside the hero quiz: emit hidden quiz[...] inputs from Alpine state
-    'submit' => 'Get My Free Quote',
+    'submit' => 'Get my free quote',
     'note' => null,
     'variant' => 'default',       // default (contact/package) | quiz (short: contact details only) | modal (pop-up: full trip details)
 ])

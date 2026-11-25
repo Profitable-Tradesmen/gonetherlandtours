@@ -25,7 +25,7 @@
         @else
             <p class="text-center">Destinations are coming soon.</p>
         @endif
-        <p class="mt-10 text-center"><x-button @click="$store.modal.show()">Get a Free Quote</x-button></p>
+        <p class="mt-10 text-center"><x-button @click="$store.modal.show()">Get a free quote</x-button></p>
     </div>
 </section>
 @endsection

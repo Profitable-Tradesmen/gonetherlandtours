@@ -7,7 +7,7 @@
 return [
     // Exact consent wording. [Company Name] is replaced with the legal company name from settings.
     // Do NOT reword this without legal review: it is evidence stored with every inquiry.
-    'consent_template' => 'I agree to the Terms and Conditions and Privacy Policy provided by [Company Name]. By providing my phone number, I consent to receive SMS messages from [Company Name] regarding my enquiry, booking updates, itinerary updates, reminders, and customer support. Message and data rates may apply. Reply STOP to unsubscribe or HELP for assistance. Consent is not a condition of purchase.',
+    'consent_template' => 'I agree to the Terms and conditions and Privacy policy provided by [Company Name]. By providing my phone number, I consent to receive SMS messages from [Company Name] regarding my enquiry, booking updates, itinerary updates, reminders, and customer support. Message and data rates may apply. Reply STOP to unsubscribe or HELP for assistance. Consent is not a condition of purchase.',
 
     // Set SITE_NOINDEX=true on preview/staging sites: noindex meta + X-Robots-Tag + "Disallow: /" robots.txt.
     'site_noindex' => (bool) env('SITE_NOINDEX', false),
@@ -50,19 +50,19 @@ return [
 
     // Default wording for site-wide labels. Admin > Settings overrides each one (a saved blank hides it where that makes sense).
     'texts' => [
-        'card_quote_label' => 'Get a Quote', 'card_details_label' => 'Details', 'card_more_info_label' => 'More info', 'card_from_label' => 'From', 'card_per_person' => 'pp', 'card_sample_badge' => 'Sample',
+        'card_quote_label' => 'Get a quote', 'card_details_label' => 'Details', 'card_more_info_label' => 'More info', 'card_from_label' => 'From', 'card_per_person' => 'pp', 'card_sample_badge' => 'Sample',
         'row_packages_suffix' => 'Packages', 'carousel_prev_label' => 'Previous packages', 'carousel_next_label' => 'Next packages', 'carousel_dash_label' => 'Show package', 'carousel_dash_type_label' => 'Show tour type',
-        'topbar_link_label' => '', 'topbar_link_url' => '', 'topbar_button_label' => 'Start Your Adventure',
-        'header_button_label' => 'Free Quote',
+        'topbar_link_label' => '', 'topbar_link_url' => '', 'topbar_button_label' => 'Start your adventure',
+        'header_button_label' => 'Free quote',
         'mega_view_all_label' => 'View all', 'mega_help_text' => 'Not sure which suits you? We will plan it around you.',
-        'mega_all_packages_label' => 'All Packages', 'mega_quote_label' => 'Get a Free Quote',
+        'mega_all_packages_label' => 'All packages', 'mega_quote_label' => 'Get a free quote',
         'mega_tagline' => 'Your journey. Our expertise. The Netherlands awaits.', 'mega_tours_heading' => 'Ways to travel', 'mega_tours_sub' => 'Choose how you want to explore', 'mega_trips_sub' => 'Our most loved itineraries', 'mega_badge_label' => 'Featured', 'mega_discover_label' => 'Discover', 'mega_destinations_tagline' => 'Regions worth slowing down for.', 'mega_destinations_all_label' => 'All destinations',
-        'nav_promo_title' => 'Plan with *peace of mind*', 'nav_promo_text' => 'Learn about our team, read what travelers say and find the answers that make your Netherlands trip smooth and stress-free.', 'nav_promo_eyebrow' => 'Get to know us', 'nav_card_link_label' => 'Learn more', 'mega_featured_label' => 'Featured trips', 'nav_promo_button' => 'Get a Free Quote',
-        'mobile_home_label' => 'Home', 'mobile_tours_heading' => 'Tours', 'mobile_destinations_heading' => 'Destinations', 'mobile_more_heading' => 'More', 'mobile_quote_label' => 'Free Quote',
-        'mobile_bar_call_label' => 'Call', 'mobile_bar_quote_label' => 'Get a Free Quote',
+        'nav_promo_title' => 'Plan with *peace of mind*', 'nav_promo_text' => 'Learn about our team, read what travelers say and find the answers that make your Netherlands trip smooth and stress-free.', 'nav_promo_eyebrow' => 'Get to know us', 'nav_card_link_label' => 'Learn more', 'mega_featured_label' => 'Featured trips', 'nav_promo_button' => 'Get a free quote',
+        'mobile_home_label' => 'Home', 'mobile_tours_heading' => 'Tours', 'mobile_destinations_heading' => 'Destinations', 'mobile_more_heading' => 'More', 'mobile_quote_label' => 'Free quote',
+        'mobile_bar_call_label' => 'Call', 'mobile_bar_quote_label' => 'Get a free quote',
         'footer_tours_heading' => 'Tours', 'footer_destinations_heading' => 'Destinations', 'footer_company_heading' => 'Company', 'footer_copyright' => 'All rights reserved.',
         'modal_title' => 'Start your adventure', 'modal_intro' => 'Fill out this form, save up to {discount} on your trip.',
-        'quiz_title' => 'Start Your Adventure',
+        'quiz_title' => 'Start your adventure',
         'quiz_rating_label' => '', 'quiz_trust_1' => 'Your data stays private', 'quiz_trust_2' => 'Free, no obligation', 'quiz_trust_3' => 'Support all the way', 'quiz_trust_line' => 'No hidden fees · Quick response · 100% free quote', 'quote_promise' => '', 'reviews_badge' => '',
         'usp_heading' => 'Why travel with us',
         'usp_1_title' => 'Authentic Dutch culture', 'usp_1_text' => 'Windmills, tulip fields, cheese markets and local traditions.',

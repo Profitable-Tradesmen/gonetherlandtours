@@ -3,7 +3,7 @@
 @section('content')
 <x-page-banner :image="$destination->image" :alt="$destination->image_alt ?? ''" :heading="e($destination->h1 ?: $destination->name)" :text="$destination->summary">
     <x-slot:crumbs><nav aria-label="Breadcrumb" class="mb-4 text-xs text-white/80"><a href="{{ route('home') }}" class="hover:text-accent">Home</a> / <a href="{{ route('destinations.index') }}" class="hover:text-accent">{{ text('destinations_heading') }}</a> / <span>{{ $destination->name }}</span></nav></x-slot:crumbs>
-    <p class="mt-6"><x-button @click="$store.modal.show()">Get a Free Quote</x-button></p>
+    <p class="mt-6"><x-button @click="$store.modal.show()">Get a free quote</x-button></p>
 </x-page-banner>
 @if (! empty($sections))
     {{-- The rest of the page is built from sections (Admin > Pages > "{{ $destination->name }} page"), the same blocks as the home and tour type pages. --}}

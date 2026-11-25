@@ -8,7 +8,7 @@
     $n = $logos->count();
     $items = $logos->concat($logos->pipe(fn ($l) => collect(range(0, 2))->map(fn ($k) => $l[$k % $n])));   // originals + 3 repeats
 @endphp
-<section class="bg-brown py-14 text-white sm:py-20" aria-labelledby="pt-{{ $sid }}">
+<section class="bg-brand-900 py-14 text-white sm:py-20" aria-labelledby="pt-{{ $sid }}">
     <div class="container-site grid items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] lg:gap-0">
         <div class="max-w-xl lg:pr-12" data-reveal="left">
             @if ($d['eyebrow'])

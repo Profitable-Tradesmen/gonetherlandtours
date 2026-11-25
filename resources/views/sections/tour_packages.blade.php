@@ -8,7 +8,7 @@
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :subtitle="$d['intro'] ?: null" :id="'tp-'.$sid" />
         @if ($packages->isEmpty())
-            <p class="text-center text-ink/75">{{ $d['empty_text'] }} <button type="button" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust" @click="$store.modal.show()">{{ text('card_quote_label') ?: 'Get a Quote' }}</button></p>
+            <p class="text-center text-ink/75">{{ $d['empty_text'] }} <button type="button" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust" @click="$store.modal.show()">{{ text('card_quote_label') ?: 'Get a quote' }}</button></p>
         @else
             {{-- A plain grid of cards, the same on every package list: one column on phones, two from sm, three from lg. --}}
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

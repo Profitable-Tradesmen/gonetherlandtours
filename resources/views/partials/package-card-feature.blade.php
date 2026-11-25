@@ -39,7 +39,7 @@
                 <p class="label-caps text-[0.7rem] text-ink/60">{{ text('card_from_label') ?: 'From' }}</p>
                 <p class="font-display text-3xl font-medium leading-none text-brand-900">{{ $package->priceLabel() }}@if ($hasPrice && text('card_per_person'))<span class="ml-1 font-sans text-xs font-semibold text-ink/60">{{ text('card_per_person') }}</span>@endif</p>
             </div>
-            <button type="button" class="btn btn-primary shrink-0 !px-5" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">{{ text('card_quote_label') ?: 'Get a Quote' }}</button>
+            <button type="button" class="btn btn-primary shrink-0 !px-5" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">{{ text('card_quote_label') ?: 'Get a quote' }}</button>
         </div>
     </div>
 </article>

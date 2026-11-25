@@ -33,11 +33,11 @@ if (! function_exists('consent_html')) {
     function consent_html(): string
     {
         $text = e(consent_text());
-        $terms = '<a href="'.e(route('terms')).'" target="_blank" rel="noopener" class="underline">Terms and Conditions</a>';
-        $privacy = '<a href="'.e(route('privacy')).'" target="_blank" rel="noopener" class="underline">Privacy Policy</a>';
+        $terms = '<a href="'.e(route('terms')).'" target="_blank" rel="noopener" class="underline">Terms and conditions</a>';
+        $privacy = '<a href="'.e(route('privacy')).'" target="_blank" rel="noopener" class="underline">Privacy policy</a>';
 
         return preg_replace(
-            ['/Terms and Conditions/', '/Privacy Policy/'],
+            ['/Terms and conditions/', '/Privacy policy/'],
             [$terms, $privacy],
             $text,
             1

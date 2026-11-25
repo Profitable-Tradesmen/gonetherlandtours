@@ -36,7 +36,7 @@
                 <p class="label-caps text-[0.68rem] text-white/70">From</p>
                 <p class="font-display text-3xl font-medium text-accent">{{ $package->priceLabel() }}<span class="ml-1 text-sm font-semibold text-accent/80">per person</span></p>
             </div>
-            <button type="button" class="btn btn-primary" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">Get a Free Quote</button>
+            <button type="button" class="btn btn-primary" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">Get a free quote</button>
         </div>
     </div>
 </section>
@@ -145,8 +145,8 @@
                 @if ($package->destination)<div class="flex justify-between py-2.5"><dt class="text-ink/60">Destination</dt><dd class="font-semibold">{{ $package->destination->name }}</dd></div>@endif
             </dl>
 
-            <button type="button" class="btn btn-primary mt-5 w-full" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">Get a Free Quote</button>
-            <a href="{{ route('contact') }}" class="btn btn-outline mt-3 w-full text-brand-900">Ask Us a Question</a>
+            <button type="button" class="btn btn-primary mt-5 w-full" @click="$store.modal.show({ id: {{ $package->id }}, name: @js($package->title) })">Get a free quote</button>
+            <a href="{{ route('contact') }}" class="btn btn-outline mt-3 w-full text-brand-900">Ask us a question</a>
 
             <ul class="mt-5 space-y-2 text-sm text-ink/80">
                 <li class="flex gap-2"><x-icon name="check" class="h-5 w-5 shrink-0 text-rust" />Free, no-obligation quote</li>
