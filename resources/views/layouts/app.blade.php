@@ -81,9 +81,14 @@
          x-transition:enter="transition duration-300" x-transition:enter-start="translate-y-full" x-transition:enter-end="translate-y-0"
          class="fixed inset-x-0 bottom-0 z-40 hidden border-t border-sand-200 bg-white/95 shadow-[0_-8px_24px_-12px_rgb(0_0_0/.35)] backdrop-blur lg:block" role="region" aria-label="Contact">
         <div class="container-site flex items-center justify-between gap-6 py-3">
-            <p class="text-sm text-ink/80">Consult with our Travel Specialists at
-                @php $barPhone = $phone ?: '+1 000-000-0000'; @endphp<a href="tel:{{ preg_replace('/[^+\d]/', '', $barPhone) }}" class="ml-2 font-display text-xl font-medium text-brand-900 hover:text-rust">{{ $barPhone }}</a>
-            </p>
+            @php $barPhone = $phone ?: '+1 000-000-0000'; @endphp
+            @if ($barPhone)
+                <p class="text-sm text-ink/80">Consult with our Travel Specialists at
+                    <a href="tel:{{ preg_replace('/[^+\d]/', '', $barPhone) }}" class="ml-2 font-display text-xl font-medium text-brand-900 hover:text-rust">{{ $barPhone }}</a>
+                </p>
+            @else
+                <p class="text-sm text-ink/80">Free quote from our Netherlands specialists, with no obligation.</p>
+            @endif
             <button type="button" class="btn btn-primary !px-6 !py-2.5" @click="$store.modal.show()">Request a quote</button>
         </div>
     </div>

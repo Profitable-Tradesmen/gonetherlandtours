@@ -28,7 +28,7 @@
             @if (text('quote_promise'))<p class="mt-3 text-center text-sm text-white/80">{{ text('quote_promise') }}</p>@endif
             @if ($d['show_phone'])
                 <div class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-white/20 pt-5 text-sm">
-                    <a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="inline-flex min-h-[2.75rem] items-center gap-2 font-semibold hover:text-accent"><x-icon name="phone" class="h-4 w-4 text-accent" />{{ trim($d['phone_label'].' '.$phone) }}</a>
+@if ($phone)                    <a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="inline-flex min-h-[2.75rem] items-center gap-2 font-semibold hover:text-accent"><x-icon name="phone" class="h-4 w-4 text-accent" />{{ trim($d['phone_label'].' '.$phone) }}</a>@endif
                     <a href="mailto:{{ $email }}" class="inline-flex min-h-[2.75rem] items-center gap-2 font-semibold hover:text-accent"><x-icon name="mail" class="h-4 w-4 text-accent" />{{ $email }}</a>
                 </div>
             @endif

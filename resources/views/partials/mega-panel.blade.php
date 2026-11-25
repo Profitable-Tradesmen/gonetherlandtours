@@ -44,7 +44,7 @@
             <p class="mt-4 font-display text-2xl font-medium leading-snug">Talk to a travel specialist</p>
             <p class="mt-3 text-sm leading-relaxed text-white/85">Tell us about the trip you have in mind and we will reply with a free quote.</p>
             <button type="button" class="btn btn-primary mt-5" @click="dd = null; $store.modal.show()">{{ $quote ?: 'Request a quote' }}</button>
-            <a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="mt-5 flex items-center gap-2 text-sm font-semibold hover:text-accent"><x-icon name="phone" class="h-4 w-4 text-accent" />{{ $phone }}</a>
+@if ($phone)            <a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="mt-5 flex items-center gap-2 text-sm font-semibold hover:text-accent"><x-icon name="phone" class="h-4 w-4 text-accent" />{{ $phone }}</a>@endif
         </div>
     </div>
 </div>

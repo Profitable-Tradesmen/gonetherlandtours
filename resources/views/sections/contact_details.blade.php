@@ -22,11 +22,11 @@
 
         @if ($d['reach_heading'])<h2 class="mt-8 font-display text-2xl font-medium sm:text-3xl">{{ $d['reach_heading'] }}</h2>@endif
         <ul class="mt-4 space-y-3">
-            <li><a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="{{ $card }} hover:bg-sand-200">
+@if ($phone)            <li><a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="{{ $card }} hover:bg-sand-200">
                 <span class="{{ $icon }}"><x-icon name="phone" class="h-5 w-5" /></span>
                 <span class="min-w-0"><span class="block font-display text-lg leading-tight">Call us</span><span class="block text-sm text-ink/70">{{ $d['call_text'] }}</span><span class="block font-semibold text-brand-700 group-hover:text-rust">{{ $phone }}</span></span>
             </a></li>
-            <li><a href="mailto:{{ $email }}" class="{{ $card }} hover:bg-sand-200">
+            <li><a href="mailto:{{ $email }}" class="{{ $card }} hover:bg-sand-200">@endif
                 <span class="{{ $icon }}"><x-icon name="mail" class="h-5 w-5" /></span>
                 <span class="min-w-0"><span class="block font-display text-lg leading-tight">Email us</span><span class="block text-sm text-ink/70">{{ $d['email_text'] }}</span><span class="block break-all font-semibold text-brand-700 group-hover:text-rust">{{ $email }}</span></span>
             </a></li>

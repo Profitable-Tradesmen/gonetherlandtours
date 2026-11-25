@@ -10,7 +10,7 @@
             <a href="{{ route('home') }}" class="inline-block">@include('partials.logo', ['light' => true])</a>
             <p class="mt-4 text-sm leading-relaxed">{{ setting('footer_text') }}</p>
             <ul class="mt-5 space-y-2.5 text-sm">
-                <li class="flex items-center gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="phone" class="h-4 w-4" /></span><a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="inline-block py-1 hover:text-accent">{{ $phone }}</a></li>
+@if ($phone)                <li class="flex items-center gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="phone" class="h-4 w-4" /></span><a href="tel:{{ preg_replace('/[^+\d]/', '', $phone) }}" class="inline-block py-1 hover:text-accent">{{ $phone }}</a></li>@endif
                 <li class="flex items-center gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="mail" class="h-4 w-4" /></span><a href="mailto:{{ $email }}" class="inline-block py-1 hover:text-accent">{{ $email }}</a></li>
                 @if ($address)<li class="flex items-start gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent"><x-icon name="map" class="h-4 w-4" /></span><span class="py-1.5">{{ $address }}</span></li>@endif
             </ul>
