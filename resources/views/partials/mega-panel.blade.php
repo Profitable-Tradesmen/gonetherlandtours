@@ -17,6 +17,7 @@
                 </li>
             @endforeach
         </ul>
+        @if (! empty($legal))<div class="mt-3 flex flex-wrap gap-x-5 gap-y-1 border-t border-sand-200 pt-4 text-sm text-ink/70">@foreach ($legal as [$label, $href])<a href="{{ $href }}" class="hover:text-rust" @click="dd = null">{{ $label }}</a>@endforeach</div>@endif
         @if ($foot)<a href="{{ $foot['href'] }}" class="label-caps mt-3 inline-flex items-center gap-2 border-t border-sand-200 pt-4 text-xs font-bold text-brand-700 hover:text-rust" @click="dd = null">{{ $foot['label'] }} <x-icon name="arrow" class="h-3.5 w-3.5" /></a>@endif
     </div>
 

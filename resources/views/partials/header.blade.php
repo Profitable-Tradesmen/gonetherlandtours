@@ -53,7 +53,8 @@
         $megaQuote = text('mega_quote_label') ?: 'Request a quote';
     @endphp
 
-    {{-- Tour types: the ways to travel, one featured trip, and the contact card. --}}
+    @php $tripCard = null; @endphp
+    {{-- Tour types: three photo cards (one per way to travel) and the personal planning card. --}}
     @if ($hasTours)
         @php
             $trips = $tourTypes->flatMap(fn ($t) => $t->packages->each(fn ($p) => $p->setRelation('tourType', $t)))->unique('id');   // tour type is already loaded: no extra query per package
@@ -65,9 +66,7 @@
         <div id="mega-tours" x-show="dd === 'tours'" x-cloak x-transition:enter="{{ $megaIn }}" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
              class="{{ $megaPanel }}" @click.outside="dd === 'tours' && (dd = null)">
-            @include('partials.mega-panel', ['eyebrow' => text('mega_tours_heading') ?: 'Ways to travel',
-                'items' => $tourTypes->map(fn ($t) => ['href' => route('tour-types.show', $t), 'title' => $t->name, 'text' => $t->style_note ?: $t->summary, 'new_tab' => false]),
-                'foot' => ['label' => 'View all packages', 'href' => route('packages.index')], 'card' => $tripCard, 'quote' => $megaQuote])
+            @include('partials.mega-tours', ['megaQuote' => $megaQuote])
         </div>
     @endif
 
@@ -76,9 +75,7 @@
         <div id="mega-destinations" x-show="dd === 'dest'" x-cloak x-transition:enter="{{ $megaIn }}" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
              class="{{ $megaPanel }}" @click.outside="dd === 'dest' && (dd = null)">
-            @include('partials.mega-panel', ['eyebrow' => 'Where to go',
-                'items' => $destinations->take(6)->map(fn ($d) => ['href' => route('destinations.show', $d), 'title' => $d->name, 'text' => $d->summary, 'new_tab' => false]),
-                'foot' => ['label' => text('mega_destinations_all_label') ?: 'All destinations', 'href' => route('destinations.index')], 'card' => $postCard, 'quote' => $megaQuote])
+            @include('partials.mega-destinations', ['tripCard' => $tripCard ?? null, 'megaQuote' => $megaQuote])
         </div>
     @endif
 
@@ -90,7 +87,7 @@
              class="{{ $megaPanel }}" @click.outside="dd === 'm{{ $item->id }}' && (dd = null)">
             @include('partials.mega-panel', ['eyebrow' => $item->label,
                 'items' => $item->children->take(6)->map(fn ($c) => ['href' => $c->href(), 'title' => $c->label, 'text' => $c->description, 'new_tab' => (bool) $c->new_tab]),
-                'foot' => null, 'card' => $postCard, 'quote' => $megaQuote])
+                'foot' => null, 'legal' => [['Terms and conditions', route('terms')], ['Privacy policy', route('privacy')]], 'card' => $postCard, 'quote' => $megaQuote])
         </div>
     @endforeach
 
