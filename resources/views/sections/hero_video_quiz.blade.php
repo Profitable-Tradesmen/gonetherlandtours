@@ -9,7 +9,7 @@
 @endpush
 <section class="hero-pad relative isolate flex min-h-[96vh] items-center overflow-hidden bg-brand-900 text-white {{ $overlay ? 'pt-24 lg:pt-32' : 'pt-10' }} {{ count($chips) ? "pb-28 sm:pb-36" : "" }}">
     {{-- Photo first (works without JavaScript and on phones); the background video, if one exists, plays over it on larger screens. --}}
-    <x-picture :src="$poster" alt="" :width="1600" :height="900" priority sizes="100vw" class="absolute inset-0 -z-30 h-full w-full object-cover" />
+    <x-picture :src="$poster" alt="" :width="1600" :height="900" priority sizes="100vw" class="absolute inset-y-0 inset-x-px -z-30 h-full w-[calc(100%-2px)] object-cover" />
     @if ($d['show_video'] ?? true)<x-video name="homepage_banner" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" />@endif
     {{-- Golden-hour grade: warm amber/rose glow from the horizon, dusky violet-blue up top. Blends into the photo/video rather than covering it. --}}
     <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-accent-600/55 via-rust/20 to-brand-900/20 mix-blend-soft-light"></div>

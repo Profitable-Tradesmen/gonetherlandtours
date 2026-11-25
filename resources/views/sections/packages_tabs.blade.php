@@ -85,7 +85,7 @@
             @endforeach
         </div>
 
-        @if ($d['button_label'])<p class="mt-10 text-center"><x-button variant="secondary" :href="route('packages.index')">{{ $d['button_label'] }}</x-button></p>@endif
+        <p class="mt-10 flex flex-wrap items-center justify-center gap-3"><x-button @click="$store.modal.show()">Get a free quote <x-icon name="arrow" class="h-4 w-4" /></x-button>@if ($d['button_label'])<x-button variant="secondary" :href="route('packages.index')">{{ $d['button_label'] }}</x-button>@endif</p>
     </div>
 </section>
 @endif

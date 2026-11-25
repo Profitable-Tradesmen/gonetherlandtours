@@ -116,6 +116,14 @@ class Sections
                 self::rep('items', 'Points', 'point', [self::icon('icon', 'check'), $t('title', 'Title'), $ta('text', 'Short text')], 4),
             ]],
             'skyline_divider' => ['label' => 'Skyline divider', 'description' => 'A decorative Dutch skyline (canal houses and windmills) that separates a white section from a sand one. No settings.', 'fields' => []],
+            'photo_band' => ['label' => 'Full-width photo', 'description' => 'A wide photo with no text, used as a breather between two sections.', 'fields' => [
+                self::img('image', 'Photo'),
+                $t('image_alt', 'Photo description (for screen readers)', ''),
+                $t('eyebrow', 'Small label (optional)', ''),
+                $t('heading', 'Heading on the photo (optional)', '', 'Wrap a word in *asterisks* to highlight it.'),
+                $t('text', 'One line under the heading (optional)', ''),
+                $t('button_label', 'Button (opens the quote pop-up, optional)', ''),
+            ]],
             'contact_bar' => ['label' => 'Contact bar', 'description' => 'A slim white bar under the hero: a line of text with the phone number from Admin > Settings, and a quote button.', 'fields' => [
                 $t('text', 'Text before the phone number', 'Talk to a Netherlands travel specialist'),
                 $t('button_label', 'Button (opens the quote pop-up)', 'Request a quote'),
@@ -208,8 +216,12 @@ class Sections
                 $t('button_label', 'Button (opens the quote pop-up)', 'Get a free quote'),
             ]],
             'text_cta' => ['label' => 'Centered text with buttons', 'description' => 'A heading, short text and up to three buttons on a light background.', 'fields' => [
+                $t('eyebrow', 'Small label (optional)', ''),
                 $t('heading', 'Heading', '', 'Wrap a word in *asterisks* to italicise it.'),
                 $ta('text', 'Text'),
+                ['name' => 'background', 'label' => 'Background', 'type' => 'select', 'options' => ['sand' => 'Sand', 'white' => 'White'], 'default' => 'sand'],
+                self::img('image', 'Background photo (optional, shown softly behind the text)'),
+                ['name' => 'first_button_gold', 'label' => 'Make the first button gold', 'type' => 'checkbox', 'default' => false],
                 self::rep('buttons', 'Buttons', 'button', [$t('label', 'Label'), self::link('url', 'Link')], 3),
             ]],
             'faq' => ['label' => 'FAQ list', 'description' => 'Questions from Admin > FAQs. Adds Google FAQ markup automatically.', 'fields' => [

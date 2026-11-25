@@ -222,3 +222,23 @@ Notes:
 - The inline SVG landmark icons (about 1 KB each, six cards) did not change the score. Home mobile stays at 95-96.
 - A first run right after `php artisan view:clear` scored home mobile 86: the first request recompiled every Blade view (TTFB 6.7 s). That is a test artifact, not a page problem. Warm the page with one request before auditing.
 - Package mobile is at the edge (90-92 between runs, LCP 2.9 s is the cover photo). If it dips below 90 on the live host, first try smaller 480/960 cover copies or a lower quality for the cover.
+
+### Re-run after the new home layout, gallery and new hero photo (Lighthouse 12, 25 Nov 2026)
+Same method as above (local build behind the gzip + long-cache proxy; the live domain still returns 403 to Lighthouse). Home mobile first scored **85-86**, so it was fixed (see below); everything else was already at 90 or more.
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | Page size |
+|---|---|---|---|---|---|---|---|
+| Home | Mobile | 90-93 after the fix (was 85-86; TBT 180 ms, CLS 0) | 100 | 100 | 100 | 3.1 s | about 870 KiB |
+| Home | Desktop | 98 | 100 | 100 | 100 | 1.1 s | 1152 KiB |
+| Package | Mobile | 92 (TBT 140 ms, CLS 0) | 100 | 100 | 100 | 3.1 s | 524 KiB |
+| Package | Desktop | 100 | 100 | 100 | 100 | 0.8 s | 658 KiB |
+
+What was wrong and what was changed:
+- **Cause:** on phones the home hero (photo plus quiz) is taller than the screen. Chrome does not count an image that covers the whole viewport as the "largest" element, so the 36 px logo became the LCP element and Lighthouse's estimate for it was 3.7 s (LCP score 0.58).
+- **Fix 1:** the hero photo in `sections/hero_video_quiz.blade.php` is now 1 px narrower on each side (`inset-x-px`, `w-[calc(100%-2px)]`; invisible) so Chrome counts it as the LCP image again.
+- **Fix 2:** the new Amsterdam hero photo was heavier than the old one (108 KB at 800 px). `images/hero-home-800.webp` is now 73 KB (quality 48) and `images/hero-home.webp` 267 KB (quality 74). Estimated LCP went from 3.7 s to 3.1 s.
+
+Notes:
+- Home mobile now has little margin (90-93 between runs). If it dips below 90 on the live host, make `hero-home-800.webp` smaller still, or add a 480 px copy for small phones.
+- The first request after `php artisan view:clear` is slow because every Blade view is recompiled; warm the page with one request before auditing.
+- Keep the hero photo slightly narrower than the screen if the hero layout changes again; a photo exactly as large as the screen is ignored as the LCP image.
