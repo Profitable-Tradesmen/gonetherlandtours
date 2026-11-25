@@ -54,30 +54,38 @@
     </div>
 </section>
 @elseif ($featured->isNotEmpty())
-<section class="{{ ($d['background'] ?? 'sand') === 'white' ? 'bg-white' : 'bg-sand' }} py-16 sm:py-24" aria-labelledby="pk-{{ $sid }}" x-data="{ tab: 'all' }">
+@php
+    $tabTypes = $types->filter(fn ($t) => $featured->where('tour_type_id', $t->id)->isNotEmpty())->values();
+    $counts = ['all' => min(6, $featured->count())];
+    foreach ($tabTypes as $t) { $counts[$t->slug] = $featured->where('tour_type_id', $t->id)->count(); }
+@endphp
+{{-- Handpicked journeys (layout from the sister Go Austria site): heading on the left, filter pills and a "Showing N of M" count on the right, then a grid of cards. --}}
+<section class="{{ ($d['background'] ?? 'sand') === 'white' ? 'bg-white' : 'bg-sand' }} py-16 sm:py-24" aria-labelledby="pk-{{ $sid }}" x-data="{ tab: 'all', counts: @js($counts), total: {{ $featured->count() }} }">
     <div class="container-site">
-        <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'pk-'.$sid" />
-        <div class="mb-8 flex flex-wrap justify-center gap-2" role="tablist">
-            <button type="button" role="tab" :aria-selected="tab === 'all'" class="btn !px-4 !py-2 !text-xs sm:!px-6 sm:!text-[0.8rem]" :class="tab === 'all' ? 'btn-secondary' : 'btn-outline text-brand-700'" @click="tab = 'all'"><x-icon name="map" class="h-4 w-4" />{{ $d['all_label'] }}</button>
-            @foreach ($types as $t)
-                <button type="button" role="tab" :aria-selected="tab === '{{ $t->slug }}'" class="btn !px-4 !py-2 !text-xs sm:!px-6 sm:!text-[0.8rem]" :class="tab === '{{ $t->slug }}' ? 'btn-secondary' : 'btn-outline text-brand-700'" @click="tab = '{{ $t->slug }}'"><x-icon :name="$t->icon ?: 'check'" class="h-4 w-4" />{{ $t->name }}</button>
+        <div class="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <x-section-heading data-reveal="up" class="!mb-0 max-w-2xl lg:min-w-0 lg:flex-1" :center="false" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :subtitle="$d['intro'] ?: null" :id="'pk-'.$sid" />
+            <div class="min-w-0 lg:shrink-0 lg:text-right">
+                <div class="flex flex-wrap gap-2 lg:flex-nowrap lg:justify-end" role="tablist">
+                    @php $pill = 'label-caps inline-flex min-h-[2.75rem] items-center whitespace-nowrap rounded-full border px-4 text-[0.65rem] font-semibold tracking-[0.12em] transition'; @endphp
+                    <button type="button" role="tab" :aria-selected="tab === 'all'" class="{{ $pill }}" :class="tab === 'all' ? 'border-brand-900 bg-brand-900 text-white shadow-[0_3px_0_0_var(--color-accent)]' : 'border-ink/25 text-brand-900 hover:border-brand-900'" @click="tab = 'all'">{{ $d['all_label'] }}</button>
+                    @foreach ($tabTypes as $t)
+                        <button type="button" role="tab" :aria-selected="tab === '{{ $t->slug }}'" class="{{ $pill }}" :class="tab === '{{ $t->slug }}' ? 'border-brand-900 bg-brand-900 text-white shadow-[0_3px_0_0_var(--color-accent)]' : 'border-ink/25 text-brand-900 hover:border-brand-900'" @click="tab = '{{ $t->slug }}'">{{ $t->name }}</button>
+                    @endforeach
+                </div>
+                <p class="mt-4 text-xs tracking-wider text-ink/60" aria-live="polite">Showing 1–<span x-text="counts[tab]"></span> of <span x-text="tab === 'all' ? total : counts[tab]"></span> tours</p>
+            </div>
+        </div>
+
+        {{-- Phones: swipeable row; from sm a plain grid (two, then three columns). --}}
+        <div class="carousel-track -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+            @foreach ($featured as $p)
+                <div x-show="(tab === 'all' && {{ $loop->index }} < 6) || tab === '{{ $p->tourType?->slug }}'" class="flex w-[84%] shrink-0 snap-start sm:w-auto">
+                    <div class="w-full">@include('partials.package-card-feature', ['package' => $p])</div>
+                </div>
             @endforeach
         </div>
 
-        {{-- Swipeable carousel: native scroll-snap, arrows on larger screens (see Alpine "carousel" in app.js). --}}
-        <div class="relative" x-data="carousel" x-init="$watch('tab', () => $nextTick(() => reset()))" role="region" aria-roledescription="carousel" aria-label="{{ $d['heading'] }}">
-            <div x-ref="track" @scroll.passive="sync()" class="carousel-track relative -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-4 pb-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-3">
-                @foreach ($featured as $p)
-                    <div data-slide x-show="(tab === 'all' && {{ $loop->index }} < 6) || tab === '{{ $p->tourType?->slug }}'" class="flex w-[84%] shrink-0 snap-start sm:w-auto">
-                        <div class="w-full">@include('partials.package-card-feature', ['package' => $p])</div>
-                    </div>
-                @endforeach
-            </div>
-            <button type="button" class="carousel-arrow absolute -left-3 top-1/3 hidden" @click="step(-1)" :disabled="atStart" aria-label="{{ text('carousel_prev_label') }}"><x-icon name="arrow" class="h-5 w-5 rotate-180" /></button>
-            <button type="button" class="carousel-arrow absolute -right-3 top-1/3 hidden" @click="step(1)" :disabled="atEnd" aria-label="{{ text('carousel_next_label') }}"><x-icon name="arrow" class="h-5 w-5" /></button>
-        </div>
-
-        @if ($d['button_label'])<p class="mt-8 text-center"><x-button variant="secondary" :href="route('packages.index')">{{ $d['button_label'] }}</x-button></p>@endif
+        @if ($d['button_label'])<p class="mt-10 text-center"><x-button variant="secondary" :href="route('packages.index')">{{ $d['button_label'] }}</x-button></p>@endif
     </div>
 </section>
 @endif

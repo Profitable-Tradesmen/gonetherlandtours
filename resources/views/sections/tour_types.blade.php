@@ -1,6 +1,6 @@
 @php $types = \App\Support\SiteData::tourTypes(); @endphp
 @if ($types->isNotEmpty())
-<section class="py-16 sm:py-24" aria-labelledby="tt-{{ $sid }}">
+<section class="bg-sand py-16 sm:py-24" aria-labelledby="tt-{{ $sid }}">
     <div class="container-site">
         <x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :id="'tt-'.$sid" />
     </div>
