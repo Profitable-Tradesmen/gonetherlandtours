@@ -7,7 +7,7 @@
     <section class="rounded-xl bg-white p-5 shadow-sm sm:p-7">
         <div class="flex flex-wrap items-center gap-3">
             @if ($active)
-                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800"><span class="h-2 w-2 rounded-full bg-emerald-600"></span>On: enquiries are sent to GoHighLevel</span>
+                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800"><span class="h-2 w-2 rounded-full bg-emerald-600"></span>On: inquiries are sent to GoHighLevel</span>
             @elseif (filled($locationId) && $tokenHint && ! $sendEnabled)
                 <span class="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-sm font-semibold text-amber-800"><span class="h-2 w-2 rounded-full bg-amber-500"></span>Paused: credentials saved, nothing is sent</span>
             @else
@@ -15,7 +15,7 @@
             @endif
             <span class="text-sm text-ink/70">Credentials saved here (the token is stored encrypted).</span>
         </div>
-        <p class="mt-3 text-sm text-ink/70">Enquiries are always saved here first. If GoHighLevel is off or fails, nothing is lost and the enquiry is never blocked.</p>
+        <p class="mt-3 text-sm text-ink/70">Inquiries are always saved here first. If GoHighLevel is off or fails, nothing is lost and the inquiry is never blocked.</p>
     </section>
 
     <form method="POST" action="{{ route('admin.ghl.update') }}" class="space-y-5 rounded-xl bg-white p-5 shadow-sm sm:p-7" autocomplete="off">
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div>
-            <label class="inline-flex items-center gap-3 font-semibold"><input type="checkbox" name="enabled" value="1" class="h-5 w-5" @checked(old('enabled', $sendEnabled))> Send enquiries to GoHighLevel</label>
+            <label class="inline-flex items-center gap-3 font-semibold"><input type="checkbox" name="enabled" value="1" class="h-5 w-5" @checked(old('enabled', $sendEnabled))> Send inquiries to GoHighLevel</label>
             <p class="mt-1 text-sm text-ink/60">Untick to pause the sync without losing your credentials.</p>
         </div>
         <x-button type="submit" variant="secondary">Save</x-button>
@@ -56,7 +56,7 @@
             </form>
             <form method="POST" action="{{ route('admin.ghl.setup') }}">@csrf
                 <button class="btn btn-outline w-full !text-ink">Create missing custom fields</button>
-                <p class="mt-2 text-sm text-ink/60">Adds the {{ $fieldCount }} fields enquiries use (quiz answers, consent, tracking). Safe to repeat. Do not rename them in GoHighLevel.</p>
+                <p class="mt-2 text-sm text-ink/60">Adds the {{ $fieldCount }} fields inquiries use (quiz answers, consent, tracking). Safe to repeat. Do not rename them in GoHighLevel.</p>
             </form>
         </div>
     </section>

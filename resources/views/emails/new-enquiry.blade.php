@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><body style="font-family:Arial,sans-serif;color:#0C0D11;line-height:1.5">
-<h2 style="margin:0 0 12px">New enquiry #{{ $enquiry->id }}</h2>
+<h2 style="margin:0 0 12px">New inquiry #{{ $enquiry->id }}</h2>
 <table cellpadding="6" style="border-collapse:collapse">
     <tr><td><strong>Name</strong></td><td>{{ $enquiry->fullName() }}</td></tr>
     <tr><td><strong>Email</strong></td><td>{{ $enquiry->email }}</td></tr>

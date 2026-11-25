@@ -7,7 +7,7 @@
 return [
     // Exact consent wording. [Company Name] is replaced with the legal company name from settings.
     // Do NOT reword this without legal review: it is evidence stored with every inquiry.
-    'consent_template' => 'I agree to the Terms and conditions and Privacy policy provided by [Company Name]. By providing my phone number, I consent to receive SMS messages from [Company Name] regarding my enquiry, booking updates, itinerary updates, reminders, and customer support. Message and data rates may apply. Reply STOP to unsubscribe or HELP for assistance. Consent is not a condition of purchase.',
+    'consent_template' => 'I agree to the Terms and conditions and Privacy policy provided by [Company Name]. By providing my phone number, I consent to receive SMS messages from [Company Name] regarding my inquiry, booking updates, itinerary updates, reminders, and customer support. Message and data rates may apply. Reply STOP to unsubscribe or HELP for assistance. Consent is not a condition of purchase.',
 
     // Set SITE_NOINDEX=true on preview/staging sites: noindex meta + X-Robots-Tag + "Disallow: /" robots.txt.
     'site_noindex' => (bool) env('SITE_NOINDEX', false),

@@ -1,8 +1,8 @@
 @extends('admin.layout')
-@section('title', 'Enquiries')
+@section('title', 'Inquiries')
 @section('content')
 <div class="flex flex-wrap items-center justify-between gap-3">
-    <h1 class="font-display text-3xl">Enquiries</h1>
+    <h1 class="font-display text-3xl">Inquiries</h1>
     <x-button :href="route('admin.enquiries.export', request()->query())" variant="secondary" class="!py-2">Export CSV</x-button>
 </div>
 <form method="GET" class="mt-5 grid gap-3 rounded-xl bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-6" aria-label="Filter enquiries">
@@ -26,7 +26,7 @@
                 <td class="p-3"><span class="rounded bg-sand px-2 py-0.5">{{ \App\Models\Enquiry::STATUSES[$e->status] ?? $e->status }}</span></td>
                 <td class="p-3">{{ $e->ghl_status }}</td>
             </tr>
-        @empty<tr><td colspan="7" class="p-4 text-ink/60">No enquiries match.</td></tr>@endforelse</tbody>
+        @empty<tr><td colspan="7" class="p-4 text-ink/60">No inquiries match.</td></tr>@endforelse</tbody>
     </table>
 </div>
 <div class="mt-4">{{ $enquiries->links() }}</div>

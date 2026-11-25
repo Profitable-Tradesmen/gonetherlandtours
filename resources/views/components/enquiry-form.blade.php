@@ -21,7 +21,7 @@
     $opts = fn (string $key) => \App\Support\SiteData::quizOptions($key);
 @endphp
 <form method="POST" action="{{ route('enquiry.store') }}" x-data="enquiryForm" @submit.prevent="submit($event)"
-      data-form-name="{{ $form }}" novalidate class="relative" aria-label="{{ config('gnt.form_names.'.$form, 'Enquiry') }} enquiry form">
+      data-form-name="{{ $form }}" novalidate class="relative" aria-label="{{ config('gnt.form_names.'.$form, 'Inquiry') }} inquiry form">
     @csrf
     <input type="hidden" name="form_name" value="{{ $form }}">
     <input type="hidden" name="_form_id" value="{{ $idp }}">

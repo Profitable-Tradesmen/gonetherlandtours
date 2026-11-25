@@ -1,8 +1,8 @@
 @extends('admin.layout')
-@section('title', 'Enquiry #'.$e->id)
+@section('title', 'Inquiry #'.$e->id)
 @php $row = fn ($label, $value) => $value !== null && $value !== '' ? '<div class="flex gap-3 py-1.5 text-sm"><dt class="w-40 shrink-0 font-semibold">'.e($label).'</dt><dd class="min-w-0 break-words">'.e($value).'</dd></div>' : ''; @endphp
 @section('content')
-<a href="{{ route('admin.enquiries.index') }}" class="text-sm underline">&larr; All enquiries</a>
+<a href="{{ route('admin.enquiries.index') }}" class="text-sm underline">&larr; All inquiries</a>
 <h1 class="mt-2 font-display text-3xl">{{ $e->fullName() }} <span class="text-lg text-ink/50">#{{ $e->id }}</span></h1>
 <div class="mt-6 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
     <div class="space-y-6">
@@ -39,7 +39,7 @@
             <dl class="mt-2">{!! $row('Sync status', $e->sheets_status) !!}{!! $row('Last synced', $e->sheets_synced_at?->format('d M Y H:i')) !!}{!! $row('Last error', $e->sheets_error) !!}</dl>
             <form method="POST" action="{{ route('admin.enquiries.sheets-retry', $e) }}" class="mt-3">@csrf<button class="btn btn-primary btn-block !py-2">Send to the sheet again</button></form>
         </section>
-        <form method="POST" action="{{ route('admin.enquiries.destroy', $e) }}" onsubmit="return confirm('Delete this enquiry permanently?')">@csrf @method('DELETE')<button class="text-sm text-rust underline">Delete enquiry</button></form>
+        <form method="POST" action="{{ route('admin.enquiries.destroy', $e) }}" onsubmit="return confirm('Delete this inquiry permanently?')">@csrf @method('DELETE')<button class="text-sm text-rust underline">Delete inquiry</button></form>
     </div>
 </div>
 @endsection

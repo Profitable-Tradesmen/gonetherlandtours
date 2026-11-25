@@ -88,7 +88,7 @@
         <div><label class="field-label" for="meta_description">Meta description (about 155 characters)</label><textarea id="meta_description" name="meta_description" rows="2" class="field" maxlength="320">{{ old('meta_description', $page->meta_description) }}</textarea></div>
         <label class="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="noindex" value="1" @checked(old('noindex', $page->noindex))> Hide this page from search engines (noindex)</label>
         @if (in_array($page->slug, ['terms', 'privacy']))
-            <div><label class="field-label" for="version">Version (stored with each enquiry as the terms version)</label><input id="version" name="version" value="{{ old('version', $page->version) }}" class="field max-w-xs"><p class="mt-1 text-xs text-ink/60">Increase this whenever you change the legal text.</p></div>
+            <div><label class="field-label" for="version">Version (stored with each inquiry as the terms version)</label><input id="version" name="version" value="{{ old('version', $page->version) }}" class="field max-w-xs"><p class="mt-1 text-xs text-ink/60">Increase this whenever you change the legal text.</p></div>
         @endif
         <x-button type="submit" variant="secondary">Save page details</x-button>
     </form>

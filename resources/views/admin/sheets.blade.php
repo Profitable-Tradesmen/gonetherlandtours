@@ -7,7 +7,7 @@
     <section class="rounded-xl bg-white p-5 shadow-sm sm:p-7">
         <div class="flex flex-wrap items-center gap-3">
             @if ($active)
-                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800"><span class="h-2 w-2 rounded-full bg-emerald-600"></span>On: every enquiry is added to your sheet</span>
+                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800"><span class="h-2 w-2 rounded-full bg-emerald-600"></span>On: every inquiry is added to your sheet</span>
             @elseif (filled($url) && $secretHint && ! $sendEnabled)
                 <span class="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-sm font-semibold text-amber-800"><span class="h-2 w-2 rounded-full bg-amber-500"></span>Paused: connection saved, nothing is sent</span>
             @else
@@ -15,7 +15,7 @@
             @endif
             <span class="text-sm text-ink/70">{{ $synced }} in the sheet &middot; {{ $failed }} failed &middot; {{ $skipped }} skipped @if ($pending) &middot; {{ $pending }} waiting @endif</span>
         </div>
-        <p class="mt-3 text-sm text-ink/70">Every form on the site (the quiz, quote requests, questions and the contact form) uses the same pipeline, so once this is On they all add one row to your sheet, including the UTM parameters and ad click ids (GCLID, GBRAID, WBRAID) of the first and the last visit. Enquiries are always saved here first: if Google is unreachable, nothing is lost and the visitor never sees an error.</p>
+        <p class="mt-3 text-sm text-ink/70">Every form on the site (the quiz, quote requests, questions and the contact form) uses the same pipeline, so once this is On they all add one row to your sheet, including the UTM parameters and ad click ids (GCLID, GBRAID, WBRAID) of the first and the last visit. Inquiries are always saved here first: if Google is unreachable, nothing is lost and the visitor never sees an error.</p>
     </section>
 
     <form method="POST" action="{{ route('admin.sheets.update') }}" class="space-y-5 rounded-xl bg-white p-5 shadow-sm sm:p-7" autocomplete="off"
@@ -42,7 +42,7 @@
             @endif
         </div>
         <div>
-            <label class="inline-flex items-center gap-3 font-semibold"><input type="checkbox" name="enabled" value="1" class="h-5 w-5" @checked(old('enabled', $sendEnabled))> Send enquiries to Google Sheets</label>
+            <label class="inline-flex items-center gap-3 font-semibold"><input type="checkbox" name="enabled" value="1" class="h-5 w-5" @checked(old('enabled', $sendEnabled))> Send inquiries to Google Sheets</label>
             <p class="mt-1 text-sm text-ink/60">Untick to pause the sync without losing your connection.</p>
         </div>
         <x-button type="submit" variant="secondary">Save</x-button>
@@ -53,11 +53,11 @@
         <div class="mt-4 grid gap-6 sm:grid-cols-2">
             <form method="POST" action="{{ route('admin.sheets.test') }}">@csrf
                 <button class="btn btn-outline w-full !text-ink">Send a test row</button>
-                <p class="mt-2 text-sm text-ink/60">Adds one sample row (marked "Test row") to your sheet so you can see the connection works. It is not saved as an enquiry. Delete the row afterwards.</p>
+                <p class="mt-2 text-sm text-ink/60">Adds one sample row (marked "Test row") to your sheet so you can see the connection works. It is not saved as an inquiry. Delete the row afterwards.</p>
             </form>
             <form method="POST" action="{{ route('admin.sheets.backfill') }}">@csrf
-                <button class="btn btn-outline w-full !text-ink">Send enquiries that are not in the sheet</button>
-                <p class="mt-2 text-sm text-ink/60">Adds the {{ $skipped + $failed }} enquiries that were received while this was off, or that failed. Rows already in the sheet are never duplicated.</p>
+                <button class="btn btn-outline w-full !text-ink">Send inquiries that are not in the sheet</button>
+                <p class="mt-2 text-sm text-ink/60">Adds the {{ $skipped + $failed }} inquiries that were received while this was off, or that failed. Rows already in the sheet are never duplicated.</p>
             </form>
         </div>
     </section>
@@ -65,14 +65,14 @@
     <details class="rounded-xl bg-white p-5 shadow-sm sm:p-7" @unless ($active) open @endunless>
         <summary class="cursor-pointer font-display text-xl">Step by step: set up the spreadsheet</summary>
         <ol class="mt-4 list-decimal space-y-4 pl-5 text-sm leading-relaxed">
-            <li><strong>Create the sheet.</strong> Go to <a href="https://sheets.google.com" target="_blank" rel="noopener" class="font-semibold text-brand-700 underline">sheets.google.com</a>, sign in with the Google account that should own the data and click <strong>Blank spreadsheet</strong>. Name it, for example, "{{ $brand }} enquiries". Leave it empty: the script creates a tab called <strong>Enquiries</strong> and the header row for you.</li>
+            <li><strong>Create the sheet.</strong> Go to <a href="https://sheets.google.com" target="_blank" rel="noopener" class="font-semibold text-brand-700 underline">sheets.google.com</a>, sign in with the Google account that should own the data and click <strong>Blank spreadsheet</strong>. Name it, for example, "{{ $brand }} enquiries". Leave it empty: the script creates a tab called <strong>Inquiries</strong> and the header row for you.</li>
             <li><strong>Open Apps Script.</strong> In the sheet click <strong>Extensions &gt; Apps Script</strong>. A new tab opens with a file called Code.gs. Select everything in it and delete it.</li>
             <li><strong>Paste the script.</strong> Click <strong>Copy the script</strong> below and paste it into the empty Code.gs file.</li>
             <li><strong>Add the secret key.</strong> Above, click <strong>Generate</strong>, then <strong>Copy</strong>, and click <strong>Save</strong> on this page. In the script, replace <code>PASTE-YOUR-SECRET-KEY-HERE</code> (between the quotes, near the top) with that key. Click the disk icon (or press Ctrl+S) to save the script. The key in the script and the key on this page must be exactly the same.</li>
             <li><strong>Deploy it.</strong> In Apps Script click <strong>Deploy &gt; New deployment</strong>. Click the gear icon next to "Select type" and choose <strong>Web app</strong>. Set <strong>Execute as: Me</strong> and <strong>Who has access: Anyone</strong> (the secret key is what protects it). Click <strong>Deploy</strong>. Google asks you to authorize: click <strong>Authorize access</strong>, choose your account, then <strong>Advanced &gt; Go to (your project name) (unsafe) &gt; Allow</strong>. This warning is normal for your own scripts: only you wrote and own it.</li>
-            <li><strong>Copy the web app URL.</strong> After deploying, copy the <strong>Web app</strong> URL (it ends in <code>/exec</code>) and paste it into <strong>Web app URL</strong> above. Make sure <strong>Send enquiries to Google Sheets</strong> is ticked and click <strong>Save</strong>.</li>
-            <li><strong>Test it.</strong> Click <strong>Send a test row</strong>. Open your sheet: you should see a tab called <strong>Enquiries</strong> with the header row and one row marked "Test row". Delete that row. From now on every new enquiry adds a row within a few seconds.</li>
-            <li><strong>Optional: catch up.</strong> Click <strong>Send enquiries that are not in the sheet</strong> to add the older enquiries. Repeat if it says more are waiting.</li>
+            <li><strong>Copy the web app URL.</strong> After deploying, copy the <strong>Web app</strong> URL (it ends in <code>/exec</code>) and paste it into <strong>Web app URL</strong> above. Make sure <strong>Send inquiries to Google Sheets</strong> is ticked and click <strong>Save</strong>.</li>
+            <li><strong>Test it.</strong> Click <strong>Send a test row</strong>. Open your sheet: you should see a tab called <strong>Inquiries</strong> with the header row and one row marked "Test row". Delete that row. From now on every new inquiry adds a row within a few seconds.</li>
+            <li><strong>Optional: catch up.</strong> Click <strong>Send inquiries that are not in the sheet</strong> to add the older inquiries. Repeat if it says more are waiting.</li>
         </ol>
         <h3 class="mt-6 font-display text-lg">Good to know</h3>
         <ul class="mt-2 list-disc space-y-2 pl-5 text-sm leading-relaxed">
@@ -86,8 +86,8 @@
         <ul class="mt-2 list-disc space-y-2 pl-5 text-sm leading-relaxed">
             <li><strong>"Google did not return the expected answer":</strong> the deployment is not set to <em>Who has access: Anyone</em>. Redeploy it with that setting and paste the new URL.</li>
             <li><strong>"The secret key does not match":</strong> the key in the script differs from the one saved here. Generate a new key, paste it in both places and save both.</li>
-            <li><strong>Nothing arrives but no error:</strong> check the web app URL ends in <code>/exec</code> (not <code>/dev</code>) and that "Send enquiries to Google Sheets" is ticked. Open an enquiry in Admin &gt; Enquiries to see its sheet status and the last error.</li>
-            <li><strong>Failed rows:</strong> they are retried automatically a few times. After fixing the cause, use <strong>Send enquiries that are not in the sheet</strong>.</li>
+            <li><strong>Nothing arrives but no error:</strong> check the web app URL ends in <code>/exec</code> (not <code>/dev</code>) and that "Send inquiries to Google Sheets" is ticked. Open an inquiry in Admin &gt; Inquiries to see its sheet status and the last error.</li>
+            <li><strong>Failed rows:</strong> they are retried automatically a few times. After fixing the cause, use <strong>Send inquiries that are not in the sheet</strong>.</li>
         </ul>
     </details>
 

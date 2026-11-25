@@ -2,7 +2,7 @@
 @section('title', 'Quiz')
 @section('content')
 <div class="flex flex-wrap items-center justify-between gap-3"><h1 class="font-display text-3xl">Hero quiz</h1><x-button :href="route('admin.quiz.create')" variant="secondary" class="!py-2">Add step</x-button></div>
-<p class="mt-2 text-sm text-ink/70">Each step is one question. The final contact-details step is always added automatically. Quiz answers are saved with each enquiry and sent to GoHighLevel, so avoid changing a step's key once leads exist.</p>
+<p class="mt-2 text-sm text-ink/70">Each step is one question. The final contact-details step is always added automatically. Quiz answers are saved with each inquiry and sent to GoHighLevel, so avoid changing a step's key once leads exist.</p>
 <div class="mt-5 overflow-x-auto rounded-xl bg-white shadow-sm"><table class="w-full text-left text-sm">
     <thead class="bg-sand text-xs uppercase"><tr><th class="p-3">#</th><th class="p-3">Question</th><th class="p-3">Key</th><th class="p-3">Type</th><th class="p-3">Options</th><th class="p-3">Active</th><th class="p-3 text-right">Actions</th></tr></thead>
     <tbody>@foreach ($steps as $s)
