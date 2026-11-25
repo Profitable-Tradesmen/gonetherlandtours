@@ -63,7 +63,7 @@
                                 @if ($dayImg)
                                     <x-picture :media="$dayImg" :alt="''" class="h-16 w-16 shrink-0 rounded-xl object-cover" sizes="64px" />
                                 @else
-                                    <span class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-brown font-display text-2xl text-accent" aria-hidden="true">{{ $n + 1 }}</span>
+                                    <span class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-brand-900 font-display text-2xl text-accent" aria-hidden="true">{{ $n + 1 }}</span>
                                 @endif
                                 <span class="min-w-0 flex-1 font-display text-lg font-medium leading-snug sm:text-xl">{{ $day['title'] }}</span>
                                 <x-icon name="chevron" class="h-5 w-5 shrink-0 text-rust transition-transform group-open:rotate-180" />
