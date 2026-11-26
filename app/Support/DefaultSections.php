@@ -68,7 +68,7 @@ class DefaultSections
                 ['caption' => 'Families', 'image' => 'images/families.webp', 'alt' => 'A traditional windmill beside a quiet canal at Kinderdijk'],
                 ['caption' => 'Culture lovers', 'image' => 'images/culture_lovers.webp', 'alt' => 'A plate of Dutch cheese cubes for tasting'],
                 ['caption' => 'Off the beaten path', 'image' => 'images/off_the_beaten_path.webp', 'alt' => 'An aerial view of Dutch polders, rivers and quiet villages'],
-                ['caption' => 'Special occasions', 'image' => 'images/special_occasions.webp', 'alt' => 'A restaurant table set with drinks in a warm, candle-lit room'],
+                ['caption' => 'Special occasions', 'image' => 'images/nh-occasions.webp', 'alt' => 'A glass of sparkling wine on a canal-side terrace in Amsterdam at sunset'],
             ],
         ];
         $galleryRows = array_map(fn ($i) => ['caption' => $i['caption'] ?? '', 'image' => $i['image'] ?? '', 'image_alt' => $i['alt'] ?? ($i['image_alt'] ?? '')], $gallery['items']);
@@ -81,7 +81,7 @@ class DefaultSections
             ['Families', 'Windmills, cheese markets and hands-on traditions the whole group will remember.', 'images/families.webp', 'A traditional windmill beside a quiet canal at Kinderdijk'],
             ['Culture lovers', 'Local traditions, living crafts and the stories behind them.', 'images/culture_lovers.webp', 'A plate of Dutch cheese cubes for tasting'],
             ['Off the beaten path', 'Lesser-known villages and local secrets away from the crowds.', 'images/off_the_beaten_path.webp', 'An aerial view of Dutch polders, rivers and quiet villages'],
-            ['Special occasions', 'Anniversaries and milestones, thoughtfully planned.', 'images/special_occasions.webp', 'A restaurant table set with drinks in a warm, candle-lit room'],
+            ['Special occasions', 'Anniversaries and milestones, thoughtfully planned.', 'images/nh-occasions.webp', 'A glass of sparkling wine on a canal-side terrace in Amsterdam at sunset'],
         ];
 
         return [

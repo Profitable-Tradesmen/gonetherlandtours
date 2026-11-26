@@ -17,6 +17,8 @@ Route::get('/packages/search', [PackageController::class, 'search'])->middleware
 Route::get('/packages/{package:slug}', [PackageController::class, 'show'])->name('packages.show');
 Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations.index');
 Route::get('/destinations/{destination:slug}', [DestinationController::class, 'show'])->name('destinations.show');
+Route::get('/travel-styles', [\App\Http\Controllers\TravelStyleController::class, 'index'])->name('travel-styles.index');
+Route::get('/travel-styles/{travelStyle:slug}', [\App\Http\Controllers\TravelStyleController::class, 'show'])->name('travel-styles.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/tours/{tourType:slug}', [TourTypeController::class, 'show'])->name('tour-types.show');

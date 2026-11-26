@@ -26,7 +26,7 @@ class MenuItem extends Model
             return $where.' > '.$p->label.' (card)';
         }
 
-        return $where.match ($this->kind) { 'tours' => ' (Tours menu)', 'cards' => ' (dropdown)', default => '' };
+        return $where.match ($this->kind) { 'tours' => ' (Tours menu)', 'styles' => ' (Travel styles menu)', 'cards' => ' (dropdown)', default => '' };
     }
 
     public function getLinkLabelAttribute(): string

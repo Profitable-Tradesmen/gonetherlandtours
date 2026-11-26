@@ -15,7 +15,7 @@
 @php
     $nav = [
         ['admin.dashboard', 'Dashboard'], ['admin.enquiries.index', 'Inquiries'], ['admin.packages.index', 'Packages'],
-        ['admin.tour-types.index', 'Tour types'], ['admin.destinations.index', 'Destinations'], ['admin.quiz.index', 'Quiz'],
+        ['admin.tour-types.index', 'Tour types'], ['admin.destinations.index', 'Destinations'], ['admin.travel-styles.index', 'Travel styles'], ['admin.quiz.index', 'Quiz'],
         ['admin.pages.index', 'Pages'], ['admin.faqs.index', 'FAQs'], ['admin.testimonials.index', 'Testimonials'], ['admin.blog.index', 'Blog'],
         ['admin.media.index', 'Media'], ['admin.navigation.index', 'Navigation'], ['admin.settings', 'Settings'], ['admin.snippets.index', 'Header & Footer'], ['admin.ghl', 'GoHighLevel'], ['admin.sheets', 'Google Sheets'], ['admin.users.index', 'Admin users'],
     ];

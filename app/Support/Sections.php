@@ -215,6 +215,7 @@ class Sections
                 ['name' => 'limit', 'label' => 'How many to show (0 = all)', 'type' => 'number', 'default' => 0],
                 $t('button_label', 'Button under the reviews (opens the quote pop-up)', ''),
                 ['name' => 'show_stars', 'label' => 'Show the star ratings', 'type' => 'checkbox', 'default' => true],
+                ['name' => 'background', 'label' => 'Background (light style)', 'type' => 'select', 'options' => ['sand' => 'Sand', 'white' => 'White'], 'default' => 'sand'],
                 ['name' => 'real_only_live', 'label' => 'On the live site, show real reviews only (hide samples)', 'type' => 'checkbox', 'default' => false],
                 ['name' => 'bg', 'label' => 'Background (dark and spotlight styles): photo, animated GIF or video', 'type' => 'media', 'default' => 'images/couples.webp', 'help' => 'Upload a JPG, PNG, WebP or GIF (up to 8 MB) or a short MP4 / WebM video (up to 25 MB). Remove it for a plain navy background. A video plays on tablets and desktops only; phones show the photo below.'],
                 self::img('poster', 'Photo for phones and while a video loads (only used with a video)'),

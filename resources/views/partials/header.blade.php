@@ -2,9 +2,10 @@
      auto mega menu of tour types, an item with children shows a dropdown of image cards, other items are plain links.
      $tourTypes (with published packages) and $destinations come from the layout. Labels come from Admin > Settings. --}}
 @php
-    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-[0.9rem] font-medium xl:px-4 text-ink transition-colors hover:bg-sand';
+    $navBtn = 'hdr-link inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 py-2.5 text-[0.9rem] font-medium xl:px-3 2xl:px-4 text-ink transition-colors hover:bg-sand';
     $menu = \App\Models\MenuItem::tree('header');
     $hasTours = $menu->contains('kind', 'tours');
+    $styles = \App\Support\SiteData::travelStyles();
     $overlay = ! empty($overlayHeader);   // the page starts with a photo hero: the header is fully transparent over it (white links, white logo) until you scroll, then it becomes a white bar
 @endphp
 <header class="hdr sticky top-0 z-50 bg-white/95 shadow-[0_6px_20px_-6px_rgb(12_13_17/0.28)] backdrop-blur {{ $overlay ? 'hdr-overlay -mb-16 lg:-mb-20' : '' }}"
@@ -21,6 +22,10 @@
                     <button type="button" class="{{ $navBtn }}" :class="dd === 'tours' && 'bg-sand'" @click="dd = dd === 'tours' ? null : 'tours'" @mouseenter="dd = 'tours'" :aria-expanded="dd === 'tours'" aria-controls="mega-tours">
                         {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'tours' && 'rotate-180'" />
                     </button>
+                @elseif ($item->kind === 'styles' && $styles->isNotEmpty())
+                    <button type="button" class="{{ $navBtn }}" :class="dd === 'styles' && 'bg-sand'" @click="dd = dd === 'styles' ? null : 'styles'" @mouseenter="dd = 'styles'" :aria-expanded="dd === 'styles'" aria-controls="mega-styles">
+                        {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'styles' && 'rotate-180'" />
+                    </button>
                 @elseif ($item->kind === 'cards' && $item->children->isNotEmpty())
                     <button type="button" class="{{ $navBtn }}" :class="dd === 'm{{ $item->id }}' && 'bg-sand'" @click="dd = dd === 'm{{ $item->id }}' ? null : 'm{{ $item->id }}'" @mouseenter="dd = 'm{{ $item->id }}'" :aria-expanded="dd === 'm{{ $item->id }}'" aria-controls="mega-{{ $item->id }}">
                         {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'm{{ $item->id }}' && 'rotate-180'" />
@@ -30,7 +35,7 @@
                         {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'dest' && 'rotate-180'" />
                     </button>
                 @else
-                    <a href="{{ $item->href() }}" class="{{ $navBtn }}" @if ($item->new_tab) target="_blank" rel="noopener" @endif @mouseenter="dd = null">{{ $item->label }}</a>
+                    <a href="{{ $item->href() }}" class="{{ $navBtn }} {{ $item->href() === url('/') ? 'lg:!hidden xl:!inline-flex' : '' }}" @if ($item->new_tab) target="_blank" rel="noopener" @endif @mouseenter="dd = null">{{ $item->label }}</a>
                 @endif
             @endforeach
         </nav>
@@ -70,6 +75,15 @@
         </div>
     @endif
 
+    {{-- Travel styles: a photo card per interest and the planning card. --}}
+    @if ($styles->isNotEmpty() && $menu->contains('kind', 'styles'))
+        <div id="mega-styles" x-show="dd === 'styles'" x-cloak x-transition:enter="{{ $megaIn }}" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             class="{{ $megaPanel }}" @click.outside="dd === 'styles' && (dd = null)">
+            @include('partials.mega-styles', ['megaQuote' => $megaQuote])
+        </div>
+    @endif
+
     {{-- Destinations: the regions, the latest journal post, and the contact card. --}}
     @if ($destinations->isNotEmpty())
         <div id="mega-destinations" x-show="dd === 'dest'" x-cloak x-transition:enter="{{ $megaIn }}" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
@@ -98,12 +112,16 @@
                 <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_tours_heading') }}</p>
                 @foreach ($tourTypes as $t)<a href="{{ route('tour-types.show', $t) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $t->name }}</a>@endforeach
             @endif
+            @if ($styles->isNotEmpty() && $menu->contains('kind', 'styles'))
+                <p class="label-caps px-2 pt-3 text-rust">Travel styles</p>
+                @foreach ($styles as $s)<a href="{{ route('travel-styles.show', $s) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $s->name }}</a>@endforeach
+            @endif
             @if ($destinations->isNotEmpty())
                 <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_destinations_heading') }}</p>
                 @foreach ($destinations as $d)<a href="{{ route('destinations.show', $d) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $d->name }}</a>@endforeach
             @endif
             <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_more_heading') }}</p>
-            @foreach ($menu->where('kind', '!=', 'tours') as $item)
+            @foreach ($menu->whereNotIn('kind', ['tours', 'styles']) as $item)
                 <a href="{{ $item->href() }}" class="block rounded px-2 py-2.5 hover:bg-sand" @if ($item->new_tab) target="_blank" rel="noopener" @endif>{{ $item->label }}</a>
                 @foreach ($item->children->filter(fn ($c) => $c->href() !== $item->href()) as $c)
                     <a href="{{ $c->href() }}" class="block rounded px-2 py-2.5 pl-5 font-normal hover:bg-sand" @if ($c->new_tab) target="_blank" rel="noopener" @endif>{{ $c->label }}</a>

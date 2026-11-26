@@ -112,7 +112,7 @@ class TourTypePages
                     ['Door-to-door comfort', 'No parking, no navigation, no unfamiliar roads and no stress after the long flight, just time to enjoy the view.'],
                 ],
                 'button' => 'Plan my chauffeur tour',
-                'image' => 'images/tour-chauffeur.webp', 'image_alt' => 'A chauffeur holding the door of a black van on a cobbled Dutch town square',
+                'image' => 'images/chauffeur-couple.webp', 'image_alt' => 'A couple beside a black chauffeur van on an Amsterdam canal quay',
                 'pk_eyebrow' => 'Enjoy comfort and ease', 'pk_heading' => 'Chauffeur driven packages',
                 'pk_intro' => 'Private tours with a local driver-guide. Every itinerary can be shaped around your dates, pace and interests.',
                 'promo_heading' => 'Ready for a *private chauffeur driven tour?*',

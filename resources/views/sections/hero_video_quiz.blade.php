@@ -9,7 +9,7 @@
 @endpush
 <section class="hero-pad relative isolate flex min-h-[96vh] items-center overflow-hidden bg-brand-900 text-white {{ $overlay ? 'pt-24 lg:pt-32' : 'pt-10' }} {{ count($chips) ? "pb-28 sm:pb-36" : "" }}">
     {{-- Photo slider: the first photo is the main one (shown at once, works without JavaScript and is the LCP image). The other photos are only loaded
-         after the page has finished loading and then fade in one after the other. A flat 30% black layer sits on top of all of them. --}}
+         after the page has finished loading and then fade in one after the other (tablets and desktops only). A light black layer sits on top of all of them. --}}
     @php $slides = array_values(array_filter(array_map(fn ($x) => $x['image'] ?? '', $d['slides'] ?? []))); @endphp
     <div class="absolute inset-0 -z-30" data-hero-slider aria-hidden="true">
         <x-picture :src="$poster" alt="" :width="1600" :height="900" priority sizes="100vw" class="absolute inset-y-0 inset-x-px h-full w-[calc(100%-2px)] object-cover" />
@@ -27,7 +27,8 @@
         <script>
         (function () {
             var box = document.querySelector('[data-hero-slider]');
-            if (!box || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            // Phones keep the first photo only: no slider, and the other photos are never downloaded.
+            if (!box || window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)').matches) return;
             var imgs = box.querySelectorAll('img[data-src]');
             function start() {
                 var first = box.querySelector('picture, img:not([data-src])');

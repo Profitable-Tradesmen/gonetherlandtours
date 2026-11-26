@@ -24,7 +24,7 @@ class CatalogSeeder extends Seeder
 
         $types = [
             ['Self Drive', 'self-drive', 'car', 'Pick up your car and follow a carefully planned route at your own pace, with hotels booked for you.', 'images/tour-self-drive.webp', 'A small car driving a quiet country road through Dutch polders and tulip fields'],
-            ['Chauffeur Driven', 'chauffeur-driven', 'guide', 'Relax in comfort while a local driver-guide handles the roads and shares the stories behind each stop.', 'images/tour-chauffeur.webp', 'A chauffeur holding the door of a black van on a cobbled Dutch town square'],
+            ['Chauffeur Driven', 'chauffeur-driven', 'guide', 'Relax in comfort while a local driver-guide handles the roads and shares the stories behind each stop.', 'images/chauffeur-couple.webp', 'A couple beside a black chauffeur van on an Amsterdam canal quay'],
             ['Coach Tours', 'coach-tours', 'coach', 'Travel in a small group with a guide, with sightseeing, transport and accommodation taken care of.', 'images/tour-coach.webp', 'A small tour minibus parked beside a canal in a charming Dutch village'],
         ];
         $typeIds = [];

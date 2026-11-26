@@ -27,6 +27,11 @@ class SiteData
         return self::once('tourTypes', fn () => TourType::active()->with(['packages' => fn ($q) => $q->published()->orderBy('title')->with(['images', 'destination'])])->get());
     }
 
+    public static function travelStyles(): Collection
+    {
+        return self::once('travelStyles', fn () => \App\Models\TravelStyle::active()->get());
+    }
+
     public static function destinations(): Collection
     {
         return self::once('destinations', fn () => Destination::active()->get());

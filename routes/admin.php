@@ -32,7 +32,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('packages/{package}/move/{dir}', [Admin\PackageController::class, 'move'])->whereIn('dir', ['up', 'down'])->name('packages.move');
 
         // Simple list resources (generic CRUD)
-        foreach (['navigation' => Admin\NavigationController::class, 'tour-types' => Admin\TourTypeController::class, 'destinations' => Admin\DestinationController::class, 'faqs' => Admin\FaqController::class, 'testimonials' => Admin\TestimonialController::class, 'blog' => Admin\BlogController::class, 'users' => Admin\AdminUserController::class] as $uri => $controller) {
+        foreach (['navigation' => Admin\NavigationController::class, 'tour-types' => Admin\TourTypeController::class, 'destinations' => Admin\DestinationController::class, 'travel-styles' => Admin\TravelStyleController::class, 'faqs' => Admin\FaqController::class, 'testimonials' => Admin\TestimonialController::class, 'blog' => Admin\BlogController::class, 'users' => Admin\AdminUserController::class] as $uri => $controller) {
             Route::get($uri, [$controller, 'index'])->name("$uri.index");
             Route::get("$uri/create", [$controller, 'create'])->name("$uri.create");
             Route::post($uri, [$controller, 'store'])->name("$uri.store");

@@ -261,3 +261,19 @@ What was wrong and what was changed:
 Notes:
 - **Home mobile has almost no margin (90-91).** Total blocking time rose from about 80 ms to 200 ms with the added sections (about 2,800 DOM elements). If it dips below 90 on the live host, first reduce the repeated cards: make "More itineraries" show 3 packages, or drop the faint landmark drawing (`partials/place-icon-bg`) from the cards.
 - The home page now has 12 published packages (3 added), a gallery and two extra package grids; all are lazy-loaded below the hero, so LCP is unchanged at about 3.0 s.
+
+### Re-run after the font change, new menu, guest reviews, tour routes, page numbers and photo swaps (Lighthouse 12, 26 Nov 2026)
+Same method as above (local build behind the gzip + long-cache proxy, pages warmed first; the live domain returned 403 to Lighthouse when it was last tried, and these changes are not deployed). **All scores are 90 or more, so no code was changed.**
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | TBT | CLS | Page size |
+|---|---|---|---|---|---|---|---|---|---|
+| Home | Mobile | 95 (two runs) | 100 | 100 | 100 | 2.7 s | 100 ms | 0 | 1429 KiB |
+| Home | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 10 ms | 0 | 1864 KiB |
+| Package (Tulip Route) | Mobile | 95 | 100 | 100 | 100 | 2.8 s | 120 ms | 0 | 502 KiB |
+| Package (Tulip Route) | Desktop | 100 | 100 | 100 | 100 | 0.8 s | 0 ms | 0 | 636 KiB |
+
+Notes:
+- **Home page weight went up** (mobile 604 to 1429 KiB, desktop 1107 to 1864 KiB since the 25 Nov run). The two largest requests are the later photos of the home hero slider, `images/dest-zeeland.webp` (521 KiB) and `images/feature_band.webp` (360 KiB). They load after the page, so the scores are not affected, but phones download them at full size. **Open improvement:** have the slider use smaller copies on phones.
+- The home page has about 3,100 elements. If home mobile drops below 90 on the live host, the earlier suggestions still apply (fewer repeated cards).
+
+**Follow-up the same day:** on phones (up to 767 px) the home hero now shows the first photo only, with no slider, so the two large slider photos are no longer downloaded there. Home mobile: performance 95, accessibility 100, best practices 100, SEO 100, LCP 2.7 s, TBT 100 ms, CLS 0, page size **549 KiB** (was 1429 KiB). Desktop keeps the slider, unchanged.

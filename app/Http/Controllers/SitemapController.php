@@ -23,6 +23,10 @@ class SitemapController extends Controller
         foreach (Destination::active()->where('noindex', false)->get() as $d) {
             $urls[] = [route('destinations.show', $d), $d->updated_at];
         }
+        $urls[] = [route('travel-styles.index'), now()];
+        foreach (\App\Models\TravelStyle::active()->where('noindex', false)->get() as $s) {
+            $urls[] = [route('travel-styles.show', $s), $s->updated_at];
+        }
         foreach (Package::published()->where('noindex', false)->get() as $p) {
             $urls[] = [route('packages.show', $p), $p->updated_at];
         }

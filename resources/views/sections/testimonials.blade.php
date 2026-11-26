@@ -57,14 +57,14 @@
     </div>
 </section>
 @elseif ($items->isNotEmpty())
-<section class="relative isolate overflow-hidden {{ $dark ? 'bg-brand-900 text-white' : 'bg-sand' }} py-16 sm:py-24" @if ($d['heading']) aria-labelledby="te-{{ $sid }}" @else aria-label="Traveler reviews" @endif>
+<section class="relative isolate overflow-hidden {{ $dark ? 'bg-brand-900 text-white' : (($d['background'] ?? 'sand') === 'white' ? 'bg-white' : 'bg-sand') }} py-16 sm:py-24" @if ($d['heading']) aria-labelledby="te-{{ $sid }}" @else aria-label="Traveler reviews" @endif>
     @if ($dark)@include('partials.section-bg', ['bg' => $bg, 'poster' => $d['poster'] ?? '', 'posterAlt' => $d['poster_alt'] ?? '', 'tint' => $d['overlay'] ?? 'medium'])@endif
     <div class="container-site">
         @if ($d['heading'])<x-section-heading data-reveal="up" :eyebrow="$d['eyebrow'] ?: null" :title="$d['heading']" :light="$dark" :id="'te-'.$sid" />@endif
         @if (text('reviews_badge'))<p class="-mt-6 mb-8 text-center text-sm font-semibold opacity-90"><span class="text-accent" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> {{ text('reviews_badge') }}</p>@endif
         <x-slider :light="$dark" class="grid gap-6 md:grid-cols-3">
             @foreach ($items as $t)
-                <figure class="relative flex flex-col rounded-2xl {{ $dark ? ($bg !== '' ? 'bg-brand-900/80 backdrop-blur-sm' : 'bg-white/10').' ring-1 ring-white/20 transition-transform duration-300 hover:-translate-y-1' : 'bg-white shadow-card' }} p-6 pt-8" data-reveal="up" style="--d:{{ $loop->index * 120 }}ms">
+                <figure class="relative flex flex-col rounded-2xl {{ $dark ? ($bg !== '' ? 'bg-brand-900/80 backdrop-blur-sm' : 'bg-white/10').' ring-1 ring-white/20 transition-transform duration-300 hover:-translate-y-1' : 'bg-white shadow-card ring-1 ring-ink/10' }} p-6 pt-8" data-reveal="up" style="--d:{{ $loop->index * 120 }}ms">
                     <span class="absolute right-5 top-1 select-none font-display text-7xl leading-none text-accent/40" aria-hidden="true">&rdquo;</span>
                     @if ($stars)<p>@include('partials.review-stars', ['rating' => $t->rating ?? 5, 'class' => 'h-4 w-4'])</p>@endif
                     <blockquote class="mt-3 flex-1 text-base leading-relaxed">{{ $t->quote }}</blockquote>
