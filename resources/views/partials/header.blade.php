@@ -112,16 +112,16 @@
                 <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_tours_heading') }}</p>
                 @foreach ($tourTypes as $t)<a href="{{ route('tour-types.show', $t) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $t->name }}</a>@endforeach
             @endif
-            @if ($styles->isNotEmpty() && $menu->contains('kind', 'styles'))
-                <p class="label-caps px-2 pt-3 text-rust">Travel styles</p>
-                @foreach ($styles as $s)<a href="{{ route('travel-styles.show', $s) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $s->name }}</a>@endforeach
-            @endif
             @if ($destinations->isNotEmpty())
                 <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_destinations_heading') }}</p>
                 @foreach ($destinations as $d)<a href="{{ route('destinations.show', $d) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $d->name }}</a>@endforeach
             @endif
+            @if ($styles->isNotEmpty() && $menu->contains('kind', 'styles'))
+                <p class="label-caps px-2 pt-3 text-rust">Travel styles</p>
+                @foreach ($styles as $s)<a href="{{ route('travel-styles.show', $s) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $s->name }}</a>@endforeach
+            @endif
             <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_more_heading') }}</p>
-            @foreach ($menu->whereNotIn('kind', ['tours', 'styles']) as $item)
+            @foreach ($menu->whereNotIn('kind', ['tours', 'styles'])->reject(fn ($m) => $m->href() === url('/')) as $item)
                 <a href="{{ $item->href() }}" class="block rounded px-2 py-2.5 hover:bg-sand" @if ($item->new_tab) target="_blank" rel="noopener" @endif>{{ $item->label }}</a>
                 @foreach ($item->children->filter(fn ($c) => $c->href() !== $item->href()) as $c)
                     <a href="{{ $c->href() }}" class="block rounded px-2 py-2.5 pl-5 font-normal hover:bg-sand" @if ($c->new_tab) target="_blank" rel="noopener" @endif>{{ $c->label }}</a>

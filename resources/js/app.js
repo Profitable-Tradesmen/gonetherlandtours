@@ -118,6 +118,16 @@ Alpine.data('enquiryForm', () => ({
         return this.errors[field] ? this.errors[field][0] : '';
     },
 
+    /** Phone field: letters and other symbols are removed as soon as they are typed, pasted or auto-filled. */
+    phoneClean(input) {
+        const allowed = /[^0-9+()\-. ]/g;
+        if (!allowed.test(input.value)) return;
+        // Keep the cursor where the visitor was typing.
+        const before = input.value.slice(0, input.selectionStart).replace(allowed, '').length;
+        input.value = input.value.replace(allowed, '');
+        input.setSelectionRange(before, before);
+    },
+
     phoneCheck(form) {
         let rules = {};
         try { rules = JSON.parse(form.dataset.phoneRules || '{}'); } catch (e) { /* use the default */ }

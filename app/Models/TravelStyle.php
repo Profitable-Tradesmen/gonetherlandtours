@@ -30,12 +30,26 @@ class TravelStyle extends Model
         return array_values(array_filter(array_map('trim', explode($separator, str_replace("\r", '', (string) $this->{$field})))));
     }
 
-    /** The published tours of this style, in the order typed in the admin. */
+    /** The tours ticked in Admin > Travel styles, in page order. */
+    public function packages()
+    {
+        return $this->belongsToMany(Package::class)->withPivot('sort_order')->orderBy('package_travel_style.sort_order');
+    }
+
+    /** The published ones, for the public page. */
     public function tours()
     {
-        $slugs = $this->list('tour_slugs');
+        return $this->packages()->published()->with(['tourType', 'destination', 'images'])->get();
+    }
 
-        return Package::published()->whereIn('slug', $slugs)->with(['tourType', 'destination', 'images'])->get()
-            ->sortBy(fn ($p) => array_search($p->slug, $slugs))->values();
+    public function tourIds(): array
+    {
+        return $this->exists ? $this->packages()->pluck('packages.id')->all() : [];
+    }
+
+    /** Package titles for the Tours column in the admin list. */
+    public function getTourListAttribute(): array
+    {
+        return $this->packages()->get()->map(fn ($p) => $p->title.($p->is_published ? '' : ' (unpublished)'))->all();
     }
 }

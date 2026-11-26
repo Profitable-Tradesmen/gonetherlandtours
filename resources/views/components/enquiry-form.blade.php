@@ -104,7 +104,7 @@
             <x-form-field name="phone" label="Phone" :idp="$idp" required>
                 <div class="relative">
                     <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-brand-900" x-text="'+' + dial" aria-hidden="true">+1</span>
-                    <input id="{{ $idp }}-phone" name="phone" type="tel" inputmode="tel" class="field" required autocomplete="tel-national" value="{{ $oldHere ? old('phone') : '' }}"
+                    <input id="{{ $idp }}-phone" name="phone" type="tel" inputmode="tel" class="field" required autocomplete="tel-national" value="{{ $oldHere ? old('phone') : '' }}" @input="phoneClean($el)"
                            :style="{ paddingLeft: (1.9 + dial.length * 0.62) + 'rem' }" :aria-invalid="err('phone') ? 'true' : 'false'" aria-describedby="{{ $idp }}-phone-error">
                 </div>
             </x-form-field>

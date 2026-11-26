@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 /**
  * Generic admin CRUD driven by a field list. Subclasses only describe the model and fields.
- * Field types: text, textarea, rich, number, checkbox, select, image, password.
+ * Field types: text, textarea, rich, number, checkbox, select, image, password, tours (tick the packages that belong to the item).
  */
 abstract class ResourceController extends Controller
 {
@@ -37,12 +37,12 @@ abstract class ResourceController extends Controller
 
     public function create()
     {
-        return view('admin.resource.form', ['cfg' => $this->config(), 'item' => new ($this->model())]);
+        return view('admin.resource.form', ['cfg' => $this->config(), 'item' => new ($this->model()), 'packages' => $this->packageChoices()]);
     }
 
     public function edit($id)
     {
-        return view('admin.resource.form', ['cfg' => $this->config(), 'item' => ($this->model())::findOrFail($id)]);
+        return view('admin.resource.form', ['cfg' => $this->config(), 'item' => ($this->model())::findOrFail($id), 'packages' => $this->packageChoices()]);
     }
 
     public function store(Request $request)
@@ -92,6 +92,17 @@ abstract class ResourceController extends Controller
         return null;
     }
 
+    /** Every package, for a "tours" field. */
+    private function packageChoices()
+    {
+        return collect($this->config()['fields'])->contains('type', 'tours')
+            ? \App\Models\Package::with(['tourType', 'destination'])->orderBy('sort_order')->get()
+            : collect();
+    }
+
+    /** Hook for a "tours" field: store the ticked package ids once the item itself is saved. */
+    protected function syncTours(Model $item, array $ids): void {}
+
     /** Hook for subclasses to adjust validated data before saving. */
     protected function prepare(array $data, Model $item, Request $request): array
     {
@@ -115,11 +126,21 @@ abstract class ResourceController extends Controller
                 unset($rules[$f['name']]);
             }
         }
+        $toursField = collect($cfg['fields'])->firstWhere('type', 'tours');
+        if ($toursField) {
+            unset($rules[$toursField['name']]);
+            $rules['tours'] = ['nullable', 'array'];
+            $rules['tours.*'] = ['integer', 'exists:packages,id'];
+        }
         $rules = array_merge($rules, $this->extraRules($item));
         $data = $request->validate($rules);
 
+        unset($data['tours']);
         foreach ($cfg['fields'] as $f) {
             $n = $f['name'];
+            if ($f['type'] === 'tours') {
+                continue;
+            }
             if ($f['type'] === 'checkbox') {
                 $data[$n] = $request->boolean($n);
             } elseif ($f['type'] === 'rich') {
@@ -146,6 +167,10 @@ abstract class ResourceController extends Controller
             $data['sort_order'] = (($this->model())::max('sort_order') ?? 0) + 1;
         }
         $item->fill($this->prepare($data, $item, $request))->save();
+        // The hidden "tours_shown" input says the checklist was on the form, so "nothing ticked" really means none.
+        if ($toursField && $request->boolean('tours_shown')) {
+            $this->syncTours($item, array_map('intval', (array) $request->input('tours', [])));
+        }
     }
 
     private function uniqueSlug(Model $item, string $slug): string
