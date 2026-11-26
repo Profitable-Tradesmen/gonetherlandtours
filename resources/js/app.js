@@ -541,3 +541,10 @@ document.addEventListener(
     },
     true,
 );
+
+/** Date fields: a click anywhere on the field opens the calendar, not only the small calendar icon. */
+document.addEventListener('click', (e) => {
+    const input = e.target.closest && e.target.closest('input[type="date"]');
+    if (!input || input.disabled || input.readOnly || !input.showPicker) return;
+    try { input.showPicker(); } catch (err) { /* the browser refused: the icon and typing still work */ }
+});

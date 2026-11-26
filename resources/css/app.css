@@ -236,3 +236,6 @@ main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 
 .hero-underline::after { content: ''; position: absolute; left: 0; right: 0; bottom: -.06em; height: .07em; min-height: 3px; border-radius: 9999px; background: var(--color-accent); transform: scaleX(0); transform-origin: left; animation: hero-underline 1.4s cubic-bezier(.65, 0, .35, 1) .9s forwards; }
 @keyframes hero-underline { to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: reduce) { .hero-underline::after { animation: none; transform: scaleX(1); } }
+
+/* The whole date field opens the calendar, so it looks clickable. */
+input[type="date"], input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
