@@ -70,7 +70,7 @@ return [
         'mobile_bar_call_label' => 'Call', 'mobile_bar_quote_label' => 'Get a free quote',
         'footer_tours_heading' => 'Tours', 'footer_destinations_heading' => 'Destinations', 'footer_company_heading' => 'Company', 'footer_copyright' => 'All rights reserved.',
         'modal_title' => 'Start your adventure', 'modal_intro' => 'Fill out this form, save up to {discount} on your trip.',
-        'quiz_title' => 'Start your adventure',
+        'quiz_title' => 'Start your *adventure*',
         'quiz_rating_label' => '', 'quiz_trust_1' => 'Your data stays private', 'quiz_trust_2' => 'Free, no obligation', 'quiz_trust_3' => 'Support all the way', 'quiz_trust_line' => 'No hidden fees · Quick response · 100% free quote', 'quote_promise' => '', 'reviews_badge' => '',
         'usp_heading' => 'Why travel with us',
         'usp_1_title' => 'Authentic Dutch culture', 'usp_1_text' => 'Windmills, tulip fields, cheese markets and local traditions.',
