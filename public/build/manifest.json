@@ -1,58 +1,62 @@
 {
-  "node_modules/@fontsource-variable/montserrat/files/montserrat-cyrillic-ext-wght-normal.woff2": {
-    "file": "assets/montserrat-cyrillic-ext-wght-normal-CO5hGrJv.woff2",
-    "src": "node_modules/@fontsource-variable/montserrat/files/montserrat-cyrillic-ext-wght-normal.woff2"
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-wght-italic.woff2": {
+    "file": "assets/bodoni-moda-latin-ext-wght-italic-NDCc9UyL.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-wght-italic.woff2"
   },
-  "node_modules/@fontsource-variable/montserrat/files/montserrat-cyrillic-wght-normal.woff2": {
-    "file": "assets/montserrat-cyrillic-wght-normal-EAA9jha_.woff2",
-    "src": "node_modules/@fontsource-variable/montserrat/files/montserrat-cyrillic-wght-normal.woff2"
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-wght-normal.woff2": {
+    "file": "assets/bodoni-moda-latin-ext-wght-normal-BlIE6rrN.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-ext-wght-normal.woff2"
   },
-  "node_modules/@fontsource-variable/montserrat/files/montserrat-latin-ext-wght-normal.woff2": {
-    "file": "assets/montserrat-latin-ext-wght-normal-BsZE-iaG.woff2",
-    "src": "node_modules/@fontsource-variable/montserrat/files/montserrat-latin-ext-wght-normal.woff2"
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-wght-italic.woff2": {
+    "file": "assets/bodoni-moda-latin-wght-italic-B5SVoS-R.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-wght-italic.woff2"
   },
-  "node_modules/@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2": {
-    "file": "assets/montserrat-latin-wght-normal-l_AIctKy.woff2",
-    "src": "node_modules/@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2"
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-wght-normal.woff2": {
+    "file": "assets/bodoni-moda-latin-wght-normal-BIFT5Qnz.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-wght-normal.woff2"
   },
-  "node_modules/@fontsource-variable/montserrat/files/montserrat-vietnamese-wght-normal.woff2": {
-    "file": "assets/montserrat-vietnamese-wght-normal-k7S-YeeD.woff2",
-    "src": "node_modules/@fontsource-variable/montserrat/files/montserrat-vietnamese-wght-normal.woff2"
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-math-wght-italic.woff2": {
+    "file": "assets/bodoni-moda-math-wght-italic-Csabf5l-.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-math-wght-italic.woff2"
   },
-  "node_modules/@fontsource-variable/playfair-display/files/playfair-display-cyrillic-wght-italic.woff2": {
-    "file": "assets/playfair-display-cyrillic-wght-italic-D5dBZ3aJ.woff2",
-    "src": "node_modules/@fontsource-variable/playfair-display/files/playfair-display-cyrillic-wght-italic.woff2"
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-math-wght-normal.woff2": {
+    "file": "assets/bodoni-moda-math-wght-normal-_TL2RCrf.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-math-wght-normal.woff2"
   },
-  "node_modules/@fontsource-variable/playfair-display/files/playfair-display-cyrillic-wght-normal.woff2": {
-    "file": "assets/playfair-display-cyrillic-wght-normal-5WvUvBgz.woff2",
-    "src": "node_modules/@fontsource-variable/playfair-display/files/playfair-display-cyrillic-wght-normal.woff2"
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-symbols-wght-italic.woff2": {
+    "file": "assets/bodoni-moda-symbols-wght-italic-Dit9nj3y.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-symbols-wght-italic.woff2"
   },
-  "node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-ext-wght-italic.woff2": {
-    "file": "assets/playfair-display-latin-ext-wght-italic-ze_cPdSg.woff2",
-    "src": "node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-ext-wght-italic.woff2"
+  "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-symbols-wght-normal.woff2": {
+    "file": "assets/bodoni-moda-symbols-wght-normal-DO7lZbk6.woff2",
+    "src": "node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-symbols-wght-normal.woff2"
   },
-  "node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-ext-wght-normal.woff2": {
-    "file": "assets/playfair-display-latin-ext-wght-normal-CT1r92Rl.woff2",
-    "src": "node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-ext-wght-normal.woff2"
+  "node_modules/@fontsource-variable/manrope/files/manrope-cyrillic-ext-wght-normal.woff2": {
+    "file": "assets/manrope-cyrillic-ext-wght-normal-C8S-KRRz.woff2",
+    "src": "node_modules/@fontsource-variable/manrope/files/manrope-cyrillic-ext-wght-normal.woff2"
   },
-  "node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-italic.woff2": {
-    "file": "assets/playfair-display-latin-wght-italic-DmbndNpe.woff2",
-    "src": "node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-italic.woff2"
+  "node_modules/@fontsource-variable/manrope/files/manrope-cyrillic-wght-normal.woff2": {
+    "file": "assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2",
+    "src": "node_modules/@fontsource-variable/manrope/files/manrope-cyrillic-wght-normal.woff2"
   },
-  "node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2": {
-    "file": "assets/playfair-display-latin-wght-normal-BOwq7MWX.woff2",
-    "src": "node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2"
+  "node_modules/@fontsource-variable/manrope/files/manrope-greek-wght-normal.woff2": {
+    "file": "assets/manrope-greek-wght-normal-DL7QRZyv.woff2",
+    "src": "node_modules/@fontsource-variable/manrope/files/manrope-greek-wght-normal.woff2"
   },
-  "node_modules/@fontsource-variable/playfair-display/files/playfair-display-vietnamese-wght-italic.woff2": {
-    "file": "assets/playfair-display-vietnamese-wght-italic-DUEcMSM3.woff2",
-    "src": "node_modules/@fontsource-variable/playfair-display/files/playfair-display-vietnamese-wght-italic.woff2"
+  "node_modules/@fontsource-variable/manrope/files/manrope-latin-ext-wght-normal.woff2": {
+    "file": "assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2",
+    "src": "node_modules/@fontsource-variable/manrope/files/manrope-latin-ext-wght-normal.woff2"
   },
-  "node_modules/@fontsource-variable/playfair-display/files/playfair-display-vietnamese-wght-normal.woff2": {
-    "file": "assets/playfair-display-vietnamese-wght-normal-Cabi7G8-.woff2",
-    "src": "node_modules/@fontsource-variable/playfair-display/files/playfair-display-vietnamese-wght-normal.woff2"
+  "node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2": {
+    "file": "assets/manrope-latin-wght-normal-DHIcAJRg.woff2",
+    "src": "node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/manrope/files/manrope-vietnamese-wght-normal.woff2": {
+    "file": "assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2",
+    "src": "node_modules/@fontsource-variable/manrope/files/manrope-vietnamese-wght-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-B3UKatiF.css",
+    "file": "assets/app-Be-JWsCZ.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",

@@ -85,6 +85,7 @@ class Sections
                 self::link('secondary_url', 'Second button link', '/packages'),
                 self::rep('badges', 'Trust badges (up to 3)', 'badge', [$t('text', 'Badge text')], 3),
                 self::img('poster', 'Hero photo (shown first and on phones; the video plays over it on desktop)', 'images/hero-home.webp'),
+                self::rep('slides', 'More photos for the slider (they fade in one after the other)', 'photo', [self::img('image', 'Photo')], 8),
                 $t('chips_label', 'Label above the chips (bottom of the hero)', 'Where to?'),
                 self::rep('chips', 'Destination chips (sliding row at the bottom of the hero)', 'chip', [$t('label', 'Label'), self::link('url', 'Link', '/destinations', 'A page path such as /destinations or a full https:// address.')], 12),
                 ['name' => 'show_video', 'label' => 'Play the background video on desktop (untick for a photo only)', 'type' => 'checkbox', 'default' => true],

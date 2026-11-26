@@ -42,7 +42,7 @@
                             <circle cx="{{ $x }}" cy="{{ $y }}" r="18" fill="transparent" />
                             <circle cx="{{ $x }}" cy="{{ $y }}" r="11" fill="#F2B743" class="transition-opacity" :class="active === '{{ $slug }}' ? 'opacity-35' : 'opacity-0 group-hover/stop:opacity-35 group-focus/stop:opacity-35'" />
                             <circle cx="{{ $x }}" cy="{{ $y }}" r="5.5" fill="#F2B743" stroke="#1F4660" stroke-width="2" />
-                            <text x="{{ $tx }}" y="{{ $y + 4 }}" text-anchor="{{ $anchor }}" font-size="12.5" font-weight="700" letter-spacing=".06em" fill="#fff" paint-order="stroke" stroke="#1F4660" stroke-width="3" stroke-linejoin="round" style="text-transform:uppercase;font-family:Montserrat,system-ui,sans-serif">{{ $label }}</text>
+                            <text x="{{ $tx }}" y="{{ $y + 4 }}" text-anchor="{{ $anchor }}" font-size="12.5" font-weight="700" letter-spacing=".06em" fill="#fff" paint-order="stroke" stroke="#1F4660" stroke-width="3" stroke-linejoin="round" style="text-transform:uppercase;font-family:'Manrope Variable',system-ui,sans-serif">{{ $label }}</text>
                         </a>
                     @endforeach
                 </svg>

@@ -43,7 +43,7 @@
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{{ e($gtm) }}');</script>
     @endif
     {{-- Preload the two fonts every page uses (body + headings) so text is laid out once with the final fonts (no re-wrap / layout shift). --}}
-    @foreach (['montserrat'] as $font)
+    @foreach (['manrope'] as $font)
         @php $fontUrl = rescue(fn () => Vite::asset('node_modules/@fontsource-variable/'.$font.'/files/'.$font.'-latin-wght-normal.woff2'), null, false); @endphp
         @if ($fontUrl)<link rel="preload" as="font" type="font/woff2" href="{{ $fontUrl }}" crossorigin>@endif
     @endforeach

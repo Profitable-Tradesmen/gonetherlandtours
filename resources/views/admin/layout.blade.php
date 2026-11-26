@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/2.1.1/trix.min.js" defer></script>
     <style>trix-toolbar .trix-button-group--file-tools{display:none}trix-editor{min-height:12rem;background:#fff}</style>
 </head>
-<body x-data="{ nav: false }" class="bg-sand/60 text-ink">
+<body x-data="{ nav: false }" class="bg-[#ebe7e1] text-ink">
 @php
     $nav = [
         ['admin.dashboard', 'Dashboard'], ['admin.enquiries.index', 'Inquiries'], ['admin.packages.index', 'Packages'],
@@ -21,14 +21,14 @@
     ];
 @endphp
 <div class="flex min-h-screen">
-    <aside class="fixed inset-y-0 left-0 z-40 w-60 -translate-x-full overflow-y-auto bg-ink p-4 text-white transition lg:static lg:translate-x-0" :class="nav && '!translate-x-0'">
+    <aside class="fixed inset-y-0 left-0 z-40 w-60 -translate-x-full overflow-y-auto bg-brand-900 p-4 text-white transition lg:static lg:translate-x-0" :class="nav && '!translate-x-0'">
         <a href="{{ route('admin.dashboard') }}" class="mb-6 block font-display text-xl">{{ setting('brand_name', 'GoNetherlandTours') }}<span class="block text-xs font-sans text-white/60">Admin</span></a>
         <nav class="space-y-1 text-sm" aria-label="Admin">
             @foreach ($nav as [$r, $label])
                 @continue(! auth("admin")->user()->canAccessRoute($r))
                 {{-- "admin.packages.index" is active for every "admin.packages.*" page; two-part names ("admin.dashboard", "admin.settings") match only themselves. --}}
                 @php $active = request()->routeIs(substr_count($r, '.') >= 2 ? Str::beforeLast($r, '.').'.*' : $r.'*'); @endphp
-                <a href="{{ route($r) }}" @class(['block rounded-lg px-3 py-2', 'bg-accent text-ink font-semibold' => $active, 'hover:bg-white/10' => ! $active])>{{ $label }}</a>
+                <a href="{{ route($r) }}" @class(['block rounded-lg px-3 py-2', 'bg-white/15 font-semibold' => $active, 'hover:bg-white/10' => ! $active])>{{ $label }}</a>
             @endforeach
             <a href="{{ url('/') }}" target="_blank" class="block rounded-lg px-3 py-2 text-white/70 hover:bg-white/10">View site &nearr;</a>
             <form method="POST" action="{{ route('admin.logout') }}">@csrf<button class="mt-4 w-full rounded-lg px-3 py-2 text-left text-white/70 hover:bg-white/10">Log out</button></form>
@@ -38,7 +38,7 @@
         <div class="flex items-center gap-3 border-b border-sand-200 bg-white px-4 py-3 lg:hidden">
             <button type="button" @click="nav = !nav" class="rounded p-1" aria-label="Menu"><x-icon name="menu" /></button><span class="font-semibold">Admin</span>
         </div>
-        <main class="mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">
+        <main class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
             @if (session('status'))<div class="mb-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">{{ session('status') }}</div>@endif
             @if (session('warning'))<div class="mb-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status">{{ session('warning') }}</div>@endif
             @if ($errors->any())

@@ -8,20 +8,48 @@
     <link rel="preload" as="image" href="{{ asset_v($poster) }}" @if ($sets = static_srcset($poster)) imagesrcset="{{ $sets }}" imagesizes="100vw" @endif fetchpriority="high">
 @endpush
 <section class="hero-pad relative isolate flex min-h-[96vh] items-center overflow-hidden bg-brand-900 text-white {{ $overlay ? 'pt-24 lg:pt-32' : 'pt-10' }} {{ count($chips) ? "pb-28 sm:pb-36" : "" }}">
-    {{-- Photo first (works without JavaScript and on phones); the background video, if one exists, plays over it on larger screens. --}}
-    <x-picture :src="$poster" alt="" :width="1600" :height="900" priority sizes="100vw" class="absolute inset-y-0 inset-x-px -z-30 h-full w-[calc(100%-2px)] object-cover" />
-    @if ($d['show_video'] ?? true)<x-video name="homepage_banner" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" />@endif
-    {{-- Golden-hour grade: warm amber/rose glow from the horizon, dusky violet-blue up top. Blends into the photo/video rather than covering it. --}}
-    <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-accent-600/55 via-rust/20 to-brand-900/20 mix-blend-soft-light"></div>
-    <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-accent/30 via-transparent to-transparent"></div>
-    {{-- Contrast scrim behind the text: dark ink, strongest on the left and at the top (header). --}}
-    <div class="pointer-events-none absolute inset-0 -z-10 bg-ink/20 lg:bg-transparent"></div>
-    <div class="pointer-events-none absolute inset-0 -z-10 hidden bg-gradient-to-r from-ink/45 via-ink/15 to-transparent lg:block"></div>
-    <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-ink/30 to-transparent"></div>
+    {{-- Photo slider: the first photo is the main one (shown at once, works without JavaScript and is the LCP image). The other photos are only loaded
+         after the page has finished loading and then fade in one after the other. A flat 30% black layer sits on top of all of them. --}}
+    @php $slides = array_values(array_filter(array_map(fn ($x) => $x['image'] ?? '', $d['slides'] ?? []))); @endphp
+    <div class="absolute inset-0 -z-30" data-hero-slider aria-hidden="true">
+        <x-picture :src="$poster" alt="" :width="1600" :height="900" priority sizes="100vw" class="absolute inset-y-0 inset-x-px h-full w-[calc(100%-2px)] object-cover" />
+        @foreach ($slides as $img)
+            <img data-src="{{ asset_v($img) }}" alt="" width="1600" height="900" decoding="async" class="absolute inset-y-0 inset-x-px h-full w-[calc(100%-2px)] object-cover opacity-0 transition-opacity duration-[3000ms] ease-in-out">
+        @endforeach
+    </div>
+    @if ($d['show_video'] ?? false)<x-video name="homepage_banner" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" />@endif
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-black/15"></div>
+    {{-- Extra overlay behind the text: a dark fade from the left (and from the top, behind the menu) so the headline stays easy to read on any photo. --}}
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-black/15 to-transparent lg:from-black/20 lg:via-black/3"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-black/15 to-transparent"></div>
+    @if ($slides)
+        @push('scripts')
+        <script>
+        (function () {
+            var box = document.querySelector('[data-hero-slider]');
+            if (!box || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var imgs = box.querySelectorAll('img[data-src]');
+            function start() {
+                var first = box.querySelector('picture, img:not([data-src])');
+                var list = [first].concat([].slice.call(imgs));
+                imgs.forEach(function (i) { i.src = i.dataset.src; });
+                var cur = 0;
+                setInterval(function () {
+                    var next = (cur + 1) % list.length;
+                    if (next === 0) { list.slice(1).forEach(function (el) { el.style.opacity = 0; }); }
+                    else { list[next].style.opacity = 1; }
+                    cur = next;
+                }, 10000);
+            }
+            window.addEventListener('load', function () { setTimeout(start, 2500); });
+        })();
+        </script>
+        @endpush
+    @endif
     <div class="container-site grid items-center gap-10 py-10 md:py-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-8">
         <div class="[text-shadow:0_2px_3px_rgb(0_0_0/0.35),0_6px_28px_rgb(0_0_0/0.55)]">
-            @if ($d['eyebrow'])<p class="hero-in text-center lg:text-left"><span class="label-caps inline-block rounded-full bg-ink/85 px-4 py-1.5 text-[0.8rem] font-bold [text-shadow:none]" style="color:#F2B743">{{ $d['eyebrow'] }}</span></p>@endif
-            <h1 style="--d:120ms" class="hero-in mt-4 text-center text-4xl font-semibold sm:text-5xl lg:text-left lg:text-5xl xl:text-6xl">{!! emphasize($d['heading'], 'text-accent') !!}</h1>
+            @if ($d['eyebrow'])<p class="hero-in text-center lg:text-left"><span class="label-caps inline-block text-[0.8rem] font-bold text-white">{{ $d['eyebrow'] }}</span></p>@endif
+            <h1 style="--d:120ms" class="hero-in mt-4 text-center text-4xl font-semibold sm:text-5xl lg:text-left lg:text-5xl xl:text-6xl">{!! emphasize($d['heading'], 'hero-underline text-white') !!}</h1>
             @if ($d['subheading'])<p style="--d:240ms" class="hero-in mt-4 hidden max-w-xl text-center text-sm font-medium text-white sm:mx-auto sm:mt-5 sm:block sm:text-lg lg:mx-0 lg:text-left">{{ $d['subheading'] }}</p>@endif
             {{-- The three ways to travel as a quiet row of links (icon + name), like a short menu under the intro text. --}}
             @php $ttypes = \App\Support\SiteData::tourTypes(); @endphp

@@ -1,9 +1,9 @@
 @import 'tailwindcss';
 
 /* Self-hosted variable fonts (font-display: swap is set by Fontsource). */
-@import '@fontsource-variable/playfair-display/wght.css';
-@import '@fontsource-variable/playfair-display/wght-italic.css';
-@import '@fontsource-variable/montserrat/wght.css';
+@import '@fontsource-variable/bodoni-moda/wght.css';
+@import '@fontsource-variable/bodoni-moda/wght-italic.css';
+@import '@fontsource-variable/manrope/wght.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../**/*.blade.php';
@@ -27,8 +27,8 @@
     --color-sand-200: #E9DFD2;
 
     /* Typography */
-    --font-display: 'Playfair Display Variable', Georgia, 'Times New Roman', serif;
-    --font-sans: 'Montserrat Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Bodoni Moda Variable', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
     /* Layout */
     --container-site: 1390px;
@@ -230,3 +230,9 @@ main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 
     main > section:not(:first-child), main > section.hero-pad { padding-block: 90px; }
     main > section.tight-pad { padding-block: 1.5rem; }   /* slim strips of selling points (value_strip, feature_cards strip) */
 }
+
+/* Hero headline: the highlighted word keeps the headline color and gets a gold underline that draws itself from left to right. */
+.hero-underline { position: relative; display: inline-block; }
+.hero-underline::after { content: ''; position: absolute; left: 0; right: 0; bottom: -.06em; height: .07em; min-height: 3px; border-radius: 9999px; background: var(--color-accent); transform: scaleX(0); transform-origin: left; animation: hero-underline 1.4s cubic-bezier(.65, 0, .35, 1) .9s forwards; }
+@keyframes hero-underline { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .hero-underline::after { animation: none; transform: scaleX(1); } }
