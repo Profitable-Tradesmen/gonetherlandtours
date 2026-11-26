@@ -56,7 +56,7 @@
         <x-form-field name="last_name" label="Last name" :idp="$idp" required autocomplete="family-name" />
         <x-form-field name="email" label="Email" type="email" :idp="$idp" required autocomplete="email" span />
 
-        <div class="sm:col-span-2 grid grid-cols-[minmax(0,10.5rem)_1fr] gap-3">
+        <div class="sm:col-span-2 grid grid-cols-1 gap-3 min-[420px]:grid-cols-[minmax(0,10.5rem)_minmax(0,1fr)]">
             <x-form-field name="country_code" label="Country code" :idp="$idp" required>
                 @php $selectedIso = $oldHere ? old('country_code', 'US') : 'US'; @endphp
                 @php

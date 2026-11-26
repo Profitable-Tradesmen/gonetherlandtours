@@ -12,7 +12,7 @@
                 <p class="label-caps text-ink">{{ $d['eyebrow'] }}</p>
                 <span class="mb-4 mt-3 flex items-center gap-2" aria-hidden="true"><i class="h-0.5 w-9 bg-brand-900"></i><i class="h-1.5 w-1.5 rotate-45 bg-rust"></i><i class="h-0.5 w-9 bg-brand-900"></i></span>
             @endif
-            <h2 id="sl-{{ $sid }}" class="text-3xl font-medium sm:text-4xl lg:text-5xl">{!! emphasize($d['heading'], 'text-rust') !!}</h2>
+            <h2 id="sl-{{ $sid }}" class="break-words text-3xl font-medium sm:text-4xl lg:text-4xl xl:text-5xl">{!! emphasize($d['heading'], 'text-rust') !!}</h2>
             <ul class="mt-10 space-y-7">
                 @foreach ($d['items'] as $i => $w)
                     <li class="flex gap-3" data-reveal="up" style="--d:{{ $i * 120 }}ms">

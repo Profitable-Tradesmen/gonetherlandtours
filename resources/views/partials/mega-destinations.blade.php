@@ -7,7 +7,7 @@
     $slugToDest = $destinations->keyBy('slug');
     $half = (int) ceil($stops->count() / 2);
 @endphp
-<div class="container-site grid gap-x-10 gap-y-8 pb-9 pt-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)_minmax(0,0.8fr)]">
+<div class="container-site grid gap-x-10 gap-y-8 pb-9 pt-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)_minmax(0,0.8fr)]">
     <div class="min-w-0">
         <p class="label-caps text-xs font-bold text-rust">Explore by region</p>
         <div class="mt-5 grid gap-4" style="grid-template-columns: repeat({{ max(1, min($dests->count(), 3)) }}, minmax(0, 1fr))">
@@ -16,7 +16,7 @@
                 <a href="{{ route('destinations.show', $dest) }}" class="group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-lg bg-brand-900 p-4 text-white" @click="dd = null">
                     @if ($dest->image)<x-picture :src="$dest->image" :alt="''" :width="640" :height="800" sizes="220px" class="absolute inset-0 -z-20 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />@endif
                     <span class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent"></span>
-                    <span class="font-display text-xl font-medium leading-tight">{{ $dest->name }}</span>
+                    <span class="break-words font-display text-base font-medium leading-tight xl:text-xl">{{ $dest->name }}</span>
                     <span class="label-caps mt-1 text-[0.65rem] font-bold text-accent">{{ $count }} {{ \Illuminate\Support\Str::plural('tour', $count) }}</span>
                 </a>
             @endforeach
@@ -43,7 +43,7 @@
     </div>
 
     @if ($tripCard)
-        <div class="min-w-0 self-start">
+        <div class="hidden min-w-0 self-start xl:block">
             <a href="{{ $tripCard['href'] }}" class="group block overflow-hidden border-t-[3px] border-accent bg-white shadow-card" @click="dd = null">
                 <span class="relative block overflow-hidden">
                     @if (! empty($tripCard['media']))<x-picture :media="$tripCard['media']" :alt="$tripCard['media']->alt" sizes="300px" class="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105" />@else<x-picture :src="$tripCard['src']" :alt="''" :width="640" :height="400" sizes="300px" class="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105" />@endif

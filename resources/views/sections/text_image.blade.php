@@ -5,7 +5,7 @@
 <section class="{{ ($d['background'] ?? 'sand') === 'white' ? 'bg-white' : 'bg-sand' }} py-16 sm:py-24 lg:py-28" aria-labelledby="ti-{{ $sid }}">
     <div class="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
         <div class="{{ $left ? 'lg:order-2' : '' }}" data-reveal="{{ $left ? 'right' : 'left' }}">
-            <h2 id="ti-{{ $sid }}" class="text-3xl font-medium sm:text-4xl lg:text-5xl">{!! emphasize($d['heading'], 'text-rust') !!}</h2>
+            <h2 id="ti-{{ $sid }}" class="break-words text-3xl font-medium sm:text-4xl lg:text-4xl xl:text-5xl">{!! emphasize($d['heading'], 'text-rust') !!}</h2>
             @if ($d['quote'])<p class="mt-5 text-lg font-medium leading-snug text-brand-700">{{ $d['quote'] }}</p>@endif
             <div class="mt-6 space-y-4 leading-relaxed text-ink/80">
                 @foreach ($paras as $p)<p>{{ $p }}</p>@endforeach

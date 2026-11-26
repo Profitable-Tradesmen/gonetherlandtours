@@ -81,7 +81,7 @@
     @php $trust = array_values(array_filter([[text('quiz_trust_1'), 'lock'], [text('quiz_trust_2'), 'check'], [text('quiz_trust_3'), 'shield']], fn ($t) => $t[0] !== '')); @endphp
     @if ($trust)
         <div class="bg-gradient-to-br from-[#f3e6cb] to-sand px-5 py-3.5 sm:px-7">
-            <ul class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-ink/85 sm:justify-between">@foreach ($trust as [$label, $icon])<li class="inline-flex items-center gap-1.5"><x-icon :name="$icon" class="h-4 w-4 text-rust" />{{ $label }}</li>@endforeach</ul>
+            <ul class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-ink/85 2xl:justify-between">@foreach ($trust as [$label, $icon])<li class="inline-flex items-center gap-1.5"><x-icon :name="$icon" class="h-4 w-4 text-rust" />{{ $label }}</li>@endforeach</ul>
         </div>
     @endif
 </div>
