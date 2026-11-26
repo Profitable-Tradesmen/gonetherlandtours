@@ -9,6 +9,7 @@
         ->when(($d['sort'] ?? 'default') === 'price', fn ($q) => $q->orderBy('price_from'))
         ->orderBy('sort_order')->skip($offset)->take($limit)->get();
     $bg = ($d['background'] ?? 'white') === 'sand' ? 'bg-sand' : 'bg-white';
+    $card = ($d['style'] ?? 'cards') === 'photo' ? 'partials.package-card-photo' : 'partials.package-card-feature';
 @endphp
 <section class="{{ $bg }} py-16 sm:py-24" aria-labelledby="tp-{{ $sid }}">
     <div class="container-site">
@@ -19,7 +20,7 @@
             {{-- A plain grid of cards, the same on every package list: a swipe row on phones, then two columns from sm and three from lg. --}}
             <div class="carousel-track -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
                 @foreach ($packages as $p)
-                    <div class="flex w-[84%] shrink-0 snap-start sm:w-auto"><div class="w-full">@include('partials.package-card-feature', ['package' => $p])</div></div>
+                    <div class="flex w-[84%] shrink-0 snap-start sm:w-auto"><div class="w-full">@include($card, ['package' => $p])</div></div>
                 @endforeach
             </div>
         @endif

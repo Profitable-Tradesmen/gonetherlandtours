@@ -23,6 +23,7 @@ class DestinationController extends ResourceController
                 ['name' => 'slug', 'label' => 'URL slug (leave blank to generate)', 'type' => 'text', 'rules' => 'nullable|string|max:120'],
                 ['name' => 'h1', 'label' => 'Page heading (H1)', 'type' => 'text', 'rules' => 'nullable|string|max:190'],
                 ['name' => 'summary', 'label' => 'Short summary', 'type' => 'textarea', 'rules' => 'nullable|string|max:500'],
+                ['name' => 'places', 'label' => 'Places listed on the destination card (separate with commas)', 'type' => 'text', 'rules' => 'nullable|string|max:255'],
                 ['name' => 'body', 'label' => 'Page content', 'type' => 'rich', 'rules' => 'nullable|string'],
                 ['name' => 'image', 'label' => 'Image (JPG, PNG or WebP)', 'type' => 'image'],
                 ['name' => 'seo_title', 'label' => 'SEO title', 'type' => 'text', 'rules' => 'nullable|string|max:190'],

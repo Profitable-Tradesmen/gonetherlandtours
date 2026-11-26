@@ -29,6 +29,12 @@
         @include('partials.place-icon-bg', ['slug' => $package->destination?->slug])
         @if ($dest)<p class="label-caps flex items-center gap-1.5 text-xs font-bold text-rust"><x-icon name="map" class="h-4 w-4" />{{ $dest }}</p>@endif
         <h{{ $headingLevel ?? 3 }} class="mt-2.5 line-clamp-2 text-[1.45rem] font-medium leading-snug"><a href="{{ $url }}" class="hover:text-rust">{{ $package->title }}</a></h{{ $headingLevel ?? 3 }}>
+        @if ($stops = $package->routeStops())
+            <p class="mt-3 border-y border-sand-200 py-2.5">
+                <span class="label-caps block text-[0.65rem] text-ink/60">{{ text('card_route_label') ?: 'Route' }}</span>
+                <span class="mt-0.5 block text-sm font-semibold leading-snug text-brand-900">@foreach ($stops as $stop)<span class="whitespace-nowrap">{{ $stop }}@if (! $loop->last)<span class="mx-1.5 text-rust" aria-hidden="true">&rsaquo;</span><span class="sr-only">, </span>@endif</span> @endforeach</span>
+            </p>
+        @endif
         <p class="mt-2 line-clamp-2 min-h-[3rem] text-[0.95rem] leading-relaxed text-ink/80">{{ $package->summary }}</p>
         <a href="{{ $url }}" class="group/link mt-3 inline-flex min-h-[2.75rem] items-center gap-1.5 self-start text-sm font-bold text-brand-700 hover:text-rust">
             <span class="border-b border-current pb-0.5">{{ text('card_details_label') ?: 'Details' }}<span class="sr-only"> about {{ $package->title }}</span></span>

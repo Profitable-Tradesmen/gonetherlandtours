@@ -14,7 +14,19 @@
             @endif
             <h2 id="sb-{{ $sid }}" class="text-3xl font-medium sm:text-4xl lg:text-5xl">{!! emphasize($d['heading'], 'text-accent') !!}</h2>
             @if ($d['text'])<p class="mt-5 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">{{ $d['text'] }}</p>@endif
-            @if ($d['button_label'])<p class="mt-8"><x-button @click="$store.modal.show()">{{ $d['button_label'] }}</x-button></p>@endif
+            @if (! empty($d['points']))
+                <ul class="mt-6 max-w-xl space-y-3">
+                    @foreach ($d['points'] as $pt)
+                        <li class="flex gap-3 text-base leading-snug text-white/95"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-ink"><x-icon name="check" class="h-3 w-3" /></span>{{ $pt['text'] }}</li>
+                    @endforeach
+                </ul>
+            @endif
+            @if ($d['button_label'] || ! empty($d['link_label']))
+                <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+                    @if ($d['button_label'])<x-button @click="$store.modal.show()">{{ $d['button_label'] }}</x-button>@endif
+                    @if (! empty($d['link_label']) && ! empty($d['link_url']))<a href="{{ str_starts_with($d['link_url'], '/') ? url($d['link_url']) : $d['link_url'] }}" class="inline-flex items-center gap-2 border-b-2 border-accent pb-0.5 text-sm font-semibold text-white hover:text-accent">{{ $d['link_label'] }} <x-icon name="arrow" class="h-4 w-4" /></a>@endif
+                </div>
+            @endif
         </div>
         @if (count($d['items']))
             <dl class="grid grid-cols-2 gap-4 sm:gap-5" data-reveal="right">

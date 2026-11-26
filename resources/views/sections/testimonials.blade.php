@@ -4,7 +4,9 @@
     $spot = $variant === 'spotlight';
     $stars = (bool) ($d['show_stars'] ?? true);
     $bg = (string) ($d['bg'] ?? '');
-    $items = \App\Models\Testimonial::active()->when((int) $d['limit'] > 0, fn ($q) => $q->take((int) $d['limit']))->get();
+    // This option leaves sample reviews off the live site, so only real ones are shown to visitors there.
+    $items = \App\Models\Testimonial::active()->when(! empty($d['real_only_live']) && app()->isProduction(), fn ($q) => $q->where('is_placeholder', false))
+        ->when((int) $d['limit'] > 0, fn ($q) => $q->take((int) $d['limit']))->get();
 @endphp
 @if ($items->isNotEmpty() && $spot)
 {{-- Spotlight: one review at a time in a large card (round photo or initial, stars, big quote, name, place and trip), a picker made of the

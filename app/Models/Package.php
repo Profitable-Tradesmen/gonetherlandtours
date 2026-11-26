@@ -49,6 +49,12 @@ class Package extends Model
         return 'slug';
     }
 
+    /** The stops of the route, typed in Admin > Packages as "Haarlem > Gouda > Delft". */
+    public function routeStops(): array
+    {
+        return array_values(array_filter(array_map('trim', preg_split('/[>›]/u', (string) $this->route))));
+    }
+
     public function priceLabel(): string
     {
         if (! $this->price_from) {

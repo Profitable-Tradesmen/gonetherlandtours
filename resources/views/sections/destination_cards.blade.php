@@ -22,6 +22,11 @@
                         <p class="label-caps flex items-center gap-1.5 text-xs font-bold text-rust"><x-icon name="map" class="h-4 w-4" />@if ($st && $st->nmin){{ $st->nmin == $st->nmax ? $st->nmin : $st->nmin.'–'.$st->nmax }} nights @else Trips across the country @endif</p>
                         <h3 class="mt-2.5 line-clamp-2 text-[1.45rem] font-medium leading-snug"><a href="{{ $url }}" class="hover:text-rust">{{ $dest->name }}</a></h3>
                         <p class="mt-2 line-clamp-2 min-h-[3rem] flex-1 text-[0.95rem] leading-relaxed text-ink/80">{{ $dest->summary }}</p>
+                        @if ($places = array_filter(array_map('trim', explode(',', (string) $dest->places))))
+                            <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-2" aria-label="Places in {{ $dest->name }}">
+                                @foreach ($places as $place)<li class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-900"><i class="h-1.5 w-1.5 rotate-45 bg-accent" aria-hidden="true"></i>{{ $place }}</li>@endforeach
+                            </ul>
+                        @endif
                         <div class="mt-5 flex items-center justify-between gap-3 border-t border-sand-200 pt-3">
                             <a href="{{ $url }}" class="group/link inline-flex min-h-[2.75rem] items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-rust">
                                 <span class="border-b border-current pb-0.5">{{ $d['explore_label'] ?: 'Explore' }}<span class="sr-only"> {{ $dest->name }}</span></span>
@@ -33,6 +38,18 @@
                 </article>
             @endforeach
         </x-slider>
+        @if (! empty($d['own_heading']))
+            <div class="mt-6 flex flex-col items-start gap-5 rounded-2xl bg-brand-900 p-6 text-white shadow-card sm:p-8 md:flex-row md:items-center md:justify-between" data-reveal="up">
+                <div class="flex min-w-0 items-start gap-4">
+                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent text-ink"><x-icon name="map" class="h-6 w-6" /></span>
+                    <div class="min-w-0">
+                        <h3 class="text-2xl font-medium">{{ $d['own_heading'] }}</h3>
+                        @if (! empty($d['own_text']))<p class="mt-1 max-w-2xl leading-relaxed text-white/85">{{ $d['own_text'] }}</p>@endif
+                    </div>
+                </div>
+                @if (! empty($d['own_button']))<x-button class="shrink-0" @click="$store.modal.show()">{{ $d['own_button'] }} <x-icon name="arrow" class="h-4 w-4" /></x-button>@endif
+            </div>
+        @endif
         @if ($d['all_label'])<p class="mt-10 text-center"><x-cta-button variant="secondary" :label="$d['all_label']" :url="$d['all_url']" /></p>@endif
     </div>
 </section>

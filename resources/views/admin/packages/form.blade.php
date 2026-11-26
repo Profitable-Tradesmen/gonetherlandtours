@@ -19,6 +19,7 @@
             <div><label class="field-label" for="destination_id">Destination</label><select id="destination_id" name="destination_id" class="field"><option value="">None</option>@foreach ($destinations as $d)<option value="{{ $d->id }}" @selected($v('destination_id') == $d->id)>{{ $d->name }}</option>@endforeach</select></div>
             <div><label class="field-label" for="price_from">"From" price per person (blank = Price on request)</label><input id="price_from" type="number" step="0.01" min="0" name="price_from" value="{{ $v('price_from') }}" class="field"></div>
             <div><label class="field-label" for="currency">Currency</label><select id="currency" name="currency" class="field">@foreach (['EUR', 'USD', 'GBP'] as $c)<option @selected($v('currency', 'EUR') === $c)>{{ $c }}</option>@endforeach</select></div>
+            <div class="sm:col-span-2"><label class="field-label" for="route">Route shown on the tour card (separate stops with &gt;)</label><input id="route" name="route" maxlength="190" value="{{ $v('route') }}" class="field" placeholder="Haarlem > Gouda > Delft"></div>
             <div class="sm:col-span-2"><label class="field-label" for="summary">Short summary</label><textarea id="summary" name="summary" rows="2" class="field">{{ $v('summary') }}</textarea></div>
         </div>
         <div class="flex flex-wrap gap-5 text-sm font-semibold">
