@@ -27,4 +27,15 @@
         <p class="mt-10 text-center"><x-button @click="$store.modal.show()">Get a free quote</x-button></p>
     </div>
 </section>
+
+<section class="bg-brand-900 py-12 text-white sm:py-16" aria-labelledby="ts-ways">
+    <div class="container-site flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+        <div class="max-w-2xl">
+            <h2 id="ts-ways" class="text-3xl font-medium">Next, choose <em class="text-accent">how you travel</em></h2>
+            <p class="mt-3 text-white/90">Any style works as a self drive, with a private driver-guide or on a small-group coach tour.</p>
+        </div>
+        <x-button :href="route('ways-to-travel')" class="shrink-0">Compare ways to travel <x-icon name="arrow" class="h-4 w-4" /></x-button>
+    </div>
+</section>
+@include('partials.how-it-works', ['bg' => 'sand'])
 @endsection

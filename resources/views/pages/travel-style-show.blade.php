@@ -47,6 +47,10 @@
 </section>
 @endif
 
+@include('partials.places-section', ['places' => \App\Models\Place::forStops($style->list('places', ',')), 'title' => 'Places for *'.$style->name.'*', 'intro' => 'Stops that suit this style. We can add or swap any of them.', 'bg' => 'white', 'id' => 'ts-places'])
+
+@include('partials.how-it-works', ['bg' => 'sand'])
+
 @if ($others->isNotEmpty())
 <section class="bg-white py-12 sm:py-16" aria-labelledby="ts-more">
     <div class="container-site text-center">

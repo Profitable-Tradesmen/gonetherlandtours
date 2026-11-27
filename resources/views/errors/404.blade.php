@@ -10,4 +10,5 @@
         <x-button :href="route('packages.index')" variant="secondary">Tour packages</x-button>
     </div>
 </section>
+@include('partials.explore-cards')
 @endsection

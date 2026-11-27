@@ -18,9 +18,10 @@
             <p class="text-center text-ink/75">{{ $d['empty_text'] }} <button type="button" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust" @click="$store.modal.show()">{{ text('card_quote_label') ?: 'Get a quote' }}</button></p>
         @else
             {{-- A plain grid of cards, the same on every package list: a swipe row on phones, then two columns from sm and three from lg. --}}
-            <div class="carousel-track -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+            <div class="carousel-track -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0">
                 @foreach ($packages as $p)
-                    <div class="flex w-[84%] shrink-0 snap-start sm:w-auto"><div class="w-full">@include($card, ['package' => $p])</div></div>
+                    {{-- Four cards sit in one row (two by two on smaller screens) instead of three plus one. --}}
+                    <div class="flex w-[84%] shrink-0 snap-start sm:w-[calc(50%-0.75rem)] {{ $packages->count() % 4 === 0 ? 'xl:w-[calc(25%-1.125rem)]' : 'lg:w-[calc(33.333%-1rem)]' }}"><div class="w-full">@include($card, ['package' => $p])</div></div>
                 @endforeach
             </div>
         @endif

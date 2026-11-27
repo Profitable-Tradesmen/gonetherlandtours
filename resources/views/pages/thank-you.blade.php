@@ -7,6 +7,7 @@
     <p class="mx-auto mt-4 max-w-xl text-lg text-ink/80">{{ text('thankyou_text') }}</p>
     <p class="mt-8"><x-button :href="route('packages.index')" variant="secondary">{{ text('thankyou_button') }}</x-button></p>
 </section>
+@include('partials.explore-cards', ['title' => 'While you *wait*'])
 @endsection
 
 @if ($enquiryId)
