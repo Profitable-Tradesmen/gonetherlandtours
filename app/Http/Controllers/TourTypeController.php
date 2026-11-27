@@ -11,7 +11,7 @@ use App\Support\Seo;
 /** Public landing page for one tour type (Self Drive, Chauffeur Driven, Coach Tours) at /tours/{slug}. */
 class TourTypeController extends Controller
 {
-    /** /ways-to-travel: the three tour types side by side. */
+    /** /tours: the three tour types side by side ("Ways to travel"). */
     public function compare()
     {
         $intro = 'Drive yourself, ride with a private driver-guide or join a small group. Here is how they compare.';

@@ -19,21 +19,15 @@
         <nav class="hidden items-center gap-1 lg:ml-auto lg:flex" aria-label="Main">
             @foreach ($menu as $item)
                 @if ($item->kind === 'tours')
-                    <button type="button" class="{{ $navBtn }}" :class="dd === 'tours' && 'bg-sand'" @click="dd = dd === 'tours' ? null : 'tours'" @mouseenter="dd = 'tours'" :aria-expanded="dd === 'tours'" aria-controls="mega-tours">
-                        {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'tours' && 'rotate-180'" />
-                    </button>
+                    @include('partials.nav-split', ['key' => 'tours', 'panel' => 'mega-tours', 'href' => route('ways-to-travel'), 'label' => $item->label])
                 @elseif ($item->kind === 'styles' && $styles->isNotEmpty())
-                    <button type="button" class="{{ $navBtn }}" :class="dd === 'styles' && 'bg-sand'" @click="dd = dd === 'styles' ? null : 'styles'" @mouseenter="dd = 'styles'" :aria-expanded="dd === 'styles'" aria-controls="mega-styles">
-                        {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'styles' && 'rotate-180'" />
-                    </button>
+                    @include('partials.nav-split', ['key' => 'styles', 'panel' => 'mega-styles', 'href' => route('travel-styles.index'), 'label' => $item->label])
                 @elseif ($item->kind === 'cards' && $item->children->isNotEmpty())
                     <button type="button" class="{{ $navBtn }}" :class="dd === 'm{{ $item->id }}' && 'bg-sand'" @click="dd = dd === 'm{{ $item->id }}' ? null : 'm{{ $item->id }}'" @mouseenter="dd = 'm{{ $item->id }}'" :aria-expanded="dd === 'm{{ $item->id }}'" aria-controls="mega-{{ $item->id }}">
                         {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'm{{ $item->id }}' && 'rotate-180'" />
                     </button>
                 @elseif ($item->kind === 'link' && $destinations->isNotEmpty() && rtrim($item->href(), '/') === rtrim(route('destinations.index'), '/'))
-                    <button type="button" class="{{ $navBtn }}" :class="dd === 'dest' && 'bg-sand'" @click="dd = dd === 'dest' ? null : 'dest'" @mouseenter="dd = 'dest'" :aria-expanded="dd === 'dest'" aria-controls="mega-destinations">
-                        {{ $item->label }} <x-icon name="chevron" class="h-4 w-4 transition-transform" ::class="dd === 'dest' && 'rotate-180'" />
-                    </button>
+                    @include('partials.nav-split', ['key' => 'dest', 'panel' => 'mega-destinations', 'href' => route('destinations.index'), 'label' => $item->label])
                 @else
                     <a href="{{ $item->href() }}" class="{{ $navBtn }} {{ $item->href() === url('/') ? 'lg:!hidden xl:!inline-flex' : '' }}" @if ($item->new_tab) target="_blank" rel="noopener" @endif @mouseenter="dd = null">{{ $item->label }}</a>
                 @endif
@@ -109,15 +103,15 @@
         <div class="container-site space-y-1 py-3 text-sm font-semibold">
             <a href="{{ route('home') }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ text('mobile_home_label') }}</a>
             @if ($hasTours)
-                <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_tours_heading') }}</p>
+                <a href="{{ route('ways-to-travel') }}" class="label-caps flex min-h-[2.75rem] items-center gap-2 rounded px-2 pt-3 text-rust hover:bg-sand">{{ text('mobile_tours_heading') }} <x-icon name="arrow" class="h-3.5 w-3.5" /></a>
                 @foreach ($tourTypes as $t)<a href="{{ route('tour-types.show', $t) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $t->name }}</a>@endforeach
             @endif
             @if ($destinations->isNotEmpty())
-                <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_destinations_heading') }}</p>
+                <a href="{{ route('destinations.index') }}" class="label-caps flex min-h-[2.75rem] items-center gap-2 rounded px-2 pt-3 text-rust hover:bg-sand">{{ text('mobile_destinations_heading') }} <x-icon name="arrow" class="h-3.5 w-3.5" /></a>
                 @foreach ($destinations as $d)<a href="{{ route('destinations.show', $d) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $d->name }}</a>@endforeach
             @endif
             @if ($styles->isNotEmpty() && $menu->contains('kind', 'styles'))
-                <p class="label-caps px-2 pt-3 text-rust">Travel styles</p>
+                <a href="{{ route('travel-styles.index') }}" class="label-caps flex min-h-[2.75rem] items-center gap-2 rounded px-2 pt-3 text-rust hover:bg-sand">Travel styles <x-icon name="arrow" class="h-3.5 w-3.5" /></a>
                 @foreach ($styles as $s)<a href="{{ route('travel-styles.show', $s) }}" class="block rounded px-2 py-2.5 hover:bg-sand">{{ $s->name }}</a>@endforeach
             @endif
             <p class="label-caps px-2 pt-3 text-rust">{{ text('mobile_more_heading') }}</p>
