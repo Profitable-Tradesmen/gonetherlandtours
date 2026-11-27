@@ -28,4 +28,25 @@
         <p class="mt-10 text-center"><x-button @click="$store.modal.show()">Get a free quote</x-button></p>
     </div>
 </section>
+@foreach ($destinations as $dest)
+    @php
+        $places = \App\Models\Place::active()->where('destination_id', $dest->id)->get();
+        $tours = \App\Models\Package::published()->where('destination_id', $dest->id)->orderBy('sort_order')->get();
+    @endphp
+    @continue($places->isEmpty())
+    <section class="{{ $loop->odd ? 'bg-sand' : 'bg-white' }} py-14 sm:py-20" aria-labelledby="reg-{{ $dest->id }}">
+        <div class="container-site">
+            <x-section-heading eyebrow="{{ $places->count() }} places to discover" :title="$dest->name" :subtitle="$dest->summary" :id="'reg-'.$dest->id" />
+            @include('partials.places-grid')
+            @if ($tours->isNotEmpty())
+                <div class="mt-8">
+                    <h3 class="text-center text-xl font-medium">Tours in {{ $dest->name }}</h3>
+                    <ul class="mt-4 flex flex-wrap justify-center gap-3">
+                        @foreach ($tours as $tour)<li><a href="{{ route('packages.show', $tour) }}" class="inline-flex min-h-[2.75rem] items-center rounded-full border border-ink/20 bg-white px-5 text-sm font-semibold text-brand-900 transition hover:border-brand-900">{{ $tour->title }}</a></li>@endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
+    </section>
+@endforeach
 @endsection

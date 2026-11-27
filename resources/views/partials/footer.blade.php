@@ -20,7 +20,7 @@
                 @endforeach
             </ul>
         </div>
-        <div class="grid gap-x-10 gap-y-8 sm:grid-cols-3">
+        <div class="grid gap-x-8 gap-y-8 sm:grid-cols-2 xl:grid-cols-4">
         <nav aria-label="{{ text('footer_tours_heading') ?: 'Tours' }}">
             <h2 class="label-caps pb-1 text-accent !font-sans">{{ text('footer_tours_heading') }}</h2>
             <ul class="mt-3 space-y-0.5 text-sm">
@@ -32,6 +32,14 @@
             <h2 class="label-caps pb-1 text-accent !font-sans">{{ text('footer_destinations_heading') ?: 'Destinations' }}</h2>
             <ul class="mt-3 space-y-0.5 text-sm">
                 @foreach ($destinations as $d)<li><a href="{{ route('destinations.show', $d) }}" class="inline-block py-1.5 hover:text-accent">{{ $d->name }}</a></li>@endforeach
+            </ul>
+        </nav>
+        @endif
+        @if (($footerStyles = \App\Support\SiteData::travelStyles())->isNotEmpty())
+        <nav aria-label="Travel styles">
+            <h2 class="label-caps pb-1 text-accent !font-sans">Travel styles</h2>
+            <ul class="mt-3 space-y-0.5 text-sm">
+                @foreach ($footerStyles as $s)<li><a href="{{ route('travel-styles.show', $s) }}" class="inline-block py-1.5 hover:text-accent">{{ $s->name }}</a></li>@endforeach
             </ul>
         </nav>
         @endif

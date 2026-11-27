@@ -15,6 +15,7 @@
                 </a>
             @endforeach
         </div>
+        <a href="{{ route('ways-to-travel') }}" class="label-caps mr-6 mt-5 inline-flex items-center gap-2 border-b-2 border-accent pb-0.5 text-[0.7rem] font-bold text-brand-900 hover:text-rust" @click="dd = null">Compare ways to travel <x-icon name="arrow" class="h-3.5 w-3.5" /></a>
         <a href="{{ route('packages.index') }}" class="label-caps mt-5 inline-flex items-center gap-2 border-b-2 border-accent pb-0.5 text-[0.7rem] font-bold text-brand-900 hover:text-rust" @click="dd = null">View all packages <x-icon name="arrow" class="h-3.5 w-3.5" /></a>
     </div>
 

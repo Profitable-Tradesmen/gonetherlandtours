@@ -1,0 +1,242 @@
+{
+    "amsterdam": {
+        "file": "images/places/amsterdam.webp",
+        "title": "Amsterdam (NL), Brücke am Kloveniersburgwal -- 2015 -- 7254",
+        "author": "Dietmar Rabich",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Amsterdam_(NL),_Br%C3%BCcke_am_Kloveniersburgwal_--_2015_--_7254.jpg"
+    },
+    "haarlem": {
+        "file": "images/places/haarlem.webp",
+        "title": "Haarlem, het Teylermuseum RM315441 en de Sint Bavokerk RM19264 vanaf de Korte Spaarne foto4 2015-01-04 10.05",
+        "author": "Michielverbeek",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Haarlem,_het_Teylermuseum_RM315441_en_de_Sint_Bavokerk_RM19264_vanaf_de_Korte_Spaarne_foto4_2015-01-04_10.05.jpg"
+    },
+    "leiden": {
+        "file": "images/places/leiden.webp",
+        "title": "Rapenburg tijdens Japanmarkt (2026-05-24)",
+        "author": "Sneeuwvlakte",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Rapenburg_tijdens_Japanmarkt_(2026-05-24).jpg"
+    },
+    "delft": {
+        "file": "images/places/delft.webp",
+        "title": "0804 Delft, Markt with Nieuwe Kerk, Delft 407",
+        "author": "Jan Geerling",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:0804_Delft,_Markt_with_Nieuwe_Kerk,_Delft_407.jpg"
+    },
+    "utrecht": {
+        "file": "images/places/utrecht.webp",
+        "title": "Utrecht, de Domtoren (RM36075) vanaf de Oudegracht 230 ongeveer foto5 2015-11-01 08.56",
+        "author": "Michielverbeek",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Utrecht,_de_Domtoren_(RM36075)_vanaf_de_Oudegracht_230_ongeveer_foto5_2015-11-01_08.56.jpg"
+    },
+    "the-hague": {
+        "file": "images/places/the-hague.webp",
+        "title": "Den Haag, het Mauritshuis RM17650 foto5 2015-08-05 19.06",
+        "author": "Michielverbeek",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Den_Haag,_het_Mauritshuis_RM17650_foto5_2015-08-05_19.06.jpg"
+    },
+    "rotterdam": {
+        "file": "images/places/rotterdam.webp",
+        "title": "Erasmus bridge and Rotterdam skyline (21458216300)",
+        "author": "Kristoffer Trolle from Copenhagen, Denmark",
+        "license": "CC BY 2.0",
+        "license_url": "https://creativecommons.org/licenses/by/2.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Erasmus_bridge_and_Rotterdam_skyline_(21458216300).jpg"
+    },
+    "keukenhof": {
+        "file": "images/places/keukenhof.webp",
+        "title": "Keukenhof 2018 DSC 0165",
+        "author": "Atamari",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Keukenhof_2018_DSC_0165.jpg"
+    },
+    "lisse": {
+        "file": "images/places/lisse.webp",
+        "title": "Lisse, veld met tulpen bij de Zwartelaan IMG 8946 2021-04-27 11.19",
+        "author": "Michielverbeek",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Lisse,_veld_met_tulpen_bij_de_Zwartelaan_IMG_8946_2021-04-27_11.19.jpg"
+    },
+    "zaanse-schans": {
+        "file": "images/places/zaanse-schans.webp",
+        "title": "Zaanse Schans (NL), Windmühlen -- 2026 -- 0493",
+        "author": "Dietmar Rabich",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Zaanse_Schans_(NL),_Windm%C3%BChlen_--_2026_--_0493.jpg"
+    },
+    "edam": {
+        "file": "images/places/edam.webp",
+        "title": "Canal in Edam 307365",
+        "author": "Anne Hornyak",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Canal_in_Edam_307365.jpg"
+    },
+    "volendam": {
+        "file": "images/places/volendam.webp",
+        "title": "Volendam harbour promenade with boats and poffertjes shop",
+        "author": "Cro-Cop",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Volendam_harbour_promenade_with_boats_and_poffertjes_shop.jpg"
+    },
+    "alkmaar": {
+        "file": "images/places/alkmaar.webp",
+        "title": "Amsterdam (NL), Waag -- 2015 -- 7258",
+        "author": "Dietmar Rabich",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Amsterdam_(NL),_Waag_--_2015_--_7258.jpg"
+    },
+    "gouda": {
+        "file": "images/places/gouda.webp",
+        "title": "Stadhuis van Gouda op de Markt",
+        "author": "MPhernambucq",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Stadhuis_van_Gouda_op_de_Markt.jpg"
+    },
+    "kinderdijk": {
+        "file": "images/places/kinderdijk.webp",
+        "title": "The windmills of Kinderdijk",
+        "author": "Tarod",
+        "license": "CC BY-SA 3.0 nl",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/nl/deed.en",
+        "source_url": "https://commons.wikimedia.org/wiki/File:The_windmills_of_Kinderdijk.JPG"
+    },
+    "dordrecht": {
+        "file": "images/places/dordrecht.webp",
+        "title": "Dordrecht, zicht op de Grote Kerk RM13417 vanaf de Lange IJzeren Brug RM14041 IMG 6805 2023-06-11 12.22",
+        "author": "Michielverbeek",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Dordrecht,_zicht_op_de_Grote_Kerk_RM13417_vanaf_de_Lange_IJzeren_Brug_RM14041_IMG_6805_2023-06-11_12.22.jpg"
+    },
+    "middelburg": {
+        "file": "images/places/middelburg.webp",
+        "title": "Middelburg Markt R01",
+        "author": "Marc Ryckaert",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Middelburg_Markt_R01.jpg"
+    },
+    "veere": {
+        "file": "images/places/veere.webp",
+        "title": "Veere (NL), Haven -- 2022 -- 5092",
+        "author": "Dietmar Rabich",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Veere_(NL),_Haven_--_2022_--_5092.jpg"
+    },
+    "delta-works": {
+        "file": "images/places/delta-works.webp",
+        "title": "Vrouwenpolder (NL), Oosterscheldekering -- 2022 -- 5023",
+        "author": "Dietmar Rabich",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Vrouwenpolder_(NL),_Oosterscheldekering_--_2022_--_5023.jpg"
+    },
+    "zierikzee": {
+        "file": "images/places/zierikzee.webp",
+        "title": "41012 Zuidhavenpoort zierikzee Met Noordhavenpoort",
+        "author": "Johan Bakker",
+        "license": "CC BY-SA 3.0 nl",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/nl/deed.en",
+        "source_url": "https://commons.wikimedia.org/wiki/File:41012_Zuidhavenpoort_zierikzee_Met_Noordhavenpoort.jpg"
+    },
+    "giethoorn": {
+        "file": "images/places/giethoorn.webp",
+        "title": "Giethoorn as viewed from a boat in August 2018 39",
+        "author": "Donald Trung Quoc Don",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Giethoorn_as_viewed_from_a_boat_in_August_2018_39.jpg"
+    },
+    "domburg": {
+        "file": "images/places/domburg.webp",
+        "title": "Strand Domburg (167850755)",
+        "author": "Marcoskv",
+        "license": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Strand_Domburg_(167850755).jpeg"
+    },
+    "style-tulips": {
+        "file": "images/places/style-tulips.webp",
+        "title": "Halfweg, veld met rode tulpen IMG 8991 2021-04-27 12.37",
+        "author": "Michielverbeek",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Halfweg,_veld_met_rode_tulpen_IMG_8991_2021-04-27_12.37.jpg"
+    },
+    "style-canals": {
+        "file": "images/places/style-canals.webp",
+        "title": "Amsterdam (NL), Singel -- 2015 -- 7173",
+        "author": "Dietmar Rabich",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Amsterdam_(NL),_Singel_--_2015_--_7173.jpg"
+    },
+    "style-windmills": {
+        "file": "images/places/style-windmills.webp",
+        "title": "Overwaard Mill No.4, sunrise",
+        "author": "Dmytro Balkhovitin",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Overwaard_Mill_No.4,_sunrise.jpg"
+    },
+    "style-cheese": {
+        "file": "images/places/style-cheese.webp",
+        "title": "Cheese market in Alkmaar 12",
+        "author": "Donarreiskoffer",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Cheese_market_in_Alkmaar_12.jpg"
+    },
+    "style-cycling": {
+        "file": "images/places/style-cycling.webp",
+        "title": "Bicycle racks at the windmills, Kinderdijk (2021) 08",
+        "author": "Donald Trung Quoc Don",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Bicycle_racks_at_the_windmills,_Kinderdijk_(2021)_08.jpg"
+    },
+    "style-coast": {
+        "file": "images/places/style-coast.webp",
+        "title": "Urk - 2012 -032",
+        "author": "Pa3ems",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Urk_-_2012_-032.JPG"
+    },
+    "special-evening": {
+        "file": "images/places/special-evening.webp",
+        "title": "Magere Brug in Amsterdam",
+        "author": "Heinz-Josef Lücking",
+        "license": "CC BY-SA 3.0 de",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Magere_Brug_in_Amsterdam.jpg"
+    },
+    "journal-getting-around": {
+        "file": "images/places/journal-getting-around.webp",
+        "title": "Henriëttewaard",
+        "author": "Marczoutendijk",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Henri%C3%ABttewaard.jpg"
+    }
+}

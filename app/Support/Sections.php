@@ -126,6 +126,7 @@ class Sections
             'photo_band' => ['label' => 'Full-width photo', 'description' => 'A wide photo with no text, used as a breather between two sections.', 'fields' => [
                 self::img('image', 'Photo'),
                 $t('image_alt', 'Photo description (for screen readers)', ''),
+                self::rep('photos', 'Photo collage beside the text (only with a heading; blank shows the photo above)', 'photo', [self::img('image', 'Photo'), $t('image_alt', 'Photo description'), $t('title', 'Title on the card'), $t('place', 'Place name')], 3),
                 $t('eyebrow', 'Small label (optional)', ''),
                 $t('heading', 'Heading on the photo (optional)', '', 'Wrap a word in *asterisks* to highlight it.'),
                 $t('text', 'One line under the heading (optional)', ''),

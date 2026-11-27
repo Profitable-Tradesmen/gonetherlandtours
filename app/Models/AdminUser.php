@@ -16,7 +16,7 @@ class AdminUser extends Authenticatable
     ];
 
     /** Admin areas an editor may use: the route-name prefixes after "admin.". Everything else is administrators only. */
-    public const EDITOR_AREAS = ['dashboard', 'enquiries', 'packages', 'tour-types', 'destinations', 'travel-styles', 'pages', 'faqs', 'testimonials', 'blog', 'media', 'logout'];
+    public const EDITOR_AREAS = ['dashboard', 'enquiries', 'packages', 'tour-types', 'destinations', 'travel-styles', 'places', 'photo-credits', 'pages', 'faqs', 'testimonials', 'blog', 'media', 'logout'];
 
     protected $fillable = ['name', 'email', 'password', 'role'];
 

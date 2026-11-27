@@ -24,6 +24,8 @@ class SitemapController extends Controller
             $urls[] = [route('destinations.show', $d), $d->updated_at];
         }
         $urls[] = [route('travel-styles.index'), now()];
+        $urls[] = [route('ways-to-travel'), now()];
+        $urls[] = [route('photo-credits'), now()];
         foreach (\App\Models\TravelStyle::active()->where('noindex', false)->get() as $s) {
             $urls[] = [route('travel-styles.show', $s), $s->updated_at];
         }

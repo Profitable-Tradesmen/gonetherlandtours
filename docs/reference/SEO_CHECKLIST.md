@@ -277,3 +277,29 @@ Notes:
 - The home page has about 3,100 elements. If home mobile drops below 90 on the live host, the earlier suggestions still apply (fewer repeated cards).
 
 **Follow-up the same day:** on phones (up to 767 px) the home hero now shows the first photo only, with no slider, so the two large slider photos are no longer downloaded there. Home mobile: performance 95, accessibility 100, best practices 100, SEO 100, LCP 2.7 s, TBT 100 ms, CLS 0, page size **549 KiB** (was 1429 KiB). Desktop keeps the slider, unchanged.
+
+### Re-run after the Travel styles menu, admin and form changes (Lighthouse 12, 26 Nov 2026, second run of the day)
+Same method as above (local build behind the gzip + long-cache proxy, pages warmed first; these changes are not deployed from here, so the live site was not audited). **All scores are 90 or more, so no code was changed.**
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | TBT | CLS | Page size |
+|---|---|---|---|---|---|---|---|---|---|
+| Home | Mobile | 95 | 100 | 100 | 100 | 2.6 s | 110 ms | 0 | 550 KiB |
+| Home | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 0 ms | 0.004 | 1865 KiB |
+| Package (Tulip Route) | Mobile | 95 | 100 | 100 | 100 | 2.8 s | 120 ms | 0 | 504 KiB |
+| Package (Tulip Route) | Desktop | 100 | 100 | 100 | 100 | 0.8 s | 0 ms | 0 | 638 KiB |
+
+Notes:
+- The home page on desktop still downloads the two later hero slider photos at full size (`images/dest-zeeland.webp`, `images/feature_band.webp`). It does not affect the score; compressing them is still an open improvement.
+- Only the home page and one package page were audited. The new Travel styles pages have not been run.
+
+### Re-run after the inner-page additions (Lighthouse 12, 26 Nov 2026, local build, same method)
+Tour pages gained a route line, jump links, a places map, planning steps, an inquiry form and reviews. All scores are 90 or more.
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | Page size |
+|---|---|---|---|---|---|---|---|
+| Home | Mobile | 95 | 100 | 100 | 100 | 2.8 s | 551 KiB |
+| Home | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 1866 KiB |
+| Package (Tulip Route) | Mobile | 93 | 100 | 100 | 100 | 3.1 s | 542 KiB |
+| Package (Tulip Route) | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 866 KiB |
+
+- Photo credits: Creative Commons photos are listed on `/photo-credits` (Admin > Photo credits). The older note that all photos are CC0 is no longer true.

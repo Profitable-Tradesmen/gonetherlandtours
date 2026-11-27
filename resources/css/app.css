@@ -239,3 +239,16 @@ main > :nth-child(n+4) { content-visibility: auto; contain-intrinsic-size: auto 
 
 /* The whole date field opens the calendar, so it looks clickable. */
 input[type="date"], input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
+
+/* Postcard collage (photo band). Pure CSS: card 1 top left, card 2 middle right, card 3 bottom; hovering brings a card forward. */
+.collage { position: relative; width: 100%; aspect-ratio: 1 / 1; }
+@media (min-width: 640px) { .collage { aspect-ratio: 10 / 9; } }
+.collage-card { position: absolute; transition: transform .35s ease; }
+.collage-card:nth-of-type(1) { left: 1%; top: 3%; width: 63%; z-index: 30; transform: rotate(-4deg); }
+.collage-card:nth-of-type(2) { right: 1%; top: 22%; width: 58%; z-index: 20; transform: rotate(5deg); }
+.collage-card:nth-of-type(3) { left: 13%; bottom: 1%; width: 64%; z-index: 10; transform: rotate(-1.5deg); }
+.collage-card:hover { z-index: 40; transform: rotate(0deg) scale(1.03); }
+.collage-1 { aspect-ratio: auto; padding: 1.5rem 1rem; }
+.collage-1 .collage-card:nth-of-type(1) { position: relative; left: 0; top: 0; width: 100%; }
+.collage-2 .collage-card:nth-of-type(2) { top: auto; bottom: 3%; width: 64%; }
+@media (prefers-reduced-motion: reduce) { .collage-card { transition: none; } }

@@ -21,11 +21,14 @@
     <div class="prose-site max-w-3xl">{!! clean_html($tourType->body) !!}</div>
 </section>
 @endif
+@php $placesBlock = ['places' => \App\Models\Place::forStops($packages->flatMap->routeStops()->all())->take(8), 'title' => 'Places on *these tours*', 'intro' => 'Some of the towns and sights our '.$tourType->name.' routes visit.', 'bg' => 'white']; @endphp
 @if (! empty($sections))
     {{-- The rest of the page is built from sections (Admin > Pages > "{{ $tourType->name }} page"), the same blocks as the home page. --}}
     @foreach ($sections as $section)
+        @if ($loop->last && $section['type'] === 'cta_banner')@include('partials.places-section', $placesBlock)@endif
         @include('sections.'.$section['type'], ['d' => $section['d'], 'sid' => $section['id'], 'tourType' => $tourType])
     @endforeach
+    @if (end($sections)['type'] !== 'cta_banner')@include('partials.places-section', $placesBlock)@endif
 @else
 <section class="bg-sand py-14"><div class="container-site">
     <x-section-heading :title="$tourType->name.' packages'" />
@@ -37,6 +40,7 @@
     <p class="mt-8 text-center"><a href="{{ route('packages.index') }}" class="font-bold text-brand-700 underline underline-offset-4 hover:text-rust">See all Netherlands packages</a></p>
 </div></section>
 @include('partials.why-us')
+@include('partials.places-section', $placesBlock)
 @endif
 @if (empty($sections) && $faqs->isNotEmpty())
 <section class="py-14"><div class="container-site max-w-3xl">

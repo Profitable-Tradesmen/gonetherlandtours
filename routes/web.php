@@ -21,6 +21,8 @@ Route::get('/travel-styles', [\App\Http\Controllers\TravelStyleController::class
 Route::get('/travel-styles/{travelStyle:slug}', [\App\Http\Controllers\TravelStyleController::class, 'show'])->name('travel-styles.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/ways-to-travel', [TourTypeController::class, 'compare'])->name('ways-to-travel');
+Route::get('/photo-credits', [PageController::class, 'photoCredits'])->name('photo-credits');
 Route::get('/tours/{tourType:slug}', [TourTypeController::class, 'show'])->name('tour-types.show');
 Route::get('/faq', [PageController::class, 'faq'])->name('faq');
 Route::get('/testimonials', [PageController::class, 'testimonials'])->name('testimonials');

@@ -1,0 +1,6 @@
+{{-- The Dutch skyline (gables, a church tower, two windmills) as a faint silhouette in the current text color. Same drawing as the skyline divider. --}}
+<svg viewBox="0 20 1440 100" preserveAspectRatio="xMidYMax slice" class="{{ $class }}" fill="currentColor" aria-hidden="true" focusable="false">
+    <path d="M0 120V92h40V70l15-14 15 14v22h30V76h22l11-16 11 16h22v16h34V64h18l9-12 9 12h18v28h30V80l14-18 14 18v12h40V58l12-16 12 16v34h36V84h26l13-20 13 20h26v8h24V50l10-8V28h6v14l10 8v42h30V72h20l10-14 10 14h20v20h38V66h24l12-16 12 16h24v26h32V78h30l15-22 15 22v14h40V84h18l9-12 9 12h18v8h34V60h20l10-14 10 14h20v32h40V70h24l12-18 12 18v22h30V86h22l11-14 11 14h22v6h36V64h22l11-14 11 14h22v28h30V76h28l14-20 14 20v16h36V80h24l12-14 12 14h24v12h30V68h20l10-12 10 12h20v24h40V74h26l13-18 13 18v18h32V84h22l11-12 11 12h22v8h26V120Z"/>
+    <path d="M262 92 270 52h12l8 40Z"/><path d="M266 52 276 44 286 52Z"/><path d="M276 48 244 16M276 48 308 80M276 48 308 16M276 48 244 80" stroke="currentColor" stroke-width="3" fill="none"/>
+    <path d="M1118 92 1126 56h12l8 36Z"/><path d="M1132 52 1104 24M1132 52 1160 80M1132 52 1160 24M1132 52 1104 80" stroke="currentColor" stroke-width="3" fill="none"/>
+</svg>

@@ -24,6 +24,19 @@ class PageController extends Controller
         return $this->render(Page::bySlug('contact'));
     }
 
+    /** /photo-credits: who took the licensed photos. */
+    public function photoCredits()
+    {
+        return view('pages.photo-credits', [
+            'credits' => \App\Models\PhotoCredit::orderBy('sort_order')->orderBy('id')->get(),
+            'seo' => \App\Support\Seo::make([
+                'title' => 'Photo Credits | '.setting('brand_name', 'GoNetherlandTours'),
+                'description' => 'Photographers and licenses of the photos used on this website.',
+                'breadcrumbs' => [['Home', url('/')], ['Photo credits', route('photo-credits')]],
+            ]),
+        ]);
+    }
+
     public function faq()
     {
         return $this->render(Page::bySlug('faq'));

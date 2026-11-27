@@ -41,9 +41,38 @@
     </div>
 </section>
 
+@php
+    $places = \App\Models\Place::forStops($package->routeStops());
+    $tabs = array_filter([
+        'overview' => 'Overview',
+        'itinerary' => $package->itinerary ? 'Day by day' : null,
+        'included' => ($package->inclusions || $package->exclusions) ? 'Included' : null,
+        'places' => $places->isNotEmpty() ? 'Places & map' : null,
+        'inquire' => 'Inquire',
+    ]);
+@endphp
+@if ($stops = $package->routeStops())
+    <div class="border-b border-sand-200 bg-white">
+        <div class="container-site flex flex-wrap items-center gap-x-3 gap-y-1 py-4">
+            <span class="label-caps mr-2 text-xs font-bold text-rust">Your route</span>
+            @foreach ($stops as $stop)
+                <span class="whitespace-nowrap font-display text-lg text-brand-900">{{ $stop }}@if (! $loop->last)<span class="ml-3 text-rust" aria-hidden="true">&rsaquo;</span><span class="sr-only">, then</span>@endif</span>
+            @endforeach
+        </div>
+    </div>
+@endif
+{{-- Jump links; they stay under the header while scrolling. --}}
+<nav class="sticky top-16 z-30 border-b border-sand-200 bg-white/95 backdrop-blur lg:top-20" aria-label="On this page">
+    <ul class="container-site flex gap-2 overflow-x-auto py-2">
+        @foreach ($tabs as $anchor => $label)
+            <li class="shrink-0"><a href="#{{ $anchor }}" class="label-caps inline-flex min-h-[2.75rem] items-center whitespace-nowrap rounded-full border border-ink/20 px-4 text-[0.68rem] font-bold text-brand-900 transition hover:border-brand-900 hover:bg-sand">{{ $label }}</a></li>
+        @endforeach
+    </ul>
+</nav>
+
 <div class="container-site grid gap-10 py-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16 lg:py-14">
     <div class="min-w-0 space-y-12">
-        @if ($package->description)<div class="prose-site">{!! clean_html($package->description) !!}</div>@endif
+        <div id="overview" class="scroll-mt-40">@if ($package->description)<div class="prose-site">{!! clean_html($package->description) !!}</div>@endif</div>
 
         @if ($package->highlights)
             <section aria-labelledby="hl"><h2 id="hl" class="text-2xl font-medium sm:text-3xl">Highlights</h2>
@@ -54,7 +83,7 @@
         @endif
 
         @if ($package->itinerary)
-            <section aria-labelledby="it"><h2 id="it" class="text-2xl font-medium sm:text-3xl">Day by day</h2>
+            <section id="itinerary" class="scroll-mt-40" aria-labelledby="it"><h2 id="it" class="text-2xl font-medium sm:text-3xl">Day by day</h2>
                 <div class="mt-4 space-y-3">
                     @foreach ($package->itinerary as $n => $day)
                         @php $dayImg = $package->images->firstWhere('id', $day['image'] ?? null); @endphp
@@ -78,7 +107,7 @@
             </section>
         @endif
 
-        <div class="grid gap-6 sm:grid-cols-2">
+        <div id="included" class="grid scroll-mt-40 gap-6 sm:grid-cols-2">
             @if ($package->inclusions)<section aria-labelledby="inc" class="rounded-2xl bg-sand p-5"><h2 id="inc" class="text-xl font-medium">Included</h2><ul class="mt-3 space-y-2 text-sm">@foreach ($package->inclusions as $i)<li class="flex gap-2"><x-icon name="check" class="h-5 w-5 shrink-0 text-brand-700" />{{ $i }}</li>@endforeach</ul></section>@endif
             @if ($package->exclusions)<section aria-labelledby="exc" class="rounded-2xl bg-sand p-5"><h2 id="exc" class="text-xl font-medium">Not included</h2><ul class="mt-3 space-y-2 text-sm">@foreach ($package->exclusions as $i)<li class="flex gap-2"><x-icon name="no" class="h-5 w-5 shrink-0 text-rust" />{{ $i }}</li>@endforeach</ul></section>@endif
         </div>
@@ -133,7 +162,7 @@
         @endif
     </div>
 
-    <aside class="lg:sticky lg:top-28 lg:self-start" aria-label="Get a quote">
+    <aside class="lg:sticky lg:top-40 lg:self-start" aria-label="Get a quote">
         <div id="quote" class="rounded-2xl border border-sand-200 bg-white p-6 shadow-card">
             <p class="label-caps text-xs text-ink/60">From</p>
             <p class="font-display text-4xl font-medium text-brand-900">{{ $package->priceLabel() }}<span class="ml-1 text-sm font-semibold text-ink/60">per person</span></p>
@@ -156,6 +185,29 @@
         </div>
     </aside>
 </div>
+
+@if ($places->isNotEmpty())
+<section id="places" class="scroll-mt-32 bg-sand py-14 sm:py-20" aria-labelledby="places-h">
+    <div class="container-site">
+        <x-section-heading eyebrow="Places & map" title="Where this tour *takes you*" subtitle="The main stops, numbered in route order." id="places-h" />
+        @include('partials.tour-map')
+    </div>
+</section>
+@endif
+
+@include('partials.how-it-works', ['bg' => 'white'])
+
+<section id="inquire" class="scroll-mt-32 bg-sand py-14 sm:py-20" aria-labelledby="inq-h">
+    <div class="container-site max-w-3xl">
+        <x-section-heading eyebrow="Free, no obligation" title="Ask about *this tour*" :subtitle="'Tell us your dates and group, and a travel specialist will tailor '.$package->title.' to you.'" id="inq-h" />
+        <div class="rounded-2xl border-t-[3px] border-accent bg-white p-5 shadow-card sm:p-8">
+            <x-enquiry-form form="package-quote" idp="pkg" :package="$package" extra submit="Send my inquiry" />
+        </div>
+    </div>
+</section>
+
+{{-- Sample reviews never show on the live site; the block stays hidden there until there are real ones. --}}
+@include('sections.testimonials', ['sid' => 'pkg-reviews', 'd' => ['variant' => 'light', 'eyebrow' => 'Guest reviews', 'heading' => 'What travelers *tell us*', 'limit' => 3, 'button_label' => '', 'show_stars' => true, 'background' => 'white', 'real_only_live' => true]])
 
 @include('partials.why-us')
 
