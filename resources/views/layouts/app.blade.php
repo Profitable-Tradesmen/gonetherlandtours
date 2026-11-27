@@ -16,10 +16,10 @@
     <link rel="canonical" href="{{ $seo['canonical'] }}">
     @if ($seo['noindex'])<meta name="robots" content="noindex, nofollow">@else<meta name="robots" content="index, follow, max-image-preview:large">@endif
     <meta name="theme-color" content="#2F6285">
-    <link rel="icon" href="{{ asset("favicon.ico") }}" sizes="any">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset("images/favicon-32.png") }}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset("images/favicon-192.png") }}">
-    <link rel="apple-touch-icon" href="{{ asset("images/apple-touch-icon.png") }}">
+    <link rel="icon" href="{{ asset_v("favicon.ico") }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset_v("images/favicon-32.png") }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset_v("images/favicon-192.png") }}">
+    <link rel="apple-touch-icon" href="{{ asset_v("images/apple-touch-icon.png") }}">
 
     <meta property="og:site_name" content="{{ $brand }}">
     <meta property="og:type" content="{{ $seo['type'] }}">

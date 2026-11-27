@@ -303,3 +303,24 @@ Tour pages gained a route line, jump links, a places map, planning steps, an inq
 | Package (Tulip Route) | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 866 KiB |
 
 - Photo credits: Creative Commons photos are listed on `/photo-credits` (Admin > Photo credits). The older note that all photos are CC0 is no longer true.
+
+### Re-run after the home page redesigns and menu changes (Lighthouse 12, 27 Nov 2026)
+Same method as above (local build behind the gzip + long-cache proxy, pages warmed first; the live site was not audited). **All scores are 90 or more, so no code was changed.**
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | TBT | CLS | Page size |
+|---|---|---|---|---|---|---|---|---|---|
+| Home | Mobile | 96 | 100 | 100 | 100 | 2.6 s | 90 ms | 0 | 812 KiB |
+| Home | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 10 ms | 0 | 2130 KiB |
+| Package (Tulip Route) | Mobile | 93 | 100 | 100 | 100 | 3.1 s | 80 ms | 0 | 542 KiB |
+| Package (Tulip Route) | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 0 ms | 0 | 866 KiB |
+
+Open improvement (does not affect the scores): the home page got heavier (mobile 551 to 812 KiB, desktop 1866 to 2130 KiB). The largest files are the later hero slider photos on desktop (`images/dest-zeeland.webp`, `images/feature_band.webp`), `images/Guide_2.webp`, and the tour type and package photos near the top, which could use smaller copies or stronger compression.
+
+**Follow-up the same day, photos compressed:** 29 large photos were re-saved at the same dimensions (hero slider, "Why choose us", tour type cards and the 960 px package photos), 4.1 MB to 2.7 MB in total. Originals are in git history.
+
+| Page | Size | Performance | Accessibility | Best practices | SEO | LCP | Page size before → after |
+|---|---|---|---|---|---|---|---|
+| Home | Mobile | 96 | 100 | 100 | 100 | 2.6 s | 812 → 616 KiB |
+| Home | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 2130 → 1332 KiB |
+| Package (Tulip Route) | Mobile | 92 | 100 | 100 | 100 | 2.8 s | 542 → 506 KiB |
+| Package (Tulip Route) | Desktop | 99 | 100 | 100 | 100 | 0.9 s | 866 → 866 KiB |
